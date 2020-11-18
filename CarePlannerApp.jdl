@@ -183,13 +183,12 @@ entity Tenant {
 }
 
 
-// Many to one relationship with tenant 
+// Many to one relationship with tenant
 entity Branch {
 	name String required,
 	address String,
 	telephone String,
-	lastUpdatedDate ZonedDateTime,
-	tenantId Long required
+	lastUpdatedDate ZonedDateTime
 }
 
 relationship ManyToOne {
@@ -293,7 +292,7 @@ entity EmergencyContact {
 	contactRelationship String required,
 	isKeyHolder Boolean,
 	infoSharingConsentGiven Boolean,
-	preferredContactNumber Stirng required,
+	preferredContactNumber String required,
 	fullAddress String,
 	lastUpdatedDate ZonedDateTime,
 	tenantId Long required
@@ -546,7 +545,7 @@ entity Disability{
 }
 
 relationship ManyToOne {
-	Disability {disabilityType (disabilityType)} to DisabilityType
+	Disability {disabilityType (disability)} to DisabilityType
 }
 
 relationship ManyToOne {
@@ -584,7 +583,7 @@ relationship ManyToOne {
 
 
 relationship ManyToOne {
-	Eligibility {eligibilityType (eligibilitype)} to EligibilityType
+	Eligibility {eligibilityType (eligibilityType)} to EligibilityType
 }
 
 relationship ManyToOne {
