@@ -1,0 +1,23 @@
+{
+  "carePlannerApp": {
+    "eligibilityType": {
+      "home": {
+        "title": "EligibilityTypes",
+        "createLabel": "Créer un nouveau Eligibility Type",
+        "createOrEditLabel": "Créer ou éditer un Eligibility Type",
+        "notFound": "Aucun Eligibility Type trouvé"
+      },
+      "created": "Un nouveau Eligibility Type a été créé avec l'identifiant {{ param }}",
+      "updated": "Le Eligibility Type avec l'identifiant {{ param }} a été mis à jour",
+      "deleted": "Le Eligibility Type avec l'identifiant {{ param }} a été supprimé",
+      "delete": {
+        "question": "Etes-vous certain de vouloir supprimer le Eligibility Type {{ id }} ?"
+      },
+      "detail": {
+        "title": "Eligibility Type"
+      },
+      "eligibilityType": "Eligibility Type",
+      "description": "Description"
+    }
+  }
+}

@@ -1,0 +1,33 @@
+{
+  "carePlannerApp": {
+    "consent": {
+      "home": {
+        "title": "Consents",
+        "createLabel": "Créer un nouveau Consent",
+        "createOrEditLabel": "Créer ou éditer un Consent",
+        "notFound": "Aucun Consent trouvé"
+      },
+      "created": "Un nouveau Consent a été créé avec l'identifiant {{ param }}",
+      "updated": "Le Consent avec l'identifiant {{ param }} a été mis à jour",
+      "deleted": "Le Consent avec l'identifiant {{ param }} a été supprimé",
+      "delete": {
+        "question": "Etes-vous certain de vouloir supprimer le Consent {{ id }} ?"
+      },
+      "detail": {
+        "title": "Consent"
+      },
+      "title": "Title",
+      "description": "Description",
+      "giveConsent": "Give Consent",
+      "arrangements": "Arrangements",
+      "serviceUserSignature": "Service User Signature",
+      "signatureImage": "Signature Image",
+      "signatureImageUrl": "Signature Image Url",
+      "consentDate": "Consent Date",
+      "lastUpdatedDate": "Last Updated Date",
+      "tenantId": "Tenant Id",
+      "serviceUser": "Service User",
+      "witnessedBy": "Witnessed By"
+    }
+  }
+}

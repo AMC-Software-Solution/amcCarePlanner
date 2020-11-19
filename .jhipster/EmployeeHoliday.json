@@ -1,0 +1,75 @@
+{
+  "name": "EmployeeHoliday",
+  "fields": [
+    {
+      "fieldName": "description",
+      "fieldType": "String",
+      "fieldValidateRules": ["required"]
+    },
+    {
+      "fieldName": "startDate",
+      "fieldType": "ZonedDateTime"
+    },
+    {
+      "fieldName": "endDate",
+      "fieldType": "ZonedDateTime"
+    },
+    {
+      "fieldName": "employeeHolidayType",
+      "fieldType": "EmployeeHolidayType",
+      "fieldValues": "ANNUAL_HOLIDAY,PUBLIC_HOLIDAY,UNPAID_HOLIDAY,OTHER"
+    },
+    {
+      "fieldName": "approvedDate",
+      "fieldType": "ZonedDateTime"
+    },
+    {
+      "fieldName": "requestedDate",
+      "fieldType": "ZonedDateTime"
+    },
+    {
+      "fieldName": "approved",
+      "fieldType": "Boolean"
+    },
+    {
+      "fieldName": "note",
+      "fieldType": "String"
+    },
+    {
+      "fieldName": "lastUpdatedDate",
+      "fieldType": "ZonedDateTime"
+    },
+    {
+      "fieldName": "tenantId",
+      "fieldType": "Long",
+      "fieldValidateRules": ["required"]
+    }
+  ],
+  "relationships": [
+    {
+      "relationshipType": "many-to-one",
+      "otherEntityName": "employee",
+      "otherEntityRelationshipName": "employeeHoliday",
+      "relationshipName": "employee",
+      "otherEntityField": "employeeCode"
+    },
+    {
+      "relationshipType": "many-to-one",
+      "otherEntityName": "employee",
+      "otherEntityRelationshipName": "employeeHoliday",
+      "relationshipName": "approvedBy",
+      "otherEntityField": "employeeCode"
+    }
+  ],
+  "changelogDate": "20201119071612",
+  "entityTableName": "employee_holiday",
+  "dto": "mapstruct",
+  "pagination": "pagination",
+  "service": "serviceClass",
+  "jpaMetamodelFiltering": true,
+  "fluentMethods": true,
+  "readOnly": false,
+  "embedded": false,
+  "clientRootFolder": "",
+  "applications": "*"
+}

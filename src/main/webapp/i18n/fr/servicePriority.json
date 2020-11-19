@@ -1,0 +1,10 @@
+{
+  "carePlannerApp": {
+    "ServicePriority": {
+      "null": "",
+      "HIGH": "HIGH",
+      "LOW": "LOW",
+      "MEDIUM": "MEDIUM"
+    }
+  }
+}

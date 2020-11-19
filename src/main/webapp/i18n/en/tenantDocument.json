@@ -1,0 +1,36 @@
+{
+  "carePlannerApp": {
+    "tenantDocument": {
+      "home": {
+        "title": "Tenant Documents",
+        "createLabel": "Create a new Tenant Document",
+        "createOrEditLabel": "Create or edit a Tenant Document",
+        "notFound": "No Tenant Documents found"
+      },
+      "created": "A new Tenant Document is created with identifier {{ param }}",
+      "updated": "A Tenant Document is updated with identifier {{ param }}",
+      "deleted": "A Tenant Document is deleted with identifier {{ param }}",
+      "delete": {
+        "question": "Are you sure you want to delete Tenant Document {{ id }}?"
+      },
+      "detail": {
+        "title": "Tenant Document"
+      },
+      "documentName": "Document Name",
+      "documentCode": "Document Code",
+      "documentNumber": "Document Number",
+      "documentType": "Document Type",
+      "documentStatus": "Document Status",
+      "note": "Note",
+      "issuedDate": "Issued Date",
+      "expiryDate": "Expiry Date",
+      "uploadedDate": "Uploaded Date",
+      "documentFile": "Document File",
+      "documentFileUrl": "Document File Url",
+      "lastUpdatedDate": "Last Updated Date",
+      "tenantId": "Tenant Id",
+      "uploadedBy": "Uploaded By",
+      "approvedBy": "Approved By"
+    }
+  }
+}

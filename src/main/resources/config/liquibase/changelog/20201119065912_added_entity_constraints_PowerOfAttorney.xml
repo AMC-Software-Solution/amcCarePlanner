@@ -1,0 +1,24 @@
+<?xml version="1.0" encoding="utf-8"?>
+<databaseChangeLog
+    xmlns="http://www.liquibase.org/xml/ns/dbchangelog"
+    xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+    xsi:schemaLocation="http://www.liquibase.org/xml/ns/dbchangelog http://www.liquibase.org/xml/ns/dbchangelog/dbchangelog-3.9.xsd">
+    <!--
+        Added the constraints for entity PowerOfAttorney.
+    -->
+    <changeSet id="20201119065912-2" author="jhipster">
+        
+        <addForeignKeyConstraint baseColumnNames="service_user_id"
+                                 baseTableName="power_of_attorney"
+                                 constraintName="fk_power_of_attorney_service_user_id"
+                                 referencedColumnNames="id"
+                                 referencedTableName="service_user"/>
+
+        <addForeignKeyConstraint baseColumnNames="witnessed_by_id"
+                                 baseTableName="power_of_attorney"
+                                 constraintName="fk_power_of_attorney_witnessed_by_id"
+                                 referencedColumnNames="id"
+                                 referencedTableName="employee"/>
+
+    </changeSet>
+</databaseChangeLog>

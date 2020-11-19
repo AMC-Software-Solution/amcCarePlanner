@@ -1,0 +1,26 @@
+{
+  "carePlannerApp": {
+    "employeeAvailability": {
+      "home": {
+        "title": "Employee Availabilities",
+        "createLabel": "Create a new Employee Availability",
+        "createOrEditLabel": "Create or edit a Employee Availability",
+        "notFound": "No Employee Availabilities found"
+      },
+      "created": "A new Employee Availability is created with identifier {{ param }}",
+      "updated": "A Employee Availability is updated with identifier {{ param }}",
+      "deleted": "A Employee Availability is deleted with identifier {{ param }}",
+      "delete": {
+        "question": "Are you sure you want to delete Employee Availability {{ id }}?"
+      },
+      "detail": {
+        "title": "Employee Availability"
+      },
+      "isAvailableForWork": "Is Available For Work",
+      "minimumHoursPerWeek": "Minimum Hours Per Week",
+      "maximumHoursPerWeek": "Maximum Hours Per Week",
+      "leastPreferredShift": "Least Preferred Shift",
+      "employee": "Employee"
+    }
+  }
+}

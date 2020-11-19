@@ -1,0 +1,30 @@
+<?xml version="1.0" encoding="utf-8"?>
+<databaseChangeLog
+    xmlns="http://www.liquibase.org/xml/ns/dbchangelog"
+    xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+    xsi:schemaLocation="http://www.liquibase.org/xml/ns/dbchangelog http://www.liquibase.org/xml/ns/dbchangelog/dbchangelog-3.9.xsd">
+    <!--
+        Added the constraints for entity ServiceUserEvent.
+    -->
+    <changeSet id="20201119072512-2" author="jhipster">
+        
+        <addForeignKeyConstraint baseColumnNames="reported_by_id"
+                                 baseTableName="service_user_event"
+                                 constraintName="fk_service_user_event_reported_by_id"
+                                 referencedColumnNames="id"
+                                 referencedTableName="employee"/>
+
+        <addForeignKeyConstraint baseColumnNames="assigned_to_id"
+                                 baseTableName="service_user_event"
+                                 constraintName="fk_service_user_event_assigned_to_id"
+                                 referencedColumnNames="id"
+                                 referencedTableName="employee"/>
+
+        <addForeignKeyConstraint baseColumnNames="service_user_id"
+                                 baseTableName="service_user_event"
+                                 constraintName="fk_service_user_event_service_user_id"
+                                 referencedColumnNames="id"
+                                 referencedTableName="service_user"/>
+
+    </changeSet>
+</databaseChangeLog>

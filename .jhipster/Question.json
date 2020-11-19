@@ -1,0 +1,58 @@
+{
+  "name": "Question",
+  "fields": [
+    {
+      "fieldName": "question",
+      "fieldType": "String"
+    },
+    {
+      "fieldName": "description",
+      "fieldType": "String"
+    },
+    {
+      "fieldName": "attribute1",
+      "fieldType": "String"
+    },
+    {
+      "fieldName": "attribute2",
+      "fieldType": "String"
+    },
+    {
+      "fieldName": "attribute3",
+      "fieldType": "String"
+    },
+    {
+      "fieldName": "attribute4",
+      "fieldType": "String"
+    },
+    {
+      "fieldName": "attribute5",
+      "fieldType": "String"
+    },
+    {
+      "fieldName": "optional",
+      "fieldType": "Boolean"
+    },
+    {
+      "fieldName": "lastUpdatedDate",
+      "fieldType": "ZonedDateTime"
+    },
+    {
+      "fieldName": "tenantId",
+      "fieldType": "Long",
+      "fieldValidateRules": ["required"]
+    }
+  ],
+  "relationships": [],
+  "changelogDate": "20201119070412",
+  "entityTableName": "question",
+  "dto": "mapstruct",
+  "pagination": "pagination",
+  "service": "serviceClass",
+  "jpaMetamodelFiltering": true,
+  "fluentMethods": true,
+  "readOnly": false,
+  "embedded": false,
+  "clientRootFolder": "",
+  "applications": "*"
+}

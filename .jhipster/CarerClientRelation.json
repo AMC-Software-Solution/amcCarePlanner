@@ -1,0 +1,55 @@
+{
+  "name": "CarerClientRelation",
+  "fields": [
+    {
+      "fieldName": "relationType",
+      "fieldType": "RelationType",
+      "fieldValues": "CLIENT_UNFAVOURS_EMPLOYEE,EMPLOYEE_VISITED_CLIENT_BEFORE,CLIENT_PREFERRED_EMPLOYEE",
+      "fieldValidateRules": ["required"]
+    },
+    {
+      "fieldName": "reason",
+      "fieldType": "String"
+    },
+    {
+      "fieldName": "count",
+      "fieldType": "Long"
+    },
+    {
+      "fieldName": "lastUpdatedDate",
+      "fieldType": "ZonedDateTime"
+    },
+    {
+      "fieldName": "tenantId",
+      "fieldType": "Long",
+      "fieldValidateRules": ["required"]
+    }
+  ],
+  "relationships": [
+    {
+      "relationshipType": "many-to-one",
+      "otherEntityName": "employee",
+      "otherEntityRelationshipName": "carerClientRelation",
+      "relationshipName": "employee",
+      "otherEntityField": "employeeCode"
+    },
+    {
+      "relationshipType": "many-to-one",
+      "otherEntityName": "serviceUser",
+      "otherEntityRelationshipName": "carerClientRelation",
+      "relationshipName": "serviceUser",
+      "otherEntityField": "serviceUserCode"
+    }
+  ],
+  "changelogDate": "20201119070912",
+  "entityTableName": "carer_client_relation",
+  "dto": "mapstruct",
+  "pagination": "pagination",
+  "service": "serviceClass",
+  "jpaMetamodelFiltering": true,
+  "fluentMethods": true,
+  "readOnly": false,
+  "embedded": false,
+  "clientRootFolder": "",
+  "applications": "*"
+}

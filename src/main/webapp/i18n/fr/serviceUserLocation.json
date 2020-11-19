@@ -1,0 +1,26 @@
+{
+  "carePlannerApp": {
+    "serviceUserLocation": {
+      "home": {
+        "title": "ServiceUserLocations",
+        "createLabel": "Créer un nouveau Service User Location",
+        "createOrEditLabel": "Créer ou éditer un Service User Location",
+        "notFound": "Aucun Service User Location trouvé"
+      },
+      "created": "Un nouveau Service User Location a été créé avec l'identifiant {{ param }}",
+      "updated": "Le Service User Location avec l'identifiant {{ param }} a été mis à jour",
+      "deleted": "Le Service User Location avec l'identifiant {{ param }} a été supprimé",
+      "delete": {
+        "question": "Etes-vous certain de vouloir supprimer le Service User Location {{ id }} ?"
+      },
+      "detail": {
+        "title": "Service User Location"
+      },
+      "latitude": "Latitude",
+      "longitude": "Longitude",
+      "lastUpdatedDate": "Last Updated Date",
+      "tenantId": "Tenant Id",
+      "employee": "Employee"
+    }
+  }
+}

@@ -1,0 +1,51 @@
+{
+  "carePlannerApp": {
+    "serviceUser": {
+      "home": {
+        "title": "Service Users",
+        "createLabel": "Create a new Service User",
+        "createOrEditLabel": "Create or edit a Service User",
+        "notFound": "No Service Users found"
+      },
+      "created": "A new Service User is created with identifier {{ param }}",
+      "updated": "A Service User is updated with identifier {{ param }}",
+      "deleted": "A Service User is deleted with identifier {{ param }}",
+      "delete": {
+        "question": "Are you sure you want to delete Service User {{ id }}?"
+      },
+      "detail": {
+        "title": "Service User"
+      },
+      "title": "Title",
+      "firstName": "First Name",
+      "middleName": "Middle Name",
+      "lastName": "Last Name",
+      "preferredName": "Preferred Name",
+      "serviceUserCode": "Service User Code",
+      "dateOfBirth": "Date Of Birth",
+      "lastVisitDate": "Last Visit Date",
+      "startDate": "Start Date",
+      "supportType": "Support Type",
+      "serviceUserCategory": "Service User Category",
+      "vulnerability": "Vulnerability",
+      "servicePriority": "Service Priority",
+      "source": "Source",
+      "status": "Status",
+      "firstLanguage": "First Language",
+      "interpreterRequired": "Interpreter Required",
+      "activatedDate": "Activated Date",
+      "profilePhoto": "Profile Photo",
+      "profilePhotoUrl": "Profile Photo Url",
+      "lastRecordedHeight": "Last Recorded Height",
+      "lastRecordedWeight": "Last Recorded Weight",
+      "hasMedicalCondition": "Has Medical Condition",
+      "medicalConditionSummary": "Medical Condition Summary",
+      "lastUpdatedDate": "Last Updated Date",
+      "tenantId": "Tenant Id",
+      "user": "User",
+      "branch": "Branch",
+      "registeredBy": "Registered By",
+      "activatedBy": "Activated By"
+    }
+  }
+}

@@ -1,0 +1,31 @@
+{
+  "carePlannerApp": {
+    "systemEventsHistory": {
+      "home": {
+        "title": "SystemEventsHistories",
+        "createLabel": "Créer un nouveau System Events History",
+        "createOrEditLabel": "Créer ou éditer un System Events History",
+        "notFound": "Aucun System Events History trouvé"
+      },
+      "created": "Un nouveau System Events History a été créé avec l'identifiant {{ param }}",
+      "updated": "Le System Events History avec l'identifiant {{ param }} a été mis à jour",
+      "deleted": "Le System Events History avec l'identifiant {{ param }} a été supprimé",
+      "delete": {
+        "question": "Etes-vous certain de vouloir supprimer le System Events History {{ id }} ?"
+      },
+      "detail": {
+        "title": "System Events History"
+      },
+      "eventName": "Event Name",
+      "eventDate": "Event Date",
+      "eventApi": "Event Api",
+      "ipAddress": "Ip Address",
+      "eventNote": "Event Note",
+      "eventEntityName": "Event Entity Name",
+      "eventEntityId": "Event Entity Id",
+      "isSuspecious": "Is Suspecious",
+      "tenantId": "Tenant Id",
+      "triggedBy": "Trigged By"
+    }
+  }
+}

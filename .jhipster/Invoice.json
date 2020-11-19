@@ -1,0 +1,107 @@
+{
+  "name": "Invoice",
+  "fields": [
+    {
+      "fieldName": "totalAmount",
+      "fieldType": "BigDecimal",
+      "fieldValidateRules": ["required"]
+    },
+    {
+      "fieldName": "description",
+      "fieldType": "String"
+    },
+    {
+      "fieldName": "invoiceNumber",
+      "fieldType": "UUID",
+      "fieldValidateRules": ["required", "unique"]
+    },
+    {
+      "fieldName": "generatedDate",
+      "fieldType": "ZonedDateTime",
+      "fieldValidateRules": ["required"]
+    },
+    {
+      "fieldName": "dueDate",
+      "fieldType": "ZonedDateTime",
+      "fieldValidateRules": ["required"]
+    },
+    {
+      "fieldName": "paymentDate",
+      "fieldType": "ZonedDateTime"
+    },
+    {
+      "fieldName": "invoiceStatus",
+      "fieldType": "InvoiceStatus",
+      "fieldValues": "CREATED,PAID,CANCELLED",
+      "fieldValidateRules": ["required"]
+    },
+    {
+      "fieldName": "tax",
+      "fieldType": "Double"
+    },
+    {
+      "fieldName": "attribute1",
+      "fieldType": "String"
+    },
+    {
+      "fieldName": "attribute2",
+      "fieldType": "String"
+    },
+    {
+      "fieldName": "attribute3",
+      "fieldType": "String"
+    },
+    {
+      "fieldName": "attribute4",
+      "fieldType": "String"
+    },
+    {
+      "fieldName": "attribute5",
+      "fieldType": "String"
+    },
+    {
+      "fieldName": "attribute6",
+      "fieldType": "String"
+    },
+    {
+      "fieldName": "attribute7",
+      "fieldType": "String"
+    },
+    {
+      "fieldName": "lastUpdatedDate",
+      "fieldType": "ZonedDateTime"
+    },
+    {
+      "fieldName": "tenantId",
+      "fieldType": "Long",
+      "fieldValidateRules": ["required"]
+    }
+  ],
+  "relationships": [
+    {
+      "relationshipType": "many-to-one",
+      "otherEntityName": "serviceOrder",
+      "otherEntityRelationshipName": "invoice",
+      "relationshipName": "serviceOrder",
+      "otherEntityField": "title"
+    },
+    {
+      "relationshipType": "many-to-one",
+      "otherEntityName": "serviceUser",
+      "otherEntityRelationshipName": "invoice",
+      "relationshipName": "serviceUser",
+      "otherEntityField": "serviceUserCode"
+    }
+  ],
+  "changelogDate": "20201119072712",
+  "entityTableName": "invoice",
+  "dto": "mapstruct",
+  "pagination": "pagination",
+  "service": "serviceClass",
+  "jpaMetamodelFiltering": true,
+  "fluentMethods": true,
+  "readOnly": false,
+  "embedded": false,
+  "clientRootFolder": "",
+  "applications": "*"
+}

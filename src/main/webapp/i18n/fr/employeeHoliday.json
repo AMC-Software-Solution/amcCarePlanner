@@ -1,0 +1,33 @@
+{
+  "carePlannerApp": {
+    "employeeHoliday": {
+      "home": {
+        "title": "EmployeeHolidays",
+        "createLabel": "Créer un nouveau Employee Holiday",
+        "createOrEditLabel": "Créer ou éditer un Employee Holiday",
+        "notFound": "Aucun Employee Holiday trouvé"
+      },
+      "created": "Un nouveau Employee Holiday a été créé avec l'identifiant {{ param }}",
+      "updated": "Le Employee Holiday avec l'identifiant {{ param }} a été mis à jour",
+      "deleted": "Le Employee Holiday avec l'identifiant {{ param }} a été supprimé",
+      "delete": {
+        "question": "Etes-vous certain de vouloir supprimer le Employee Holiday {{ id }} ?"
+      },
+      "detail": {
+        "title": "Employee Holiday"
+      },
+      "description": "Description",
+      "startDate": "Start Date",
+      "endDate": "End Date",
+      "employeeHolidayType": "Employee Holiday Type",
+      "approvedDate": "Approved Date",
+      "requestedDate": "Requested Date",
+      "approved": "Approved",
+      "note": "Note",
+      "lastUpdatedDate": "Last Updated Date",
+      "tenantId": "Tenant Id",
+      "employee": "Employee",
+      "approvedBy": "Approved By"
+    }
+  }
+}

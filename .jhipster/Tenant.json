@@ -1,0 +1,55 @@
+{
+  "name": "Tenant",
+  "fields": [
+    {
+      "fieldName": "tenantName",
+      "fieldType": "String",
+      "fieldValidateRules": ["required"]
+    },
+    {
+      "fieldName": "tenantDescription",
+      "fieldType": "String"
+    },
+    {
+      "fieldName": "tenantLogo",
+      "fieldType": "byte[]",
+      "fieldTypeBlobContent": "image"
+    },
+    {
+      "fieldName": "tenantLogoUrl",
+      "fieldType": "String"
+    },
+    {
+      "fieldName": "tenantContactName",
+      "fieldType": "String"
+    },
+    {
+      "fieldName": "tenantPhone",
+      "fieldType": "String"
+    },
+    {
+      "fieldName": "tenantEmail",
+      "fieldType": "String"
+    },
+    {
+      "fieldName": "createdDate",
+      "fieldType": "ZonedDateTime"
+    },
+    {
+      "fieldName": "lastUpdatedDate",
+      "fieldType": "ZonedDateTime"
+    }
+  ],
+  "relationships": [],
+  "changelogDate": "20201119065212",
+  "entityTableName": "tenant",
+  "dto": "mapstruct",
+  "pagination": "pagination",
+  "service": "serviceClass",
+  "jpaMetamodelFiltering": true,
+  "fluentMethods": true,
+  "readOnly": false,
+  "embedded": false,
+  "clientRootFolder": "",
+  "applications": "*"
+}

@@ -1,0 +1,30 @@
+{
+  "carePlannerApp": {
+    "powerOfAttorney": {
+      "home": {
+        "title": "PowerOfAttorneys",
+        "createLabel": "Créer un nouveau Power Of Attorney",
+        "createOrEditLabel": "Créer ou éditer un Power Of Attorney",
+        "notFound": "Aucun Power Of Attorney trouvé"
+      },
+      "created": "Un nouveau Power Of Attorney a été créé avec l'identifiant {{ param }}",
+      "updated": "Le Power Of Attorney avec l'identifiant {{ param }} a été mis à jour",
+      "deleted": "Le Power Of Attorney avec l'identifiant {{ param }} a été supprimé",
+      "delete": {
+        "question": "Etes-vous certain de vouloir supprimer le Power Of Attorney {{ id }} ?"
+      },
+      "detail": {
+        "title": "Power Of Attorney"
+      },
+      "powerOfAttorneyConsent": "Power Of Attorney Consent",
+      "healthAndWelfare": "Health And Welfare",
+      "healthAndWelfareName": "Health And Welfare Name",
+      "propertyAndFinAffairs": "Property And Fin Affairs",
+      "propertyAndFinAffairsName": "Property And Fin Affairs Name",
+      "lastUpdatedDate": "Last Updated Date",
+      "tenantId": "Tenant Id",
+      "serviceUser": "Service User",
+      "witnessedBy": "Witnessed By"
+    }
+  }
+}

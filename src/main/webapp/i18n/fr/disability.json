@@ -1,0 +1,26 @@
+{
+  "carePlannerApp": {
+    "disability": {
+      "home": {
+        "title": "Disabilities",
+        "createLabel": "Créer un nouveau Disability",
+        "createOrEditLabel": "Créer ou éditer un Disability",
+        "notFound": "Aucun Disability trouvé"
+      },
+      "created": "Un nouveau Disability a été créé avec l'identifiant {{ param }}",
+      "updated": "Le Disability avec l'identifiant {{ param }} a été mis à jour",
+      "deleted": "Le Disability avec l'identifiant {{ param }} a été supprimé",
+      "delete": {
+        "question": "Etes-vous certain de vouloir supprimer le Disability {{ id }} ?"
+      },
+      "detail": {
+        "title": "Disability"
+      },
+      "note": "Note",
+      "lastUpdatedDate": "Last Updated Date",
+      "tenantId": "Tenant Id",
+      "disabilityType": "Disability Type",
+      "employee": "Employee"
+    }
+  }
+}

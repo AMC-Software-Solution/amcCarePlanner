@@ -1,0 +1,42 @@
+{
+  "name": "EmployeeAvailability",
+  "fields": [
+    {
+      "fieldName": "isAvailableForWork",
+      "fieldType": "Boolean"
+    },
+    {
+      "fieldName": "minimumHoursPerWeek",
+      "fieldType": "Integer"
+    },
+    {
+      "fieldName": "maximumHoursPerWeek",
+      "fieldType": "Integer"
+    },
+    {
+      "fieldName": "leastPreferredShift",
+      "fieldType": "Shift",
+      "fieldValues": "MORNING_SHIFT,AFTERNOON_SHIFT,EVENING_SHIFT,NIGHTS_SHIFT,NONE"
+    }
+  ],
+  "relationships": [
+    {
+      "relationshipType": "many-to-one",
+      "otherEntityName": "employee",
+      "otherEntityRelationshipName": "employeeAvailability",
+      "relationshipName": "employee",
+      "otherEntityField": "employeeCode"
+    }
+  ],
+  "changelogDate": "20201119070812",
+  "entityTableName": "employee_availability",
+  "dto": "mapstruct",
+  "pagination": "pagination",
+  "service": "serviceClass",
+  "jpaMetamodelFiltering": true,
+  "fluentMethods": true,
+  "readOnly": false,
+  "embedded": false,
+  "clientRootFolder": "",
+  "applications": "*"
+}

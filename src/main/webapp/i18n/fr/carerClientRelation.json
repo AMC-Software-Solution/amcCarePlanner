@@ -1,0 +1,28 @@
+{
+  "carePlannerApp": {
+    "carerClientRelation": {
+      "home": {
+        "title": "CarerClientRelations",
+        "createLabel": "Créer un nouveau Carer Client Relation",
+        "createOrEditLabel": "Créer ou éditer un Carer Client Relation",
+        "notFound": "Aucun Carer Client Relation trouvé"
+      },
+      "created": "Un nouveau Carer Client Relation a été créé avec l'identifiant {{ param }}",
+      "updated": "Le Carer Client Relation avec l'identifiant {{ param }} a été mis à jour",
+      "deleted": "Le Carer Client Relation avec l'identifiant {{ param }} a été supprimé",
+      "delete": {
+        "question": "Etes-vous certain de vouloir supprimer le Carer Client Relation {{ id }} ?"
+      },
+      "detail": {
+        "title": "Carer Client Relation"
+      },
+      "relationType": "Relation Type",
+      "reason": "Reason",
+      "count": "Count",
+      "lastUpdatedDate": "Last Updated Date",
+      "tenantId": "Tenant Id",
+      "employee": "Employee",
+      "serviceUser": "Service User"
+    }
+  }
+}

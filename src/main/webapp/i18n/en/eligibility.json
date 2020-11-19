@@ -1,0 +1,26 @@
+{
+  "carePlannerApp": {
+    "eligibility": {
+      "home": {
+        "title": "Eligibilities",
+        "createLabel": "Create a new Eligibility",
+        "createOrEditLabel": "Create or edit a Eligibility",
+        "notFound": "No Eligibilities found"
+      },
+      "created": "A new Eligibility is created with identifier {{ param }}",
+      "updated": "A Eligibility is updated with identifier {{ param }}",
+      "deleted": "A Eligibility is deleted with identifier {{ param }}",
+      "delete": {
+        "question": "Are you sure you want to delete Eligibility {{ id }}?"
+      },
+      "detail": {
+        "title": "Eligibility"
+      },
+      "note": "Note",
+      "lastUpdatedDate": "Last Updated Date",
+      "tenantId": "Tenant Id",
+      "eligibilityType": "Eligibility Type",
+      "employee": "Employee"
+    }
+  }
+}

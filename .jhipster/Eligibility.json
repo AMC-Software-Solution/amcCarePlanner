@@ -1,0 +1,45 @@
+{
+  "name": "Eligibility",
+  "fields": [
+    {
+      "fieldName": "note",
+      "fieldType": "String"
+    },
+    {
+      "fieldName": "lastUpdatedDate",
+      "fieldType": "ZonedDateTime"
+    },
+    {
+      "fieldName": "tenantId",
+      "fieldType": "Long",
+      "fieldValidateRules": ["required"]
+    }
+  ],
+  "relationships": [
+    {
+      "relationshipType": "many-to-one",
+      "otherEntityName": "eligibilityType",
+      "otherEntityRelationshipName": "eligibility",
+      "relationshipName": "eligibilityType",
+      "otherEntityField": "eligibilityType"
+    },
+    {
+      "relationshipType": "many-to-one",
+      "otherEntityName": "employee",
+      "otherEntityRelationshipName": "eligibility",
+      "relationshipName": "employee",
+      "otherEntityField": "employeeCode"
+    }
+  ],
+  "changelogDate": "20201119071312",
+  "entityTableName": "eligibility",
+  "dto": "mapstruct",
+  "pagination": "pagination",
+  "service": "serviceClass",
+  "jpaMetamodelFiltering": true,
+  "fluentMethods": true,
+  "readOnly": false,
+  "embedded": false,
+  "clientRootFolder": "",
+  "applications": "*"
+}

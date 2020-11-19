@@ -1,0 +1,30 @@
+{
+  "carePlannerApp": {
+    "tenant": {
+      "home": {
+        "title": "Tenants",
+        "createLabel": "Créer un nouveau Tenant",
+        "createOrEditLabel": "Créer ou éditer un Tenant",
+        "notFound": "Aucun Tenant trouvé"
+      },
+      "created": "Un nouveau Tenant a été créé avec l'identifiant {{ param }}",
+      "updated": "Le Tenant avec l'identifiant {{ param }} a été mis à jour",
+      "deleted": "Le Tenant avec l'identifiant {{ param }} a été supprimé",
+      "delete": {
+        "question": "Etes-vous certain de vouloir supprimer le Tenant {{ id }} ?"
+      },
+      "detail": {
+        "title": "Tenant"
+      },
+      "tenantName": "Tenant Name",
+      "tenantDescription": "Tenant Description",
+      "tenantLogo": "Tenant Logo",
+      "tenantLogoUrl": "Tenant Logo Url",
+      "tenantContactName": "Tenant Contact Name",
+      "tenantPhone": "Tenant Phone",
+      "tenantEmail": "Tenant Email",
+      "createdDate": "Created Date",
+      "lastUpdatedDate": "Last Updated Date"
+    }
+  }
+}

@@ -1,0 +1,10 @@
+{
+  "carePlannerApp": {
+    "PayrollStatus": {
+      "null": "",
+      "CREATED": "CREATED",
+      "PROCESSING": "PROCESSING",
+      "PAID": "PAID"
+    }
+  }
+}

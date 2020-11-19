@@ -1,0 +1,9 @@
+{
+  "carePlannerApp": {
+    "ServiceUserStatus": {
+      "null": "",
+      "ACTIVE": "ACTIVE",
+      "DEACTIVE": "DEACTIVE"
+    }
+  }
+}

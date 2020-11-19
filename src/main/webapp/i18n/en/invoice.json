@@ -1,0 +1,40 @@
+{
+  "carePlannerApp": {
+    "invoice": {
+      "home": {
+        "title": "Invoices",
+        "createLabel": "Create a new Invoice",
+        "createOrEditLabel": "Create or edit a Invoice",
+        "notFound": "No Invoices found"
+      },
+      "created": "A new Invoice is created with identifier {{ param }}",
+      "updated": "A Invoice is updated with identifier {{ param }}",
+      "deleted": "A Invoice is deleted with identifier {{ param }}",
+      "delete": {
+        "question": "Are you sure you want to delete Invoice {{ id }}?"
+      },
+      "detail": {
+        "title": "Invoice"
+      },
+      "totalAmount": "Total Amount",
+      "description": "Description",
+      "invoiceNumber": "Invoice Number",
+      "generatedDate": "Generated Date",
+      "dueDate": "Due Date",
+      "paymentDate": "Payment Date",
+      "invoiceStatus": "Invoice Status",
+      "tax": "Tax",
+      "attribute1": "Attribute 1",
+      "attribute2": "Attribute 2",
+      "attribute3": "Attribute 3",
+      "attribute4": "Attribute 4",
+      "attribute5": "Attribute 5",
+      "attribute6": "Attribute 6",
+      "attribute7": "Attribute 7",
+      "lastUpdatedDate": "Last Updated Date",
+      "tenantId": "Tenant Id",
+      "serviceOrder": "Service Order",
+      "serviceUser": "Service User"
+    }
+  }
+}

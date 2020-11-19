@@ -1,0 +1,12 @@
+{
+  "carePlannerApp": {
+    "SupportType": {
+      "null": "",
+      "COMPLEX_CARE_LIVE_IN": "COMPLEX_CARE_LIVE_IN",
+      "DOMICILIARY_CARE": "DOMICILIARY_CARE",
+      "EXTRA_CARE": "EXTRA_CARE",
+      "PRIVATE": "PRIVATE",
+      "REABLEMENT": "REABLEMENT"
+    }
+  }
+}

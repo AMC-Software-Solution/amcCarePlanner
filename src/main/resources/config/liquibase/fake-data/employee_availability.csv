@@ -1,0 +1,11 @@
+id;is_available_for_work;minimum_hours_per_week;maximum_hours_per_week;least_preferred_shift
+1;true;51897;87875;MORNING_SHIFT
+2;false;59765;27336;NONE
+3;true;36931;72245;EVENING_SHIFT
+4;true;91843;6427;NONE
+5;true;81806;36276;EVENING_SHIFT
+6;false;15666;18734;NONE
+7;true;4885;61993;MORNING_SHIFT
+8;true;19916;88890;MORNING_SHIFT
+9;true;40936;73517;NONE
+10;false;16863;46922;NIGHTS_SHIFT

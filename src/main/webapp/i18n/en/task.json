@@ -1,0 +1,35 @@
+{
+  "carePlannerApp": {
+    "task": {
+      "home": {
+        "title": "Tasks",
+        "createLabel": "Create a new Task",
+        "createOrEditLabel": "Create or edit a Task",
+        "notFound": "No Tasks found"
+      },
+      "created": "A new Task is created with identifier {{ param }}",
+      "updated": "A Task is updated with identifier {{ param }}",
+      "deleted": "A Task is deleted with identifier {{ param }}",
+      "delete": {
+        "question": "Are you sure you want to delete Task {{ id }}?"
+      },
+      "detail": {
+        "title": "Task"
+      },
+      "taskName": "Task Name",
+      "description": "Description",
+      "dateOfTask": "Date Of Task",
+      "startTime": "Start Time",
+      "endTime": "End Time",
+      "status": "Status",
+      "dateCreated": "Date Created",
+      "lastUpdatedDate": "Last Updated Date",
+      "tenantId": "Tenant Id",
+      "serviceUser": "Service User",
+      "assignedTo": "Assigned To",
+      "serviceOrder": "Service Order",
+      "createdBy": "Created By",
+      "allocatedBy": "Allocated By"
+    }
+  }
+}

@@ -1,0 +1,32 @@
+{
+  "carePlannerApp": {
+    "payroll": {
+      "home": {
+        "title": "Payrolls",
+        "createLabel": "Créer un nouveau Payroll",
+        "createOrEditLabel": "Créer ou éditer un Payroll",
+        "notFound": "Aucun Payroll trouvé"
+      },
+      "created": "Un nouveau Payroll a été créé avec l'identifiant {{ param }}",
+      "updated": "Le Payroll avec l'identifiant {{ param }} a été mis à jour",
+      "deleted": "Le Payroll avec l'identifiant {{ param }} a été supprimé",
+      "delete": {
+        "question": "Etes-vous certain de vouloir supprimer le Payroll {{ id }} ?"
+      },
+      "detail": {
+        "title": "Payroll"
+      },
+      "paymentDate": "Payment Date",
+      "payPeriod": "Pay Period",
+      "totalHoursWorked": "Total Hours Worked",
+      "grossPay": "Gross Pay",
+      "netPay": "Net Pay",
+      "totalTax": "Total Tax",
+      "payrollStatus": "Payroll Status",
+      "lastUpdatedDate": "Last Updated Date",
+      "tenantId": "Tenant Id",
+      "employee": "Employee",
+      "timesheet": "Timesheet"
+    }
+  }
+}

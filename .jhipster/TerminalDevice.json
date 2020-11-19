@@ -1,0 +1,78 @@
+{
+  "name": "TerminalDevice",
+  "fields": [
+    {
+      "fieldName": "deviceName",
+      "fieldType": "String"
+    },
+    {
+      "fieldName": "deviceModel",
+      "fieldType": "String"
+    },
+    {
+      "fieldName": "registeredDate",
+      "fieldType": "ZonedDateTime"
+    },
+    {
+      "fieldName": "imei",
+      "fieldType": "String"
+    },
+    {
+      "fieldName": "simNumber",
+      "fieldType": "String"
+    },
+    {
+      "fieldName": "userStartedUsingFrom",
+      "fieldType": "ZonedDateTime"
+    },
+    {
+      "fieldName": "deviceOnLocationFrom",
+      "fieldType": "ZonedDateTime"
+    },
+    {
+      "fieldName": "operatingSystem",
+      "fieldType": "String"
+    },
+    {
+      "fieldName": "note",
+      "fieldType": "String"
+    },
+    {
+      "fieldName": "ownerEntityId",
+      "fieldType": "Long"
+    },
+    {
+      "fieldName": "ownerEntityName",
+      "fieldType": "String"
+    },
+    {
+      "fieldName": "lastUpdatedDate",
+      "fieldType": "ZonedDateTime"
+    },
+    {
+      "fieldName": "tenantId",
+      "fieldType": "Long",
+      "fieldValidateRules": ["required"]
+    }
+  ],
+  "relationships": [
+    {
+      "relationshipType": "many-to-one",
+      "otherEntityName": "employee",
+      "otherEntityRelationshipName": "terminalDevice",
+      "relationshipName": "employee",
+      "otherEntityField": "employeeCode"
+    }
+  ],
+  "changelogDate": "20201119071812",
+  "entityTableName": "terminal_device",
+  "dto": "mapstruct",
+  "pagination": "pagination",
+  "service": "serviceClass",
+  "jpaMetamodelFiltering": true,
+  "fluentMethods": true,
+  "readOnly": false,
+  "embedded": false,
+  "clientRootFolder": "",
+  "applications": "*"
+}
