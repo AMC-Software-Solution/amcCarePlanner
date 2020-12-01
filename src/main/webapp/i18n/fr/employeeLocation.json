@@ -1,0 +1,26 @@
+{
+  "carePlannerApp": {
+    "employeeLocation": {
+      "home": {
+        "title": "EmployeeLocations",
+        "createLabel": "Créer un nouveau Employee Location",
+        "createOrEditLabel": "Créer ou éditer un Employee Location",
+        "notFound": "Aucun Employee Location trouvé"
+      },
+      "created": "Un nouveau Employee Location a été créé avec l'identifiant {{ param }}",
+      "updated": "Le Employee Location avec l'identifiant {{ param }} a été mis à jour",
+      "deleted": "Le Employee Location avec l'identifiant {{ param }} a été supprimé",
+      "delete": {
+        "question": "Etes-vous certain de vouloir supprimer le Employee Location {{ id }} ?"
+      },
+      "detail": {
+        "title": "Employee Location"
+      },
+      "latitude": "Latitude",
+      "longitude": "Longitude",
+      "lastUpdatedDate": "Last Updated Date",
+      "clientId": "Client Id",
+      "employee": "Employee"
+    }
+  }
+}

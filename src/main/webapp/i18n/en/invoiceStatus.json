@@ -1,0 +1,10 @@
+{
+  "carePlannerApp": {
+    "InvoiceStatus": {
+      "null": "",
+      "CREATED": "CREATED",
+      "PAID": "PAID",
+      "CANCELLED": "CANCELLED"
+    }
+  }
+}

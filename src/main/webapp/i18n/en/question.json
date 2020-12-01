@@ -1,0 +1,31 @@
+{
+  "carePlannerApp": {
+    "question": {
+      "home": {
+        "title": "Questions",
+        "createLabel": "Create a new Question",
+        "createOrEditLabel": "Create or edit a Question",
+        "notFound": "No Questions found"
+      },
+      "created": "A new Question is created with identifier {{ param }}",
+      "updated": "A Question is updated with identifier {{ param }}",
+      "deleted": "A Question is deleted with identifier {{ param }}",
+      "delete": {
+        "question": "Are you sure you want to delete Question {{ id }}?"
+      },
+      "detail": {
+        "title": "Question"
+      },
+      "question": "Question",
+      "description": "Description",
+      "attribute1": "Attribute 1",
+      "attribute2": "Attribute 2",
+      "attribute3": "Attribute 3",
+      "attribute4": "Attribute 4",
+      "attribute5": "Attribute 5",
+      "optional": "Optional",
+      "lastUpdatedDate": "Last Updated Date",
+      "clientId": "Client Id"
+    }
+  }
+}

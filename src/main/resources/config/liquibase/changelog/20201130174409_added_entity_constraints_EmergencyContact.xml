@@ -1,0 +1,18 @@
+<?xml version="1.0" encoding="utf-8"?>
+<databaseChangeLog
+    xmlns="http://www.liquibase.org/xml/ns/dbchangelog"
+    xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+    xsi:schemaLocation="http://www.liquibase.org/xml/ns/dbchangelog http://www.liquibase.org/xml/ns/dbchangelog/dbchangelog-3.9.xsd">
+    <!--
+        Added the constraints for entity EmergencyContact.
+    -->
+    <changeSet id="20201130174409-2" author="jhipster">
+        
+        <addForeignKeyConstraint baseColumnNames="service_user_id"
+                                 baseTableName="emergency_contact"
+                                 constraintName="fk_emergency_contact_service_user_id"
+                                 referencedColumnNames="id"
+                                 referencedTableName="service_user"/>
+
+    </changeSet>
+</databaseChangeLog>

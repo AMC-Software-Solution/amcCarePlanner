@@ -1,0 +1,26 @@
+{
+  "carePlannerApp": {
+    "access": {
+      "home": {
+        "title": "Accesses",
+        "createLabel": "Créer un nouveau Access",
+        "createOrEditLabel": "Créer ou éditer un Access",
+        "notFound": "Aucun Access trouvé"
+      },
+      "created": "Un nouveau Access a été créé avec l'identifiant {{ param }}",
+      "updated": "Le Access avec l'identifiant {{ param }} a été mis à jour",
+      "deleted": "Le Access avec l'identifiant {{ param }} a été supprimé",
+      "delete": {
+        "question": "Etes-vous certain de vouloir supprimer le Access {{ id }} ?"
+      },
+      "detail": {
+        "title": "Access"
+      },
+      "keySafeNumber": "Key Safe Number",
+      "accessDetails": "Access Details",
+      "lastUpdatedDate": "Last Updated Date",
+      "clientId": "Client Id",
+      "serviceUser": "Service User"
+    }
+  }
+}

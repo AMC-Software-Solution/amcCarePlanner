@@ -1,0 +1,11 @@
+id;is_available_for_work_week_days;minimum_hours_per_week_week_days;maximum_hours_per_week_week_days;is_available_for_work_week_ends;minimum_hours_per_week_week_ends;maximum_hours_per_week_week_ends;least_preferred_shift
+1;true;51897;87875;true;33665;36629;EVENING_SHIFT
+2;true;27336;33705;true;37668;82790;NIGHTS_SHIFT
+3;true;70856;91843;false;21430;53413;AVAILABLE_ANY_SHIFT
+4;false;58516;77822;true;31342;39362;EVENING_SHIFT
+5;true;37638;544;true;84821;83348;NIGHTS_SHIFT
+6;false;88890;28289;false;34879;70702;AVAILABLE_ANY_SHIFT
+7;true;80108;84299;false;2948;29628;NIGHTS_SHIFT
+8;true;56953;90113;true;64830;80290;EVENING_SHIFT
+9;false;38267;48815;false;50163;61549;AVAILABLE_ANY_SHIFT
+10;false;26565;77477;true;34244;17882;EVENING_SHIFT

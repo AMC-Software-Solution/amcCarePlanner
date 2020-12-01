@@ -1,0 +1,30 @@
+{
+  "carePlannerApp": {
+    "client": {
+      "home": {
+        "title": "Clients",
+        "createLabel": "Create a new Client",
+        "createOrEditLabel": "Create or edit a Client",
+        "notFound": "No Clients found"
+      },
+      "created": "A new Client is created with identifier {{ param }}",
+      "updated": "A Client is updated with identifier {{ param }}",
+      "deleted": "A Client is deleted with identifier {{ param }}",
+      "delete": {
+        "question": "Are you sure you want to delete Client {{ id }}?"
+      },
+      "detail": {
+        "title": "Client"
+      },
+      "clientName": "Client Name",
+      "clientDescription": "Client Description",
+      "clientLogo": "Client Logo",
+      "clientLogoUrl": "Client Logo Url",
+      "clientContactName": "Client Contact Name",
+      "clientPhone": "Client Phone",
+      "clientEmail": "Client Email",
+      "createdDate": "Created Date",
+      "lastUpdatedDate": "Last Updated Date"
+    }
+  }
+}

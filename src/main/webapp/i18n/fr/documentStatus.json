@@ -1,0 +1,10 @@
+{
+  "carePlannerApp": {
+    "DocumentStatus": {
+      "null": "",
+      "EXPIRED": "EXPIRED",
+      "ACTIVE": "ACTIVE",
+      "ARCHIVED": "ARCHIVED"
+    }
+  }
+}

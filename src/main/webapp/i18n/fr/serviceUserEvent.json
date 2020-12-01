@@ -1,0 +1,33 @@
+{
+  "carePlannerApp": {
+    "serviceUserEvent": {
+      "home": {
+        "title": "ServiceUserEvents",
+        "createLabel": "Créer un nouveau Service User Event",
+        "createOrEditLabel": "Créer ou éditer un Service User Event",
+        "notFound": "Aucun Service User Event trouvé"
+      },
+      "created": "Un nouveau Service User Event a été créé avec l'identifiant {{ param }}",
+      "updated": "Le Service User Event avec l'identifiant {{ param }} a été mis à jour",
+      "deleted": "Le Service User Event avec l'identifiant {{ param }} a été supprimé",
+      "delete": {
+        "question": "Etes-vous certain de vouloir supprimer le Service User Event {{ id }} ?"
+      },
+      "detail": {
+        "title": "Service User Event"
+      },
+      "eventTitle": "Event Title",
+      "description": "Description",
+      "serviceUserEventStatus": "Service User Event Status",
+      "serviceUserEventType": "Service User Event Type",
+      "priority": "Priority",
+      "note": "Note",
+      "dateOfEvent": "Date Of Event",
+      "lastUpdatedDate": "Last Updated Date",
+      "clientId": "Client Id",
+      "reportedBy": "Reported By",
+      "assignedTo": "Assigned To",
+      "serviceUser": "Service User"
+    }
+  }
+}

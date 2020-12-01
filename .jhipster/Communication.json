@@ -1,0 +1,65 @@
+{
+  "name": "Communication",
+  "fields": [
+    {
+      "fieldName": "communicationType",
+      "fieldType": "CommunicationType",
+      "fieldValues": "EMAIL,SMS,TELEPHONE,MAIL,IN_PERSON,OTHER",
+      "fieldValidateRules": ["required"]
+    },
+    {
+      "fieldName": "note",
+      "fieldType": "String"
+    },
+    {
+      "fieldName": "communicationDate",
+      "fieldType": "ZonedDateTime",
+      "fieldValidateRules": ["required"]
+    },
+    {
+      "fieldName": "attachment",
+      "fieldType": "byte[]",
+      "fieldTypeBlobContent": "image"
+    },
+    {
+      "fieldName": "attachmentUrl",
+      "fieldType": "String"
+    },
+    {
+      "fieldName": "lastUpdatedDate",
+      "fieldType": "ZonedDateTime"
+    },
+    {
+      "fieldName": "clientId",
+      "fieldType": "Long",
+      "fieldValidateRules": ["required"]
+    }
+  ],
+  "relationships": [
+    {
+      "relationshipType": "many-to-one",
+      "otherEntityName": "serviceUser",
+      "otherEntityRelationshipName": "communication",
+      "relationshipName": "serviceUser",
+      "otherEntityField": "serviceUserCode"
+    },
+    {
+      "relationshipType": "many-to-one",
+      "otherEntityName": "employee",
+      "otherEntityRelationshipName": "communication",
+      "relationshipName": "communicatedBy",
+      "otherEntityField": "employeeCode"
+    }
+  ],
+  "changelogDate": "20201130180709",
+  "entityTableName": "communication",
+  "dto": "mapstruct",
+  "pagination": "pagination",
+  "service": "serviceClass",
+  "jpaMetamodelFiltering": true,
+  "fluentMethods": true,
+  "readOnly": false,
+  "embedded": false,
+  "clientRootFolder": "",
+  "applications": "*"
+}

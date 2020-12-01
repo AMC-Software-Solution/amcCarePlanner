@@ -1,0 +1,62 @@
+{
+  "name": "SystemEventsHistory",
+  "fields": [
+    {
+      "fieldName": "eventName",
+      "fieldType": "String",
+      "fieldValidateRules": ["required"]
+    },
+    {
+      "fieldName": "eventDate",
+      "fieldType": "ZonedDateTime"
+    },
+    {
+      "fieldName": "eventApi",
+      "fieldType": "String"
+    },
+    {
+      "fieldName": "ipAddress",
+      "fieldType": "String"
+    },
+    {
+      "fieldName": "eventNote",
+      "fieldType": "String"
+    },
+    {
+      "fieldName": "eventEntityName",
+      "fieldType": "String"
+    },
+    {
+      "fieldName": "eventEntityId",
+      "fieldType": "Long"
+    },
+    {
+      "fieldName": "isSuspecious",
+      "fieldType": "Boolean"
+    },
+    {
+      "fieldName": "clientId",
+      "fieldType": "Long"
+    }
+  ],
+  "relationships": [
+    {
+      "relationshipType": "many-to-one",
+      "otherEntityName": "user",
+      "otherEntityRelationshipName": "systemEventsHistory",
+      "relationshipName": "triggedBy",
+      "otherEntityField": "login"
+    }
+  ],
+  "changelogDate": "20201130181809",
+  "entityTableName": "system_events_history",
+  "dto": "mapstruct",
+  "pagination": "pagination",
+  "service": "serviceClass",
+  "jpaMetamodelFiltering": true,
+  "fluentMethods": true,
+  "readOnly": false,
+  "embedded": false,
+  "clientRootFolder": "",
+  "applications": "*"
+}

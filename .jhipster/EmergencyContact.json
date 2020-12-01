@@ -1,0 +1,61 @@
+{
+  "name": "EmergencyContact",
+  "fields": [
+    {
+      "fieldName": "name",
+      "fieldType": "String",
+      "fieldValidateRules": ["required"]
+    },
+    {
+      "fieldName": "contactRelationship",
+      "fieldType": "String",
+      "fieldValidateRules": ["required"]
+    },
+    {
+      "fieldName": "isKeyHolder",
+      "fieldType": "Boolean"
+    },
+    {
+      "fieldName": "infoSharingConsentGiven",
+      "fieldType": "Boolean"
+    },
+    {
+      "fieldName": "preferredContactNumber",
+      "fieldType": "String",
+      "fieldValidateRules": ["required"]
+    },
+    {
+      "fieldName": "fullAddress",
+      "fieldType": "String"
+    },
+    {
+      "fieldName": "lastUpdatedDate",
+      "fieldType": "ZonedDateTime"
+    },
+    {
+      "fieldName": "clientId",
+      "fieldType": "Long",
+      "fieldValidateRules": ["required"]
+    }
+  ],
+  "relationships": [
+    {
+      "relationshipType": "many-to-one",
+      "otherEntityName": "serviceUser",
+      "otherEntityRelationshipName": "emergencyContact",
+      "relationshipName": "serviceUser",
+      "otherEntityField": "serviceUserCode"
+    }
+  ],
+  "changelogDate": "20201130174409",
+  "entityTableName": "emergency_contact",
+  "dto": "mapstruct",
+  "pagination": "pagination",
+  "service": "serviceClass",
+  "jpaMetamodelFiltering": true,
+  "fluentMethods": true,
+  "readOnly": false,
+  "embedded": false,
+  "clientRootFolder": "",
+  "applications": "*"
+}

@@ -1,0 +1,28 @@
+{
+  "carePlannerApp": {
+    "equality": {
+      "home": {
+        "title": "Equalities",
+        "createLabel": "Créer un nouveau Equality",
+        "createOrEditLabel": "Créer ou éditer un Equality",
+        "notFound": "Aucun Equality trouvé"
+      },
+      "created": "Un nouveau Equality a été créé avec l'identifiant {{ param }}",
+      "updated": "Le Equality avec l'identifiant {{ param }} a été mis à jour",
+      "deleted": "Le Equality avec l'identifiant {{ param }} a été supprimé",
+      "delete": {
+        "question": "Etes-vous certain de vouloir supprimer le Equality {{ id }} ?"
+      },
+      "detail": {
+        "title": "Equality"
+      },
+      "gender": "Gender",
+      "maritalStatus": "Marital Status",
+      "religion": "Religion",
+      "lastUpdatedDate": "Last Updated Date",
+      "clientId": "Client Id",
+      "nationality": "Nationality",
+      "serviceUser": "Service User"
+    }
+  }
+}

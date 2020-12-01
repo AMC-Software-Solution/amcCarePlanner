@@ -1,0 +1,30 @@
+<?xml version="1.0" encoding="utf-8"?>
+<databaseChangeLog
+    xmlns="http://www.liquibase.org/xml/ns/dbchangelog"
+    xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+    xsi:schemaLocation="http://www.liquibase.org/xml/ns/dbchangelog http://www.liquibase.org/xml/ns/dbchangelog/dbchangelog-3.9.xsd">
+    <!--
+        Added the constraints for entity Timesheet.
+    -->
+    <changeSet id="20201130181609-2" author="jhipster">
+        
+        <addForeignKeyConstraint baseColumnNames="service_order_id"
+                                 baseTableName="timesheet"
+                                 constraintName="fk_timesheet_service_order_id"
+                                 referencedColumnNames="id"
+                                 referencedTableName="service_order"/>
+
+        <addForeignKeyConstraint baseColumnNames="service_user_id"
+                                 baseTableName="timesheet"
+                                 constraintName="fk_timesheet_service_user_id"
+                                 referencedColumnNames="id"
+                                 referencedTableName="service_user"/>
+
+        <addForeignKeyConstraint baseColumnNames="care_provider_id"
+                                 baseTableName="timesheet"
+                                 constraintName="fk_timesheet_care_provider_id"
+                                 referencedColumnNames="id"
+                                 referencedTableName="employee"/>
+
+    </changeSet>
+</databaseChangeLog>

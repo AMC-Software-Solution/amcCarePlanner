@@ -1,0 +1,54 @@
+{
+  "name": "EmployeeAvailability",
+  "fields": [
+    {
+      "fieldName": "isAvailableForWorkWeekDays",
+      "fieldType": "Boolean"
+    },
+    {
+      "fieldName": "minimumHoursPerWeekWeekDays",
+      "fieldType": "Integer"
+    },
+    {
+      "fieldName": "maximumHoursPerWeekWeekDays",
+      "fieldType": "Integer"
+    },
+    {
+      "fieldName": "isAvailableForWorkWeekEnds",
+      "fieldType": "Boolean"
+    },
+    {
+      "fieldName": "minimumHoursPerWeekWeekEnds",
+      "fieldType": "Integer"
+    },
+    {
+      "fieldName": "maximumHoursPerWeekWeekEnds",
+      "fieldType": "Integer"
+    },
+    {
+      "fieldName": "leastPreferredShift",
+      "fieldType": "Shift",
+      "fieldValues": "MORNING_SHIFT,AFTERNOON_SHIFT,EVENING_SHIFT,NIGHTS_SHIFT,AVAILABLE_ANY_SHIFT"
+    }
+  ],
+  "relationships": [
+    {
+      "relationshipType": "many-to-one",
+      "otherEntityName": "employee",
+      "otherEntityRelationshipName": "employeeAvailability",
+      "relationshipName": "employee",
+      "otherEntityField": "employeeCode"
+    }
+  ],
+  "changelogDate": "20201130175509",
+  "entityTableName": "employee_availability",
+  "dto": "mapstruct",
+  "pagination": "pagination",
+  "service": "serviceClass",
+  "jpaMetamodelFiltering": true,
+  "fluentMethods": true,
+  "readOnly": false,
+  "embedded": false,
+  "clientRootFolder": "",
+  "applications": "*"
+}

@@ -1,0 +1,63 @@
+{
+  "name": "PowerOfAttorney",
+  "fields": [
+    {
+      "fieldName": "powerOfAttorneyConsent",
+      "fieldType": "Boolean"
+    },
+    {
+      "fieldName": "healthAndWelfare",
+      "fieldType": "Boolean"
+    },
+    {
+      "fieldName": "healthAndWelfareName",
+      "fieldType": "String"
+    },
+    {
+      "fieldName": "propertyAndFinAffairs",
+      "fieldType": "Boolean"
+    },
+    {
+      "fieldName": "propertyAndFinAffairsName",
+      "fieldType": "String"
+    },
+    {
+      "fieldName": "lastUpdatedDate",
+      "fieldType": "ZonedDateTime"
+    },
+    {
+      "fieldName": "clientId",
+      "fieldType": "Long",
+      "fieldValidateRules": ["required"]
+    }
+  ],
+  "relationships": [
+    {
+      "relationshipType": "one-to-one",
+      "otherEntityName": "serviceUser",
+      "otherEntityRelationshipName": "powerOfAttorney",
+      "relationshipName": "serviceUser",
+      "otherEntityField": "serviceUserCode",
+      "ownerSide": true
+    },
+    {
+      "relationshipType": "one-to-one",
+      "otherEntityName": "employee",
+      "otherEntityRelationshipName": "powerOfAttorney",
+      "relationshipName": "witnessedBy",
+      "otherEntityField": "employeeCode",
+      "ownerSide": true
+    }
+  ],
+  "changelogDate": "20201130174609",
+  "entityTableName": "power_of_attorney",
+  "dto": "mapstruct",
+  "pagination": "pagination",
+  "service": "serviceClass",
+  "jpaMetamodelFiltering": true,
+  "fluentMethods": true,
+  "readOnly": false,
+  "embedded": false,
+  "clientRootFolder": "",
+  "applications": "*"
+}

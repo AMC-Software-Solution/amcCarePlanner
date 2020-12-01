@@ -1,0 +1,71 @@
+{
+  "name": "MedicalContact",
+  "fields": [
+    {
+      "fieldName": "doctorName",
+      "fieldType": "String"
+    },
+    {
+      "fieldName": "doctorSurgery",
+      "fieldType": "String"
+    },
+    {
+      "fieldName": "doctorAddress",
+      "fieldType": "String"
+    },
+    {
+      "fieldName": "doctorPhone",
+      "fieldType": "String"
+    },
+    {
+      "fieldName": "lastVisitedDoctor",
+      "fieldType": "ZonedDateTime"
+    },
+    {
+      "fieldName": "districtNurseName",
+      "fieldType": "String"
+    },
+    {
+      "fieldName": "districtNursePhone",
+      "fieldType": "String"
+    },
+    {
+      "fieldName": "careManagerName",
+      "fieldType": "String"
+    },
+    {
+      "fieldName": "careManagerPhone",
+      "fieldType": "String"
+    },
+    {
+      "fieldName": "lastUpdatedDate",
+      "fieldType": "ZonedDateTime"
+    },
+    {
+      "fieldName": "clientId",
+      "fieldType": "Long",
+      "fieldValidateRules": ["required"]
+    }
+  ],
+  "relationships": [
+    {
+      "relationshipType": "one-to-one",
+      "otherEntityName": "serviceUser",
+      "otherEntityRelationshipName": "medicalContact",
+      "relationshipName": "serviceUser",
+      "otherEntityField": "serviceUserCode",
+      "ownerSide": true
+    }
+  ],
+  "changelogDate": "20201130174209",
+  "entityTableName": "medical_contact",
+  "dto": "mapstruct",
+  "pagination": "pagination",
+  "service": "serviceClass",
+  "jpaMetamodelFiltering": true,
+  "fluentMethods": true,
+  "readOnly": false,
+  "embedded": false,
+  "clientRootFolder": "",
+  "applications": "*"
+}

@@ -1,0 +1,34 @@
+{
+  "carePlannerApp": {
+    "servceUserDocument": {
+      "home": {
+        "title": "Servce User Documents",
+        "createLabel": "Create a new Servce User Document",
+        "createOrEditLabel": "Create or edit a Servce User Document",
+        "notFound": "No Servce User Documents found"
+      },
+      "created": "A new Servce User Document is created with identifier {{ param }}",
+      "updated": "A Servce User Document is updated with identifier {{ param }}",
+      "deleted": "A Servce User Document is deleted with identifier {{ param }}",
+      "delete": {
+        "question": "Are you sure you want to delete Servce User Document {{ id }}?"
+      },
+      "detail": {
+        "title": "Servce User Document"
+      },
+      "documentName": "Document Name",
+      "documentNumber": "Document Number",
+      "documentStatus": "Document Status",
+      "note": "Note",
+      "issuedDate": "Issued Date",
+      "expiryDate": "Expiry Date",
+      "uploadedDate": "Uploaded Date",
+      "documentFile": "Document File",
+      "documentFileUrl": "Document File Url",
+      "lastUpdatedDate": "Last Updated Date",
+      "clientId": "Client Id",
+      "owner": "Owner",
+      "approvedBy": "Approved By"
+    }
+  }
+}

@@ -1,0 +1,35 @@
+{
+  "carePlannerApp": {
+    "terminalDevice": {
+      "home": {
+        "title": "TerminalDevices",
+        "createLabel": "Créer un nouveau Terminal Device",
+        "createOrEditLabel": "Créer ou éditer un Terminal Device",
+        "notFound": "Aucun Terminal Device trouvé"
+      },
+      "created": "Un nouveau Terminal Device a été créé avec l'identifiant {{ param }}",
+      "updated": "Le Terminal Device avec l'identifiant {{ param }} a été mis à jour",
+      "deleted": "Le Terminal Device avec l'identifiant {{ param }} a été supprimé",
+      "delete": {
+        "question": "Etes-vous certain de vouloir supprimer le Terminal Device {{ id }} ?"
+      },
+      "detail": {
+        "title": "Terminal Device"
+      },
+      "deviceName": "Device Name",
+      "deviceModel": "Device Model",
+      "registeredDate": "Registered Date",
+      "imei": "Imei",
+      "simNumber": "Sim Number",
+      "userStartedUsingFrom": "User Started Using From",
+      "deviceOnLocationFrom": "Device On Location From",
+      "operatingSystem": "Operating System",
+      "note": "Note",
+      "ownerEntityId": "Owner Entity Id",
+      "ownerEntityName": "Owner Entity Name",
+      "lastUpdatedDate": "Last Updated Date",
+      "clientId": "Client Id",
+      "employee": "Employee"
+    }
+  }
+}

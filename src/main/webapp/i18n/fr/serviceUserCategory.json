@@ -1,0 +1,13 @@
+{
+  "carePlannerApp": {
+    "ServiceUserCategory": {
+      "null": "",
+      "HIV_AIDS": "HIV_AIDS",
+      "LEARNING_DISABILITIES": "LEARNING_DISABILITIES",
+      "MENTAL_HEALTH": "MENTAL_HEALTH",
+      "OLDER_PEOPLE": "OLDER_PEOPLE",
+      "PHYSICAL_SENSORY_IMPAIRMENT": "PHYSICAL_SENSORY_IMPAIRMENT",
+      "OTHER": "OTHER"
+    }
+  }
+}

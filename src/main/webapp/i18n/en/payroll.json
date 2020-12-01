@@ -1,0 +1,32 @@
+{
+  "carePlannerApp": {
+    "payroll": {
+      "home": {
+        "title": "Payrolls",
+        "createLabel": "Create a new Payroll",
+        "createOrEditLabel": "Create or edit a Payroll",
+        "notFound": "No Payrolls found"
+      },
+      "created": "A new Payroll is created with identifier {{ param }}",
+      "updated": "A Payroll is updated with identifier {{ param }}",
+      "deleted": "A Payroll is deleted with identifier {{ param }}",
+      "delete": {
+        "question": "Are you sure you want to delete Payroll {{ id }}?"
+      },
+      "detail": {
+        "title": "Payroll"
+      },
+      "paymentDate": "Payment Date",
+      "payPeriod": "Pay Period",
+      "totalHoursWorked": "Total Hours Worked",
+      "grossPay": "Gross Pay",
+      "netPay": "Net Pay",
+      "totalTax": "Total Tax",
+      "payrollStatus": "Payroll Status",
+      "lastUpdatedDate": "Last Updated Date",
+      "clientId": "Client Id",
+      "employee": "Employee",
+      "timesheet": "Timesheet"
+    }
+  }
+}
