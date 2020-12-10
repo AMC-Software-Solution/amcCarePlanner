@@ -109,7 +109,7 @@ export default (state: ConsentState = initialState, action): ConsentState => {
   }
 };
 
-const apiUrl = 'api/consents';
+const apiUrl = 'api/v1/consents';
 
 // Actions
 

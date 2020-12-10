@@ -97,7 +97,7 @@ export default (state: DisabilityState = initialState, action): DisabilityState 
   }
 };
 
-const apiUrl = 'api/disabilities';
+const apiUrl = 'api/v1/disabilities';
 
 // Actions
 

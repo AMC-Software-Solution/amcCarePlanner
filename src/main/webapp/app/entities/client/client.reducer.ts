@@ -109,7 +109,7 @@ export default (state: ClientState = initialState, action): ClientState => {
   }
 };
 
-const apiUrl = 'api/clients';
+const apiUrl = 'api/v1/clients';
 
 // Actions
 

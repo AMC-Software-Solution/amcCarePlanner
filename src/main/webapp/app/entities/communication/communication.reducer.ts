@@ -109,7 +109,7 @@ export default (state: CommunicationState = initialState, action): Communication
   }
 };
 
-const apiUrl = 'api/communications';
+const apiUrl = 'api/v1/communications';
 
 // Actions
 

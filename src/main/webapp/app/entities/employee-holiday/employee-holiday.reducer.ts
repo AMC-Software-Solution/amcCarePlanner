@@ -97,7 +97,7 @@ export default (state: EmployeeHolidayState = initialState, action): EmployeeHol
   }
 };
 
-const apiUrl = 'api/employee-holidays';
+const apiUrl = 'api/v1/employee-holidays';
 
 // Actions
 

@@ -97,7 +97,7 @@ export default (state: EligibilityState = initialState, action): EligibilityStat
   }
 };
 
-const apiUrl = 'api/eligibilities';
+const apiUrl = 'api/v1/eligibilities';
 
 // Actions
 

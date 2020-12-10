@@ -97,7 +97,7 @@ export default (state: EmergencyContactState = initialState, action): EmergencyC
   }
 };
 
-const apiUrl = 'api/emergency-contacts';
+const apiUrl = 'api/v1/emergency-contacts';
 
 // Actions
 

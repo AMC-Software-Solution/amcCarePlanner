@@ -109,7 +109,7 @@ export default (state: CurrencyState = initialState, action): CurrencyState => {
   }
 };
 
-const apiUrl = 'api/currencies';
+const apiUrl = 'api/v1/currencies';
 
 // Actions
 

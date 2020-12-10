@@ -97,7 +97,7 @@ export default (state: DocumentTypeState = initialState, action): DocumentTypeSt
   }
 };
 
-const apiUrl = 'api/document-types';
+const apiUrl = 'api/v1/document-types';
 
 // Actions
 

@@ -97,7 +97,7 @@ export default (state: AnswerState = initialState, action): AnswerState => {
   }
 };
 
-const apiUrl = 'api/answers';
+const apiUrl = 'api/v1/answers';
 
 // Actions
 

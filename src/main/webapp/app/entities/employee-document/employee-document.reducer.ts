@@ -109,7 +109,7 @@ export default (state: EmployeeDocumentState = initialState, action): EmployeeDo
   }
 };
 
-const apiUrl = 'api/employee-documents';
+const apiUrl = 'api/v1/employee-documents';
 
 // Actions
 

@@ -97,7 +97,7 @@ export default (state: EmployeeAvailabilityState = initialState, action): Employ
   }
 };
 
-const apiUrl = 'api/employee-availabilities';
+const apiUrl = 'api/v1/employee-availabilities';
 
 // Actions
 

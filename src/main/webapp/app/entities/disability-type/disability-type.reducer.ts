@@ -97,7 +97,7 @@ export default (state: DisabilityTypeState = initialState, action): DisabilityTy
   }
 };
 
-const apiUrl = 'api/disability-types';
+const apiUrl = 'api/v1/disability-types';
 
 // Actions
 

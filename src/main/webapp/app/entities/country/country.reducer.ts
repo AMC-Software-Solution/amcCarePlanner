@@ -97,7 +97,7 @@ export default (state: CountryState = initialState, action): CountryState => {
   }
 };
 
-const apiUrl = 'api/countries';
+const apiUrl = 'api/v1/countries';
 
 // Actions
 

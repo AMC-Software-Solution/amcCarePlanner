@@ -97,7 +97,7 @@ export default (state: BranchState = initialState, action): BranchState => {
   }
 };
 
-const apiUrl = 'api/branches';
+const apiUrl = 'api/v1/branches';
 
 // Actions
 

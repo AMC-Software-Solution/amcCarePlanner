@@ -109,7 +109,7 @@ export default (state: ClientDocumentState = initialState, action): ClientDocume
   }
 };
 
-const apiUrl = 'api/client-documents';
+const apiUrl = 'api/v1/client-documents';
 
 // Actions
 

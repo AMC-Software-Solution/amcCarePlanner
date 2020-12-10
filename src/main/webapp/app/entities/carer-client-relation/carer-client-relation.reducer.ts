@@ -97,7 +97,7 @@ export default (state: CarerClientRelationState = initialState, action): CarerCl
   }
 };
 
-const apiUrl = 'api/carer-client-relations';
+const apiUrl = 'api/v1/carer-client-relations';
 
 // Actions
 
