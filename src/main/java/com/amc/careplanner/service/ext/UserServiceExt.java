@@ -156,7 +156,8 @@ public class UserServiceExt extends UserService {
         } else {
             user.setLangKey(userDTO.getLangKey());
         }
-        String encryptedPassword = passwordEncoder.encode(RandomUtil.generatePassword());
+      //  String encryptedPassword = passwordEncoder.encode(RandomUtil.generatePassword());
+        String encryptedPassword = passwordEncoder.encode("onetimepassword");
         user.setPassword(encryptedPassword);
         user.setResetKey(RandomUtil.generateResetKey());
         user.setResetDate(Instant.now());
@@ -212,7 +213,7 @@ public class UserServiceExt extends UserService {
     }
 
     public void deleteUser(String login) {
-    	userRepositoryExt.findOneByLogin(login).ifPresent(user -> {
+    	userRepositoryExt.findOneByEmailIgnoreCase(login).ifPresent(user -> {
     		userRepositoryExt.delete(user);
             this.clearUserCaches(user);
             log.debug("Deleted User: {}", user);
@@ -230,7 +231,7 @@ public class UserServiceExt extends UserService {
      */
     public void updateUser(String firstName, String lastName, String email, String langKey, String imageUrl) {
         SecurityUtils.getCurrentUserLogin()
-            .flatMap(userRepositoryExt::findOneByLogin)
+            .flatMap(userRepositoryExt::findOneByEmailIgnoreCase)
             .ifPresent(user -> {
                 user.setFirstName(firstName);
                 user.setLastName(lastName);
@@ -248,7 +249,7 @@ public class UserServiceExt extends UserService {
     @Transactional
     public void changePassword(String currentClearTextPassword, String newPassword) {
         SecurityUtils.getCurrentUserLogin()
-            .flatMap(userRepositoryExt::findOneByLogin)
+            .flatMap(userRepositoryExt::findOneByEmailIgnoreCase)
             .ifPresent(user -> {
                 String currentEncryptedPassword = user.getPassword();
                 if (!passwordEncoder.matches(currentClearTextPassword, currentEncryptedPassword)) {

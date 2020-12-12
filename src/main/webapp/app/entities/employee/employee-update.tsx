@@ -379,7 +379,7 @@ export const EmployeeUpdate = (props: IEmployeeUpdateProps) => {
                   {users
                     ? users.map(otherEntity => (
                         <option value={otherEntity.id} key={otherEntity.id}>
-                          {otherEntity.login}
+                          {otherEntity.email}
                         </option>
                       ))
                     : null}

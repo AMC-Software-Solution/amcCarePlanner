@@ -121,7 +121,7 @@ public class EmployeeResourceExt extends EmployeeResource{
 		managedUserVM.setFirstName(employeeDTO.getFirstName());
 		managedUserVM.setLastName(employeeDTO.getLastName());
 		managedUserVM.setLangKey("en");
-		managedUserVM.setPassword("defaultpassword");
+		managedUserVM.setPassword("onetimepassword");
 		managedUserVM.setCreatedBy(SecurityUtils.getCurrentUserLogin().get());
 		managedUserVM.setCreatedDate(ZonedDateTime.now().toInstant());
 		managedUserVM.setLogin(loggedInAdminUser.getLogin());

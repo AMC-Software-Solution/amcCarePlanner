@@ -109,9 +109,9 @@ export const UserManagement = (props: IUserManagementProps) => {
         </thead>
         <tbody>
           {users.map((user, i) => (
-            <tr id={user.login} key={`user-${i}`}>
+            <tr id={user.email} key={`user-${i}`}>
               <td>
-                <Button tag={Link} to={`${match.url}/${user.login}`} color="link" size="sm">
+                <Button tag={Link} to={`${match.url}/${user.email}`} color="link" size="sm">
                   {user.id}
                 </Button>
               </td>
