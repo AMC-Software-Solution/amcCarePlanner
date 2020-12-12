@@ -12,6 +12,7 @@ import com.amc.careplanner.service.mapper.UserMapper;
 import com.amc.careplanner.service.dto.EmployeeCriteria;
 import com.amc.careplanner.domain.User;
 import com.amc.careplanner.repository.ext.UserRepositoryExt;
+import com.amc.careplanner.security.AuthoritiesConstants;
 import com.amc.careplanner.security.SecurityUtils;
 import com.amc.careplanner.service.EmployeeQueryService;
 
@@ -31,6 +32,7 @@ import org.springframework.http.HttpMethod;
 import org.springframework.http.HttpStatus;
 import org.springframework.web.servlet.support.ServletUriComponentsBuilder;
 import org.springframework.http.ResponseEntity;
+import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.web.client.RestTemplate;
 
@@ -85,6 +87,7 @@ public class EmployeeResourceExt extends EmployeeResource{
 
 
     @PostMapping("/create_employee_login")
+    @PreAuthorize("hasAuthority(\"" + AuthoritiesConstants.COMPANY_ADMIN + "\")")
     public ResponseEntity<EmployeeDTO> createEmployeeWithLogin(@Valid @RequestBody EmployeeDTO employeeDTO) throws URISyntaxException {
         log.debug("REST request to save Employee : {}", employeeDTO);
         if (employeeDTO.getId() != null) {
@@ -94,7 +97,15 @@ public class EmployeeResourceExt extends EmployeeResource{
         // uniquely identify an employee by their FirstName Initial and Last Name
 		employeeDTO.setEmployeeCode(employeeDTO.getFirstName().toUpperCase() + "_" + employeeDTO.getMiddleInitial() + "_" + employeeDTO.getLastName());
 
-        ManagedUserVM managedUserVM = new ManagedUserVM();
+		// We have decided to use and store the user.login as clientID
+		String loggedInAdminUserEmail = SecurityUtils.getCurrentUserLogin().get();
+		User loggedInAdminUser = userRepositoryExt.findOneByEmailIgnoreCase(loggedInAdminUserEmail).get();
+		if (StringUtils.isEmpty(loggedInAdminUser.getLogin())) {
+			throw new BadRequestAlertException("Employee Creation error, registered has no client", ENTITY_NAME,
+					"employeewithnoclient");
+		}
+		
+		ManagedUserVM managedUserVM = new ManagedUserVM();
 
 		// this should be a system config settings weather to allow email activation
 		// link for 2 factor Authentication or just allow user to use any email with out
@@ -110,11 +121,10 @@ public class EmployeeResourceExt extends EmployeeResource{
 		managedUserVM.setFirstName(employeeDTO.getFirstName());
 		managedUserVM.setLastName(employeeDTO.getLastName());
 		managedUserVM.setLangKey("en");
-		//managedUserVM.setLogin(employeeDTO.getUserLogin());
 		managedUserVM.setPassword("defaultpassword");
 		managedUserVM.setCreatedBy(SecurityUtils.getCurrentUserLogin().get());
 		managedUserVM.setCreatedDate(ZonedDateTime.now().toInstant());
-
+		managedUserVM.setLogin(loggedInAdminUser.getLogin());
 
 		userServiceExt.registerUser(managedUserVM, managedUserVM.getPassword());
 		User user = userRepositoryExt.findOneByEmailIgnoreCase(employeeDTO.getEmail()).get();
@@ -124,18 +134,13 @@ public class EmployeeResourceExt extends EmployeeResource{
 
 		}
 		
-		// We have decided to use and store the user.login as clientID
-		String loggedInAdminUserEmail = SecurityUtils.getCurrentUserLogin().get();
-		User loggedInAdminUser = userRepositoryExt.findOneByEmailIgnoreCase(loggedInAdminUserEmail).get();
-		if (StringUtils.isEmpty(loggedInAdminUser.getLogin())) {
-			throw new BadRequestAlertException("Employee Creation error, registered has no client", ENTITY_NAME,
-					"employeewithnoclient");
-		}
+
 		
 		employeeDTO.setUserId(user.getId());
 		employeeDTO.setClientId(Long.valueOf(loggedInAdminUser.getLogin()));
 		employeeDTO.setAcruedHolidayHours(0);
 		employeeDTO.setLastUpdatedDate(ZonedDateTime.now());
+		employeeDTO.setClientId(Long.valueOf(loggedInAdminUser.getLogin()));
 		// generate Random number 
 		//employeeDTO.setPinCode(pinCode);
         EmployeeDTO result = employeeServiceExt.save(employeeDTO);

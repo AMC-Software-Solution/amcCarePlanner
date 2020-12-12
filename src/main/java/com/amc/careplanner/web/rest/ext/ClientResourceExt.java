@@ -6,6 +6,7 @@ import com.amc.careplanner.web.rest.errors.BadRequestAlertException;
 import com.amc.careplanner.service.dto.ClientDTO;
 import com.amc.careplanner.service.ext.ClientServiceExt;
 import com.amc.careplanner.service.dto.ClientCriteria;
+import com.amc.careplanner.security.AuthoritiesConstants;
 import com.amc.careplanner.service.ClientQueryService;
 
 import io.github.jhipster.web.util.HeaderUtil;
@@ -20,6 +21,7 @@ import org.springframework.http.HttpHeaders;
 import org.springframework.http.HttpStatus;
 import org.springframework.web.servlet.support.ServletUriComponentsBuilder;
 import org.springframework.http.ResponseEntity;
+import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.web.bind.annotation.*;
 
 import javax.validation.Valid;
@@ -60,6 +62,7 @@ public class ClientResourceExt extends ClientResource{
      * @throws URISyntaxException if the Location URI syntax is incorrect.
      */
     @PostMapping("/clients")
+    @PreAuthorize("hasAuthority(\"" + AuthoritiesConstants.ADMIN + "\")")
     public ResponseEntity<ClientDTO> createClient(@Valid @RequestBody ClientDTO clientDTO) throws URISyntaxException {
         log.debug("REST request to save Client : {}", clientDTO);
         if (clientDTO.getId() != null) {
@@ -81,6 +84,7 @@ public class ClientResourceExt extends ClientResource{
      * @throws URISyntaxException if the Location URI syntax is incorrect.
      */
     @PutMapping("/clients")
+    @PreAuthorize("hasAuthority(\"" + AuthoritiesConstants.ADMIN + "\")")
     public ResponseEntity<ClientDTO> updateClient(@Valid @RequestBody ClientDTO clientDTO) throws URISyntaxException {
         log.debug("REST request to update Client : {}", clientDTO);
         if (clientDTO.getId() == null) {
@@ -100,6 +104,7 @@ public class ClientResourceExt extends ClientResource{
      * @return the {@link ResponseEntity} with status {@code 200 (OK)} and the list of clients in body.
      */
     @GetMapping("/clients")
+    @PreAuthorize("hasAuthority(\"" + AuthoritiesConstants.ADMIN + "\")")
     public ResponseEntity<List<ClientDTO>> getAllClients(ClientCriteria criteria, Pageable pageable) {
         log.debug("REST request to get Clients by criteria: {}", criteria);
         Page<ClientDTO> page = clientQueryService.findByCriteria(criteria, pageable);
@@ -114,6 +119,7 @@ public class ClientResourceExt extends ClientResource{
      * @return the {@link ResponseEntity} with status {@code 200 (OK)} and the count in body.
      */
     @GetMapping("/clients/count")
+    @PreAuthorize("hasAuthority(\"" + AuthoritiesConstants.ADMIN + "\")")
     public ResponseEntity<Long> countClients(ClientCriteria criteria) {
         log.debug("REST request to count Clients by criteria: {}", criteria);
         return ResponseEntity.ok().body(clientQueryService.countByCriteria(criteria));
@@ -126,6 +132,7 @@ public class ClientResourceExt extends ClientResource{
      * @return the {@link ResponseEntity} with status {@code 200 (OK)} and with body the clientDTO, or with status {@code 404 (Not Found)}.
      */
     @GetMapping("/clients/{id}")
+    @PreAuthorize("hasAuthority(\"" + AuthoritiesConstants.ADMIN + "\")")
     public ResponseEntity<ClientDTO> getClient(@PathVariable Long id) {
         log.debug("REST request to get Client : {}", id);
         Optional<ClientDTO> clientDTO = clientServiceExt.findOne(id);
@@ -139,6 +146,7 @@ public class ClientResourceExt extends ClientResource{
      * @return the {@link ResponseEntity} with status {@code 204 (NO_CONTENT)}.
      */
     @DeleteMapping("/clients/{id}")
+    @PreAuthorize("hasAuthority(\"" + AuthoritiesConstants.ADMIN + "\")")
     public ResponseEntity<Void> deleteClient(@PathVariable Long id) {
         log.debug("REST request to delete Client : {}", id);
         clientServiceExt.delete(id);

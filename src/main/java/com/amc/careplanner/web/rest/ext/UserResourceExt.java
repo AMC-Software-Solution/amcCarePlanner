@@ -104,8 +104,8 @@ public class UserResourceExt extends UserResource {
         if (userDTO.getId() != null) {
             throw new BadRequestAlertException("A new user cannot already have an ID", "userManagement", "idexists");
             // Lowercase the user login before comparing with database
-        } else if (userRepositoryExt.findOneByLogin(userDTO.getLogin().toLowerCase()).isPresent()) {
-            throw new LoginAlreadyUsedException();
+       // } else if (userRepositoryExt.findOneByLogin(userDTO.getLogin().toLowerCase()).isPresent()) {
+         //   throw new LoginAlreadyUsedException();
         } else if (userRepositoryExt.findOneByEmailIgnoreCase(userDTO.getEmail()).isPresent()) {
             throw new EmailAlreadyUsedException();
         } else {
@@ -133,7 +133,7 @@ public class UserResourceExt extends UserResource {
         if (existingUser.isPresent() && (!existingUser.get().getId().equals(userDTO.getId()))) {
             throw new EmailAlreadyUsedException();
         }
-        existingUser = userRepositoryExt.findOneByLogin(userDTO.getLogin().toLowerCase());
+        //existingUser = userRepositoryExt.findOneByLogin(userDTO.getLogin().toLowerCase());
         if (existingUser.isPresent() && (!existingUser.get().getId().equals(userDTO.getId()))) {
             throw new LoginAlreadyUsedException();
         }
@@ -181,10 +181,10 @@ public class UserResourceExt extends UserResource {
      * @return the {@link ResponseEntity} with status {@code 200 (OK)} and with body the "login" user, or with status {@code 404 (Not Found)}.
      */
     @GetMapping("/users/{login:" + Constants.LOGIN_REGEX + "}")
-    public ResponseEntity<UserDTO> getUser(@PathVariable String login) {
-        log.debug("REST request to get User : {}", login);
+    public ResponseEntity<UserDTO> getUser(@PathVariable String email) {
+        log.debug("REST request to get User : {}", email);
         return ResponseUtil.wrapOrNotFound(
-        		userServiceExt.getUserWithAuthoritiesByLogin(login)
+        		userRepositoryExt.findOneWithAuthoritiesByEmailIgnoreCase(email)
                 .map(UserDTO::new));
     }
 

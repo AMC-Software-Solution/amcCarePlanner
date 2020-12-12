@@ -68,7 +68,7 @@ export const UserManagementUpdate = (props: IUserManagementUpdateProps) => {
               ) : null}
               <AvGroup>
                 <Label for="login">
-                  <Translate contentKey="userManagement.login">Login</Translate>
+                  <Translate contentKey="userManagement.login">Client ID</Translate>
                 </Label>
                 <AvField
                   type="text"

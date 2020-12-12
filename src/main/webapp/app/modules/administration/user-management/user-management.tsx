@@ -149,13 +149,13 @@ export const UserManagement = (props: IUserManagementProps) => {
               </td>
               <td className="text-right">
                 <div className="btn-group flex-btn-group-container">
-                  <Button tag={Link} to={`${match.url}/${user.login}`} color="info" size="sm">
+                  <Button tag={Link} to={`${match.url}/${user.email}`} color="info" size="sm">
                     <FontAwesomeIcon icon="eye" />{' '}
                     <span className="d-none d-md-inline">
                       <Translate contentKey="entity.action.view">View</Translate>
                     </span>
                   </Button>
-                  <Button tag={Link} to={`${match.url}/${user.login}/edit`} color="primary" size="sm">
+                  <Button tag={Link} to={`${match.url}/${user.email}/edit`} color="primary" size="sm">
                     <FontAwesomeIcon icon="pencil-alt" />{' '}
                     <span className="d-none d-md-inline">
                       <Translate contentKey="entity.action.edit">Edit</Translate>
@@ -163,10 +163,10 @@ export const UserManagement = (props: IUserManagementProps) => {
                   </Button>
                   <Button
                     tag={Link}
-                    to={`${match.url}/${user.login}/delete`}
+                    to={`${match.url}/${user.email}/delete`}
                     color="danger"
                     size="sm"
-                    disabled={account.login === user.login}
+                    disabled={account.email === user.email}
                   >
                     <FontAwesomeIcon icon="trash" />{' '}
                     <span className="d-none d-md-inline">

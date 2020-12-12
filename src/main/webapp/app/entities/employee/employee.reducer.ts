@@ -132,7 +132,7 @@ export const getEntity: ICrudGetAction<IEmployee> = id => {
 export const createEntity: ICrudPutAction<IEmployee> = entity => async dispatch => {
   const result = await dispatch({
     type: ACTION_TYPES.CREATE_EMPLOYEE,
-    payload: axios.post(apiUrl, cleanEntity(entity)),
+    payload: axios.post('api/v1/create_employee_login', cleanEntity(entity)),
   });
   dispatch(getEntities());
   return result;

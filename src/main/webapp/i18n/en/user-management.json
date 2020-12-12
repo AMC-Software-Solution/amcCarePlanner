@@ -14,7 +14,7 @@
     "detail": {
       "title": "User"
     },
-    "login": "Login",
+    "login": "Client ID",
     "firstName": "First name",
     "lastName": "Last name",
     "email": "Email",
