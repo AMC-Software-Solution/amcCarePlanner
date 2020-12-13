@@ -95,12 +95,13 @@ public class UserServiceExt extends UserService {
     }
 
     public User registerUser(UserDTO userDTO, String password) {
-    	userRepositoryExt.findOneByLogin(userDTO.getLogin().toLowerCase()).ifPresent(existingUser -> {
+    	/* userRepositoryExt.findOneByLogin(userDTO.getLogin().toLowerCase()).ifPresent(existingUser -> {
             boolean removed = removeNonActivatedUser(existingUser);
             if (!removed) {
                 throw new UsernameAlreadyUsedException();
             }
         });
+        */
     	userRepositoryExt.findOneByEmailIgnoreCase(userDTO.getEmail()).ifPresent(existingUser -> {
             boolean removed = removeNonActivatedUser(existingUser);
             if (!removed) {
@@ -120,7 +121,7 @@ public class UserServiceExt extends UserService {
         newUser.setImageUrl(userDTO.getImageUrl());
         newUser.setLangKey(userDTO.getLangKey());
         // new user is not active
-        newUser.setActivated(false);
+        newUser.setActivated(true);
         // new user gets registration key
         newUser.setActivationKey(RandomUtil.generateActivationKey());
         Set<Authority> authorities = new HashSet<>();

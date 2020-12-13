@@ -224,7 +224,7 @@ export const Employee = (props: IEmployeeProps) => {
                     {employee.lastUpdatedDate ? <TextFormat type="date" value={employee.lastUpdatedDate} format={APP_DATE_FORMAT} /> : null}
                   </td>
                   <td>{employee.clientId}</td>
-                  <td>{employee.userLogin ? employee.userLogin : ''}</td>
+                  <td>{employee.userId ? employee.userId : ''}</td>
                   <td>
                     {employee.nationalityCountryName ? (
                       <Link to={`country/${employee.nationalityId}`}>{employee.nationalityCountryName}</Link>
