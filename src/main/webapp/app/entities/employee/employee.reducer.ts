@@ -114,7 +114,7 @@ const apiUrl = 'api/employees';
 // Actions
 
 export const getEntities: ICrudGetAllAction<IEmployee> = (page, size, sort) => {
-  const requestUrl = `${apiUrl}${sort ? `?page=${page}&size=${size}&sort=${sort}` : ''}`;
+  const requestUrl = `api/v1/get_employee_by_client_id${sort ? `?page=${page}&size=${size}&sort=${sort}` : ''}`;
   return {
     type: ACTION_TYPES.FETCH_EMPLOYEE_LIST,
     payload: axios.get<IEmployee>(`${requestUrl}${sort ? '&' : '?'}cacheBuster=${new Date().getTime()}`),
