@@ -16,6 +16,7 @@ import com.amc.careplanner.security.AuthoritiesConstants;
 import com.amc.careplanner.security.SecurityUtils;
 import com.amc.careplanner.service.EmployeeQueryService;
 
+import io.github.jhipster.service.filter.LongFilter;
 import io.github.jhipster.web.util.HeaderUtil;
 import io.github.jhipster.web.util.PaginationUtil;
 import io.github.jhipster.web.util.ResponseUtil;
@@ -155,6 +156,30 @@ public class EmployeeResourceExt extends EmployeeResource{
         return ResponseEntity.created(new URI("/api/employees/" + result.getId()))
             .headers(HeaderUtil.createEntityCreationAlert(applicationName, true, ENTITY_NAME, result.getId().toString()))
             .body(result);
+    }
+    
+    @GetMapping("/get_employee_by_client_id")
+    public ResponseEntity<List<EmployeeDTO>> getAllEmployees(EmployeeCriteria criteria, Pageable pageable) {
+        log.debug("REST request to get Employees by criteria: {}", criteria);
+        EmployeeCriteria employeeCriteria = new EmployeeCriteria();
+		LongFilter longFilterForClientId = new LongFilter();
+		longFilterForClientId.setEquals(getClientIdFromLoggedInUser());
+		employeeCriteria.setClientId(longFilterForClientId);
+        Page<EmployeeDTO> page = employeeQueryService.findByCriteria(employeeCriteria, pageable);
+        HttpHeaders headers = PaginationUtil.generatePaginationHttpHeaders(ServletUriComponentsBuilder.fromCurrentRequest(), page);
+        return ResponseEntity.ok().headers(headers).body(page.getContent());
+    }
+    
+    private Long getClientIdFromLoggedInUser() {
+    	Long clientId = 0L;
+    	String loggedInAdminUserEmail = SecurityUtils.getCurrentUserLogin().get();
+		User loggedInAdminUser = userRepositoryExt.findOneByEmailIgnoreCase(loggedInAdminUserEmail).get();
+		
+		if(loggedInAdminUser != null) {
+			clientId = Long.valueOf(loggedInAdminUser.getLogin());
+		}
+		
+		return clientId;
     }
   
 }
