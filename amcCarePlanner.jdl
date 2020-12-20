@@ -246,7 +246,7 @@ entity ServiceUser {
 }
 
  relationship ManyToOne  {
-   ServiceUser {user(login)} to User
+   ServiceUser {user(email)} to User
  
 }
 
@@ -488,15 +488,18 @@ entity Employee {
 	dateOfBirth LocalDate required,
 	photo ImageBlob,
 	photoUrl String ,
+	// New Addition
+	active Boolean,
 	acruedHolidayHours Integer,
 	lastUpdatedDate ZonedDateTime,
 	clientId Long required
 }
 
  relationship ManyToOne  {
-   Employee {user(login)} to User
+   Employee {user(email)} to User
  
 }
+
 
 
  relationship ManyToOne {
@@ -963,7 +966,7 @@ entity SystemEventsHistory {
 
 
 relationship ManyToOne  {
-   SystemEventsHistory{triggedBy(login)} to User 
+   SystemEventsHistory{triggedBy(email)} to User 
  
 }
 

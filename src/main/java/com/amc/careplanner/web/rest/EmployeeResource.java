@@ -138,7 +138,7 @@ public class EmployeeResource {
     @DeleteMapping("/employees/{id}")
     public ResponseEntity<Void> deleteEmployee(@PathVariable Long id) {
         log.debug("REST request to delete Employee : {}", id);
-        employeeService.delete(id);
+       // employeeService.delete(id);
         return ResponseEntity.noContent().headers(HeaderUtil.createEntityDeletionAlert(applicationName, true, ENTITY_NAME, id.toString())).build();
     }
 }

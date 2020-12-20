@@ -11,9 +11,11 @@ import com.amc.careplanner.service.ext.UserServiceExt;
 import com.amc.careplanner.service.mapper.UserMapper;
 import com.amc.careplanner.service.dto.EmployeeCriteria;
 import com.amc.careplanner.domain.User;
+import com.amc.careplanner.domain.enumeration.Gender;
 import com.amc.careplanner.repository.ext.UserRepositoryExt;
 import com.amc.careplanner.security.AuthoritiesConstants;
 import com.amc.careplanner.security.SecurityUtils;
+import com.amc.careplanner.service.EmailAlreadyUsedException;
 import com.amc.careplanner.service.EmployeeQueryService;
 
 import io.github.jhipster.service.filter.LongFilter;
@@ -40,6 +42,7 @@ import org.springframework.web.client.RestTemplate;
 import javax.validation.Valid;
 import java.net.URI;
 import java.net.URISyntaxException;
+import java.time.Instant;
 import java.time.ZonedDateTime;
 import java.util.List;
 import java.util.Optional;
@@ -119,6 +122,18 @@ public class EmployeeResourceExt extends EmployeeResource{
 		} else {
 			managedUserVM.setEmail(employeeDTO.getEmail());
 		}
+		
+		// default profile icons
+        String imageUrl = null;
+    	if (StringUtils.isEmpty(employeeDTO.getPhotoUrl())) {
+			if ( employeeDTO.getGender() == Gender.MALE) {
+				imageUrl = "https://www.clipartkey.com/mpngs/m/282-2825385_profile-picture-placeholder-blue.png";
+			} else {
+				imageUrl = "https://www.rsa.com.np/wp-content/uploads/2016/02/icon-user-default.png";	
+			}
+			employeeDTO.setPhotoUrl(imageUrl);
+		}
+    	
 		managedUserVM.setFirstName(employeeDTO.getFirstName());
 		managedUserVM.setLastName(employeeDTO.getLastName());
 		managedUserVM.setLangKey("en");
@@ -126,6 +141,9 @@ public class EmployeeResourceExt extends EmployeeResource{
 		managedUserVM.setCreatedBy(SecurityUtils.getCurrentUserLogin().get());
 		managedUserVM.setCreatedDate(ZonedDateTime.now().toInstant());
 		managedUserVM.setLogin(loggedInAdminUser.getLogin());
+		managedUserVM.setImageUrl(imageUrl);
+		
+		
 
 		userServiceExt.registerUser(managedUserVM, managedUserVM.getPassword());
 		User user = userRepositoryExt.findOneByEmailIgnoreCase(employeeDTO.getEmail()).get();
@@ -158,7 +176,7 @@ public class EmployeeResourceExt extends EmployeeResource{
             .body(result);
     }
     
-    @GetMapping("/get_employee_by_client_id")
+    @GetMapping("/get_employees_by_client_id")
     public ResponseEntity<List<EmployeeDTO>> getAllEmployees(EmployeeCriteria criteria, Pageable pageable) {
         log.debug("REST request to get Employees by criteria: {}", criteria);
         EmployeeCriteria employeeCriteria = new EmployeeCriteria();
@@ -169,6 +187,66 @@ public class EmployeeResourceExt extends EmployeeResource{
         HttpHeaders headers = PaginationUtil.generatePaginationHttpHeaders(ServletUriComponentsBuilder.fromCurrentRequest(), page);
         return ResponseEntity.ok().headers(headers).body(page.getContent());
     }
+    
+    
+    @PutMapping("/update_employee_by_client_id")
+    @PreAuthorize("hasAuthority(\"" + AuthoritiesConstants.COMPANY_ADMIN + "\")")
+    public ResponseEntity<EmployeeDTO> updateEmployee(@Valid @RequestBody EmployeeDTO employeeDTO) throws URISyntaxException {
+        log.debug("REST request to update Employee : {}", employeeDTO);
+        if (employeeDTO.getId() == null) {
+            throw new BadRequestAlertException("Invalid id", ENTITY_NAME, "idnull");
+        }
+        
+        User user = userRepositoryExt.findOneWithAuthoritiesByEmailIgnoreCase(employeeDTO.getEmail()).get();
+        
+        if (employeeDTO != null && employeeDTO.getClientId() != null && employeeDTO.getClientId() != getClientIdFromLoggedInUser()) {
+        	  throw new BadRequestAlertException("clientId mismatch", ENTITY_NAME, "clientIdMismatch");
+        }
+        
+        String imageUrl = null;
+    	if (StringUtils.isEmpty(employeeDTO.getPhotoUrl())) {
+			if ( employeeDTO.getGender() == Gender.MALE) {
+				imageUrl = "https://www.clipartkey.com/mpngs/m/282-2825385_profile-picture-placeholder-blue.png";
+			} else {
+				imageUrl = "https://www.rsa.com.np/wp-content/uploads/2016/02/icon-user-default.png";	
+			}
+			employeeDTO.setPhotoUrl(imageUrl);
+		}
+        
+    	
+		if (user != null) {
+			// update all fields
+			user.setFirstName(employeeDTO.getFirstName());
+			//user.setLogin(employeeDTO.getLogin());
+			user.setEmail(employeeDTO.getEmail());
+			user.setLastName(employeeDTO.getLastName());
+			//user.setActivated(employeeDTO.getActive());
+			user.setLastModifiedBy(SecurityUtils.getCurrentUserLogin().get());
+			user.setLastModifiedDate(Instant.now());
+			user.setImageUrl(imageUrl);
+			userServiceExt.updateUser(userMapper.userToUserDTO(user));
+			
+		}
+        
+        EmployeeDTO result = employeeServiceExt.save(employeeDTO);
+        return ResponseEntity.ok()
+            .headers(HeaderUtil.createEntityUpdateAlert(applicationName, true, ENTITY_NAME, employeeDTO.getId().toString()))
+            .body(result);
+    }
+    
+    
+    @GetMapping("/get_employee_by_client_id/{id}")
+    public ResponseEntity<EmployeeDTO> getEmployee(@PathVariable Long id) {
+        log.debug("REST request to get Employee : {}", id);
+        Optional<EmployeeDTO> employeeDTO = employeeServiceExt.findOne(id);
+        if (employeeDTO.get() != null && employeeDTO.get().getClientId() != null && employeeDTO.get().getClientId() != getClientIdFromLoggedInUser()) {
+        	  throw new BadRequestAlertException("clientId mismatch", ENTITY_NAME, "clientIdMismatch");
+        }
+        return ResponseUtil.wrapOrNotFound(employeeDTO);
+    }
+    
+ 
+    
     
     private Long getClientIdFromLoggedInUser() {
     	Long clientId = 0L;
