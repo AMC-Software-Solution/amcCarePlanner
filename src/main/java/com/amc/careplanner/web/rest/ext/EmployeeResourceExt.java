@@ -160,6 +160,9 @@ public class EmployeeResourceExt extends EmployeeResource{
 		employeeDTO.setAcruedHolidayHours(0);
 		employeeDTO.setLastUpdatedDate(ZonedDateTime.now());
 		employeeDTO.setClientId(Long.valueOf(loggedInAdminUser.getLogin()));
+		if (StringUtils.isEmpty(employeeDTO.getPreferredName())) {
+			employeeDTO.setPreferredName(employeeDTO.getFirstName());
+		}
 		// generate Random number 
 		//employeeDTO.setPinCode(pinCode);
         EmployeeDTO result = employeeServiceExt.save(employeeDTO);
@@ -238,11 +241,18 @@ public class EmployeeResourceExt extends EmployeeResource{
     @GetMapping("/get_employee_by_client_id/{id}")
     public ResponseEntity<EmployeeDTO> getEmployee(@PathVariable Long id) {
         log.debug("REST request to get Employee : {}", id);
-        Optional<EmployeeDTO> employeeDTO = employeeServiceExt.findOne(id);
-        if (employeeDTO.get() != null && employeeDTO.get().getClientId() != null && employeeDTO.get().getClientId() != getClientIdFromLoggedInUser()) {
+        EmployeeCriteria employeeCriteria = new EmployeeCriteria();
+		LongFilter longFilterForClientId = new LongFilter();
+		longFilterForClientId.setEquals(getClientIdFromLoggedInUser());
+		LongFilter longFilterForId = new LongFilter();
+		longFilterForId.setEquals(id);
+		employeeCriteria.setClientId(longFilterForClientId);
+		 List<EmployeeDTO> listOfEmployees = employeeQueryService.findByCriteria(employeeCriteria);
+		 EmployeeDTO employeeDTO =listOfEmployees.get(0);
+        if (employeeDTO != null && employeeDTO.getClientId() != null && employeeDTO.getClientId() != getClientIdFromLoggedInUser()) {
         	  throw new BadRequestAlertException("clientId mismatch", ENTITY_NAME, "clientIdMismatch");
         }
-        return ResponseUtil.wrapOrNotFound(employeeDTO);
+        return ResponseUtil.wrapOrNotFound(Optional.of(employeeDTO));
     }
     
  
