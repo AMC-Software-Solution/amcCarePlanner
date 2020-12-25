@@ -217,6 +217,10 @@ entity Branch {
 	name String required,
 	address String,
 	telephone String,
+	contactName String,
+	branchEmail String,
+	photo ImageBlob,
+	photoUrl String,
 	lastUpdatedDate ZonedDateTime,
 	hasExtraData Boolean
 }

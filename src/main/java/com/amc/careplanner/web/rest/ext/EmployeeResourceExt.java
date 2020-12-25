@@ -174,7 +174,7 @@ public class EmployeeResourceExt extends EmployeeResource{
 					"usercouldnotbecreated");
         }
         mailService.sendCreationEmail(user);
-        return ResponseEntity.created(new URI("/api/employees/" + result.getId()))
+        return ResponseEntity.created(new URI("/v1/api/get_employee_by_client_id/" + result.getId()))
             .headers(HeaderUtil.createEntityCreationAlert(applicationName, true, ENTITY_NAME, result.getId().toString()))
             .body(result);
     }
