@@ -5,9 +5,16 @@ import com.amc.careplanner.web.rest.TerminalDeviceResource;
 import com.amc.careplanner.web.rest.errors.BadRequestAlertException;
 import com.amc.careplanner.service.dto.TerminalDeviceDTO;
 import com.amc.careplanner.service.ext.TerminalDeviceServiceExt;
+import com.amc.careplanner.service.dto.TaskCriteria;
+import com.amc.careplanner.service.dto.TaskDTO;
 import com.amc.careplanner.service.dto.TerminalDeviceCriteria;
+import com.amc.careplanner.domain.User;
+import com.amc.careplanner.repository.ext.UserRepositoryExt;
+import com.amc.careplanner.security.AuthoritiesConstants;
+import com.amc.careplanner.security.SecurityUtils;
 import com.amc.careplanner.service.TerminalDeviceQueryService;
 
+import io.github.jhipster.service.filter.LongFilter;
 import io.github.jhipster.web.util.HeaderUtil;
 import io.github.jhipster.web.util.PaginationUtil;
 import io.github.jhipster.web.util.ResponseUtil;
@@ -20,11 +27,13 @@ import org.springframework.http.HttpHeaders;
 import org.springframework.http.HttpStatus;
 import org.springframework.web.servlet.support.ServletUriComponentsBuilder;
 import org.springframework.http.ResponseEntity;
+import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.web.bind.annotation.*;
 
 import javax.validation.Valid;
 import java.net.URI;
 import java.net.URISyntaxException;
+import java.time.ZonedDateTime;
 import java.util.List;
 import java.util.Optional;
 
@@ -45,11 +54,16 @@ public class TerminalDeviceResourceExt extends TerminalDeviceResource{
     private final TerminalDeviceServiceExt terminalDeviceServiceExt;
 
     private final TerminalDeviceQueryService terminalDeviceQueryService;
+    
+    private final UserRepositoryExt userRepositoryExt;
 
-    public TerminalDeviceResourceExt(TerminalDeviceServiceExt terminalDeviceServiceExt, TerminalDeviceQueryService terminalDeviceQueryService) {
+
+    public TerminalDeviceResourceExt(TerminalDeviceServiceExt terminalDeviceServiceExt, TerminalDeviceQueryService terminalDeviceQueryService, UserRepositoryExt userRepositoryExt) {
         super(terminalDeviceServiceExt,terminalDeviceQueryService);
     	this.terminalDeviceServiceExt = terminalDeviceServiceExt;
         this.terminalDeviceQueryService = terminalDeviceQueryService;
+        this.userRepositoryExt = userRepositoryExt;
+
     }
 
     /**
@@ -59,12 +73,15 @@ public class TerminalDeviceResourceExt extends TerminalDeviceResource{
      * @return the {@link ResponseEntity} with status {@code 201 (Created)} and with body the new terminalDeviceDTO, or with status {@code 400 (Bad Request)} if the terminalDevice has already an ID.
      * @throws URISyntaxException if the Location URI syntax is incorrect.
      */
-    @PostMapping("/terminal-devices")
+    @PostMapping("/create_terminal-devices_by_client_id")
     public ResponseEntity<TerminalDeviceDTO> createTerminalDevice(@Valid @RequestBody TerminalDeviceDTO terminalDeviceDTO) throws URISyntaxException {
         log.debug("REST request to save TerminalDevice : {}", terminalDeviceDTO);
         if (terminalDeviceDTO.getId() != null) {
             throw new BadRequestAlertException("A new terminalDevice cannot already have an ID", ENTITY_NAME, "idexists");
         }
+       //terminalDeviceDTO.setDateCreated(ZonedDateTime.now());
+        terminalDeviceDTO.setLastUpdatedDate(ZonedDateTime.now());
+        terminalDeviceDTO.setClientId(getClientIdFromLoggedInUser());
         TerminalDeviceDTO result = terminalDeviceServiceExt.save(terminalDeviceDTO);
         return ResponseEntity.created(new URI("/api/terminal-devices/" + result.getId()))
             .headers(HeaderUtil.createEntityCreationAlert(applicationName, true, ENTITY_NAME, result.getId().toString()))
@@ -80,12 +97,16 @@ public class TerminalDeviceResourceExt extends TerminalDeviceResource{
      * or with status {@code 500 (Internal Server Error)} if the terminalDeviceDTO couldn't be updated.
      * @throws URISyntaxException if the Location URI syntax is incorrect.
      */
-    @PutMapping("/terminal-devices")
+    @PutMapping("/update_terminal-devices_by_client_id")
     public ResponseEntity<TerminalDeviceDTO> updateTerminalDevice(@Valid @RequestBody TerminalDeviceDTO terminalDeviceDTO) throws URISyntaxException {
         log.debug("REST request to update TerminalDevice : {}", terminalDeviceDTO);
         if (terminalDeviceDTO.getId() == null) {
             throw new BadRequestAlertException("Invalid id", ENTITY_NAME, "idnull");
         }
+        if (terminalDeviceDTO != null && terminalDeviceDTO.getClientId() != null && terminalDeviceDTO.getClientId() != getClientIdFromLoggedInUser()) {
+        	  throw new BadRequestAlertException("clientId mismatch", ENTITY_NAME, "clientIdMismatch");
+        }
+        terminalDeviceDTO.setLastUpdatedDate(ZonedDateTime.now());
         TerminalDeviceDTO result = terminalDeviceServiceExt.save(terminalDeviceDTO);
         return ResponseEntity.ok()
             .headers(HeaderUtil.createEntityUpdateAlert(applicationName, true, ENTITY_NAME, terminalDeviceDTO.getId().toString()))
@@ -102,7 +123,11 @@ public class TerminalDeviceResourceExt extends TerminalDeviceResource{
     @GetMapping("/terminal-devices")
     public ResponseEntity<List<TerminalDeviceDTO>> getAllTerminalDevices(TerminalDeviceCriteria criteria, Pageable pageable) {
         log.debug("REST request to get TerminalDevices by criteria: {}", criteria);
-        Page<TerminalDeviceDTO> page = terminalDeviceQueryService.findByCriteria(criteria, pageable);
+        TerminalDeviceCriteria terminalDeviceCriteria = new TerminalDeviceCriteria();
+		LongFilter longFilterForClientId = new LongFilter();
+		longFilterForClientId.setEquals(getClientIdFromLoggedInUser());
+		terminalDeviceCriteria.setClientId(longFilterForClientId);
+		Page<TerminalDeviceDTO> page = terminalDeviceQueryService.findByCriteria(terminalDeviceCriteria, pageable);
         HttpHeaders headers = PaginationUtil.generatePaginationHttpHeaders(ServletUriComponentsBuilder.fromCurrentRequest(), page);
         return ResponseEntity.ok().headers(headers).body(page.getContent());
     }
@@ -139,9 +164,23 @@ public class TerminalDeviceResourceExt extends TerminalDeviceResource{
      * @return the {@link ResponseEntity} with status {@code 204 (NO_CONTENT)}.
      */
     @DeleteMapping("/terminal-devices/{id}")
+    @PreAuthorize("hasAuthority(\"" + AuthoritiesConstants.COMPANY_ADMIN + "\")")
     public ResponseEntity<Void> deleteTerminalDevice(@PathVariable Long id) {
         log.debug("REST request to delete TerminalDevice : {}", id);
         terminalDeviceServiceExt.delete(id);
         return ResponseEntity.noContent().headers(HeaderUtil.createEntityDeletionAlert(applicationName, true, ENTITY_NAME, id.toString())).build();
     }
+    
+    private Long getClientIdFromLoggedInUser() {
+    	Long clientId = 0L;
+    	String loggedInAdminUserEmail = SecurityUtils.getCurrentUserLogin().get();
+		User loggedInAdminUser = userRepositoryExt.findOneByEmailIgnoreCase(loggedInAdminUserEmail).get();
+		
+		if(loggedInAdminUser != null) {
+			clientId = Long.valueOf(loggedInAdminUser.getLogin());
+		}
+		
+		return clientId;
+    }  
+    
 }
