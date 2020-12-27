@@ -5,9 +5,16 @@ import com.amc.careplanner.web.rest.TimesheetResource;
 import com.amc.careplanner.web.rest.errors.BadRequestAlertException;
 import com.amc.careplanner.service.dto.TimesheetDTO;
 import com.amc.careplanner.service.ext.TimesheetServiceExt;
+import com.amc.careplanner.service.dto.TaskCriteria;
+import com.amc.careplanner.service.dto.TaskDTO;
 import com.amc.careplanner.service.dto.TimesheetCriteria;
+import com.amc.careplanner.domain.User;
+import com.amc.careplanner.repository.ext.UserRepositoryExt;
+import com.amc.careplanner.security.AuthoritiesConstants;
+import com.amc.careplanner.security.SecurityUtils;
 import com.amc.careplanner.service.TimesheetQueryService;
 
+import io.github.jhipster.service.filter.LongFilter;
 import io.github.jhipster.web.util.HeaderUtil;
 import io.github.jhipster.web.util.PaginationUtil;
 import io.github.jhipster.web.util.ResponseUtil;
@@ -20,11 +27,13 @@ import org.springframework.http.HttpHeaders;
 import org.springframework.http.HttpStatus;
 import org.springframework.web.servlet.support.ServletUriComponentsBuilder;
 import org.springframework.http.ResponseEntity;
+import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.web.bind.annotation.*;
 
 import javax.validation.Valid;
 import java.net.URI;
 import java.net.URISyntaxException;
+import java.time.ZonedDateTime;
 import java.util.List;
 import java.util.Optional;
 
@@ -45,11 +54,14 @@ public class TimesheetResourceExt extends TimesheetResource{
     private final TimesheetServiceExt timesheetServiceExt;
 
     private final TimesheetQueryService timesheetQueryService;
+    
+    private final UserRepositoryExt userRepositoryExt;
 
-    public TimesheetResourceExt(TimesheetServiceExt timesheetServiceExt, TimesheetQueryService timesheetQueryService) {
+    public TimesheetResourceExt(TimesheetServiceExt timesheetServiceExt, TimesheetQueryService timesheetQueryService, UserRepositoryExt userRepositoryExt) {
         super(timesheetServiceExt,timesheetQueryService);
     	this.timesheetServiceExt = timesheetServiceExt;
         this.timesheetQueryService = timesheetQueryService;
+        this.userRepositoryExt = userRepositoryExt;
     }
 
     /**
@@ -59,12 +71,15 @@ public class TimesheetResourceExt extends TimesheetResource{
      * @return the {@link ResponseEntity} with status {@code 201 (Created)} and with body the new timesheetDTO, or with status {@code 400 (Bad Request)} if the timesheet has already an ID.
      * @throws URISyntaxException if the Location URI syntax is incorrect.
      */
-    @PostMapping("/timesheets")
+    @PostMapping("/create_timesheet_by_client_id")
     public ResponseEntity<TimesheetDTO> createTimesheet(@Valid @RequestBody TimesheetDTO timesheetDTO) throws URISyntaxException {
         log.debug("REST request to save Timesheet : {}", timesheetDTO);
         if (timesheetDTO.getId() != null) {
             throw new BadRequestAlertException("A new timesheet cannot already have an ID", ENTITY_NAME, "idexists");
         }
+        //timesheetDTO.setDateCreated(ZonedDateTime.now());
+        timesheetDTO.setLastUpdatedDate(ZonedDateTime.now());
+        timesheetDTO.setClientId(getClientIdFromLoggedInUser());
         TimesheetDTO result = timesheetServiceExt.save(timesheetDTO);
         return ResponseEntity.created(new URI("/api/timesheets/" + result.getId()))
             .headers(HeaderUtil.createEntityCreationAlert(applicationName, true, ENTITY_NAME, result.getId().toString()))
@@ -80,12 +95,16 @@ public class TimesheetResourceExt extends TimesheetResource{
      * or with status {@code 500 (Internal Server Error)} if the timesheetDTO couldn't be updated.
      * @throws URISyntaxException if the Location URI syntax is incorrect.
      */
-    @PutMapping("/timesheets")
+    @PutMapping("/update_timesheet_by_client_id")
     public ResponseEntity<TimesheetDTO> updateTimesheet(@Valid @RequestBody TimesheetDTO timesheetDTO) throws URISyntaxException {
         log.debug("REST request to update Timesheet : {}", timesheetDTO);
         if (timesheetDTO.getId() == null) {
             throw new BadRequestAlertException("Invalid id", ENTITY_NAME, "idnull");
         }
+        if (timesheetDTO != null && timesheetDTO.getClientId() != null && timesheetDTO.getClientId() != getClientIdFromLoggedInUser()) {
+        	  throw new BadRequestAlertException("clientId mismatch", ENTITY_NAME, "clientIdMismatch");
+        }
+        timesheetDTO.setLastUpdatedDate(ZonedDateTime.now());
         TimesheetDTO result = timesheetServiceExt.save(timesheetDTO);
         return ResponseEntity.ok()
             .headers(HeaderUtil.createEntityUpdateAlert(applicationName, true, ENTITY_NAME, timesheetDTO.getId().toString()))
@@ -102,7 +121,11 @@ public class TimesheetResourceExt extends TimesheetResource{
     @GetMapping("/timesheets")
     public ResponseEntity<List<TimesheetDTO>> getAllTimesheets(TimesheetCriteria criteria, Pageable pageable) {
         log.debug("REST request to get Timesheets by criteria: {}", criteria);
-        Page<TimesheetDTO> page = timesheetQueryService.findByCriteria(criteria, pageable);
+        TimesheetCriteria timesheetCriteria = new TimesheetCriteria();
+		LongFilter longFilterForClientId = new LongFilter();
+		longFilterForClientId.setEquals(getClientIdFromLoggedInUser());
+		timesheetCriteria.setClientId(longFilterForClientId);
+        Page<TimesheetDTO> page = timesheetQueryService.findByCriteria(timesheetCriteria, pageable);
         HttpHeaders headers = PaginationUtil.generatePaginationHttpHeaders(ServletUriComponentsBuilder.fromCurrentRequest(), page);
         return ResponseEntity.ok().headers(headers).body(page.getContent());
     }
@@ -139,9 +162,22 @@ public class TimesheetResourceExt extends TimesheetResource{
      * @return the {@link ResponseEntity} with status {@code 204 (NO_CONTENT)}.
      */
     @DeleteMapping("/timesheets/{id}")
+    @PreAuthorize("hasAuthority(\"" + AuthoritiesConstants.COMPANY_ADMIN + "\")")
     public ResponseEntity<Void> deleteTimesheet(@PathVariable Long id) {
         log.debug("REST request to delete Timesheet : {}", id);
         timesheetServiceExt.delete(id);
         return ResponseEntity.noContent().headers(HeaderUtil.createEntityDeletionAlert(applicationName, true, ENTITY_NAME, id.toString())).build();
     }
+    private Long getClientIdFromLoggedInUser() {
+    	Long clientId = 0L;
+    	String loggedInAdminUserEmail = SecurityUtils.getCurrentUserLogin().get();
+		User loggedInAdminUser = userRepositoryExt.findOneByEmailIgnoreCase(loggedInAdminUserEmail).get();
+		
+		if(loggedInAdminUser != null) {
+			clientId = Long.valueOf(loggedInAdminUser.getLogin());
+		}
+		
+		return clientId;
+    }
+    
 }

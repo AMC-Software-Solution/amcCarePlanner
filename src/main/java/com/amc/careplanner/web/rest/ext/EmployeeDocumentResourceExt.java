@@ -4,10 +4,17 @@ import com.amc.careplanner.service.EmployeeDocumentService;
 import com.amc.careplanner.web.rest.EmployeeDocumentResource;
 import com.amc.careplanner.web.rest.errors.BadRequestAlertException;
 import com.amc.careplanner.service.dto.EmployeeDocumentDTO;
+import com.amc.careplanner.service.dto.TaskCriteria;
+import com.amc.careplanner.service.dto.TaskDTO;
 import com.amc.careplanner.service.ext.EmployeeDocumentServiceExt;
 import com.amc.careplanner.service.dto.EmployeeDocumentCriteria;
+import com.amc.careplanner.domain.User;
+import com.amc.careplanner.repository.ext.UserRepositoryExt;
+import com.amc.careplanner.security.AuthoritiesConstants;
+import com.amc.careplanner.security.SecurityUtils;
 import com.amc.careplanner.service.EmployeeDocumentQueryService;
 
+import io.github.jhipster.service.filter.LongFilter;
 import io.github.jhipster.web.util.HeaderUtil;
 import io.github.jhipster.web.util.PaginationUtil;
 import io.github.jhipster.web.util.ResponseUtil;
@@ -20,11 +27,13 @@ import org.springframework.http.HttpHeaders;
 import org.springframework.http.HttpStatus;
 import org.springframework.web.servlet.support.ServletUriComponentsBuilder;
 import org.springframework.http.ResponseEntity;
+import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.web.bind.annotation.*;
 
 import javax.validation.Valid;
 import java.net.URI;
 import java.net.URISyntaxException;
+import java.time.ZonedDateTime;
 import java.util.List;
 import java.util.Optional;
 
@@ -45,11 +54,14 @@ public class EmployeeDocumentResourceExt extends EmployeeDocumentResource{
     private final EmployeeDocumentServiceExt employeeDocumentServiceExt;
 
     private final EmployeeDocumentQueryService employeeDocumentQueryService;
+    
+    private final UserRepositoryExt userRepositoryExt;
 
-    public EmployeeDocumentResourceExt(EmployeeDocumentServiceExt employeeDocumentServiceExt, EmployeeDocumentQueryService employeeDocumentQueryService) {
+    public EmployeeDocumentResourceExt(EmployeeDocumentServiceExt employeeDocumentServiceExt, EmployeeDocumentQueryService employeeDocumentQueryService, UserRepositoryExt userRepositoryExt) {
     	super(employeeDocumentServiceExt,employeeDocumentQueryService);
         this.employeeDocumentServiceExt = employeeDocumentServiceExt;
         this.employeeDocumentQueryService = employeeDocumentQueryService;
+        this.userRepositoryExt = userRepositoryExt;
     }
 
     /**
@@ -59,12 +71,15 @@ public class EmployeeDocumentResourceExt extends EmployeeDocumentResource{
      * @return the {@link ResponseEntity} with status {@code 201 (Created)} and with body the new employeeDocumentDTO, or with status {@code 400 (Bad Request)} if the employeeDocument has already an ID.
      * @throws URISyntaxException if the Location URI syntax is incorrect.
      */
-    @PostMapping("/employee-documents")
+    @PostMapping("/create_employeeDocument_by_client_id")
     public ResponseEntity<EmployeeDocumentDTO> createEmployeeDocument(@Valid @RequestBody EmployeeDocumentDTO employeeDocumentDTO) throws URISyntaxException {
         log.debug("REST request to save EmployeeDocument : {}", employeeDocumentDTO);
         if (employeeDocumentDTO.getId() != null) {
             throw new BadRequestAlertException("A new employeeDocument cannot already have an ID", ENTITY_NAME, "idexists");
         }
+        //employeeDocumentDTO.setDateCreated(ZonedDateTime.now());
+        employeeDocumentDTO.setLastUpdatedDate(ZonedDateTime.now());
+        employeeDocumentDTO.setClientId(getClientIdFromLoggedInUser());
         EmployeeDocumentDTO result = employeeDocumentServiceExt.save(employeeDocumentDTO);
         return ResponseEntity.created(new URI("/api/employee-documents/" + result.getId()))
             .headers(HeaderUtil.createEntityCreationAlert(applicationName, true, ENTITY_NAME, result.getId().toString()))
@@ -80,12 +95,16 @@ public class EmployeeDocumentResourceExt extends EmployeeDocumentResource{
      * or with status {@code 500 (Internal Server Error)} if the employeeDocumentDTO couldn't be updated.
      * @throws URISyntaxException if the Location URI syntax is incorrect.
      */
-    @PutMapping("/employee-documents")
+    @PutMapping("/update_employeeDocument_by_client_id")
     public ResponseEntity<EmployeeDocumentDTO> updateEmployeeDocument(@Valid @RequestBody EmployeeDocumentDTO employeeDocumentDTO) throws URISyntaxException {
         log.debug("REST request to update EmployeeDocument : {}", employeeDocumentDTO);
         if (employeeDocumentDTO.getId() == null) {
             throw new BadRequestAlertException("Invalid id", ENTITY_NAME, "idnull");
         }
+        if (employeeDocumentDTO != null && employeeDocumentDTO.getClientId() != null && employeeDocumentDTO.getClientId() != getClientIdFromLoggedInUser()) {
+        	  throw new BadRequestAlertException("clientId mismatch", ENTITY_NAME, "clientIdMismatch");
+   }
+        employeeDocumentDTO.setLastUpdatedDate(ZonedDateTime.now());
         EmployeeDocumentDTO result = employeeDocumentServiceExt.save(employeeDocumentDTO);
         return ResponseEntity.ok()
             .headers(HeaderUtil.createEntityUpdateAlert(applicationName, true, ENTITY_NAME, employeeDocumentDTO.getId().toString()))
@@ -102,7 +121,11 @@ public class EmployeeDocumentResourceExt extends EmployeeDocumentResource{
     @GetMapping("/employee-documents")
     public ResponseEntity<List<EmployeeDocumentDTO>> getAllEmployeeDocuments(EmployeeDocumentCriteria criteria, Pageable pageable) {
         log.debug("REST request to get EmployeeDocuments by criteria: {}", criteria);
-        Page<EmployeeDocumentDTO> page = employeeDocumentQueryService.findByCriteria(criteria, pageable);
+        EmployeeDocumentCriteria employeeDocumentCriteria = new EmployeeDocumentCriteria();
+		LongFilter longFilterForClientId = new LongFilter();
+		longFilterForClientId.setEquals(getClientIdFromLoggedInUser());
+		employeeDocumentCriteria.setClientId(longFilterForClientId);
+        Page<EmployeeDocumentDTO> page = employeeDocumentQueryService.findByCriteria(employeeDocumentCriteria, pageable);
         HttpHeaders headers = PaginationUtil.generatePaginationHttpHeaders(ServletUriComponentsBuilder.fromCurrentRequest(), page);
         return ResponseEntity.ok().headers(headers).body(page.getContent());
     }
@@ -139,9 +162,22 @@ public class EmployeeDocumentResourceExt extends EmployeeDocumentResource{
      * @return the {@link ResponseEntity} with status {@code 204 (NO_CONTENT)}.
      */
     @DeleteMapping("/employee-documents/{id}")
+    @PreAuthorize("hasAuthority(\"" + AuthoritiesConstants.COMPANY_ADMIN + "\")")
     public ResponseEntity<Void> deleteEmployeeDocument(@PathVariable Long id) {
         log.debug("REST request to delete EmployeeDocument : {}", id);
         employeeDocumentServiceExt.delete(id);
         return ResponseEntity.noContent().headers(HeaderUtil.createEntityDeletionAlert(applicationName, true, ENTITY_NAME, id.toString())).build();
+    }
+    
+    private Long getClientIdFromLoggedInUser() {
+    	Long clientId = 0L;
+    	String loggedInAdminUserEmail = SecurityUtils.getCurrentUserLogin().get();
+		User loggedInAdminUser = userRepositoryExt.findOneByEmailIgnoreCase(loggedInAdminUserEmail).get();
+		
+		if(loggedInAdminUser != null) {
+			clientId = Long.valueOf(loggedInAdminUser.getLogin());
+		}
+		
+		return clientId;
     }
 }

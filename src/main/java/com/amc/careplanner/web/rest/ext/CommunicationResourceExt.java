@@ -4,10 +4,17 @@ import com.amc.careplanner.service.CommunicationService;
 import com.amc.careplanner.web.rest.CommunicationResource;
 import com.amc.careplanner.web.rest.errors.BadRequestAlertException;
 import com.amc.careplanner.service.dto.CommunicationDTO;
+import com.amc.careplanner.service.dto.TaskCriteria;
+import com.amc.careplanner.service.dto.TaskDTO;
 import com.amc.careplanner.service.ext.CommunicationServiceExt;
 import com.amc.careplanner.service.dto.CommunicationCriteria;
+import com.amc.careplanner.domain.User;
+import com.amc.careplanner.repository.ext.UserRepositoryExt;
+import com.amc.careplanner.security.AuthoritiesConstants;
+import com.amc.careplanner.security.SecurityUtils;
 import com.amc.careplanner.service.CommunicationQueryService;
 
+import io.github.jhipster.service.filter.LongFilter;
 import io.github.jhipster.web.util.HeaderUtil;
 import io.github.jhipster.web.util.PaginationUtil;
 import io.github.jhipster.web.util.ResponseUtil;
@@ -20,11 +27,13 @@ import org.springframework.http.HttpHeaders;
 import org.springframework.http.HttpStatus;
 import org.springframework.web.servlet.support.ServletUriComponentsBuilder;
 import org.springframework.http.ResponseEntity;
+import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.web.bind.annotation.*;
 
 import javax.validation.Valid;
 import java.net.URI;
 import java.net.URISyntaxException;
+import java.time.ZonedDateTime;
 import java.util.List;
 import java.util.Optional;
 
@@ -45,11 +54,14 @@ public class CommunicationResourceExt extends CommunicationResource{
     private final CommunicationServiceExt communicationServiceExt;
 
     private final CommunicationQueryService communicationQueryService;
+    
+    private final UserRepositoryExt userRepositoryExt;
 
-    public CommunicationResourceExt(CommunicationServiceExt communicationServiceExt, CommunicationQueryService communicationQueryService) {
+    public CommunicationResourceExt(CommunicationServiceExt communicationServiceExt, CommunicationQueryService communicationQueryService,  UserRepositoryExt userRepositoryExt) {
     	super(communicationServiceExt,communicationQueryService);
         this.communicationServiceExt = communicationServiceExt;
         this.communicationQueryService = communicationQueryService;
+        this.userRepositoryExt = userRepositoryExt;
     }
 
     /**
@@ -59,12 +71,15 @@ public class CommunicationResourceExt extends CommunicationResource{
      * @return the {@link ResponseEntity} with status {@code 201 (Created)} and with body the new communicationDTO, or with status {@code 400 (Bad Request)} if the communication has already an ID.
      * @throws URISyntaxException if the Location URI syntax is incorrect.
      */
-    @PostMapping("/communications")
+    @PostMapping("/create_communication_by_client_id")
     public ResponseEntity<CommunicationDTO> createCommunication(@Valid @RequestBody CommunicationDTO communicationDTO) throws URISyntaxException {
         log.debug("REST request to save Communication : {}", communicationDTO);
         if (communicationDTO.getId() != null) {
             throw new BadRequestAlertException("A new communication cannot already have an ID", ENTITY_NAME, "idexists");
         }
+        //communicationDTO.setDateCreated(ZonedDateTime.now());
+        communicationDTO.setLastUpdatedDate(ZonedDateTime.now());
+        communicationDTO.setClientId(getClientIdFromLoggedInUser());
         CommunicationDTO result = communicationServiceExt.save(communicationDTO);
         return ResponseEntity.created(new URI("/api/communications/" + result.getId()))
             .headers(HeaderUtil.createEntityCreationAlert(applicationName, true, ENTITY_NAME, result.getId().toString()))
@@ -80,12 +95,16 @@ public class CommunicationResourceExt extends CommunicationResource{
      * or with status {@code 500 (Internal Server Error)} if the communicationDTO couldn't be updated.
      * @throws URISyntaxException if the Location URI syntax is incorrect.
      */
-    @PutMapping("/communications")
+    @PutMapping("/update_communication_by_client_id")
     public ResponseEntity<CommunicationDTO> updateCommunication(@Valid @RequestBody CommunicationDTO communicationDTO) throws URISyntaxException {
         log.debug("REST request to update Communication : {}", communicationDTO);
         if (communicationDTO.getId() == null) {
             throw new BadRequestAlertException("Invalid id", ENTITY_NAME, "idnull");
         }
+        if (communicationDTO != null && communicationDTO.getClientId() != null && communicationDTO.getClientId() != getClientIdFromLoggedInUser()) {
+        	  throw new BadRequestAlertException("clientId mismatch", ENTITY_NAME, "clientIdMismatch");
+        }
+        communicationDTO.setLastUpdatedDate(ZonedDateTime.now());
         CommunicationDTO result = communicationServiceExt.save(communicationDTO);
         return ResponseEntity.ok()
             .headers(HeaderUtil.createEntityUpdateAlert(applicationName, true, ENTITY_NAME, communicationDTO.getId().toString()))
@@ -102,7 +121,11 @@ public class CommunicationResourceExt extends CommunicationResource{
     @GetMapping("/communications")
     public ResponseEntity<List<CommunicationDTO>> getAllCommunications(CommunicationCriteria criteria, Pageable pageable) {
         log.debug("REST request to get Communications by criteria: {}", criteria);
-        Page<CommunicationDTO> page = communicationQueryService.findByCriteria(criteria, pageable);
+        CommunicationCriteria communicationCriteria = new CommunicationCriteria();
+		LongFilter longFilterForClientId = new LongFilter();
+		longFilterForClientId.setEquals(getClientIdFromLoggedInUser());
+		communicationCriteria.setClientId(longFilterForClientId);
+        Page<CommunicationDTO> page = communicationQueryService.findByCriteria(communicationCriteria, pageable);
         HttpHeaders headers = PaginationUtil.generatePaginationHttpHeaders(ServletUriComponentsBuilder.fromCurrentRequest(), page);
         return ResponseEntity.ok().headers(headers).body(page.getContent());
     }
@@ -139,9 +162,21 @@ public class CommunicationResourceExt extends CommunicationResource{
      * @return the {@link ResponseEntity} with status {@code 204 (NO_CONTENT)}.
      */
     @DeleteMapping("/communications/{id}")
+    @PreAuthorize("hasAuthority(\"" + AuthoritiesConstants.COMPANY_ADMIN + "\")")
     public ResponseEntity<Void> deleteCommunication(@PathVariable Long id) {
         log.debug("REST request to delete Communication : {}", id);
         communicationServiceExt.delete(id);
         return ResponseEntity.noContent().headers(HeaderUtil.createEntityDeletionAlert(applicationName, true, ENTITY_NAME, id.toString())).build();
+    }
+    private Long getClientIdFromLoggedInUser() {
+    	Long clientId = 0L;
+    	String loggedInAdminUserEmail = SecurityUtils.getCurrentUserLogin().get();
+		User loggedInAdminUser = userRepositoryExt.findOneByEmailIgnoreCase(loggedInAdminUserEmail).get();
+		
+		if(loggedInAdminUser != null) {
+			clientId = Long.valueOf(loggedInAdminUser.getLogin());
+		}
+		
+		return clientId;
     }
 }
