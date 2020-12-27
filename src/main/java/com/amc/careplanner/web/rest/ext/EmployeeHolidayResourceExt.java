@@ -4,10 +4,17 @@ import com.amc.careplanner.service.EmployeeHolidayService;
 import com.amc.careplanner.web.rest.EmployeeHolidayResource;
 import com.amc.careplanner.web.rest.errors.BadRequestAlertException;
 import com.amc.careplanner.service.dto.EmployeeHolidayDTO;
+import com.amc.careplanner.service.dto.TaskCriteria;
+import com.amc.careplanner.service.dto.TaskDTO;
 import com.amc.careplanner.service.ext.EmployeeHolidayServiceExt;
 import com.amc.careplanner.service.dto.EmployeeHolidayCriteria;
+import com.amc.careplanner.domain.User;
+import com.amc.careplanner.repository.ext.UserRepositoryExt;
+import com.amc.careplanner.security.AuthoritiesConstants;
+import com.amc.careplanner.security.SecurityUtils;
 import com.amc.careplanner.service.EmployeeHolidayQueryService;
 
+import io.github.jhipster.service.filter.LongFilter;
 import io.github.jhipster.web.util.HeaderUtil;
 import io.github.jhipster.web.util.PaginationUtil;
 import io.github.jhipster.web.util.ResponseUtil;
@@ -20,11 +27,13 @@ import org.springframework.http.HttpHeaders;
 import org.springframework.http.HttpStatus;
 import org.springframework.web.servlet.support.ServletUriComponentsBuilder;
 import org.springframework.http.ResponseEntity;
+import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.web.bind.annotation.*;
 
 import javax.validation.Valid;
 import java.net.URI;
 import java.net.URISyntaxException;
+import java.time.ZonedDateTime;
 import java.util.List;
 import java.util.Optional;
 
@@ -45,11 +54,14 @@ public class EmployeeHolidayResourceExt extends EmployeeHolidayResource{
     private final EmployeeHolidayServiceExt employeeHolidayServiceExt;
 
     private final EmployeeHolidayQueryService employeeHolidayQueryService;
+    
+    private final UserRepositoryExt userRepositoryExt;
 
-    public EmployeeHolidayResourceExt(EmployeeHolidayServiceExt employeeHolidayServiceExt, EmployeeHolidayQueryService employeeHolidayQueryService) {
+    public EmployeeHolidayResourceExt(EmployeeHolidayServiceExt employeeHolidayServiceExt, EmployeeHolidayQueryService employeeHolidayQueryService, UserRepositoryExt userRepositoryExt) {
     	super(employeeHolidayServiceExt,employeeHolidayQueryService);
         this.employeeHolidayServiceExt = employeeHolidayServiceExt;
         this.employeeHolidayQueryService = employeeHolidayQueryService;
+        this.userRepositoryExt = userRepositoryExt;
     }
 
     /**
@@ -59,12 +71,15 @@ public class EmployeeHolidayResourceExt extends EmployeeHolidayResource{
      * @return the {@link ResponseEntity} with status {@code 201 (Created)} and with body the new employeeHolidayDTO, or with status {@code 400 (Bad Request)} if the employeeHoliday has already an ID.
      * @throws URISyntaxException if the Location URI syntax is incorrect.
      */
-    @PostMapping("/employee-holidays")
+    @PostMapping("/create_employee-holiday_by_client_id")
     public ResponseEntity<EmployeeHolidayDTO> createEmployeeHoliday(@Valid @RequestBody EmployeeHolidayDTO employeeHolidayDTO) throws URISyntaxException {
         log.debug("REST request to save EmployeeHoliday : {}", employeeHolidayDTO);
         if (employeeHolidayDTO.getId() != null) {
             throw new BadRequestAlertException("A new employeeHoliday cannot already have an ID", ENTITY_NAME, "idexists");
         }
+//        employeeHolidayDTO.setDateCreated(ZonedDateTime.now());
+        employeeHolidayDTO.setLastUpdatedDate(ZonedDateTime.now());
+        employeeHolidayDTO.setClientId(getClientIdFromLoggedInUser());
         EmployeeHolidayDTO result = employeeHolidayServiceExt.save(employeeHolidayDTO);
         return ResponseEntity.created(new URI("/api/employee-holidays/" + result.getId()))
             .headers(HeaderUtil.createEntityCreationAlert(applicationName, true, ENTITY_NAME, result.getId().toString()))
@@ -80,12 +95,17 @@ public class EmployeeHolidayResourceExt extends EmployeeHolidayResource{
      * or with status {@code 500 (Internal Server Error)} if the employeeHolidayDTO couldn't be updated.
      * @throws URISyntaxException if the Location URI syntax is incorrect.
      */
-    @PutMapping("/employee-holidays")
+    @PutMapping("/update_employee-holiday_by_client_id")
     public ResponseEntity<EmployeeHolidayDTO> updateEmployeeHoliday(@Valid @RequestBody EmployeeHolidayDTO employeeHolidayDTO) throws URISyntaxException {
         log.debug("REST request to update EmployeeHoliday : {}", employeeHolidayDTO);
         if (employeeHolidayDTO.getId() == null) {
             throw new BadRequestAlertException("Invalid id", ENTITY_NAME, "idnull");
         }
+        
+        if (employeeHolidayDTO != null && employeeHolidayDTO.getClientId() != null && employeeHolidayDTO.getClientId() != getClientIdFromLoggedInUser()) {
+        	  throw new BadRequestAlertException("clientId mismatch", ENTITY_NAME, "clientIdMismatch");
+        }
+        employeeHolidayDTO.setLastUpdatedDate(ZonedDateTime.now());
         EmployeeHolidayDTO result = employeeHolidayServiceExt.save(employeeHolidayDTO);
         return ResponseEntity.ok()
             .headers(HeaderUtil.createEntityUpdateAlert(applicationName, true, ENTITY_NAME, employeeHolidayDTO.getId().toString()))
@@ -102,7 +122,11 @@ public class EmployeeHolidayResourceExt extends EmployeeHolidayResource{
     @GetMapping("/employee-holidays")
     public ResponseEntity<List<EmployeeHolidayDTO>> getAllEmployeeHolidays(EmployeeHolidayCriteria criteria, Pageable pageable) {
         log.debug("REST request to get EmployeeHolidays by criteria: {}", criteria);
-        Page<EmployeeHolidayDTO> page = employeeHolidayQueryService.findByCriteria(criteria, pageable);
+       EmployeeHolidayCriteria employeeHolidayCriteria = new EmployeeHolidayCriteria();
+		LongFilter longFilterForClientId = new LongFilter();
+		longFilterForClientId.setEquals(getClientIdFromLoggedInUser());
+		employeeHolidayCriteria.setClientId(longFilterForClientId);
+        Page<EmployeeHolidayDTO> page = employeeHolidayQueryService.findByCriteria(employeeHolidayCriteria, pageable);
         HttpHeaders headers = PaginationUtil.generatePaginationHttpHeaders(ServletUriComponentsBuilder.fromCurrentRequest(), page);
         return ResponseEntity.ok().headers(headers).body(page.getContent());
     }
@@ -139,9 +163,22 @@ public class EmployeeHolidayResourceExt extends EmployeeHolidayResource{
      * @return the {@link ResponseEntity} with status {@code 204 (NO_CONTENT)}.
      */
     @DeleteMapping("/employee-holidays/{id}")
+    @PreAuthorize("hasAuthority(\"" + AuthoritiesConstants.COMPANY_ADMIN + "\")")
     public ResponseEntity<Void> deleteEmployeeHoliday(@PathVariable Long id) {
         log.debug("REST request to delete EmployeeHoliday : {}", id);
         employeeHolidayServiceExt.delete(id);
         return ResponseEntity.noContent().headers(HeaderUtil.createEntityDeletionAlert(applicationName, true, ENTITY_NAME, id.toString())).build();
+    }
+    
+    private Long getClientIdFromLoggedInUser() {
+    	Long clientId = 0L;
+    	String loggedInAdminUserEmail = SecurityUtils.getCurrentUserLogin().get();
+		User loggedInAdminUser = userRepositoryExt.findOneByEmailIgnoreCase(loggedInAdminUserEmail).get();
+		
+		if(loggedInAdminUser != null) {
+			clientId = Long.valueOf(loggedInAdminUser.getLogin());
+		}
+		
+		return clientId;
     }
 }

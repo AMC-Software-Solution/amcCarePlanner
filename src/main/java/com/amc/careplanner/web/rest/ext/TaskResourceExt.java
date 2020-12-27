@@ -63,7 +63,6 @@ public class TaskResourceExt extends TaskResource{
     	this.taskServiceExt = taskServiceExt;
         this.taskQueryService = taskQueryService;
         this.userRepositoryExt = userRepositoryExt;
-
     }
 
     /**
@@ -182,7 +181,5 @@ public class TaskResourceExt extends TaskResource{
 		}
 		
 		return clientId;
-    }
-    
-    
+    }  
 }

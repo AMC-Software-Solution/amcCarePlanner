@@ -4,10 +4,17 @@ import com.amc.careplanner.service.DisabilityService;
 import com.amc.careplanner.web.rest.DisabilityResource;
 import com.amc.careplanner.web.rest.errors.BadRequestAlertException;
 import com.amc.careplanner.service.dto.DisabilityDTO;
+import com.amc.careplanner.service.dto.TaskCriteria;
+import com.amc.careplanner.service.dto.TaskDTO;
 import com.amc.careplanner.service.ext.DisabilityServiceExt;
 import com.amc.careplanner.service.dto.DisabilityCriteria;
+import com.amc.careplanner.domain.User;
+import com.amc.careplanner.repository.ext.UserRepositoryExt;
+import com.amc.careplanner.security.AuthoritiesConstants;
+import com.amc.careplanner.security.SecurityUtils;
 import com.amc.careplanner.service.DisabilityQueryService;
 
+import io.github.jhipster.service.filter.LongFilter;
 import io.github.jhipster.web.util.HeaderUtil;
 import io.github.jhipster.web.util.PaginationUtil;
 import io.github.jhipster.web.util.ResponseUtil;
@@ -20,11 +27,13 @@ import org.springframework.http.HttpHeaders;
 import org.springframework.http.HttpStatus;
 import org.springframework.web.servlet.support.ServletUriComponentsBuilder;
 import org.springframework.http.ResponseEntity;
+import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.web.bind.annotation.*;
 
 import javax.validation.Valid;
 import java.net.URI;
 import java.net.URISyntaxException;
+import java.time.ZonedDateTime;
 import java.util.List;
 import java.util.Optional;
 
@@ -45,11 +54,14 @@ public class DisabilityResourceExt extends DisabilityResource{
     private final DisabilityServiceExt disabilityServiceExt;
 
     private final DisabilityQueryService disabilityQueryService;
+    
+    private final UserRepositoryExt userRepositoryExt;
 
-    public DisabilityResourceExt(DisabilityServiceExt disabilityServiceExt, DisabilityQueryService disabilityQueryService) {
+    public DisabilityResourceExt(DisabilityServiceExt disabilityServiceExt, DisabilityQueryService disabilityQueryService, UserRepositoryExt userRepositoryExt) {
     	super(disabilityServiceExt,disabilityQueryService);
         this.disabilityServiceExt = disabilityServiceExt;
         this.disabilityQueryService = disabilityQueryService;
+        this.userRepositoryExt = userRepositoryExt;
     }
 
     /**
@@ -59,12 +71,15 @@ public class DisabilityResourceExt extends DisabilityResource{
      * @return the {@link ResponseEntity} with status {@code 201 (Created)} and with body the new disabilityDTO, or with status {@code 400 (Bad Request)} if the disability has already an ID.
      * @throws URISyntaxException if the Location URI syntax is incorrect.
      */
-    @PostMapping("/disabilities")
+    @PostMapping("/create_disability_by_client_id")
     public ResponseEntity<DisabilityDTO> createDisability(@Valid @RequestBody DisabilityDTO disabilityDTO) throws URISyntaxException {
         log.debug("REST request to save Disability : {}", disabilityDTO);
         if (disabilityDTO.getId() != null) {
             throw new BadRequestAlertException("A new disability cannot already have an ID", ENTITY_NAME, "idexists");
         }
+//        disabilityDTO.setDateCreated(ZonedDateTime.now());
+        disabilityDTO.setLastUpdatedDate(ZonedDateTime.now());
+        disabilityDTO.setClientId(getClientIdFromLoggedInUser());
         DisabilityDTO result = disabilityServiceExt.save(disabilityDTO);
         return ResponseEntity.created(new URI("/api/disabilities/" + result.getId()))
             .headers(HeaderUtil.createEntityCreationAlert(applicationName, true, ENTITY_NAME, result.getId().toString()))
@@ -80,12 +95,17 @@ public class DisabilityResourceExt extends DisabilityResource{
      * or with status {@code 500 (Internal Server Error)} if the disabilityDTO couldn't be updated.
      * @throws URISyntaxException if the Location URI syntax is incorrect.
      */
-    @PutMapping("/disabilities")
+    @PutMapping("/update_disability_by_client_id")
     public ResponseEntity<DisabilityDTO> updateDisability(@Valid @RequestBody DisabilityDTO disabilityDTO) throws URISyntaxException {
         log.debug("REST request to update Disability : {}", disabilityDTO);
         if (disabilityDTO.getId() == null) {
             throw new BadRequestAlertException("Invalid id", ENTITY_NAME, "idnull");
         }
+        
+        if (disabilityDTO != null && disabilityDTO.getClientId() != null && disabilityDTO.getClientId() != getClientIdFromLoggedInUser()) {
+        	  throw new BadRequestAlertException("clientId mismatch", ENTITY_NAME, "clientIdMismatch");
+        }
+        disabilityDTO.setLastUpdatedDate(ZonedDateTime.now());
         DisabilityDTO result = disabilityServiceExt.save(disabilityDTO);
         return ResponseEntity.ok()
             .headers(HeaderUtil.createEntityUpdateAlert(applicationName, true, ENTITY_NAME, disabilityDTO.getId().toString()))
@@ -102,7 +122,11 @@ public class DisabilityResourceExt extends DisabilityResource{
     @GetMapping("/disabilities")
     public ResponseEntity<List<DisabilityDTO>> getAllDisabilities(DisabilityCriteria criteria, Pageable pageable) {
         log.debug("REST request to get Disabilities by criteria: {}", criteria);
-        Page<DisabilityDTO> page = disabilityQueryService.findByCriteria(criteria, pageable);
+        DisabilityCriteria disabilityCriteria = new DisabilityCriteria();
+		LongFilter longFilterForClientId = new LongFilter();
+		longFilterForClientId.setEquals(getClientIdFromLoggedInUser());
+		disabilityCriteria.setClientId(longFilterForClientId);
+        Page<DisabilityDTO> page = disabilityQueryService.findByCriteria(disabilityCriteria, pageable);
         HttpHeaders headers = PaginationUtil.generatePaginationHttpHeaders(ServletUriComponentsBuilder.fromCurrentRequest(), page);
         return ResponseEntity.ok().headers(headers).body(page.getContent());
     }
@@ -139,9 +163,22 @@ public class DisabilityResourceExt extends DisabilityResource{
      * @return the {@link ResponseEntity} with status {@code 204 (NO_CONTENT)}.
      */
     @DeleteMapping("/disabilities/{id}")
+    @PreAuthorize("hasAuthority(\"" + AuthoritiesConstants.COMPANY_ADMIN + "\")")
     public ResponseEntity<Void> deleteDisability(@PathVariable Long id) {
         log.debug("REST request to delete Disability : {}", id);
         disabilityServiceExt.delete(id);
         return ResponseEntity.noContent().headers(HeaderUtil.createEntityDeletionAlert(applicationName, true, ENTITY_NAME, id.toString())).build();
+    }
+    
+    private Long getClientIdFromLoggedInUser() {
+    	Long clientId = 0L;
+    	String loggedInAdminUserEmail = SecurityUtils.getCurrentUserLogin().get();
+		User loggedInAdminUser = userRepositoryExt.findOneByEmailIgnoreCase(loggedInAdminUserEmail).get();
+		
+		if(loggedInAdminUser != null) {
+			clientId = Long.valueOf(loggedInAdminUser.getLogin());
+		}
+		
+		return clientId;
     }
 }

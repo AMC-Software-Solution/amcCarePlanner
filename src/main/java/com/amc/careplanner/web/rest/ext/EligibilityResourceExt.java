@@ -4,10 +4,17 @@ import com.amc.careplanner.service.EligibilityService;
 import com.amc.careplanner.web.rest.EligibilityResource;
 import com.amc.careplanner.web.rest.errors.BadRequestAlertException;
 import com.amc.careplanner.service.dto.EligibilityDTO;
+import com.amc.careplanner.service.dto.TaskCriteria;
+import com.amc.careplanner.service.dto.TaskDTO;
 import com.amc.careplanner.service.ext.EligibilityServiceExt;
 import com.amc.careplanner.service.dto.EligibilityCriteria;
+import com.amc.careplanner.domain.User;
+import com.amc.careplanner.repository.ext.UserRepositoryExt;
+import com.amc.careplanner.security.AuthoritiesConstants;
+import com.amc.careplanner.security.SecurityUtils;
 import com.amc.careplanner.service.EligibilityQueryService;
 
+import io.github.jhipster.service.filter.LongFilter;
 import io.github.jhipster.web.util.HeaderUtil;
 import io.github.jhipster.web.util.PaginationUtil;
 import io.github.jhipster.web.util.ResponseUtil;
@@ -20,11 +27,13 @@ import org.springframework.http.HttpHeaders;
 import org.springframework.http.HttpStatus;
 import org.springframework.web.servlet.support.ServletUriComponentsBuilder;
 import org.springframework.http.ResponseEntity;
+import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.web.bind.annotation.*;
 
 import javax.validation.Valid;
 import java.net.URI;
 import java.net.URISyntaxException;
+import java.time.ZonedDateTime;
 import java.util.List;
 import java.util.Optional;
 
@@ -45,11 +54,14 @@ public class EligibilityResourceExt extends EligibilityResource{
     private final EligibilityServiceExt eligibilityServiceExt;
 
     private final EligibilityQueryService eligibilityQueryService;
+    
+    private final UserRepositoryExt userRepositoryExt;
 
-    public EligibilityResourceExt(EligibilityServiceExt eligibilityServiceExt, EligibilityQueryService eligibilityQueryService) {
+    public EligibilityResourceExt(EligibilityServiceExt eligibilityServiceExt, EligibilityQueryService eligibilityQueryService, UserRepositoryExt userRepositoryExt) {
     	super(eligibilityServiceExt,eligibilityQueryService);
         this.eligibilityServiceExt = eligibilityServiceExt;
         this.eligibilityQueryService = eligibilityQueryService;
+        this.userRepositoryExt = userRepositoryExt;
     }
 
     /**
@@ -59,12 +71,15 @@ public class EligibilityResourceExt extends EligibilityResource{
      * @return the {@link ResponseEntity} with status {@code 201 (Created)} and with body the new eligibilityDTO, or with status {@code 400 (Bad Request)} if the eligibility has already an ID.
      * @throws URISyntaxException if the Location URI syntax is incorrect.
      */
-    @PostMapping("/eligibilities")
+    @PostMapping("/create_eligibility_by_client_id")
     public ResponseEntity<EligibilityDTO> createEligibility(@Valid @RequestBody EligibilityDTO eligibilityDTO) throws URISyntaxException {
         log.debug("REST request to save Eligibility : {}", eligibilityDTO);
         if (eligibilityDTO.getId() != null) {
             throw new BadRequestAlertException("A new eligibility cannot already have an ID", ENTITY_NAME, "idexists");
         }
+//        eligibilityDTO.setDateCreated(ZonedDateTime.now());
+        eligibilityDTO.setLastUpdatedDate(ZonedDateTime.now());
+        eligibilityDTO.setClientId(getClientIdFromLoggedInUser());
         EligibilityDTO result = eligibilityServiceExt.save(eligibilityDTO);
         return ResponseEntity.created(new URI("/api/eligibilities/" + result.getId()))
             .headers(HeaderUtil.createEntityCreationAlert(applicationName, true, ENTITY_NAME, result.getId().toString()))
@@ -80,12 +95,17 @@ public class EligibilityResourceExt extends EligibilityResource{
      * or with status {@code 500 (Internal Server Error)} if the eligibilityDTO couldn't be updated.
      * @throws URISyntaxException if the Location URI syntax is incorrect.
      */
-    @PutMapping("/eligibilities")
+    @PutMapping("/update_eligibility_by_client_id")
     public ResponseEntity<EligibilityDTO> updateEligibility(@Valid @RequestBody EligibilityDTO eligibilityDTO) throws URISyntaxException {
         log.debug("REST request to update Eligibility : {}", eligibilityDTO);
         if (eligibilityDTO.getId() == null) {
             throw new BadRequestAlertException("Invalid id", ENTITY_NAME, "idnull");
         }
+        
+        if (eligibilityDTO != null && eligibilityDTO.getClientId() != null && eligibilityDTO.getClientId() != getClientIdFromLoggedInUser()) {
+        	  throw new BadRequestAlertException("clientId mismatch", ENTITY_NAME, "clientIdMismatch");
+        }
+        eligibilityDTO.setLastUpdatedDate(ZonedDateTime.now());
         EligibilityDTO result = eligibilityServiceExt.save(eligibilityDTO);
         return ResponseEntity.ok()
             .headers(HeaderUtil.createEntityUpdateAlert(applicationName, true, ENTITY_NAME, eligibilityDTO.getId().toString()))
@@ -102,7 +122,11 @@ public class EligibilityResourceExt extends EligibilityResource{
     @GetMapping("/eligibilities")
     public ResponseEntity<List<EligibilityDTO>> getAllEligibilities(EligibilityCriteria criteria, Pageable pageable) {
         log.debug("REST request to get Eligibilities by criteria: {}", criteria);
-        Page<EligibilityDTO> page = eligibilityQueryService.findByCriteria(criteria, pageable);
+        EligibilityCriteria eligibilityCriteria = new EligibilityCriteria();
+		LongFilter longFilterForClientId = new LongFilter();
+		longFilterForClientId.setEquals(getClientIdFromLoggedInUser());
+		eligibilityCriteria.setClientId(longFilterForClientId);
+        Page<EligibilityDTO> page = eligibilityQueryService.findByCriteria(eligibilityCriteria, pageable);
         HttpHeaders headers = PaginationUtil.generatePaginationHttpHeaders(ServletUriComponentsBuilder.fromCurrentRequest(), page);
         return ResponseEntity.ok().headers(headers).body(page.getContent());
     }
@@ -139,9 +163,22 @@ public class EligibilityResourceExt extends EligibilityResource{
      * @return the {@link ResponseEntity} with status {@code 204 (NO_CONTENT)}.
      */
     @DeleteMapping("/eligibilities/{id}")
+    @PreAuthorize("hasAuthority(\"" + AuthoritiesConstants.COMPANY_ADMIN + "\")")
     public ResponseEntity<Void> deleteEligibility(@PathVariable Long id) {
         log.debug("REST request to delete Eligibility : {}", id);
         eligibilityServiceExt.delete(id);
         return ResponseEntity.noContent().headers(HeaderUtil.createEntityDeletionAlert(applicationName, true, ENTITY_NAME, id.toString())).build();
+    }
+    
+    private Long getClientIdFromLoggedInUser() {
+    	Long clientId = 0L;
+    	String loggedInAdminUserEmail = SecurityUtils.getCurrentUserLogin().get();
+		User loggedInAdminUser = userRepositoryExt.findOneByEmailIgnoreCase(loggedInAdminUserEmail).get();
+		
+		if(loggedInAdminUser != null) {
+			clientId = Long.valueOf(loggedInAdminUser.getLogin());
+		}
+		
+		return clientId;
     }
 }

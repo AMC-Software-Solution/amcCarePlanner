@@ -6,6 +6,9 @@ import com.amc.careplanner.web.rest.errors.BadRequestAlertException;
 import com.amc.careplanner.service.dto.AccessDTO;
 import com.amc.careplanner.service.ext.AccessServiceExt;
 import com.amc.careplanner.service.dto.AccessCriteria;
+import com.amc.careplanner.domain.User;
+import com.amc.careplanner.repository.ext.UserRepositoryExt;
+import com.amc.careplanner.security.SecurityUtils;
 import com.amc.careplanner.service.AccessQueryService;
 
 import io.github.jhipster.web.util.HeaderUtil;
@@ -25,6 +28,7 @@ import org.springframework.web.bind.annotation.*;
 import javax.validation.Valid;
 import java.net.URI;
 import java.net.URISyntaxException;
+import java.time.ZonedDateTime;
 import java.util.List;
 import java.util.Optional;
 
@@ -45,24 +49,41 @@ public class AccessResourceExt extends AccessResource {
     private final AccessServiceExt accessServiceExt;
 
     private final AccessQueryService accessQueryService;
+    
+    private final UserRepositoryExt userRepositoryExt;
 
-    public AccessResourceExt(AccessServiceExt accessServiceExt, AccessQueryService accessQueryService) {
+    public AccessResourceExt(AccessServiceExt accessServiceExt, AccessQueryService accessQueryService, UserRepositoryExt userRepositoryExt) {
         super(accessServiceExt,accessQueryService);
         this.accessServiceExt = accessServiceExt;
         this.accessQueryService = accessQueryService;
+        this.userRepositoryExt = userRepositoryExt;
     }
     
-    @PostMapping("/accesses")
+    @PostMapping("/create_access_by_client_id")
     public ResponseEntity<AccessDTO> createAccess(@Valid @RequestBody AccessDTO accessDTO) throws URISyntaxException {
         log.debug("REST request to save Access : {}", accessDTO);
         if (accessDTO.getId() != null) {
             throw new BadRequestAlertException("A new access cannot already have an ID", ENTITY_NAME, "idexists");
         }
+//        accessDTO.setDateCreated(ZonedDateTime.now());
+        accessDTO.setLastUpdatedDate(ZonedDateTime.now());
+        accessDTO.setClientId(getClientIdFromLoggedInUser());
         AccessDTO result = accessServiceExt.save(accessDTO);
         return ResponseEntity.created(new URI("/api/accesses/" + result.getId()))
             .headers(HeaderUtil.createEntityCreationAlert(applicationName, true, ENTITY_NAME, result.getId().toString()))
             .body(result);
     }
     
+    private Long getClientIdFromLoggedInUser() {
+    	Long clientId = 0L;
+    	String loggedInAdminUserEmail = SecurityUtils.getCurrentUserLogin().get();
+		User loggedInAdminUser = userRepositoryExt.findOneByEmailIgnoreCase(loggedInAdminUserEmail).get();
+		
+		if(loggedInAdminUser != null) {
+			clientId = Long.valueOf(loggedInAdminUser.getLogin());
+		}
+		
+		return clientId;
+    }
     
 }
