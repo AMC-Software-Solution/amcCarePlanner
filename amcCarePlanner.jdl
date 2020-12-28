@@ -206,10 +206,11 @@ entity Client {
 	clientContactName String,
 	clientPhone String,
 	clientEmail String,
-	createdDate ZonedDateTime,
-	lastUpdatedDate ZonedDateTime,
+    createdDate ZonedDateTime,
+    lastUpdatedDate ZonedDateTime,
 	hasExtraData Boolean
 }
+
 
 
 // Many to one relationship with client
@@ -221,7 +222,8 @@ entity Branch {
 	branchEmail String,
 	photo ImageBlob,
 	photoUrl String,
-	lastUpdatedDate ZonedDateTime,
+    createdDate ZonedDateTime,
+    lastUpdatedDate ZonedDateTime,
 	hasExtraData Boolean
 }
 
@@ -260,6 +262,7 @@ entity ServiceUser {
 	lastRecordedWeight String,
 	hasMedicalCondition Boolean,
 	medicalConditionSummary String,
+	createdDate ZonedDateTime,
 	lastUpdatedDate ZonedDateTime,
 	clientId Long required,
 	hasExtraData Boolean
@@ -294,6 +297,7 @@ entity MedicalContact {
 	districtNursePhone String,
 	careManagerName String,
 	careManagerPhone String
+	createdDate ZonedDateTime,
 	lastUpdatedDate ZonedDateTime,
 	clientId Long required,
 	hasExtraData Boolean
@@ -312,6 +316,7 @@ entity ServiceUserContact {
 	county String,
 	postCode String required,
 	telephone String required,
+	createdDate ZonedDateTime,
 	lastUpdatedDate ZonedDateTime,
 	clientId Long required,
 	hasExtraData Boolean
@@ -329,6 +334,7 @@ entity EmergencyContact {
 	infoSharingConsentGiven Boolean,
 	preferredContactNumber String required,
 	fullAddress String,
+	createdDate ZonedDateTime,
 	lastUpdatedDate ZonedDateTime,
 	clientId Long required,
 	hasExtraData Boolean
@@ -341,7 +347,8 @@ relationship ManyToOne {
  entity ServiceUserLocation  {
 	latitude Double required,
 	longitude Double required,
-	lastUpdatedDate ZonedDateTime,
+    createdDate ZonedDateTime,
+    lastUpdatedDate ZonedDateTime,
 	clientId Long required,
 	hasExtraData Boolean
 }
@@ -361,6 +368,7 @@ entity PowerOfAttorney {
 	healthAndWelfareName String,
 	propertyAndFinAffairs Boolean,
 	propertyAndFinAffairsName String,
+	createdDate ZonedDateTime,
 	lastUpdatedDate ZonedDateTime,
 	clientId Long required,
 	hasExtraData Boolean
@@ -388,7 +396,8 @@ entity Consent {
 	signatureImage ImageBlob,
 	signatureImageUrl String,
 	consentDate ZonedDateTime,
-	lastUpdatedDate ZonedDateTime,
+    createdDate ZonedDateTime,
+    lastUpdatedDate ZonedDateTime,
 	clientId Long required,
 	hasExtraData Boolean
 }
@@ -405,7 +414,8 @@ entity Consent {
 entity Access {
 	keySafeNumber String required,
 	accessDetails String,
-	lastUpdatedDate ZonedDateTime,
+    createdDate ZonedDateTime,
+    lastUpdatedDate ZonedDateTime,
 	clientId Long required,
 	hasExtraData Boolean
 }
@@ -418,6 +428,7 @@ entity Equality {
 	gender Gender required,
 	maritalStatus MaritalStatus required,
 	religion Religion required,
+	createdDate ZonedDateTime,
 	lastUpdatedDate ZonedDateTime,
 	clientId Long required,
 	hasExtraData Boolean
@@ -451,7 +462,8 @@ entity Question {
 	attribute4 String,
 	attribute5 String,
 	optional Boolean,
-	lastUpdatedDate ZonedDateTime,
+    createdDate ZonedDateTime,
+    lastUpdatedDate ZonedDateTime,
 	clientId Long required,
 	hasExtraData Boolean
 }
@@ -469,7 +481,7 @@ entity Answer {
 	attribute4 String,
 	attribute5 String,
 	createdDate ZonedDateTime,
-	lastUpdatedDate ZonedDateTime,
+    lastUpdatedDate ZonedDateTime,
 	clientId Long required,
 	hasExtraData Boolean
 }
@@ -531,7 +543,8 @@ entity Employee {
 	// New Addition
 	employeeBio String,
 	acruedHolidayHours Integer,
-	lastUpdatedDate ZonedDateTime,
+	createdDate ZonedDateTime,
+    lastUpdatedDate ZonedDateTime,
 	clientId Long required,
 	hasExtraData Boolean
 }
@@ -557,7 +570,8 @@ relationship ManyToOne {
 entity EmployeeLocation  {
 	latitude Double required,
 	longitude Double required,
-	lastUpdatedDate ZonedDateTime,
+	createdDate ZonedDateTime,
+lastUpdatedDate ZonedDateTime,
 	clientId Long required,
 	hasExtraData Boolean
 }
@@ -603,7 +617,8 @@ entity RelationshipType {
 entity CarerClientRelation {
 	reason String,
 	count Long,
-	lastUpdatedDate ZonedDateTime,
+	createdDate ZonedDateTime,
+lastUpdatedDate ZonedDateTime,
 	clientId Long required,
 	hasExtraData Boolean
 }
@@ -630,7 +645,8 @@ entity DisabilityType {
 
 entity Disability{
 	note String,
-	lastUpdatedDate ZonedDateTime,
+	createdDate ZonedDateTime,
+lastUpdatedDate ZonedDateTime,
 	clientId Long required,
 	hasExtraData Boolean
 }
@@ -651,7 +667,8 @@ entity EligibilityType {
 }
 entity Eligibility {
     note String,
-    lastUpdatedDate ZonedDateTime,
+    createdDate ZonedDateTime,
+lastUpdatedDate ZonedDateTime,
 	clientId Long required,
 	hasExtraData Boolean
 }
@@ -666,7 +683,8 @@ entity Travel {
 	actualDistanceRequired Long,
 	actualTimeRequired Long,
 	travelStatus TravelStatus,
-	lastUpdatedDate ZonedDateTime,
+	createdDate ZonedDateTime,
+lastUpdatedDate ZonedDateTime,
 	clientId Long required,
 	hasExtraData Boolean
 	
@@ -693,7 +711,8 @@ entity Payroll {
 	netPay BigDecimal required,
 	totalTax BigDecimal,
 	payrollStatus PayrollStatus required,
-	lastUpdatedDate ZonedDateTime,
+	createdDate ZonedDateTime,
+lastUpdatedDate ZonedDateTime,
 	clientId Long required,
 	hasExtraData Boolean
 }
@@ -716,7 +735,8 @@ entity EmployeeHoliday {
 	requestedDate ZonedDateTime,
 	approved Boolean,
 	note String,
-	lastUpdatedDate ZonedDateTime,
+	createdDate ZonedDateTime,
+lastUpdatedDate ZonedDateTime,
 	clientId Long required,
 	hasExtraData Boolean
 }
@@ -740,7 +760,8 @@ entity ServceUserDocument{
     uploadedDate ZonedDateTime,
     documentFile Blob,
     documentFileUrl String,
-    lastUpdatedDate ZonedDateTime,
+    createdDate ZonedDateTime,
+lastUpdatedDate ZonedDateTime,
 	clientId Long required,
 	hasExtraData Boolean
 }
@@ -771,7 +792,8 @@ entity TerminalDevice {
    note String,
    ownerEntityId Long,
    ownerEntityName String
-   lastUpdatedDate ZonedDateTime,
+   createdDate ZonedDateTime,
+lastUpdatedDate ZonedDateTime,
     clientId Long required,
 	hasExtraData Boolean
 }
@@ -794,7 +816,8 @@ entity EmployeeDocument{
     uploadedDate ZonedDateTime,
     documentFile Blob,
     documentFileUrl String,
-    lastUpdatedDate ZonedDateTime,
+    createdDate ZonedDateTime,
+lastUpdatedDate ZonedDateTime,
 	clientId Long required,
 	hasExtraData Boolean
 }
@@ -817,7 +840,8 @@ entity  Communication {
 	communicationDate ZonedDateTime required,
 	attachment ImageBlob,
 	attachmentUrl String,
-	lastUpdatedDate ZonedDateTime,
+	createdDate ZonedDateTime,
+lastUpdatedDate ZonedDateTime,
 	clientId Long required,
 	hasExtraData Boolean
 }
@@ -834,7 +858,8 @@ relationship ManyToOne  {
 entity DocumentType {
 	documentTypeTitle String required,
 	documentTypeDescription String,
-	lastUpdatedDate ZonedDateTime,
+	createdDate ZonedDateTime,
+lastUpdatedDate ZonedDateTime,
 	hasExtraData Boolean
 }
 
@@ -848,7 +873,8 @@ entity Notification {
 	imageUrl String,
 	senderId Long,
 	receiverId Long,
-	lastUpdatedDate ZonedDateTime,
+	createdDate ZonedDateTime,
+lastUpdatedDate ZonedDateTime,
 	clientId Long required,
 	hasExtraData Boolean
 }
@@ -860,7 +886,8 @@ entity Country {
 	countryFlagUrl String,
 	countryCallingCode String,
 	countryTelDigitLength Integer,
-	lastUpdatedDate ZonedDateTime,
+	createdDate ZonedDateTime,
+lastUpdatedDate ZonedDateTime,
 	hasExtraData Boolean
 	
 }
@@ -874,8 +901,8 @@ entity Task {
 	startTime String required,
 	endTime String,
 	status TaskStatus,
-	dateCreated ZonedDateTime,
-	lastUpdatedDate ZonedDateTime,
+	createdDate ZonedDateTime,
+lastUpdatedDate ZonedDateTime,
 	clientId Long required,
 	hasExtraData Boolean
 }
@@ -911,7 +938,8 @@ entity ServiceUserEvent {
 	priority ServicePriority,
 	note String,
 	dateOfEvent ZonedDateTime required,
-	lastUpdatedDate ZonedDateTime,
+	createdDate ZonedDateTime,
+lastUpdatedDate ZonedDateTime,
 	clientId Long required,
 	hasExtraData Boolean
 }
@@ -944,7 +972,8 @@ entity ServiceOrder {
 	serviceDescription String,
 	serviceHourlyRate Double required,
 	clientId Long required,
-	lastUpdatedDate ZonedDateTime,
+	createdDate ZonedDateTime,
+lastUpdatedDate ZonedDateTime,
 	hasExtraData Boolean
 }
 
@@ -970,7 +999,8 @@ entity Invoice {
 	attribute5 String,
 	attribute6 String,
 	attribute7 String,
-	lastUpdatedDate ZonedDateTime,
+	createdDate ZonedDateTime,
+lastUpdatedDate ZonedDateTime,
 	clientId Long required,
 	hasExtraData Boolean
 }
@@ -995,7 +1025,8 @@ entity Timesheet {
 	breakStartTime String,
 	breakEndTime String,
 	note String,
-	lastUpdatedDate ZonedDateTime,
+	createdDate ZonedDateTime,
+lastUpdatedDate ZonedDateTime,
 	clientId Long required,
 	hasExtraData Boolean
 	
@@ -1026,6 +1057,7 @@ entity ClientDocument {
     uploadedDate ZonedDateTime,
     documentFile Blob,
     documentFileUrl String,
+    createdDate ZonedDateTime,
     lastUpdatedDate ZonedDateTime,
 	clientId Long required,
 	hasExtraData Boolean
