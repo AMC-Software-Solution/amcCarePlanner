@@ -90,7 +90,7 @@ public class EmployeeResourceExt extends EmployeeResource{
     
 
 
-    @PostMapping("/create_employee_login")
+    @PostMapping("/create-employee-login")
     @PreAuthorize("hasAuthority(\"" + AuthoritiesConstants.COMPANY_ADMIN + "\")")
     public ResponseEntity<EmployeeDTO> createEmployeeWithLogin(@Valid @RequestBody EmployeeDTO employeeDTO) throws URISyntaxException {
         log.debug("REST request to save Employee : {}", employeeDTO);
@@ -179,7 +179,7 @@ public class EmployeeResourceExt extends EmployeeResource{
             .body(result);
     }
     
-    @GetMapping("/get_employees_by_client_id")
+    @GetMapping("/get-employees-by-client-id")
     public ResponseEntity<List<EmployeeDTO>> getAllEmployees(EmployeeCriteria criteria, Pageable pageable) {
         log.debug("REST request to get Employees by criteria: {}", criteria);
         EmployeeCriteria employeeCriteria = new EmployeeCriteria();
@@ -192,7 +192,7 @@ public class EmployeeResourceExt extends EmployeeResource{
     }
     
     
-    @PutMapping("/update_employee_by_client_id")
+    @PutMapping("/update-employee-by-client-id")
     @PreAuthorize("hasAuthority(\"" + AuthoritiesConstants.COMPANY_ADMIN + "\")")
     public ResponseEntity<EmployeeDTO> updateEmployee(@Valid @RequestBody EmployeeDTO employeeDTO) throws URISyntaxException {
         log.debug("REST request to update Employee : {}", employeeDTO);
@@ -238,7 +238,7 @@ public class EmployeeResourceExt extends EmployeeResource{
     }
     
     
-    @GetMapping("/get_employee_by_client_id/{id}")
+    @GetMapping("/get-employee-by-client-id/{id}")
     public ResponseEntity<EmployeeDTO> getEmployee(@PathVariable Long id) {
         log.debug("REST request to get Employee : {}", id);
         EmployeeCriteria employeeCriteria = new EmployeeCriteria();

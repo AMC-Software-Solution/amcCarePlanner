@@ -71,7 +71,7 @@ public class EmployeeHolidayResourceExt extends EmployeeHolidayResource{
      * @return the {@link ResponseEntity} with status {@code 201 (Created)} and with body the new employeeHolidayDTO, or with status {@code 400 (Bad Request)} if the employeeHoliday has already an ID.
      * @throws URISyntaxException if the Location URI syntax is incorrect.
      */
-    @PostMapping("/create_employee-holiday_by_client_id")
+    @PostMapping("/create-employee-holiday-by-client-id")
     public ResponseEntity<EmployeeHolidayDTO> createEmployeeHoliday(@Valid @RequestBody EmployeeHolidayDTO employeeHolidayDTO) throws URISyntaxException {
         log.debug("REST request to save EmployeeHoliday : {}", employeeHolidayDTO);
         if (employeeHolidayDTO.getId() != null) {
@@ -95,7 +95,7 @@ public class EmployeeHolidayResourceExt extends EmployeeHolidayResource{
      * or with status {@code 500 (Internal Server Error)} if the employeeHolidayDTO couldn't be updated.
      * @throws URISyntaxException if the Location URI syntax is incorrect.
      */
-    @PutMapping("/update_employee-holiday_by_client_id")
+    @PutMapping("/update-employee-holiday-by-client-id")
     public ResponseEntity<EmployeeHolidayDTO> updateEmployeeHoliday(@Valid @RequestBody EmployeeHolidayDTO employeeHolidayDTO) throws URISyntaxException {
         log.debug("REST request to update EmployeeHoliday : {}", employeeHolidayDTO);
         if (employeeHolidayDTO.getId() == null) {

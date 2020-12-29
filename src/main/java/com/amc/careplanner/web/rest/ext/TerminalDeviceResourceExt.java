@@ -73,13 +73,13 @@ public class TerminalDeviceResourceExt extends TerminalDeviceResource{
      * @return the {@link ResponseEntity} with status {@code 201 (Created)} and with body the new terminalDeviceDTO, or with status {@code 400 (Bad Request)} if the terminalDevice has already an ID.
      * @throws URISyntaxException if the Location URI syntax is incorrect.
      */
-    @PostMapping("/create_terminal-devices_by_client_id")
+    @PostMapping("/create-terminal-devices-by-client-id")
     public ResponseEntity<TerminalDeviceDTO> createTerminalDevice(@Valid @RequestBody TerminalDeviceDTO terminalDeviceDTO) throws URISyntaxException {
         log.debug("REST request to save TerminalDevice : {}", terminalDeviceDTO);
         if (terminalDeviceDTO.getId() != null) {
             throw new BadRequestAlertException("A new terminalDevice cannot already have an ID", ENTITY_NAME, "idexists");
         }
-       //terminalDeviceDTO.setDateCreated(ZonedDateTime.now());
+        //terminalDeviceDTO.setDateCreated(ZonedDateTime.now());
         terminalDeviceDTO.setLastUpdatedDate(ZonedDateTime.now());
         terminalDeviceDTO.setClientId(getClientIdFromLoggedInUser());
         TerminalDeviceDTO result = terminalDeviceServiceExt.save(terminalDeviceDTO);
@@ -97,7 +97,7 @@ public class TerminalDeviceResourceExt extends TerminalDeviceResource{
      * or with status {@code 500 (Internal Server Error)} if the terminalDeviceDTO couldn't be updated.
      * @throws URISyntaxException if the Location URI syntax is incorrect.
      */
-    @PutMapping("/update_terminal-devices_by_client_id")
+    @PutMapping("/update-terminal-devices-by-client-id")
     public ResponseEntity<TerminalDeviceDTO> updateTerminalDevice(@Valid @RequestBody TerminalDeviceDTO terminalDeviceDTO) throws URISyntaxException {
         log.debug("REST request to update TerminalDevice : {}", terminalDeviceDTO);
         if (terminalDeviceDTO.getId() == null) {

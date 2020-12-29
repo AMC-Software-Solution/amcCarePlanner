@@ -71,7 +71,7 @@ public class TimesheetResourceExt extends TimesheetResource{
      * @return the {@link ResponseEntity} with status {@code 201 (Created)} and with body the new timesheetDTO, or with status {@code 400 (Bad Request)} if the timesheet has already an ID.
      * @throws URISyntaxException if the Location URI syntax is incorrect.
      */
-    @PostMapping("/create_timesheet_by_client_id")
+    @PostMapping("/create-timesheet-by-client-id")
     public ResponseEntity<TimesheetDTO> createTimesheet(@Valid @RequestBody TimesheetDTO timesheetDTO) throws URISyntaxException {
         log.debug("REST request to save Timesheet : {}", timesheetDTO);
         if (timesheetDTO.getId() != null) {
@@ -95,7 +95,7 @@ public class TimesheetResourceExt extends TimesheetResource{
      * or with status {@code 500 (Internal Server Error)} if the timesheetDTO couldn't be updated.
      * @throws URISyntaxException if the Location URI syntax is incorrect.
      */
-    @PutMapping("/update_timesheet_by_client_id")
+    @PutMapping("/update-timesheet-by-client-id")
     public ResponseEntity<TimesheetDTO> updateTimesheet(@Valid @RequestBody TimesheetDTO timesheetDTO) throws URISyntaxException {
         log.debug("REST request to update Timesheet : {}", timesheetDTO);
         if (timesheetDTO.getId() == null) {

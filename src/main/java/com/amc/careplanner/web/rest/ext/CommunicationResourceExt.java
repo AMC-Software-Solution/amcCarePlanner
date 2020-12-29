@@ -71,7 +71,7 @@ public class CommunicationResourceExt extends CommunicationResource{
      * @return the {@link ResponseEntity} with status {@code 201 (Created)} and with body the new communicationDTO, or with status {@code 400 (Bad Request)} if the communication has already an ID.
      * @throws URISyntaxException if the Location URI syntax is incorrect.
      */
-    @PostMapping("/create_communication_by_client_id")
+    @PostMapping("/create-communication-by-client-id")
     public ResponseEntity<CommunicationDTO> createCommunication(@Valid @RequestBody CommunicationDTO communicationDTO) throws URISyntaxException {
         log.debug("REST request to save Communication : {}", communicationDTO);
         if (communicationDTO.getId() != null) {
@@ -95,7 +95,7 @@ public class CommunicationResourceExt extends CommunicationResource{
      * or with status {@code 500 (Internal Server Error)} if the communicationDTO couldn't be updated.
      * @throws URISyntaxException if the Location URI syntax is incorrect.
      */
-    @PutMapping("/update_communication_by_client_id")
+    @PutMapping("/update-communication-by-client-id")
     public ResponseEntity<CommunicationDTO> updateCommunication(@Valid @RequestBody CommunicationDTO communicationDTO) throws URISyntaxException {
         log.debug("REST request to update Communication : {}", communicationDTO);
         if (communicationDTO.getId() == null) {

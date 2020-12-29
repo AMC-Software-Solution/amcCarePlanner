@@ -71,7 +71,7 @@ public class EligibilityResourceExt extends EligibilityResource{
      * @return the {@link ResponseEntity} with status {@code 201 (Created)} and with body the new eligibilityDTO, or with status {@code 400 (Bad Request)} if the eligibility has already an ID.
      * @throws URISyntaxException if the Location URI syntax is incorrect.
      */
-    @PostMapping("/create_eligibility_by_client_id")
+    @PostMapping("/create-eligibility-by-client-id")
     public ResponseEntity<EligibilityDTO> createEligibility(@Valid @RequestBody EligibilityDTO eligibilityDTO) throws URISyntaxException {
         log.debug("REST request to save Eligibility : {}", eligibilityDTO);
         if (eligibilityDTO.getId() != null) {
@@ -95,7 +95,7 @@ public class EligibilityResourceExt extends EligibilityResource{
      * or with status {@code 500 (Internal Server Error)} if the eligibilityDTO couldn't be updated.
      * @throws URISyntaxException if the Location URI syntax is incorrect.
      */
-    @PutMapping("/update_eligibility_by_client_id")
+    @PutMapping("/update-eligibility-by-client-id")
     public ResponseEntity<EligibilityDTO> updateEligibility(@Valid @RequestBody EligibilityDTO eligibilityDTO) throws URISyntaxException {
         log.debug("REST request to update Eligibility : {}", eligibilityDTO);
         if (eligibilityDTO.getId() == null) {

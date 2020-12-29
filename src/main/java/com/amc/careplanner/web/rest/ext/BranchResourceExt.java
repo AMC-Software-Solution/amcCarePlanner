@@ -71,7 +71,7 @@ public class BranchResourceExt extends BranchResource {
      * @return the {@link ResponseEntity} with status {@code 201 (Created)} and with body the new branchDTO, or with status {@code 400 (Bad Request)} if the branch has already an ID.
      * @throws URISyntaxException if the Location URI syntax is incorrect.
      */
-    @PostMapping("/create_branch_by_client_id")
+    @PostMapping("/create-branch-by-client-id")
     @PreAuthorize("hasAuthority(\"" + AuthoritiesConstants.ADMIN + "\")")
     public ResponseEntity<BranchDTO> createBranch(@Valid @RequestBody BranchDTO branchDTO) throws URISyntaxException {
         log.debug("REST request to save Branch : {}", branchDTO);
@@ -94,7 +94,7 @@ public class BranchResourceExt extends BranchResource {
      * or with status {@code 500 (Internal Server Error)} if the branchDTO couldn't be updated.
      * @throws URISyntaxException if the Location URI syntax is incorrect.
      */
-    @PutMapping("/update_branch_by_client_id")
+    @PutMapping("/update-branch-by-client-id")
     @PreAuthorize("hasAuthority(\"" + AuthoritiesConstants.ADMIN + "\")")
     public ResponseEntity<BranchDTO> updateBranch(@Valid @RequestBody BranchDTO branchDTO) throws URISyntaxException {
         log.debug("REST request to update Branch : {}", branchDTO);
@@ -115,7 +115,7 @@ public class BranchResourceExt extends BranchResource {
      * @param criteria the criteria which the requested entities should match.
      * @return the {@link ResponseEntity} with status {@code 200 (OK)} and the list of branches in body.
      */
-    @GetMapping("/get_branches_by_client_id")
+    @GetMapping("/get-branches-by-client-id")
     public ResponseEntity<List<BranchDTO>> getAllBranches(BranchCriteria criteria, Pageable pageable) {
         log.debug("REST request to get Branches by criteria: {}", criteria);
         BranchCriteria branchCriteria = new BranchCriteria();
@@ -145,7 +145,7 @@ public class BranchResourceExt extends BranchResource {
      * @param id the id of the branchDTO to retrieve.
      * @return the {@link ResponseEntity} with status {@code 200 (OK)} and with body the branchDTO, or with status {@code 404 (Not Found)}.
      */
-    @GetMapping("/get_branch_by_client_id/{id}")
+    @GetMapping("/get-branch-by-client-id/{id}")
     public ResponseEntity<BranchDTO> getBranch(@PathVariable Long id) {
         log.debug("REST request to get Branch : {}", id);
         BranchCriteria branchCriteria = new BranchCriteria();

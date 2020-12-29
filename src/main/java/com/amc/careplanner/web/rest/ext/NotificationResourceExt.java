@@ -71,7 +71,7 @@ public class NotificationResourceExt extends NotificationResource{
      * @return the {@link ResponseEntity} with status {@code 201 (Created)} and with body the new notificationDTO, or with status {@code 400 (Bad Request)} if the notification has already an ID.
      * @throws URISyntaxException if the Location URI syntax is incorrect.
      */
-    @PostMapping("/create_notification_by_client_id")
+    @PostMapping("/create-notification-by-client-id")
     public ResponseEntity<NotificationDTO> createNotification(@Valid @RequestBody NotificationDTO notificationDTO) throws URISyntaxException {
         log.debug("REST request to save Notification : {}", notificationDTO);
         if (notificationDTO.getId() != null) {
@@ -95,7 +95,7 @@ public class NotificationResourceExt extends NotificationResource{
      * or with status {@code 500 (Internal Server Error)} if the notificationDTO couldn't be updated.
      * @throws URISyntaxException if the Location URI syntax is incorrect.
      */
-    @PutMapping("/update_notification_by_client_id")
+    @PutMapping("/update-notification-by-client-id")
     public ResponseEntity<NotificationDTO> updateNotification(@Valid @RequestBody NotificationDTO notificationDTO) throws URISyntaxException {
         log.debug("REST request to update Notification : {}", notificationDTO);
         if (notificationDTO.getId() == null) {

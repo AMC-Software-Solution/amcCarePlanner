@@ -71,7 +71,7 @@ public class EmployeeDocumentResourceExt extends EmployeeDocumentResource{
      * @return the {@link ResponseEntity} with status {@code 201 (Created)} and with body the new employeeDocumentDTO, or with status {@code 400 (Bad Request)} if the employeeDocument has already an ID.
      * @throws URISyntaxException if the Location URI syntax is incorrect.
      */
-    @PostMapping("/create_employeeDocument_by_client_id")
+    @PostMapping("/create-employee-document-by-client-id")
     public ResponseEntity<EmployeeDocumentDTO> createEmployeeDocument(@Valid @RequestBody EmployeeDocumentDTO employeeDocumentDTO) throws URISyntaxException {
         log.debug("REST request to save EmployeeDocument : {}", employeeDocumentDTO);
         if (employeeDocumentDTO.getId() != null) {
@@ -95,7 +95,7 @@ public class EmployeeDocumentResourceExt extends EmployeeDocumentResource{
      * or with status {@code 500 (Internal Server Error)} if the employeeDocumentDTO couldn't be updated.
      * @throws URISyntaxException if the Location URI syntax is incorrect.
      */
-    @PutMapping("/update_employeeDocument_by_client_id")
+    @PutMapping("/update-employee-document-by-client-id")
     public ResponseEntity<EmployeeDocumentDTO> updateEmployeeDocument(@Valid @RequestBody EmployeeDocumentDTO employeeDocumentDTO) throws URISyntaxException {
         log.debug("REST request to update EmployeeDocument : {}", employeeDocumentDTO);
         if (employeeDocumentDTO.getId() == null) {

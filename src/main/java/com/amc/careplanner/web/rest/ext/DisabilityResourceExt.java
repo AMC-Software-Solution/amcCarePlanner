@@ -71,7 +71,7 @@ public class DisabilityResourceExt extends DisabilityResource{
      * @return the {@link ResponseEntity} with status {@code 201 (Created)} and with body the new disabilityDTO, or with status {@code 400 (Bad Request)} if the disability has already an ID.
      * @throws URISyntaxException if the Location URI syntax is incorrect.
      */
-    @PostMapping("/create_disability_by_client_id")
+    @PostMapping("/create-disability-by-client-id")
     public ResponseEntity<DisabilityDTO> createDisability(@Valid @RequestBody DisabilityDTO disabilityDTO) throws URISyntaxException {
         log.debug("REST request to save Disability : {}", disabilityDTO);
         if (disabilityDTO.getId() != null) {
@@ -95,7 +95,7 @@ public class DisabilityResourceExt extends DisabilityResource{
      * or with status {@code 500 (Internal Server Error)} if the disabilityDTO couldn't be updated.
      * @throws URISyntaxException if the Location URI syntax is incorrect.
      */
-    @PutMapping("/update_disability_by_client_id")
+    @PutMapping("/update-disability-by-client-id")
     public ResponseEntity<DisabilityDTO> updateDisability(@Valid @RequestBody DisabilityDTO disabilityDTO) throws URISyntaxException {
         log.debug("REST request to update Disability : {}", disabilityDTO);
         if (disabilityDTO.getId() == null) {

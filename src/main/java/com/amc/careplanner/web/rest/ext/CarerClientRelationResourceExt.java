@@ -70,7 +70,7 @@ public class CarerClientRelationResourceExt extends CarerClientRelationResource{
      * @return the {@link ResponseEntity} with status {@code 201 (Created)} and with body the new carerClientRelationDTO, or with status {@code 400 (Bad Request)} if the carerClientRelation has already an ID.
      * @throws URISyntaxException if the Location URI syntax is incorrect.
      */
-    @PostMapping("/create_carerClientRelation_by_client_id")
+    @PostMapping("/create-carer-client-relation-by-client-id")
     public ResponseEntity<CarerClientRelationDTO> createCarerClientRelation(@Valid @RequestBody CarerClientRelationDTO carerClientRelationDTO) throws URISyntaxException {
         log.debug("REST request to save CarerClientRelation : {}", carerClientRelationDTO);
         if (carerClientRelationDTO.getId() != null) {
@@ -94,7 +94,7 @@ public class CarerClientRelationResourceExt extends CarerClientRelationResource{
      * or with status {@code 500 (Internal Server Error)} if the carerClientRelationDTO couldn't be updated.
      * @throws URISyntaxException if the Location URI syntax is incorrect.
      */
-    @PutMapping("/update_carerClientRelation_by_client_id")
+    @PutMapping("/update-carer-client-relation-by-client-id")
     public ResponseEntity<CarerClientRelationDTO> updateCarerClientRelation(@Valid @RequestBody CarerClientRelationDTO carerClientRelationDTO) throws URISyntaxException {
         log.debug("REST request to update CarerClientRelation : {}", carerClientRelationDTO);
         if (carerClientRelationDTO.getId() == null) {
