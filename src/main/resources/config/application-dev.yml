@@ -68,6 +68,12 @@ spring:
   thymeleaf:
     cache: false
 
+amazonProperties:
+  endpointUrl: https://s3.eu-west-2.amazonaws.com
+  accessKey: AKIAX5TLR6TFUYOCVRXD #
+  secretKey: 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
+  bucketName: amc-care-planner # S3 bucketName
+
 server:
   port: 8080
 

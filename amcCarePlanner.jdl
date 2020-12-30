@@ -644,6 +644,7 @@ entity DisabilityType {
 }
 
 entity Disability{
+	isDisabled Boolean,
 	note String,
 	createdDate ZonedDateTime,
 lastUpdatedDate ZonedDateTime,
@@ -666,9 +667,10 @@ entity EligibilityType {
 	hasExtraData Boolean
 }
 entity Eligibility {
+	isEligible Boolean,
     note String,
     createdDate ZonedDateTime,
-lastUpdatedDate ZonedDateTime,
+    lastUpdatedDate ZonedDateTime,
 	clientId Long required,
 	hasExtraData Boolean
 }

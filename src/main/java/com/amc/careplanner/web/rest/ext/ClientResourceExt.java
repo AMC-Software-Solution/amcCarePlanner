@@ -4,8 +4,13 @@ import com.amc.careplanner.service.ClientService;
 import com.amc.careplanner.web.rest.ClientResource;
 import com.amc.careplanner.web.rest.errors.BadRequestAlertException;
 import com.amc.careplanner.service.dto.ClientDTO;
+import com.amc.careplanner.service.dto.CountryDTO;
 import com.amc.careplanner.service.ext.ClientServiceExt;
+import com.amc.careplanner.utils.CommonUtils;
+import com.amc.careplanner.utils.Constants;
+import com.amc.careplanner.utils.RandomUtil;
 import com.amc.careplanner.service.dto.ClientCriteria;
+import com.amc.careplanner.s3.S3Service;
 import com.amc.careplanner.security.AuthoritiesConstants;
 import com.amc.careplanner.service.ClientQueryService;
 
@@ -47,11 +52,14 @@ public class ClientResourceExt extends ClientResource{
     private final ClientServiceExt clientServiceExt;
 
     private final ClientQueryService clientQueryService;
+    
+    private final S3Service s3Service;
 
-    public ClientResourceExt(ClientServiceExt clientServiceExt, ClientQueryService clientQueryService) {
+    public ClientResourceExt(ClientServiceExt clientServiceExt, ClientQueryService clientQueryService,S3Service s3Service) {
     	super(clientServiceExt,clientQueryService);
         this.clientServiceExt = clientServiceExt;
         this.clientQueryService = clientQueryService;
+        this.s3Service = s3Service;
     }
 
     /**
@@ -69,9 +77,24 @@ public class ClientResourceExt extends ClientResource{
             throw new BadRequestAlertException("A new client cannot already have an ID", ENTITY_NAME, "idexists");
         }
         ClientDTO result = clientServiceExt.save(clientDTO);
+        ClientDTO result2 = result;
+        ClientDTO result3 = null;
+  		if (clientDTO.getClientLogoContentType()!= null) {
+  			String fileName = ENTITY_NAME + RandomUtil.generateRandomAlphaNum(10) + "-" + result.getId() + ".png";
+  			String url = Constants.S3_ENDPOINT + fileName;
+  			result.setClientLogoUrl(url);
+  			byte[] imageBytes = CommonUtils.resize(CommonUtils.createImageFromBytes(clientDTO.getClientLogo()),
+  					Constants.FULL_IMAGE_HEIGHT, Constants.FULL_IMAGE_WIDTH);
+  			CommonUtils.uploadToS3(imageBytes, fileName, s3Service.getAmazonS3(),clientDTO.getClientLogoContentType());
+  			result2 = clientServiceExt.save(result);
+  			result2.setClientLogo(null);
+  			result2.setClientLogoContentType(null);
+  			 result3 = clientServiceExt.save(result2);
+  		}
+        
         return ResponseEntity.created(new URI("/api/clients/" + result.getId()))
             .headers(HeaderUtil.createEntityCreationAlert(applicationName, true, ENTITY_NAME, result.getId().toString()))
-            .body(result);
+            .body(result3);
     }
 
     /**
@@ -91,9 +114,24 @@ public class ClientResourceExt extends ClientResource{
             throw new BadRequestAlertException("Invalid id", ENTITY_NAME, "idnull");
         }
         ClientDTO result = clientServiceExt.save(clientDTO);
+        ClientDTO result2 = result;
+        ClientDTO result3 = null;
+  		if (clientDTO.getClientLogoContentType()!= null) {
+  			String fileName = ENTITY_NAME + RandomUtil.generateRandomAlphaNum(10) + "-" + result.getId() + ".png";
+  			String url = Constants.S3_ENDPOINT + fileName;
+  			result.setClientLogoUrl(url);
+  			byte[] imageBytes = CommonUtils.resize(CommonUtils.createImageFromBytes(clientDTO.getClientLogo()),
+  					Constants.FULL_IMAGE_HEIGHT, Constants.FULL_IMAGE_WIDTH);
+  			CommonUtils.uploadToS3(imageBytes, fileName, s3Service.getAmazonS3(),clientDTO.getClientLogoContentType());
+  			result2 = clientServiceExt.save(result);
+  			result2.setClientLogo(null);
+  			result2.setClientLogoContentType(null);
+  			 result3 = clientServiceExt.save(result2);
+  		}
+        
         return ResponseEntity.ok()
             .headers(HeaderUtil.createEntityUpdateAlert(applicationName, true, ENTITY_NAME, clientDTO.getId().toString()))
-            .body(result);
+            .body(result3);
     }
 
     /**

@@ -5,14 +5,19 @@ import com.amc.careplanner.service.MailService;
 import com.amc.careplanner.web.rest.EmployeeResource;
 import com.amc.careplanner.web.rest.errors.BadRequestAlertException;
 import com.amc.careplanner.web.rest.vm.ManagedUserVM;
+
 import com.amc.careplanner.service.dto.EmployeeDTO;
 import com.amc.careplanner.service.ext.EmployeeServiceExt;
 import com.amc.careplanner.service.ext.UserServiceExt;
 import com.amc.careplanner.service.mapper.UserMapper;
+import com.amc.careplanner.utils.CommonUtils;
+import com.amc.careplanner.utils.Constants;
+import com.amc.careplanner.utils.RandomUtil;
 import com.amc.careplanner.service.dto.EmployeeCriteria;
 import com.amc.careplanner.domain.User;
 import com.amc.careplanner.domain.enumeration.Gender;
 import com.amc.careplanner.repository.ext.UserRepositoryExt;
+import com.amc.careplanner.s3.S3Service;
 import com.amc.careplanner.security.AuthoritiesConstants;
 import com.amc.careplanner.security.SecurityUtils;
 import com.amc.careplanner.service.EmailAlreadyUsedException;
@@ -74,10 +79,12 @@ public class EmployeeResourceExt extends EmployeeResource{
 	
 	private final MailService mailService;
 	
+	private final S3Service s3Service;
+	
 
 
     public EmployeeResourceExt(EmployeeServiceExt employeeServiceExt, EmployeeQueryService employeeQueryService,
-    	    UserRepositoryExt userRepositoryExt, UserServiceExt userServiceExt, UserMapper userMapper, MailService mailService) {
+    	    UserRepositoryExt userRepositoryExt, UserServiceExt userServiceExt, UserMapper userMapper, MailService mailService, S3Service s3Service) {
         super(employeeServiceExt,employeeQueryService);
     	this.employeeServiceExt = employeeServiceExt;
         this.employeeQueryService = employeeQueryService;
@@ -85,6 +92,7 @@ public class EmployeeResourceExt extends EmployeeResource{
         this.userServiceExt = userServiceExt;
         this.userMapper = userMapper;
         this.mailService = mailService;
+        this.s3Service = s3Service;
    
     }
     
@@ -167,7 +175,20 @@ public class EmployeeResourceExt extends EmployeeResource{
 		//employeeDTO.setPinCode(pinCode);
         EmployeeDTO result = employeeServiceExt.save(employeeDTO);
       
-        
+        EmployeeDTO result2 = result;
+		if (employeeDTO.getPhotoContentType() != null) {
+			String fileName = ENTITY_NAME + RandomUtil.generateRandomAlphaNum(10) + "-" + result.getId() + ".png";
+			String url = Constants.S3_ENDPOINT + fileName;
+			result.setPhotoUrl(url);
+			byte[] imageBytes = CommonUtils.resize(CommonUtils.createImageFromBytes(employeeDTO.getPhoto()),
+					Constants.FULL_IMAGE_HEIGHT, Constants.FULL_IMAGE_WIDTH);
+			CommonUtils.uploadToS3(imageBytes, fileName, s3Service.getAmazonS3(),employeeDTO.getPhotoContentType());
+			result2 = employeeServiceExt.save(result);
+			result2.setPhoto(null);
+			result2.setPhotoContentType(null);
+			user.setImageUrl(url);
+			userRepositoryExt.save(user);
+		}
         
         if (result == null ) {
         	throw new BadRequestAlertException("Employee Creation error, user could not be created", ENTITY_NAME,
