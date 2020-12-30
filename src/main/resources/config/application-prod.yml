@@ -65,9 +65,9 @@ spring:
 
 amazonProperties:
   endpointUrl: https://s3.eu-west-2.amazonaws.com
-  accessKey: AKIAX5TLR6TFUYOCVRXD #
-  secretKey: y2dowIf3ZRnoiISPPCVvzTN8O1licAcGHo4kGgU7
-  bucketName: amc-care-planner # S3 bucketName
+  accessKey: YOurACCESSKEY #
+  secretKey: YourSECretKee
+  bucketName: YourBucket # S3 bucketName
 
 # ===================================================================
 # To enable TLS in production, generate a certificate using:
