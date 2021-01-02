@@ -149,7 +149,7 @@ public class AnswerResourceExt extends AnswerResource{
      * @param id the id of the answerDTO to retrieve.
      * @return the {@link ResponseEntity} with status {@code 200 (OK)} and with body the answerDTO, or with status {@code 404 (Not Found)}.
      */
-    @GetMapping("/answers/{id}")
+    @GetMapping("/get-answers-by-client-id/{id}")
     public ResponseEntity<AnswerDTO> getAnswer(@PathVariable Long id) {
         log.debug("REST request to get Answer : {}", id);
         Optional<AnswerDTO> answerDTO = answerServiceExt.findOne(id);

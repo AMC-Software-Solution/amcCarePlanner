@@ -118,7 +118,7 @@ public class CommunicationResourceExt extends CommunicationResource{
      * @param criteria the criteria which the requested entities should match.
      * @return the {@link ResponseEntity} with status {@code 200 (OK)} and the list of communications in body.
      */
-    @GetMapping("/communications")
+    @GetMapping("/get-all-communications-by-client-id")
     public ResponseEntity<List<CommunicationDTO>> getAllCommunications(CommunicationCriteria criteria, Pageable pageable) {
         log.debug("REST request to get Communications by criteria: {}", criteria);
         CommunicationCriteria communicationCriteria = new CommunicationCriteria();
@@ -148,7 +148,7 @@ public class CommunicationResourceExt extends CommunicationResource{
      * @param id the id of the communicationDTO to retrieve.
      * @return the {@link ResponseEntity} with status {@code 200 (OK)} and with body the communicationDTO, or with status {@code 404 (Not Found)}.
      */
-    @GetMapping("/communications/{id}")
+    @GetMapping("/get-communications-by-client-id/{id}")
     public ResponseEntity<CommunicationDTO> getCommunication(@PathVariable Long id) {
         log.debug("REST request to get Communication : {}", id);
         Optional<CommunicationDTO> communicationDTO = communicationServiceExt.findOne(id);
@@ -161,7 +161,7 @@ public class CommunicationResourceExt extends CommunicationResource{
      * @param id the id of the communicationDTO to delete.
      * @return the {@link ResponseEntity} with status {@code 204 (NO_CONTENT)}.
      */
-    @DeleteMapping("/communications/{id}")
+    @DeleteMapping("/delete-communications-by-client-id/{id}")
     @PreAuthorize("hasAuthority(\"" + AuthoritiesConstants.COMPANY_ADMIN + "\")")
     public ResponseEntity<Void> deleteCommunication(@PathVariable Long id) {
         log.debug("REST request to delete Communication : {}", id);

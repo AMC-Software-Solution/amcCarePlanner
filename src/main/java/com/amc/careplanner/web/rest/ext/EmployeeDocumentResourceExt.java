@@ -148,7 +148,7 @@ public class EmployeeDocumentResourceExt extends EmployeeDocumentResource{
      * @param id the id of the employeeDocumentDTO to retrieve.
      * @return the {@link ResponseEntity} with status {@code 200 (OK)} and with body the employeeDocumentDTO, or with status {@code 404 (Not Found)}.
      */
-    @GetMapping("/employee-documents/{id}")
+    @GetMapping("/get-employee-documents/{id}")
     public ResponseEntity<EmployeeDocumentDTO> getEmployeeDocument(@PathVariable Long id) {
         log.debug("REST request to get EmployeeDocument : {}", id);
         Optional<EmployeeDocumentDTO> employeeDocumentDTO = employeeDocumentServiceExt.findOne(id);

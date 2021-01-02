@@ -54,6 +54,7 @@ public class CarerClientRelationResourceExt extends CarerClientRelationResource{
     private final CarerClientRelationServiceExt carerClientRelationServiceExt;
 
     private final CarerClientRelationQueryService carerClientRelationQueryService;
+    
     private final UserRepositoryExt userRepositoryExt;
 
     public CarerClientRelationResourceExt(CarerClientRelationServiceExt carerClientRelationServiceExt, CarerClientRelationQueryService carerClientRelationQueryService, UserRepositoryExt userRepositoryExt) {
@@ -117,7 +118,7 @@ public class CarerClientRelationResourceExt extends CarerClientRelationResource{
      * @param criteria the criteria which the requested entities should match.
      * @return the {@link ResponseEntity} with status {@code 200 (OK)} and the list of carerClientRelations in body.
      */
-    @GetMapping("/carer-client-relations")
+    @GetMapping("/get-all-carer-client-relations-by-client-id")
     public ResponseEntity<List<CarerClientRelationDTO>> getAllCarerClientRelations(CarerClientRelationCriteria criteria, Pageable pageable) {
         log.debug("REST request to get CarerClientRelations by criteria: {}", criteria);
         CarerClientRelationCriteria carerClientRelationCriteria = new CarerClientRelationCriteria();
@@ -147,7 +148,7 @@ public class CarerClientRelationResourceExt extends CarerClientRelationResource{
      * @param id the id of the carerClientRelationDTO to retrieve.
      * @return the {@link ResponseEntity} with status {@code 200 (OK)} and with body the carerClientRelationDTO, or with status {@code 404 (Not Found)}.
      */
-    @GetMapping("/carer-client-relations/{id}")
+    @GetMapping("/get-carer-client-relations-by-client-id/{id}")
     public ResponseEntity<CarerClientRelationDTO> getCarerClientRelation(@PathVariable Long id) {
         log.debug("REST request to get CarerClientRelation : {}", id);
         Optional<CarerClientRelationDTO> carerClientRelationDTO = carerClientRelationServiceExt.findOne(id);
@@ -160,7 +161,7 @@ public class CarerClientRelationResourceExt extends CarerClientRelationResource{
      * @param id the id of the carerClientRelationDTO to delete.
      * @return the {@link ResponseEntity} with status {@code 204 (NO_CONTENT)}.
      */
-    @DeleteMapping("/carer-client-relations/{id}")
+    @DeleteMapping("/delete-carer-client-relations-by-client-id/{id}")
     @PreAuthorize("hasAuthority(\"" + AuthoritiesConstants.COMPANY_ADMIN + "\")")
     public ResponseEntity<Void> deleteCarerClientRelation(@PathVariable Long id) {
         log.debug("REST request to delete CarerClientRelation : {}", id);

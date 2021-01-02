@@ -115,7 +115,7 @@ public class BranchResourceExt extends BranchResource {
      * @param criteria the criteria which the requested entities should match.
      * @return the {@link ResponseEntity} with status {@code 200 (OK)} and the list of branches in body.
      */
-    @GetMapping("/get-branches-by-client-id")
+    @GetMapping("/get-all-branches-by-client-id")
     public ResponseEntity<List<BranchDTO>> getAllBranches(BranchCriteria criteria, Pageable pageable) {
         log.debug("REST request to get Branches by criteria: {}", criteria);
         BranchCriteria branchCriteria = new BranchCriteria();
@@ -168,7 +168,7 @@ public class BranchResourceExt extends BranchResource {
      * @param id the id of the branchDTO to delete.
      * @return the {@link ResponseEntity} with status {@code 204 (NO_CONTENT)}.
      */
-    @DeleteMapping("/branches/{id}")
+    @DeleteMapping("/delete-branches-by-client-id/{id}")
     @PreAuthorize("hasAuthority(\"" + AuthoritiesConstants.ADMIN + "\")")
     public ResponseEntity<Void> deleteBranch(@PathVariable Long id) {
         log.debug("REST request to delete Branch : {}", id);
