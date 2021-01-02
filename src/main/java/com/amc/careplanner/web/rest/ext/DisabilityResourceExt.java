@@ -119,7 +119,7 @@ public class DisabilityResourceExt extends DisabilityResource{
      * @param criteria the criteria which the requested entities should match.
      * @return the {@link ResponseEntity} with status {@code 200 (OK)} and the list of disabilities in body.
      */
-    @GetMapping("/disabilities")
+    @GetMapping("/get-all-disabilities-by-client-id")
     public ResponseEntity<List<DisabilityDTO>> getAllDisabilities(DisabilityCriteria criteria, Pageable pageable) {
         log.debug("REST request to get Disabilities by criteria: {}", criteria);
         DisabilityCriteria disabilityCriteria = new DisabilityCriteria();
@@ -149,7 +149,7 @@ public class DisabilityResourceExt extends DisabilityResource{
      * @param id the id of the disabilityDTO to retrieve.
      * @return the {@link ResponseEntity} with status {@code 200 (OK)} and with body the disabilityDTO, or with status {@code 404 (Not Found)}.
      */
-    @GetMapping("/disabilities/{id}")
+    @GetMapping("/get-disability-by-client-id/{id}")
     public ResponseEntity<DisabilityDTO> getDisability(@PathVariable Long id) {
         log.debug("REST request to get Disability : {}", id);
         Optional<DisabilityDTO> disabilityDTO = disabilityServiceExt.findOne(id);
@@ -162,7 +162,7 @@ public class DisabilityResourceExt extends DisabilityResource{
      * @param id the id of the disabilityDTO to delete.
      * @return the {@link ResponseEntity} with status {@code 204 (NO_CONTENT)}.
      */
-    @DeleteMapping("/disabilities/{id}")
+    @DeleteMapping("/delete-disability-by-client-id/{id}")
     @PreAuthorize("hasAuthority(\"" + AuthoritiesConstants.COMPANY_ADMIN + "\")")
     public ResponseEntity<Void> deleteDisability(@PathVariable Long id) {
         log.debug("REST request to delete Disability : {}", id);

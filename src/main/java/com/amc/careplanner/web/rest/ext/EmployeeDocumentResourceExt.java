@@ -118,7 +118,7 @@ public class EmployeeDocumentResourceExt extends EmployeeDocumentResource{
      * @param criteria the criteria which the requested entities should match.
      * @return the {@link ResponseEntity} with status {@code 200 (OK)} and the list of employeeDocuments in body.
      */
-    @GetMapping("/employee-documents")
+    @GetMapping("/get-all-employee-documents-by-client-id")
     public ResponseEntity<List<EmployeeDocumentDTO>> getAllEmployeeDocuments(EmployeeDocumentCriteria criteria, Pageable pageable) {
         log.debug("REST request to get EmployeeDocuments by criteria: {}", criteria);
         EmployeeDocumentCriteria employeeDocumentCriteria = new EmployeeDocumentCriteria();
@@ -148,7 +148,7 @@ public class EmployeeDocumentResourceExt extends EmployeeDocumentResource{
      * @param id the id of the employeeDocumentDTO to retrieve.
      * @return the {@link ResponseEntity} with status {@code 200 (OK)} and with body the employeeDocumentDTO, or with status {@code 404 (Not Found)}.
      */
-    @GetMapping("/get-employee-documents/{id}")
+    @GetMapping("/get-employee-document-by-client-id/{id}")
     public ResponseEntity<EmployeeDocumentDTO> getEmployeeDocument(@PathVariable Long id) {
         log.debug("REST request to get EmployeeDocument : {}", id);
         Optional<EmployeeDocumentDTO> employeeDocumentDTO = employeeDocumentServiceExt.findOne(id);

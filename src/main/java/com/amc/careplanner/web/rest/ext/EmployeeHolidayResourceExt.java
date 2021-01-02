@@ -122,7 +122,7 @@ public class EmployeeHolidayResourceExt extends EmployeeHolidayResource{
     @GetMapping("/get-all-employee-holidays-by-client-id")
     public ResponseEntity<List<EmployeeHolidayDTO>> getAllEmployeeHolidays(EmployeeHolidayCriteria criteria, Pageable pageable) {
         log.debug("REST request to get EmployeeHolidays by criteria: {}", criteria);
-       EmployeeHolidayCriteria employeeHolidayCriteria = new EmployeeHolidayCriteria();
+        EmployeeHolidayCriteria employeeHolidayCriteria = new EmployeeHolidayCriteria();
 		LongFilter longFilterForClientId = new LongFilter();
 		longFilterForClientId.setEquals(getClientIdFromLoggedInUser());
 		employeeHolidayCriteria.setClientId(longFilterForClientId);

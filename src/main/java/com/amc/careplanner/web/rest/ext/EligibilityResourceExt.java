@@ -119,7 +119,7 @@ public class EligibilityResourceExt extends EligibilityResource{
      * @param criteria the criteria which the requested entities should match.
      * @return the {@link ResponseEntity} with status {@code 200 (OK)} and the list of eligibilities in body.
      */
-    @GetMapping("/eligibilities")
+    @GetMapping("/get-all-eligibilities-by-client-id")
     public ResponseEntity<List<EligibilityDTO>> getAllEligibilities(EligibilityCriteria criteria, Pageable pageable) {
         log.debug("REST request to get Eligibilities by criteria: {}", criteria);
         EligibilityCriteria eligibilityCriteria = new EligibilityCriteria();
@@ -149,7 +149,7 @@ public class EligibilityResourceExt extends EligibilityResource{
      * @param id the id of the eligibilityDTO to retrieve.
      * @return the {@link ResponseEntity} with status {@code 200 (OK)} and with body the eligibilityDTO, or with status {@code 404 (Not Found)}.
      */
-    @GetMapping("/eligibilities/{id}")
+    @GetMapping("/get-eligibilities-by-client-id/{id}")
     public ResponseEntity<EligibilityDTO> getEligibility(@PathVariable Long id) {
         log.debug("REST request to get Eligibility : {}", id);
         Optional<EligibilityDTO> eligibilityDTO = eligibilityServiceExt.findOne(id);
@@ -162,7 +162,7 @@ public class EligibilityResourceExt extends EligibilityResource{
      * @param id the id of the eligibilityDTO to delete.
      * @return the {@link ResponseEntity} with status {@code 204 (NO_CONTENT)}.
      */
-    @DeleteMapping("/eligibilities/{id}")
+    @DeleteMapping("/delete-eligibility-by-client-id/{id}")
     @PreAuthorize("hasAuthority(\"" + AuthoritiesConstants.COMPANY_ADMIN + "\")")
     public ResponseEntity<Void> deleteEligibility(@PathVariable Long id) {
         log.debug("REST request to delete Eligibility : {}", id);
