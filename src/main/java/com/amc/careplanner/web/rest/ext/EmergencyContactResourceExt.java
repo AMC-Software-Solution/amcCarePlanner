@@ -4,10 +4,17 @@ import com.amc.careplanner.service.EmergencyContactService;
 import com.amc.careplanner.web.rest.EmergencyContactResource;
 import com.amc.careplanner.web.rest.errors.BadRequestAlertException;
 import com.amc.careplanner.service.dto.EmergencyContactDTO;
+import com.amc.careplanner.service.dto.EmployeeHolidayCriteria;
+import com.amc.careplanner.service.dto.EmployeeHolidayDTO;
 import com.amc.careplanner.service.ext.EmergencyContactServiceExt;
 import com.amc.careplanner.service.dto.EmergencyContactCriteria;
+import com.amc.careplanner.domain.User;
+import com.amc.careplanner.repository.ext.UserRepositoryExt;
+import com.amc.careplanner.security.AuthoritiesConstants;
+import com.amc.careplanner.security.SecurityUtils;
 import com.amc.careplanner.service.EmergencyContactQueryService;
 
+import io.github.jhipster.service.filter.LongFilter;
 import io.github.jhipster.web.util.HeaderUtil;
 import io.github.jhipster.web.util.PaginationUtil;
 import io.github.jhipster.web.util.ResponseUtil;
@@ -20,11 +27,13 @@ import org.springframework.http.HttpHeaders;
 import org.springframework.http.HttpStatus;
 import org.springframework.web.servlet.support.ServletUriComponentsBuilder;
 import org.springframework.http.ResponseEntity;
+import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.web.bind.annotation.*;
 
 import javax.validation.Valid;
 import java.net.URI;
 import java.net.URISyntaxException;
+import java.time.ZonedDateTime;
 import java.util.List;
 import java.util.Optional;
 
@@ -46,10 +55,13 @@ public class EmergencyContactResourceExt extends EmergencyContactResource{
 
     private final EmergencyContactQueryService emergencyContactQueryService;
 
-    public EmergencyContactResourceExt(EmergencyContactServiceExt emergencyContactServiceExt, EmergencyContactQueryService emergencyContactQueryService) {
+    private final UserRepositoryExt userRepositoryExt;
+
+    public EmergencyContactResourceExt(EmergencyContactServiceExt emergencyContactServiceExt, EmergencyContactQueryService emergencyContactQueryService, UserRepositoryExt userRepositoryExt) {
     	super(emergencyContactServiceExt,emergencyContactQueryService);
         this.emergencyContactServiceExt = emergencyContactServiceExt;
         this.emergencyContactQueryService = emergencyContactQueryService;
+        this.userRepositoryExt = userRepositoryExt;
     }
 
     /**
@@ -59,12 +71,15 @@ public class EmergencyContactResourceExt extends EmergencyContactResource{
      * @return the {@link ResponseEntity} with status {@code 201 (Created)} and with body the new emergencyContactDTO, or with status {@code 400 (Bad Request)} if the emergencyContact has already an ID.
      * @throws URISyntaxException if the Location URI syntax is incorrect.
      */
-    @PostMapping("/emergency-contacts")
+    @PostMapping("/create-emergency-contact-by-client-id")
     public ResponseEntity<EmergencyContactDTO> createEmergencyContact(@Valid @RequestBody EmergencyContactDTO emergencyContactDTO) throws URISyntaxException {
         log.debug("REST request to save EmergencyContact : {}", emergencyContactDTO);
         if (emergencyContactDTO.getId() != null) {
             throw new BadRequestAlertException("A new emergencyContact cannot already have an ID", ENTITY_NAME, "idexists");
         }
+//      emergencyContactDTO.setDateCreated(ZonedDateTime.now());
+        emergencyContactDTO.setLastUpdatedDate(ZonedDateTime.now());
+        emergencyContactDTO.setClientId(getClientIdFromLoggedInUser());
         EmergencyContactDTO result = emergencyContactServiceExt.save(emergencyContactDTO);
         return ResponseEntity.created(new URI("/api/emergency-contacts/" + result.getId()))
             .headers(HeaderUtil.createEntityCreationAlert(applicationName, true, ENTITY_NAME, result.getId().toString()))
@@ -80,12 +95,16 @@ public class EmergencyContactResourceExt extends EmergencyContactResource{
      * or with status {@code 500 (Internal Server Error)} if the emergencyContactDTO couldn't be updated.
      * @throws URISyntaxException if the Location URI syntax is incorrect.
      */
-    @PutMapping("/emergency-contacts")
+    @PutMapping("/update-emergency-contact-by-client-id")
     public ResponseEntity<EmergencyContactDTO> updateEmergencyContact(@Valid @RequestBody EmergencyContactDTO emergencyContactDTO) throws URISyntaxException {
         log.debug("REST request to update EmergencyContact : {}", emergencyContactDTO);
         if (emergencyContactDTO.getId() == null) {
             throw new BadRequestAlertException("Invalid id", ENTITY_NAME, "idnull");
         }
+        if (emergencyContactDTO != null && emergencyContactDTO.getClientId() != null && emergencyContactDTO.getClientId() != getClientIdFromLoggedInUser()) {
+      	  throw new BadRequestAlertException("clientId mismatch", ENTITY_NAME, "clientIdMismatch");
+      }
+        emergencyContactDTO.setLastUpdatedDate(ZonedDateTime.now());
         EmergencyContactDTO result = emergencyContactServiceExt.save(emergencyContactDTO);
         return ResponseEntity.ok()
             .headers(HeaderUtil.createEntityUpdateAlert(applicationName, true, ENTITY_NAME, emergencyContactDTO.getId().toString()))
@@ -99,10 +118,14 @@ public class EmergencyContactResourceExt extends EmergencyContactResource{
      * @param criteria the criteria which the requested entities should match.
      * @return the {@link ResponseEntity} with status {@code 200 (OK)} and the list of emergencyContacts in body.
      */
-    @GetMapping("/emergency-contacts")
+    @GetMapping("/get-all-emergency-contacts-by-client-id")
     public ResponseEntity<List<EmergencyContactDTO>> getAllEmergencyContacts(EmergencyContactCriteria criteria, Pageable pageable) {
         log.debug("REST request to get EmergencyContacts by criteria: {}", criteria);
-        Page<EmergencyContactDTO> page = emergencyContactQueryService.findByCriteria(criteria, pageable);
+        EmergencyContactCriteria emergencyCriteria = new EmergencyContactCriteria();
+		LongFilter longFilterForClientId = new LongFilter();
+		longFilterForClientId.setEquals(getClientIdFromLoggedInUser());
+		emergencyCriteria.setClientId(longFilterForClientId);
+        Page<EmergencyContactDTO> page = emergencyContactQueryService.findByCriteria(emergencyCriteria, pageable);
         HttpHeaders headers = PaginationUtil.generatePaginationHttpHeaders(ServletUriComponentsBuilder.fromCurrentRequest(), page);
         return ResponseEntity.ok().headers(headers).body(page.getContent());
     }
@@ -125,7 +148,7 @@ public class EmergencyContactResourceExt extends EmergencyContactResource{
      * @param id the id of the emergencyContactDTO to retrieve.
      * @return the {@link ResponseEntity} with status {@code 200 (OK)} and with body the emergencyContactDTO, or with status {@code 404 (Not Found)}.
      */
-    @GetMapping("/emergency-contacts/{id}")
+    @GetMapping("/get-emergency-contact-by-client-id/{id}")
     public ResponseEntity<EmergencyContactDTO> getEmergencyContact(@PathVariable Long id) {
         log.debug("REST request to get EmergencyContact : {}", id);
         Optional<EmergencyContactDTO> emergencyContactDTO = emergencyContactServiceExt.findOne(id);
@@ -138,10 +161,23 @@ public class EmergencyContactResourceExt extends EmergencyContactResource{
      * @param id the id of the emergencyContactDTO to delete.
      * @return the {@link ResponseEntity} with status {@code 204 (NO_CONTENT)}.
      */
-    @DeleteMapping("/emergency-contacts/{id}")
+    @DeleteMapping("/delete-emergency-contact-by-client-id/{id}")
+    @PreAuthorize("hasAuthority(\"" + AuthoritiesConstants.COMPANY_ADMIN + "\")")
     public ResponseEntity<Void> deleteEmergencyContact(@PathVariable Long id) {
         log.debug("REST request to delete EmergencyContact : {}", id);
         emergencyContactServiceExt.delete(id);
         return ResponseEntity.noContent().headers(HeaderUtil.createEntityDeletionAlert(applicationName, true, ENTITY_NAME, id.toString())).build();
+    }
+    
+    private Long getClientIdFromLoggedInUser() {
+    	Long clientId = 0L;
+    	String loggedInAdminUserEmail = SecurityUtils.getCurrentUserLogin().get();
+		User loggedInAdminUser = userRepositoryExt.findOneByEmailIgnoreCase(loggedInAdminUserEmail).get();
+		
+		if(loggedInAdminUser != null) {
+			clientId = Long.valueOf(loggedInAdminUser.getLogin());
+		}
+		
+		return clientId;
     }
 }

@@ -200,7 +200,7 @@ public class EmployeeResourceExt extends EmployeeResource{
             .body(result);
     }
     
-    @GetMapping("/get-employees-by-client-id")
+    @GetMapping("/get-all-employees-by-client-id")
     public ResponseEntity<List<EmployeeDTO>> getAllEmployees(EmployeeCriteria criteria, Pageable pageable) {
         log.debug("REST request to get Employees by criteria: {}", criteria);
         EmployeeCriteria employeeCriteria = new EmployeeCriteria();
