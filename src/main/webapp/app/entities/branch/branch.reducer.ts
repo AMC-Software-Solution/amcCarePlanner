@@ -97,12 +97,12 @@ export default (state: BranchState = initialState, action): BranchState => {
   }
 };
 
-const apiUrl = 'api/v1/branches';
+const apiUrl = 'api/v1';
 
 // Actions
 
 export const getEntities: ICrudGetAllAction<IBranch> = (page, size, sort) => {
-  const requestUrl = `${apiUrl}${sort ? `?page=${page}&size=${size}&sort=${sort}` : ''}`;
+  const requestUrl = `${apiUrl}/get-branches-by-client-id${sort ? `?page=${page}&size=${size}&sort=${sort}` : ''}`;
   return {
     type: ACTION_TYPES.FETCH_BRANCH_LIST,
     payload: axios.get<IBranch>(`${requestUrl}${sort ? '&' : '?'}cacheBuster=${new Date().getTime()}`),
