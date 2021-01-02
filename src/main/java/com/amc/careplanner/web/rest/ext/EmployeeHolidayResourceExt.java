@@ -119,7 +119,7 @@ public class EmployeeHolidayResourceExt extends EmployeeHolidayResource{
      * @param criteria the criteria which the requested entities should match.
      * @return the {@link ResponseEntity} with status {@code 200 (OK)} and the list of employeeHolidays in body.
      */
-    @GetMapping("/employee-holidays")
+    @GetMapping("/get-all-employee-holidays-by-client-id")
     public ResponseEntity<List<EmployeeHolidayDTO>> getAllEmployeeHolidays(EmployeeHolidayCriteria criteria, Pageable pageable) {
         log.debug("REST request to get EmployeeHolidays by criteria: {}", criteria);
        EmployeeHolidayCriteria employeeHolidayCriteria = new EmployeeHolidayCriteria();
@@ -149,7 +149,7 @@ public class EmployeeHolidayResourceExt extends EmployeeHolidayResource{
      * @param id the id of the employeeHolidayDTO to retrieve.
      * @return the {@link ResponseEntity} with status {@code 200 (OK)} and with body the employeeHolidayDTO, or with status {@code 404 (Not Found)}.
      */
-    @GetMapping("/employee-holidays/{id}")
+    @GetMapping("/get-employee-holidays-by-client-id/{id}")
     public ResponseEntity<EmployeeHolidayDTO> getEmployeeHoliday(@PathVariable Long id) {
         log.debug("REST request to get EmployeeHoliday : {}", id);
         Optional<EmployeeHolidayDTO> employeeHolidayDTO = employeeHolidayServiceExt.findOne(id);
@@ -162,7 +162,7 @@ public class EmployeeHolidayResourceExt extends EmployeeHolidayResource{
      * @param id the id of the employeeHolidayDTO to delete.
      * @return the {@link ResponseEntity} with status {@code 204 (NO_CONTENT)}.
      */
-    @DeleteMapping("/employee-holidays/{id}")
+    @DeleteMapping("/delete-employee-holidays-by-client-id/{id}")
     @PreAuthorize("hasAuthority(\"" + AuthoritiesConstants.COMPANY_ADMIN + "\")")
     public ResponseEntity<Void> deleteEmployeeHoliday(@PathVariable Long id) {
         log.debug("REST request to delete EmployeeHoliday : {}", id);
