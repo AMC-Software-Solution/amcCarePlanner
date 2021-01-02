@@ -127,7 +127,7 @@ public class NotificationResourceExt extends NotificationResource{
      * @param criteria the criteria which the requested entities should match.
      * @return the {@link ResponseEntity} with status {@code 200 (OK)} and the list of notifications in body.
      */
-    @GetMapping("/notifications")
+    @GetMapping("/get-all-notifications-by-client-id")
     public ResponseEntity<List<NotificationDTO>> getAllNotifications(NotificationCriteria criteria, Pageable pageable) {
         log.debug("REST request to get Notifications by criteria: {}", criteria);
         NotificationCriteria notificationCriteria = new NotificationCriteria();
@@ -157,7 +157,7 @@ public class NotificationResourceExt extends NotificationResource{
      * @param id the id of the notificationDTO to retrieve.
      * @return the {@link ResponseEntity} with status {@code 200 (OK)} and with body the notificationDTO, or with status {@code 404 (Not Found)}.
      */
-    @GetMapping("/notifications/{id}")
+    @GetMapping("/get-notification-by-client-id/{id}")
     public ResponseEntity<NotificationDTO> getNotification(@PathVariable Long id) {
         log.debug("REST request to get Notification : {}", id);
         Optional<NotificationDTO> notificationDTO = notificationServiceExt.findOne(id);
@@ -170,7 +170,7 @@ public class NotificationResourceExt extends NotificationResource{
      * @param id the id of the notificationDTO to delete.
      * @return the {@link ResponseEntity} with status {@code 204 (NO_CONTENT)}.
      */
-    @DeleteMapping("/notifications/{id}")
+    @DeleteMapping("/delete-notification-by-client-id/{id}")
     @PreAuthorize("hasAuthority(\"" + AuthoritiesConstants.COMPANY_ADMIN + "\")")
     public ResponseEntity<Void> deleteNotification(@PathVariable Long id) {
         log.debug("REST request to delete Notification : {}", id);

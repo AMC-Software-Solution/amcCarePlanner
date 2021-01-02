@@ -5,9 +5,16 @@ import com.amc.careplanner.web.rest.PayrollResource;
 import com.amc.careplanner.web.rest.errors.BadRequestAlertException;
 import com.amc.careplanner.service.dto.PayrollDTO;
 import com.amc.careplanner.service.ext.PayrollServiceExt;
+import com.amc.careplanner.service.dto.EmployeeHolidayCriteria;
+import com.amc.careplanner.service.dto.EmployeeHolidayDTO;
 import com.amc.careplanner.service.dto.PayrollCriteria;
+import com.amc.careplanner.domain.User;
+import com.amc.careplanner.repository.ext.UserRepositoryExt;
+import com.amc.careplanner.security.AuthoritiesConstants;
+import com.amc.careplanner.security.SecurityUtils;
 import com.amc.careplanner.service.PayrollQueryService;
 
+import io.github.jhipster.service.filter.LongFilter;
 import io.github.jhipster.web.util.HeaderUtil;
 import io.github.jhipster.web.util.PaginationUtil;
 import io.github.jhipster.web.util.ResponseUtil;
@@ -20,11 +27,13 @@ import org.springframework.http.HttpHeaders;
 import org.springframework.http.HttpStatus;
 import org.springframework.web.servlet.support.ServletUriComponentsBuilder;
 import org.springframework.http.ResponseEntity;
+import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.web.bind.annotation.*;
 
 import javax.validation.Valid;
 import java.net.URI;
 import java.net.URISyntaxException;
+import java.time.ZonedDateTime;
 import java.util.List;
 import java.util.Optional;
 
@@ -45,11 +54,14 @@ public class PayrollResourceExt extends PayrollResource{
     private final PayrollServiceExt payrollServiceExt;
 
     private final PayrollQueryService payrollQueryService;
+    
+    private final UserRepositoryExt userRepositoryExt;
 
-    public PayrollResourceExt(PayrollServiceExt payrollServiceExt, PayrollQueryService payrollQueryService) {
+    public PayrollResourceExt(PayrollServiceExt payrollServiceExt, PayrollQueryService payrollQueryService, UserRepositoryExt userRepositoryExt) {
         super(payrollServiceExt,payrollQueryService);
     	this.payrollServiceExt = payrollServiceExt;
         this.payrollQueryService = payrollQueryService;
+        this.userRepositoryExt = userRepositoryExt;
     }
 
     /**
@@ -59,12 +71,15 @@ public class PayrollResourceExt extends PayrollResource{
      * @return the {@link ResponseEntity} with status {@code 201 (Created)} and with body the new payrollDTO, or with status {@code 400 (Bad Request)} if the payroll has already an ID.
      * @throws URISyntaxException if the Location URI syntax is incorrect.
      */
-    @PostMapping("/payrolls")
+    @PostMapping("/create-payroll-by-client-id")
     public ResponseEntity<PayrollDTO> createPayroll(@Valid @RequestBody PayrollDTO payrollDTO) throws URISyntaxException {
         log.debug("REST request to save Payroll : {}", payrollDTO);
         if (payrollDTO.getId() != null) {
             throw new BadRequestAlertException("A new payroll cannot already have an ID", ENTITY_NAME, "idexists");
         }
+//      payrollDTO.setDateCreated(ZonedDateTime.now());
+        payrollDTO.setLastUpdatedDate(ZonedDateTime.now());
+        payrollDTO.setClientId(getClientIdFromLoggedInUser());
         PayrollDTO result = payrollServiceExt.save(payrollDTO);
         return ResponseEntity.created(new URI("/api/payrolls/" + result.getId()))
             .headers(HeaderUtil.createEntityCreationAlert(applicationName, true, ENTITY_NAME, result.getId().toString()))
@@ -80,12 +95,16 @@ public class PayrollResourceExt extends PayrollResource{
      * or with status {@code 500 (Internal Server Error)} if the payrollDTO couldn't be updated.
      * @throws URISyntaxException if the Location URI syntax is incorrect.
      */
-    @PutMapping("/payrolls")
+    @PutMapping("/update-payroll-by-client-id")
     public ResponseEntity<PayrollDTO> updatePayroll(@Valid @RequestBody PayrollDTO payrollDTO) throws URISyntaxException {
         log.debug("REST request to update Payroll : {}", payrollDTO);
         if (payrollDTO.getId() == null) {
             throw new BadRequestAlertException("Invalid id", ENTITY_NAME, "idnull");
         }
+        if (payrollDTO != null && payrollDTO.getClientId() != null && payrollDTO.getClientId() != getClientIdFromLoggedInUser()) {
+      	  throw new BadRequestAlertException("clientId mismatch", ENTITY_NAME, "clientIdMismatch");
+      }
+        payrollDTO.setLastUpdatedDate(ZonedDateTime.now());
         PayrollDTO result = payrollServiceExt.save(payrollDTO);
         return ResponseEntity.ok()
             .headers(HeaderUtil.createEntityUpdateAlert(applicationName, true, ENTITY_NAME, payrollDTO.getId().toString()))
@@ -99,10 +118,14 @@ public class PayrollResourceExt extends PayrollResource{
      * @param criteria the criteria which the requested entities should match.
      * @return the {@link ResponseEntity} with status {@code 200 (OK)} and the list of payrolls in body.
      */
-    @GetMapping("/payrolls")
+    @GetMapping("/get-all-payrolls-by-client-id")
     public ResponseEntity<List<PayrollDTO>> getAllPayrolls(PayrollCriteria criteria, Pageable pageable) {
         log.debug("REST request to get Payrolls by criteria: {}", criteria);
-        Page<PayrollDTO> page = payrollQueryService.findByCriteria(criteria, pageable);
+        PayrollCriteria payrollCriteria = new PayrollCriteria();
+		LongFilter longFilterForClientId = new LongFilter();
+		longFilterForClientId.setEquals(getClientIdFromLoggedInUser());
+		payrollCriteria.setClientId(longFilterForClientId);
+        Page<PayrollDTO> page = payrollQueryService.findByCriteria(payrollCriteria, pageable);
         HttpHeaders headers = PaginationUtil.generatePaginationHttpHeaders(ServletUriComponentsBuilder.fromCurrentRequest(), page);
         return ResponseEntity.ok().headers(headers).body(page.getContent());
     }
@@ -125,7 +148,7 @@ public class PayrollResourceExt extends PayrollResource{
      * @param id the id of the payrollDTO to retrieve.
      * @return the {@link ResponseEntity} with status {@code 200 (OK)} and with body the payrollDTO, or with status {@code 404 (Not Found)}.
      */
-    @GetMapping("/payrolls/{id}")
+    @GetMapping("/get-payroll-by-client-id/{id}")
     public ResponseEntity<PayrollDTO> getPayroll(@PathVariable Long id) {
         log.debug("REST request to get Payroll : {}", id);
         Optional<PayrollDTO> payrollDTO = payrollServiceExt.findOne(id);
@@ -138,10 +161,23 @@ public class PayrollResourceExt extends PayrollResource{
      * @param id the id of the payrollDTO to delete.
      * @return the {@link ResponseEntity} with status {@code 204 (NO_CONTENT)}.
      */
-    @DeleteMapping("/payrolls/{id}")
+    @DeleteMapping("/delete-payroll-by-client-id/{id}")
+    @PreAuthorize("hasAuthority(\"" + AuthoritiesConstants.COMPANY_ADMIN + "\")")
     public ResponseEntity<Void> deletePayroll(@PathVariable Long id) {
         log.debug("REST request to delete Payroll : {}", id);
         payrollServiceExt.delete(id);
         return ResponseEntity.noContent().headers(HeaderUtil.createEntityDeletionAlert(applicationName, true, ENTITY_NAME, id.toString())).build();
+    }
+    
+    private Long getClientIdFromLoggedInUser() {
+    	Long clientId = 0L;
+    	String loggedInAdminUserEmail = SecurityUtils.getCurrentUserLogin().get();
+		User loggedInAdminUser = userRepositoryExt.findOneByEmailIgnoreCase(loggedInAdminUserEmail).get();
+		
+		if(loggedInAdminUser != null) {
+			clientId = Long.valueOf(loggedInAdminUser.getLogin());
+		}
+		
+		return clientId;
     }
 }
