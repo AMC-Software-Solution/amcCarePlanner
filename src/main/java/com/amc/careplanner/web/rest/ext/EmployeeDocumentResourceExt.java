@@ -161,7 +161,7 @@ public class EmployeeDocumentResourceExt extends EmployeeDocumentResource{
      * @param id the id of the employeeDocumentDTO to delete.
      * @return the {@link ResponseEntity} with status {@code 204 (NO_CONTENT)}.
      */
-    @DeleteMapping("/employee-documents/{id}")
+    @DeleteMapping("/delete-employee-documents-by-client-id/{id}")
     @PreAuthorize("hasAuthority(\"" + AuthoritiesConstants.COMPANY_ADMIN + "\")")
     public ResponseEntity<Void> deleteEmployeeDocument(@PathVariable Long id) {
         log.debug("REST request to delete EmployeeDocument : {}", id);
