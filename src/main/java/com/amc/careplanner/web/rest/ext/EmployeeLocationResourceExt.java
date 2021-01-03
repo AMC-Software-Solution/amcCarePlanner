@@ -5,6 +5,8 @@ import com.amc.careplanner.web.rest.EmployeeLocationResource;
 import com.amc.careplanner.web.rest.errors.BadRequestAlertException;
 import com.amc.careplanner.service.dto.EmployeeLocationDTO;
 import com.amc.careplanner.service.ext.EmployeeLocationServiceExt;
+import com.amc.careplanner.service.dto.EmployeeCriteria;
+import com.amc.careplanner.service.dto.EmployeeDTO;
 import com.amc.careplanner.service.dto.EmployeeHolidayCriteria;
 import com.amc.careplanner.service.dto.EmployeeHolidayDTO;
 import com.amc.careplanner.service.dto.EmployeeLocationCriteria;
@@ -153,6 +155,30 @@ public class EmployeeLocationResourceExt extends EmployeeLocationResource{
         log.debug("REST request to get EmployeeLocation : {}", id);
         Optional<EmployeeLocationDTO> employeeLocationDTO = employeeLocationServiceExt.findOne(id);
         return ResponseUtil.wrapOrNotFound(employeeLocationDTO);
+    }
+    
+    
+    @GetMapping("/get-employee-location-by-client-id-employee-id/{id}")   
+    public ResponseEntity<EmployeeLocationDTO> getEmployeeLocationByEmployeeId(@PathVariable Long id) {
+        log.debug("REST request to get EmployeeLocation : {}", id);
+        Long loggedInClientId = getClientIdFromLoggedInUser();
+        EmployeeLocationCriteria employeeLocationCriteria = new EmployeeLocationCriteria();
+       
+        LongFilter longFilterForClientId = new LongFilter();
+		longFilterForClientId.setEquals(loggedInClientId);
+		employeeLocationCriteria.setClientId(longFilterForClientId);
+		
+		LongFilter longFilterForId = new LongFilter();
+		longFilterForId.setEquals(id);
+		employeeLocationCriteria.setEmployeeId(longFilterForClientId);
+		
+		
+		 List<EmployeeLocationDTO> listOfEmployeeLocations = employeeLocationQueryService.findByCriteria(employeeLocationCriteria);
+		 EmployeeLocationDTO employeeLocationDTO =listOfEmployeeLocations.get(0);
+        if (employeeLocationDTO != null && employeeLocationDTO.getClientId() != null && employeeLocationDTO.getClientId() != loggedInClientId) {
+        	  throw new BadRequestAlertException("clientId mismatch", ENTITY_NAME, "clientIdMismatch");
+        }
+        return ResponseUtil.wrapOrNotFound(Optional.of(employeeLocationDTO));
     }
 
     /**
