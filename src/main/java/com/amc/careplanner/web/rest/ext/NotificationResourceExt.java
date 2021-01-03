@@ -7,9 +7,14 @@ import com.amc.careplanner.service.dto.NotificationDTO;
 import com.amc.careplanner.service.dto.TaskCriteria;
 import com.amc.careplanner.service.dto.TaskDTO;
 import com.amc.careplanner.service.ext.NotificationServiceExt;
+import com.amc.careplanner.utils.CommonUtils;
+import com.amc.careplanner.utils.Constants;
+import com.amc.careplanner.utils.RandomUtil;
+import com.amc.careplanner.service.dto.ClientDTO;
 import com.amc.careplanner.service.dto.NotificationCriteria;
 import com.amc.careplanner.domain.User;
 import com.amc.careplanner.repository.ext.UserRepositoryExt;
+import com.amc.careplanner.s3.S3Service;
 import com.amc.careplanner.security.AuthoritiesConstants;
 import com.amc.careplanner.security.SecurityUtils;
 import com.amc.careplanner.service.NotificationQueryService;
@@ -56,12 +61,15 @@ public class NotificationResourceExt extends NotificationResource{
     private final NotificationQueryService notificationQueryService;
     
     private final UserRepositoryExt userRepositoryExt;
+    
+    private final S3Service  s3Service;
 
-    public NotificationResourceExt(NotificationServiceExt notificationServiceExt, NotificationQueryService notificationQueryService, UserRepositoryExt userRepositoryExt) {
+    public NotificationResourceExt(NotificationServiceExt notificationServiceExt, NotificationQueryService notificationQueryService, UserRepositoryExt userRepositoryExt, S3Service  s3Service) {
         super(notificationServiceExt,notificationQueryService);
     	this.notificationServiceExt = notificationServiceExt;
         this.notificationQueryService = notificationQueryService;
         this.userRepositoryExt = userRepositoryExt;
+        this.s3Service = s3Service;
     }
 
     /**
@@ -77,6 +85,7 @@ public class NotificationResourceExt extends NotificationResource{
         if (notificationDTO.getId() != null) {
             throw new BadRequestAlertException("A new notification cannot already have an ID", ENTITY_NAME, "idexists");
         }
+        
         //notificationDTO.setDateCreated(ZonedDateTime.now());
         notificationDTO.setLastUpdatedDate(ZonedDateTime.now());
         notificationDTO.setClientId(getClientIdFromLoggedInUser());

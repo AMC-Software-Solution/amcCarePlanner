@@ -5,7 +5,12 @@ import com.amc.careplanner.web.rest.CurrencyResource;
 import com.amc.careplanner.web.rest.errors.BadRequestAlertException;
 import com.amc.careplanner.service.dto.CurrencyDTO;
 import com.amc.careplanner.service.ext.CurrencyServiceExt;
+import com.amc.careplanner.utils.CommonUtils;
+import com.amc.careplanner.utils.Constants;
+import com.amc.careplanner.utils.RandomUtil;
+import com.amc.careplanner.service.dto.ClientDTO;
 import com.amc.careplanner.service.dto.CurrencyCriteria;
+import com.amc.careplanner.s3.S3Service;
 import com.amc.careplanner.service.CurrencyQueryService;
 
 import io.github.jhipster.web.util.HeaderUtil;
@@ -45,11 +50,14 @@ public class CurrencyResourceExt extends CurrencyResource{
     private final CurrencyServiceExt currencyServiceExt;
 
     private final CurrencyQueryService currencyQueryService;
+    
+    private final S3Service s3Service;
 
-    public CurrencyResourceExt(CurrencyServiceExt currencyServiceExt, CurrencyQueryService currencyQueryService) {
+    public CurrencyResourceExt(CurrencyServiceExt currencyServiceExt, CurrencyQueryService currencyQueryService, S3Service s3Service) {
     	super(currencyServiceExt,currencyQueryService);
         this.currencyServiceExt = currencyServiceExt;
         this.currencyQueryService = currencyQueryService;
+        this.s3Service = s3Service;
     }
 
     /**
@@ -66,9 +74,23 @@ public class CurrencyResourceExt extends CurrencyResource{
             throw new BadRequestAlertException("A new currency cannot already have an ID", ENTITY_NAME, "idexists");
         }
         CurrencyDTO result = currencyServiceExt.save(currencyDTO);
-        return ResponseEntity.created(new URI("/api/currencies/" + result.getId()))
-            .headers(HeaderUtil.createEntityCreationAlert(applicationName, true, ENTITY_NAME, result.getId().toString()))
-            .body(result);
+        CurrencyDTO result2 = result;
+        CurrencyDTO result3 = null;
+  		if (currencyDTO.getCurrencyLogoContentType()!= null) {
+  			String fileName = ENTITY_NAME + RandomUtil.generateRandomAlphaNum(10) + "-" + result.getId() + ".png";
+  			String url = Constants.S3_ENDPOINT + fileName;
+  			result.setCurrencyLogoUrl(url);
+  			byte[] imageBytes = CommonUtils.resize(CommonUtils.createImageFromBytes(currencyDTO.getCurrencyLogo()),
+  					Constants.FULL_IMAGE_HEIGHT, Constants.FULL_IMAGE_WIDTH);
+  			CommonUtils.uploadToS3(imageBytes, fileName, s3Service.getAmazonS3(),currencyDTO.getCurrencyLogoContentType());
+  			result2 = currencyServiceExt.save(result);
+  			result2.setCurrencyLogo(null);
+  			result2.setCurrencyLogoContentType(null);
+  			 result3 = currencyServiceExt.save(result2);
+  		}	 
+     	return ResponseEntity.created(new URI("/api/currencies/" + result.getId()))
+  		            .headers(HeaderUtil.createEntityCreationAlert(applicationName, true, ENTITY_NAME, result.getId().toString()))
+  		            .body(result3);
     }
 
     /**
@@ -87,6 +109,20 @@ public class CurrencyResourceExt extends CurrencyResource{
             throw new BadRequestAlertException("Invalid id", ENTITY_NAME, "idnull");
         }
         CurrencyDTO result = currencyServiceExt.save(currencyDTO);
+        CurrencyDTO result2 = result;
+        CurrencyDTO result3 = null;
+  		if (currencyDTO.getCurrencyLogoContentType()!= null) {
+  			String fileName = ENTITY_NAME + RandomUtil.generateRandomAlphaNum(10) + "-" + result.getId() + ".png";
+  			String url = Constants.S3_ENDPOINT + fileName;
+  			result.setCurrencyLogoUrl(url);
+  			byte[] imageBytes = CommonUtils.resize(CommonUtils.createImageFromBytes(currencyDTO.getCurrencyLogo()),
+  					Constants.FULL_IMAGE_HEIGHT, Constants.FULL_IMAGE_WIDTH);
+  			CommonUtils.uploadToS3(imageBytes, fileName, s3Service.getAmazonS3(),currencyDTO.getCurrencyLogoContentType());
+  			result2 = currencyServiceExt.save(result);
+  			result2.setCurrencyLogo(null);
+  			result2.setCurrencyLogoContentType(null);
+  			 result3 = currencyServiceExt.save(result2);
+  		}
         return ResponseEntity.ok()
             .headers(HeaderUtil.createEntityUpdateAlert(applicationName, true, ENTITY_NAME, currencyDTO.getId().toString()))
             .body(result);
