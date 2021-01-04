@@ -71,7 +71,7 @@ public class ClientDocumentResourceExt extends ClientDocumentResource{
      * @return the {@link ResponseEntity} with status {@code 201 (Created)} and with body the new clientDocumentDTO, or with status {@code 400 (Bad Request)} if the clientDocument has already an ID.
      * @throws URISyntaxException if the Location URI syntax is incorrect.
      */
-    @PostMapping("/create-client-documents-by-client-id")
+    @PostMapping("/create-client-document-by-client-id")
     public ResponseEntity<ClientDocumentDTO> createClientDocument(@Valid @RequestBody ClientDocumentDTO clientDocumentDTO) throws URISyntaxException {
         log.debug("REST request to save ClientDocument : {}", clientDocumentDTO);
         if (clientDocumentDTO.getId() != null) {
@@ -95,7 +95,7 @@ public class ClientDocumentResourceExt extends ClientDocumentResource{
      * or with status {@code 500 (Internal Server Error)} if the clientDocumentDTO couldn't be updated.
      * @throws URISyntaxException if the Location URI syntax is incorrect.
      */
-    @PutMapping("/update-client-documents-by-client-id")
+    @PutMapping("/update-client-document-by-client-id")
     public ResponseEntity<ClientDocumentDTO> updateClientDocument(@Valid @RequestBody ClientDocumentDTO clientDocumentDTO) throws URISyntaxException {
         log.debug("REST request to update ClientDocument : {}", clientDocumentDTO);
         if (clientDocumentDTO.getId() == null) {
@@ -148,7 +148,7 @@ public class ClientDocumentResourceExt extends ClientDocumentResource{
      * @param id the id of the clientDocumentDTO to retrieve.
      * @return the {@link ResponseEntity} with status {@code 200 (OK)} and with body the clientDocumentDTO, or with status {@code 404 (Not Found)}.
      */
-    @GetMapping("/get-client-documents-by-client-id/{id}")
+    @GetMapping("/get-client-document-by-client-id/{id}")
     public ResponseEntity<ClientDocumentDTO> getClientDocument(@PathVariable Long id) {
         log.debug("REST request to get ClientDocument : {}", id);
         Optional<ClientDocumentDTO> clientDocumentDTO = clientDocumentServiceExt.findOne(id);
@@ -161,7 +161,7 @@ public class ClientDocumentResourceExt extends ClientDocumentResource{
      * @param id the id of the clientDocumentDTO to delete.
      * @return the {@link ResponseEntity} with status {@code 204 (NO_CONTENT)}.
      */
-    @DeleteMapping("/delete-client-documents-by-client-id/{id}")
+    @DeleteMapping("/delete-client-document-by-client-id/{id}")
     @PreAuthorize("hasAuthority(\"" + AuthoritiesConstants.COMPANY_ADMIN + "\")")
     public ResponseEntity<Void> deleteClientDocument(@PathVariable Long id) {
         log.debug("REST request to delete ClientDocument : {}", id);

@@ -73,7 +73,7 @@ public class TerminalDeviceResourceExt extends TerminalDeviceResource{
      * @return the {@link ResponseEntity} with status {@code 201 (Created)} and with body the new terminalDeviceDTO, or with status {@code 400 (Bad Request)} if the terminalDevice has already an ID.
      * @throws URISyntaxException if the Location URI syntax is incorrect.
      */
-    @PostMapping("/create-terminal-devices-by-client-id")
+    @PostMapping("/create-terminal-device-by-client-id")
     public ResponseEntity<TerminalDeviceDTO> createTerminalDevice(@Valid @RequestBody TerminalDeviceDTO terminalDeviceDTO) throws URISyntaxException {
         log.debug("REST request to save TerminalDevice : {}", terminalDeviceDTO);
         if (terminalDeviceDTO.getId() != null) {
@@ -97,7 +97,7 @@ public class TerminalDeviceResourceExt extends TerminalDeviceResource{
      * or with status {@code 500 (Internal Server Error)} if the terminalDeviceDTO couldn't be updated.
      * @throws URISyntaxException if the Location URI syntax is incorrect.
      */
-    @PutMapping("/update-terminal-devices-by-client-id")
+    @PutMapping("/update-terminal-device-by-client-id")
     public ResponseEntity<TerminalDeviceDTO> updateTerminalDevice(@Valid @RequestBody TerminalDeviceDTO terminalDeviceDTO) throws URISyntaxException {
         log.debug("REST request to update TerminalDevice : {}", terminalDeviceDTO);
         if (terminalDeviceDTO.getId() == null) {
@@ -120,7 +120,7 @@ public class TerminalDeviceResourceExt extends TerminalDeviceResource{
      * @param criteria the criteria which the requested entities should match.
      * @return the {@link ResponseEntity} with status {@code 200 (OK)} and the list of terminalDevices in body.
      */
-    @GetMapping("/terminal-devices")
+    @GetMapping("/get-all-terminal-devices-by-client-id")
     public ResponseEntity<List<TerminalDeviceDTO>> getAllTerminalDevices(TerminalDeviceCriteria criteria, Pageable pageable) {
         log.debug("REST request to get TerminalDevices by criteria: {}", criteria);
         TerminalDeviceCriteria terminalDeviceCriteria = new TerminalDeviceCriteria();
@@ -150,7 +150,7 @@ public class TerminalDeviceResourceExt extends TerminalDeviceResource{
      * @param id the id of the terminalDeviceDTO to retrieve.
      * @return the {@link ResponseEntity} with status {@code 200 (OK)} and with body the terminalDeviceDTO, or with status {@code 404 (Not Found)}.
      */
-    @GetMapping("/terminal-devices/{id}")
+    @GetMapping("/get-terminal-device-by-client-id/{id}")
     public ResponseEntity<TerminalDeviceDTO> getTerminalDevice(@PathVariable Long id) {
         log.debug("REST request to get TerminalDevice : {}", id);
         Optional<TerminalDeviceDTO> terminalDeviceDTO = terminalDeviceServiceExt.findOne(id);
@@ -163,7 +163,7 @@ public class TerminalDeviceResourceExt extends TerminalDeviceResource{
      * @param id the id of the terminalDeviceDTO to delete.
      * @return the {@link ResponseEntity} with status {@code 204 (NO_CONTENT)}.
      */
-    @DeleteMapping("/terminal-devices/{id}")
+    @DeleteMapping("/delete-terminal-device-by-client-id/{id}")
     @PreAuthorize("hasAuthority(\"" + AuthoritiesConstants.COMPANY_ADMIN + "\")")
     public ResponseEntity<Void> deleteTerminalDevice(@PathVariable Long id) {
         log.debug("REST request to delete TerminalDevice : {}", id);

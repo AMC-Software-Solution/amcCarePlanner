@@ -95,7 +95,7 @@ public class ConsentResourceExt extends ConsentResource{
      * or with status {@code 500 (Internal Server Error)} if the consentDTO couldn't be updated.
      * @throws URISyntaxException if the Location URI syntax is incorrect.
      */
-    @PutMapping("/update-consents-by-client-id")
+    @PutMapping("/update-consent-by-client-id")
     public ResponseEntity<ConsentDTO> updateConsent(@Valid @RequestBody ConsentDTO consentDTO) throws URISyntaxException {
         log.debug("REST request to update Consent : {}", consentDTO);
         if (consentDTO.getId() == null) {
@@ -148,7 +148,7 @@ public class ConsentResourceExt extends ConsentResource{
      * @param id the id of the consentDTO to retrieve.
      * @return the {@link ResponseEntity} with status {@code 200 (OK)} and with body the consentDTO, or with status {@code 404 (Not Found)}.
      */
-    @GetMapping("/get-consents-by-client-id/{id}")
+    @GetMapping("/get-consent-by-client-id/{id}")
     public ResponseEntity<ConsentDTO> getConsent(@PathVariable Long id) {
         log.debug("REST request to get Consent : {}", id);
         Optional<ConsentDTO> consentDTO = consentServiceExt.findOne(id);
@@ -161,7 +161,7 @@ public class ConsentResourceExt extends ConsentResource{
      * @param id the id of the consentDTO to delete.
      * @return the {@link ResponseEntity} with status {@code 204 (NO_CONTENT)}.
      */
-    @DeleteMapping("/delete-consents-by-client-id/{id}")
+    @DeleteMapping("/delete-consent-by-client-id/{id}")
     @PreAuthorize("hasAuthority(\"" + AuthoritiesConstants.COMPANY_ADMIN + "\")")
     public ResponseEntity<Void> deleteConsent(@PathVariable Long id) {
         log.debug("REST request to delete Consent : {}", id);

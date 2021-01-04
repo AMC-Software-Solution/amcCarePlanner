@@ -5,15 +5,21 @@ import com.amc.careplanner.web.rest.ClientResource;
 import com.amc.careplanner.web.rest.errors.BadRequestAlertException;
 import com.amc.careplanner.service.dto.ClientDTO;
 import com.amc.careplanner.service.dto.CountryDTO;
+import com.amc.careplanner.service.dto.EmployeeHolidayCriteria;
+import com.amc.careplanner.service.dto.EmployeeHolidayDTO;
 import com.amc.careplanner.service.ext.ClientServiceExt;
 import com.amc.careplanner.utils.CommonUtils;
 import com.amc.careplanner.utils.Constants;
 import com.amc.careplanner.utils.RandomUtil;
 import com.amc.careplanner.service.dto.ClientCriteria;
+import com.amc.careplanner.domain.User;
+import com.amc.careplanner.repository.ext.UserRepositoryExt;
 import com.amc.careplanner.s3.S3Service;
 import com.amc.careplanner.security.AuthoritiesConstants;
+import com.amc.careplanner.security.SecurityUtils;
 import com.amc.careplanner.service.ClientQueryService;
 
+import io.github.jhipster.service.filter.LongFilter;
 import io.github.jhipster.web.util.HeaderUtil;
 import io.github.jhipster.web.util.PaginationUtil;
 import io.github.jhipster.web.util.ResponseUtil;
@@ -32,6 +38,7 @@ import org.springframework.web.bind.annotation.*;
 import javax.validation.Valid;
 import java.net.URI;
 import java.net.URISyntaxException;
+import java.time.ZonedDateTime;
 import java.util.List;
 import java.util.Optional;
 
@@ -53,12 +60,15 @@ public class ClientResourceExt extends ClientResource{
 
     private final ClientQueryService clientQueryService;
     
+    private final UserRepositoryExt userRepositoryExt;
+    
     private final S3Service s3Service;
 
-    public ClientResourceExt(ClientServiceExt clientServiceExt, ClientQueryService clientQueryService,S3Service s3Service) {
+    public ClientResourceExt(ClientServiceExt clientServiceExt, ClientQueryService clientQueryService, UserRepositoryExt userRepositoryExt,S3Service s3Service) {
     	super(clientServiceExt,clientQueryService);
         this.clientServiceExt = clientServiceExt;
         this.clientQueryService = clientQueryService;
+        this.userRepositoryExt = userRepositoryExt;
         this.s3Service = s3Service;
     }
 
@@ -69,13 +79,16 @@ public class ClientResourceExt extends ClientResource{
      * @return the {@link ResponseEntity} with status {@code 201 (Created)} and with body the new clientDTO, or with status {@code 400 (Bad Request)} if the client has already an ID.
      * @throws URISyntaxException if the Location URI syntax is incorrect.
      */
-    @PostMapping("/clients")
+    @PostMapping("/create-client-by-client-id")
     @PreAuthorize("hasAuthority(\"" + AuthoritiesConstants.ADMIN + "\")")
     public ResponseEntity<ClientDTO> createClient(@Valid @RequestBody ClientDTO clientDTO) throws URISyntaxException {
         log.debug("REST request to save Client : {}", clientDTO);
         if (clientDTO.getId() != null) {
             throw new BadRequestAlertException("A new client cannot already have an ID", ENTITY_NAME, "idexists");
         }
+//      clientDTO.setDateCreated(ZonedDateTime.now());
+        clientDTO.setLastUpdatedDate(ZonedDateTime.now());
+//        clientDTO.setClientId(getClientIdFromLoggedInUser());
         ClientDTO result = clientServiceExt.save(clientDTO);
         ClientDTO result2 = result;
         ClientDTO result3 = null;
@@ -106,13 +119,18 @@ public class ClientResourceExt extends ClientResource{
      * or with status {@code 500 (Internal Server Error)} if the clientDTO couldn't be updated.
      * @throws URISyntaxException if the Location URI syntax is incorrect.
      */
-    @PutMapping("/clients")
+    @PutMapping("/update-client-by-client-id")
     @PreAuthorize("hasAuthority(\"" + AuthoritiesConstants.ADMIN + "\")")
     public ResponseEntity<ClientDTO> updateClient(@Valid @RequestBody ClientDTO clientDTO) throws URISyntaxException {
         log.debug("REST request to update Client : {}", clientDTO);
         if (clientDTO.getId() == null) {
             throw new BadRequestAlertException("Invalid id", ENTITY_NAME, "idnull");
         }
+
+//        if (clientDTO != null && clientDTO.getClientId() != null && clientDTO.getClientId() != getClientIdFromLoggedInUser()) {
+//        	  throw new BadRequestAlertException("clientId mismatch", ENTITY_NAME, "clientIdMismatch");
+//        }
+        clientDTO.setLastUpdatedDate(ZonedDateTime.now());
         ClientDTO result = clientServiceExt.save(clientDTO);
         ClientDTO result2 = result;
         ClientDTO result3 = null;
@@ -141,11 +159,15 @@ public class ClientResourceExt extends ClientResource{
      * @param criteria the criteria which the requested entities should match.
      * @return the {@link ResponseEntity} with status {@code 200 (OK)} and the list of clients in body.
      */
-    @GetMapping("/clients")
+    @GetMapping("/get-all-clients-by-client-id")
     @PreAuthorize("hasAuthority(\"" + AuthoritiesConstants.ADMIN + "\")")
     public ResponseEntity<List<ClientDTO>> getAllClients(ClientCriteria criteria, Pageable pageable) {
         log.debug("REST request to get Clients by criteria: {}", criteria);
-        Page<ClientDTO> page = clientQueryService.findByCriteria(criteria, pageable);
+        ClientCriteria clientCriteria = new ClientCriteria();
+		LongFilter longFilterForClientId = new LongFilter();
+		longFilterForClientId.setEquals(getClientIdFromLoggedInUser());
+//		clientCriteria.setClientId(longFilterForClientId);
+        Page<ClientDTO> page = clientQueryService.findByCriteria(clientCriteria, pageable);
         HttpHeaders headers = PaginationUtil.generatePaginationHttpHeaders(ServletUriComponentsBuilder.fromCurrentRequest(), page);
         return ResponseEntity.ok().headers(headers).body(page.getContent());
     }
@@ -169,7 +191,7 @@ public class ClientResourceExt extends ClientResource{
      * @param id the id of the clientDTO to retrieve.
      * @return the {@link ResponseEntity} with status {@code 200 (OK)} and with body the clientDTO, or with status {@code 404 (Not Found)}.
      */
-    @GetMapping("/clients/{id}")
+    @GetMapping("/get-client-by-client-id/{id}")
     @PreAuthorize("hasAuthority(\"" + AuthoritiesConstants.ADMIN + "\")")
     public ResponseEntity<ClientDTO> getClient(@PathVariable Long id) {
         log.debug("REST request to get Client : {}", id);
@@ -183,11 +205,23 @@ public class ClientResourceExt extends ClientResource{
      * @param id the id of the clientDTO to delete.
      * @return the {@link ResponseEntity} with status {@code 204 (NO_CONTENT)}.
      */
-    @DeleteMapping("/clients/{id}")
+    @DeleteMapping("/delete-client-by-client-id/{id}")
     @PreAuthorize("hasAuthority(\"" + AuthoritiesConstants.ADMIN + "\")")
     public ResponseEntity<Void> deleteClient(@PathVariable Long id) {
         log.debug("REST request to delete Client : {}", id);
         clientServiceExt.delete(id);
         return ResponseEntity.noContent().headers(HeaderUtil.createEntityDeletionAlert(applicationName, true, ENTITY_NAME, id.toString())).build();
+    }
+    
+    private Long getClientIdFromLoggedInUser() {
+    	Long clientId = 0L;
+    	String loggedInAdminUserEmail = SecurityUtils.getCurrentUserLogin().get();
+		User loggedInAdminUser = userRepositoryExt.findOneByEmailIgnoreCase(loggedInAdminUserEmail).get();
+		
+		if(loggedInAdminUser != null) {
+			clientId = Long.valueOf(loggedInAdminUser.getLogin());
+		}
+		
+		return clientId;
     }
 }

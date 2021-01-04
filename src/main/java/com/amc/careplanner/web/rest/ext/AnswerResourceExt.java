@@ -149,7 +149,7 @@ public class AnswerResourceExt extends AnswerResource{
      * @param id the id of the answerDTO to retrieve.
      * @return the {@link ResponseEntity} with status {@code 200 (OK)} and with body the answerDTO, or with status {@code 404 (Not Found)}.
      */
-    @GetMapping("/get-answers-by-client-id/{id}")
+    @GetMapping("/get-answer-by-client-id/{id}")
     public ResponseEntity<AnswerDTO> getAnswer(@PathVariable Long id) {
         log.debug("REST request to get Answer : {}", id);
         Optional<AnswerDTO> answerDTO = answerServiceExt.findOne(id);
@@ -162,7 +162,7 @@ public class AnswerResourceExt extends AnswerResource{
      * @param id the id of the answerDTO to delete.
      * @return the {@link ResponseEntity} with status {@code 204 (NO_CONTENT)}.
      */
-    @DeleteMapping("/delete-answers-by-client-id/{id}")
+    @DeleteMapping("/delete-answer-by-client-id/{id}")
     @PreAuthorize("hasAuthority(\"" + AuthoritiesConstants.COMPANY_ADMIN + "\")")
     public ResponseEntity<Void> deleteAnswer(@PathVariable Long id) {
         log.debug("REST request to delete Answer : {}", id);

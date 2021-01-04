@@ -5,9 +5,16 @@ import com.amc.careplanner.web.rest.SystemEventsHistoryResource;
 import com.amc.careplanner.web.rest.errors.BadRequestAlertException;
 import com.amc.careplanner.service.dto.SystemEventsHistoryDTO;
 import com.amc.careplanner.service.ext.SystemEventsHistoryServiceExt;
+import com.amc.careplanner.service.dto.EmployeeHolidayCriteria;
+import com.amc.careplanner.service.dto.EmployeeHolidayDTO;
 import com.amc.careplanner.service.dto.SystemEventsHistoryCriteria;
+import com.amc.careplanner.domain.User;
+import com.amc.careplanner.repository.ext.UserRepositoryExt;
+import com.amc.careplanner.security.AuthoritiesConstants;
+import com.amc.careplanner.security.SecurityUtils;
 import com.amc.careplanner.service.SystemEventsHistoryQueryService;
 
+import io.github.jhipster.service.filter.LongFilter;
 import io.github.jhipster.web.util.HeaderUtil;
 import io.github.jhipster.web.util.PaginationUtil;
 import io.github.jhipster.web.util.ResponseUtil;
@@ -20,11 +27,13 @@ import org.springframework.http.HttpHeaders;
 import org.springframework.http.HttpStatus;
 import org.springframework.web.servlet.support.ServletUriComponentsBuilder;
 import org.springframework.http.ResponseEntity;
+import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.web.bind.annotation.*;
 
 import javax.validation.Valid;
 import java.net.URI;
 import java.net.URISyntaxException;
+import java.time.ZonedDateTime;
 import java.util.List;
 import java.util.Optional;
 
@@ -45,11 +54,14 @@ public class SystemEventsHistoryResourceExt extends SystemEventsHistoryResource{
     private final SystemEventsHistoryServiceExt systemEventsHistoryServiceExt;
 
     private final SystemEventsHistoryQueryService systemEventsHistoryQueryService;
+    
+    private final UserRepositoryExt userRepositoryExt;
 
-    public SystemEventsHistoryResourceExt(SystemEventsHistoryServiceExt systemEventsHistoryServiceExt, SystemEventsHistoryQueryService systemEventsHistoryQueryService) {
+    public SystemEventsHistoryResourceExt(SystemEventsHistoryServiceExt systemEventsHistoryServiceExt, SystemEventsHistoryQueryService systemEventsHistoryQueryService, UserRepositoryExt userRepositoryExt) {
         super(systemEventsHistoryServiceExt,systemEventsHistoryQueryService);
     	this.systemEventsHistoryServiceExt = systemEventsHistoryServiceExt;
         this.systemEventsHistoryQueryService = systemEventsHistoryQueryService;
+        this.userRepositoryExt = userRepositoryExt;
     }
 
     /**
@@ -59,12 +71,15 @@ public class SystemEventsHistoryResourceExt extends SystemEventsHistoryResource{
      * @return the {@link ResponseEntity} with status {@code 201 (Created)} and with body the new systemEventsHistoryDTO, or with status {@code 400 (Bad Request)} if the systemEventsHistory has already an ID.
      * @throws URISyntaxException if the Location URI syntax is incorrect.
      */
-    @PostMapping("/system-events-histories")
+    @PostMapping("/create-system-events-history-by-client-id")
     public ResponseEntity<SystemEventsHistoryDTO> createSystemEventsHistory(@Valid @RequestBody SystemEventsHistoryDTO systemEventsHistoryDTO) throws URISyntaxException {
         log.debug("REST request to save SystemEventsHistory : {}", systemEventsHistoryDTO);
         if (systemEventsHistoryDTO.getId() != null) {
             throw new BadRequestAlertException("A new systemEventsHistory cannot already have an ID", ENTITY_NAME, "idexists");
         }
+//      systemEventsHistoryDTO.setDateCreated(ZonedDateTime.now());
+//      systemEventsHistoryDTO.setLastUpdatedDate(ZonedDateTime.now());
+        systemEventsHistoryDTO.setClientId(getClientIdFromLoggedInUser());
         SystemEventsHistoryDTO result = systemEventsHistoryServiceExt.save(systemEventsHistoryDTO);
         return ResponseEntity.created(new URI("/api/system-events-histories/" + result.getId()))
             .headers(HeaderUtil.createEntityCreationAlert(applicationName, true, ENTITY_NAME, result.getId().toString()))
@@ -80,12 +95,16 @@ public class SystemEventsHistoryResourceExt extends SystemEventsHistoryResource{
      * or with status {@code 500 (Internal Server Error)} if the systemEventsHistoryDTO couldn't be updated.
      * @throws URISyntaxException if the Location URI syntax is incorrect.
      */
-    @PutMapping("/system-events-histories")
+    @PutMapping("/update-system-events-history-by-client-id")
     public ResponseEntity<SystemEventsHistoryDTO> updateSystemEventsHistory(@Valid @RequestBody SystemEventsHistoryDTO systemEventsHistoryDTO) throws URISyntaxException {
         log.debug("REST request to update SystemEventsHistory : {}", systemEventsHistoryDTO);
         if (systemEventsHistoryDTO.getId() == null) {
             throw new BadRequestAlertException("Invalid id", ENTITY_NAME, "idnull");
         }
+//        if (systemEventsHistoryDTO != null && systemEventsHistoryDTO.getClientId() != null && systemEventsHistoryDTO.getClientId() != getClientIdFromLoggedInUser()) {
+//      	  throw new BadRequestAlertException("clientId mismatch", ENTITY_NAME, "clientIdMismatch");
+//      }
+//        systemEventsHistoryDTO.setLastUpdatedDate(ZonedDateTime.now());
         SystemEventsHistoryDTO result = systemEventsHistoryServiceExt.save(systemEventsHistoryDTO);
         return ResponseEntity.ok()
             .headers(HeaderUtil.createEntityUpdateAlert(applicationName, true, ENTITY_NAME, systemEventsHistoryDTO.getId().toString()))
@@ -99,10 +118,14 @@ public class SystemEventsHistoryResourceExt extends SystemEventsHistoryResource{
      * @param criteria the criteria which the requested entities should match.
      * @return the {@link ResponseEntity} with status {@code 200 (OK)} and the list of systemEventsHistories in body.
      */
-    @GetMapping("/system-events-histories")
+    @GetMapping("/get-all-system-events-histories-by-client-id")
     public ResponseEntity<List<SystemEventsHistoryDTO>> getAllSystemEventsHistories(SystemEventsHistoryCriteria criteria, Pageable pageable) {
         log.debug("REST request to get SystemEventsHistories by criteria: {}", criteria);
-        Page<SystemEventsHistoryDTO> page = systemEventsHistoryQueryService.findByCriteria(criteria, pageable);
+        SystemEventsHistoryCriteria systemEventsHistoryCriteria = new SystemEventsHistoryCriteria();
+		LongFilter longFilterForClientId = new LongFilter();
+		longFilterForClientId.setEquals(getClientIdFromLoggedInUser());
+		systemEventsHistoryCriteria.setClientId(longFilterForClientId);
+        Page<SystemEventsHistoryDTO> page = systemEventsHistoryQueryService.findByCriteria(systemEventsHistoryCriteria, pageable);
         HttpHeaders headers = PaginationUtil.generatePaginationHttpHeaders(ServletUriComponentsBuilder.fromCurrentRequest(), page);
         return ResponseEntity.ok().headers(headers).body(page.getContent());
     }
@@ -125,7 +148,7 @@ public class SystemEventsHistoryResourceExt extends SystemEventsHistoryResource{
      * @param id the id of the systemEventsHistoryDTO to retrieve.
      * @return the {@link ResponseEntity} with status {@code 200 (OK)} and with body the systemEventsHistoryDTO, or with status {@code 404 (Not Found)}.
      */
-    @GetMapping("/system-events-histories/{id}")
+    @GetMapping("/get-system-events-history-by-client-id/{id}")
     public ResponseEntity<SystemEventsHistoryDTO> getSystemEventsHistory(@PathVariable Long id) {
         log.debug("REST request to get SystemEventsHistory : {}", id);
         Optional<SystemEventsHistoryDTO> systemEventsHistoryDTO = systemEventsHistoryServiceExt.findOne(id);
@@ -138,10 +161,23 @@ public class SystemEventsHistoryResourceExt extends SystemEventsHistoryResource{
      * @param id the id of the systemEventsHistoryDTO to delete.
      * @return the {@link ResponseEntity} with status {@code 204 (NO_CONTENT)}.
      */
-    @DeleteMapping("/system-events-histories/{id}")
+    @DeleteMapping("/delete-system-events-history-by-client-id/{id}")
+    @PreAuthorize("hasAuthority(\"" + AuthoritiesConstants.COMPANY_ADMIN + "\")")
     public ResponseEntity<Void> deleteSystemEventsHistory(@PathVariable Long id) {
         log.debug("REST request to delete SystemEventsHistory : {}", id);
         systemEventsHistoryServiceExt.delete(id);
         return ResponseEntity.noContent().headers(HeaderUtil.createEntityDeletionAlert(applicationName, true, ENTITY_NAME, id.toString())).build();
+    }
+    
+    private Long getClientIdFromLoggedInUser() {
+    	Long clientId = 0L;
+    	String loggedInAdminUserEmail = SecurityUtils.getCurrentUserLogin().get();
+		User loggedInAdminUser = userRepositoryExt.findOneByEmailIgnoreCase(loggedInAdminUserEmail).get();
+		
+		if(loggedInAdminUser != null) {
+			clientId = Long.valueOf(loggedInAdminUser.getLogin());
+		}
+		
+		return clientId;
     }
 }

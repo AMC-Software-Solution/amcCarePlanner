@@ -120,7 +120,7 @@ public class TaskResourceExt extends TaskResource{
      * @param criteria the criteria which the requested entities should match.
      * @return the {@link ResponseEntity} with status {@code 200 (OK)} and the list of tasks in body.
      */
-    @GetMapping("/tasks")
+    @GetMapping("/get-all-tasks-by-client-id")
     public ResponseEntity<List<TaskDTO>> getAllTasks(TaskCriteria criteria, Pageable pageable) {
         log.debug("REST request to get Tasks by criteria: {}", criteria);
         TaskCriteria taskCriteria = new TaskCriteria();
@@ -150,7 +150,7 @@ public class TaskResourceExt extends TaskResource{
      * @param id the id of the taskDTO to retrieve.
      * @return the {@link ResponseEntity} with status {@code 200 (OK)} and with body the taskDTO, or with status {@code 404 (Not Found)}.
      */
-    @GetMapping("/tasks/{id}")
+    @GetMapping("/get-task-by-client-id/{id}")
     public ResponseEntity<TaskDTO> getTask(@PathVariable Long id) {
         log.debug("REST request to get Task : {}", id);
         Optional<TaskDTO> taskDTO = taskServiceExt.findOne(id);
@@ -163,7 +163,7 @@ public class TaskResourceExt extends TaskResource{
      * @param id the id of the taskDTO to delete.
      * @return the {@link ResponseEntity} with status {@code 204 (NO_CONTENT)}.
      */
-    @DeleteMapping("/tasks/{id}")
+    @DeleteMapping("/delete-task-by-client-id/{id}")
     @PreAuthorize("hasAuthority(\"" + AuthoritiesConstants.COMPANY_ADMIN + "\")")
     public ResponseEntity<Void> deleteTask(@PathVariable Long id) {
         log.debug("REST request to delete Task : {}", id);

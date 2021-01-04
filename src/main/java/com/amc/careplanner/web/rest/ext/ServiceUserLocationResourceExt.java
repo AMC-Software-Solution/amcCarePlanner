@@ -5,9 +5,16 @@ import com.amc.careplanner.web.rest.ServiceUserLocationResource;
 import com.amc.careplanner.web.rest.errors.BadRequestAlertException;
 import com.amc.careplanner.service.dto.ServiceUserLocationDTO;
 import com.amc.careplanner.service.ext.ServiceUserLocationServiceExt;
+import com.amc.careplanner.service.dto.EmployeeHolidayCriteria;
+import com.amc.careplanner.service.dto.EmployeeHolidayDTO;
 import com.amc.careplanner.service.dto.ServiceUserLocationCriteria;
+import com.amc.careplanner.domain.User;
+import com.amc.careplanner.repository.ext.UserRepositoryExt;
+import com.amc.careplanner.security.AuthoritiesConstants;
+import com.amc.careplanner.security.SecurityUtils;
 import com.amc.careplanner.service.ServiceUserLocationQueryService;
 
+import io.github.jhipster.service.filter.LongFilter;
 import io.github.jhipster.web.util.HeaderUtil;
 import io.github.jhipster.web.util.PaginationUtil;
 import io.github.jhipster.web.util.ResponseUtil;
@@ -20,11 +27,13 @@ import org.springframework.http.HttpHeaders;
 import org.springframework.http.HttpStatus;
 import org.springframework.web.servlet.support.ServletUriComponentsBuilder;
 import org.springframework.http.ResponseEntity;
+import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.web.bind.annotation.*;
 
 import javax.validation.Valid;
 import java.net.URI;
 import java.net.URISyntaxException;
+import java.time.ZonedDateTime;
 import java.util.List;
 import java.util.Optional;
 
@@ -45,11 +54,14 @@ public class ServiceUserLocationResourceExt extends ServiceUserLocationResource{
     private final ServiceUserLocationServiceExt serviceUserLocationServiceExt;
 
     private final ServiceUserLocationQueryService serviceUserLocationQueryService;
+    
+    private final UserRepositoryExt userRepositoryExt;
 
-    public ServiceUserLocationResourceExt(ServiceUserLocationServiceExt serviceUserLocationServiceExt, ServiceUserLocationQueryService serviceUserLocationQueryService) {
+    public ServiceUserLocationResourceExt(ServiceUserLocationServiceExt serviceUserLocationServiceExt, ServiceUserLocationQueryService serviceUserLocationQueryService, UserRepositoryExt userRepositoryExt) {
         super(serviceUserLocationServiceExt,serviceUserLocationQueryService);
     	this.serviceUserLocationServiceExt = serviceUserLocationServiceExt;
         this.serviceUserLocationQueryService = serviceUserLocationQueryService;
+        this.userRepositoryExt = userRepositoryExt;
     }
 
     /**
@@ -59,12 +71,15 @@ public class ServiceUserLocationResourceExt extends ServiceUserLocationResource{
      * @return the {@link ResponseEntity} with status {@code 201 (Created)} and with body the new serviceUserLocationDTO, or with status {@code 400 (Bad Request)} if the serviceUserLocation has already an ID.
      * @throws URISyntaxException if the Location URI syntax is incorrect.
      */
-    @PostMapping("/service-user-locations")
+    @PostMapping("/create-service-user-location-by-client-id")
     public ResponseEntity<ServiceUserLocationDTO> createServiceUserLocation(@Valid @RequestBody ServiceUserLocationDTO serviceUserLocationDTO) throws URISyntaxException {
         log.debug("REST request to save ServiceUserLocation : {}", serviceUserLocationDTO);
         if (serviceUserLocationDTO.getId() != null) {
             throw new BadRequestAlertException("A new serviceUserLocation cannot already have an ID", ENTITY_NAME, "idexists");
         }
+//      serviceUserLocationDTO.setDateCreated(ZonedDateTime.now());
+        serviceUserLocationDTO.setLastUpdatedDate(ZonedDateTime.now());
+        serviceUserLocationDTO.setClientId(getClientIdFromLoggedInUser());
         ServiceUserLocationDTO result = serviceUserLocationServiceExt.save(serviceUserLocationDTO);
         return ResponseEntity.created(new URI("/api/service-user-locations/" + result.getId()))
             .headers(HeaderUtil.createEntityCreationAlert(applicationName, true, ENTITY_NAME, result.getId().toString()))
@@ -80,12 +95,16 @@ public class ServiceUserLocationResourceExt extends ServiceUserLocationResource{
      * or with status {@code 500 (Internal Server Error)} if the serviceUserLocationDTO couldn't be updated.
      * @throws URISyntaxException if the Location URI syntax is incorrect.
      */
-    @PutMapping("/service-user-locations")
+    @PutMapping("/update-service-user-location-by-client-id")
     public ResponseEntity<ServiceUserLocationDTO> updateServiceUserLocation(@Valid @RequestBody ServiceUserLocationDTO serviceUserLocationDTO) throws URISyntaxException {
         log.debug("REST request to update ServiceUserLocation : {}", serviceUserLocationDTO);
         if (serviceUserLocationDTO.getId() == null) {
             throw new BadRequestAlertException("Invalid id", ENTITY_NAME, "idnull");
         }
+        if (serviceUserLocationDTO != null && serviceUserLocationDTO.getClientId() != null && serviceUserLocationDTO.getClientId() != getClientIdFromLoggedInUser()) {
+      	  throw new BadRequestAlertException("clientId mismatch", ENTITY_NAME, "clientIdMismatch");
+      }
+        serviceUserLocationDTO.setLastUpdatedDate(ZonedDateTime.now());
         ServiceUserLocationDTO result = serviceUserLocationServiceExt.save(serviceUserLocationDTO);
         return ResponseEntity.ok()
             .headers(HeaderUtil.createEntityUpdateAlert(applicationName, true, ENTITY_NAME, serviceUserLocationDTO.getId().toString()))
@@ -99,10 +118,14 @@ public class ServiceUserLocationResourceExt extends ServiceUserLocationResource{
      * @param criteria the criteria which the requested entities should match.
      * @return the {@link ResponseEntity} with status {@code 200 (OK)} and the list of serviceUserLocations in body.
      */
-    @GetMapping("/service-user-locations")
+    @GetMapping("/get-all-service-user-locations-by-client-id")
     public ResponseEntity<List<ServiceUserLocationDTO>> getAllServiceUserLocations(ServiceUserLocationCriteria criteria, Pageable pageable) {
         log.debug("REST request to get ServiceUserLocations by criteria: {}", criteria);
-        Page<ServiceUserLocationDTO> page = serviceUserLocationQueryService.findByCriteria(criteria, pageable);
+        ServiceUserLocationCriteria serviceUserLocationCriteria = new ServiceUserLocationCriteria();
+		LongFilter longFilterForClientId = new LongFilter();
+		longFilterForClientId.setEquals(getClientIdFromLoggedInUser());
+		serviceUserLocationCriteria.setClientId(longFilterForClientId);
+        Page<ServiceUserLocationDTO> page = serviceUserLocationQueryService.findByCriteria(serviceUserLocationCriteria, pageable);
         HttpHeaders headers = PaginationUtil.generatePaginationHttpHeaders(ServletUriComponentsBuilder.fromCurrentRequest(), page);
         return ResponseEntity.ok().headers(headers).body(page.getContent());
     }
@@ -125,7 +148,7 @@ public class ServiceUserLocationResourceExt extends ServiceUserLocationResource{
      * @param id the id of the serviceUserLocationDTO to retrieve.
      * @return the {@link ResponseEntity} with status {@code 200 (OK)} and with body the serviceUserLocationDTO, or with status {@code 404 (Not Found)}.
      */
-    @GetMapping("/service-user-locations/{id}")
+    @GetMapping("/get-service-user-location-ny-client-id/{id}")
     public ResponseEntity<ServiceUserLocationDTO> getServiceUserLocation(@PathVariable Long id) {
         log.debug("REST request to get ServiceUserLocation : {}", id);
         Optional<ServiceUserLocationDTO> serviceUserLocationDTO = serviceUserLocationServiceExt.findOne(id);
@@ -138,10 +161,23 @@ public class ServiceUserLocationResourceExt extends ServiceUserLocationResource{
      * @param id the id of the serviceUserLocationDTO to delete.
      * @return the {@link ResponseEntity} with status {@code 204 (NO_CONTENT)}.
      */
-    @DeleteMapping("/service-user-locations/{id}")
+    @DeleteMapping("/delete-service-user-location-by-client-id/{id}")
+    @PreAuthorize("hasAuthority(\"" + AuthoritiesConstants.COMPANY_ADMIN + "\")")
     public ResponseEntity<Void> deleteServiceUserLocation(@PathVariable Long id) {
         log.debug("REST request to delete ServiceUserLocation : {}", id);
         serviceUserLocationServiceExt.delete(id);
         return ResponseEntity.noContent().headers(HeaderUtil.createEntityDeletionAlert(applicationName, true, ENTITY_NAME, id.toString())).build();
+    }
+    
+    private Long getClientIdFromLoggedInUser() {
+    	Long clientId = 0L;
+    	String loggedInAdminUserEmail = SecurityUtils.getCurrentUserLogin().get();
+		User loggedInAdminUser = userRepositoryExt.findOneByEmailIgnoreCase(loggedInAdminUserEmail).get();
+		
+		if(loggedInAdminUser != null) {
+			clientId = Long.valueOf(loggedInAdminUser.getLogin());
+		}
+		
+		return clientId;
     }
 }

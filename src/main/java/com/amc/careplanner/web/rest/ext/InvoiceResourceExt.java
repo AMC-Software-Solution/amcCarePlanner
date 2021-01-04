@@ -148,7 +148,7 @@ public class InvoiceResourceExt extends InvoiceResource{
      * @param id the id of the invoiceDTO to retrieve.
      * @return the {@link ResponseEntity} with status {@code 200 (OK)} and with body the invoiceDTO, or with status {@code 404 (Not Found)}.
      */
-    @GetMapping("/get-invoices-by-client-id/{id}")
+    @GetMapping("/get-invoice-by-client-id/{id}")
     public ResponseEntity<InvoiceDTO> getInvoice(@PathVariable Long id) {
         log.debug("REST request to get Invoice : {}", id);
         Optional<InvoiceDTO> invoiceDTO = invoiceServiceExt.findOne(id);
@@ -161,7 +161,7 @@ public class InvoiceResourceExt extends InvoiceResource{
      * @param id the id of the invoiceDTO to delete.
      * @return the {@link ResponseEntity} with status {@code 204 (NO_CONTENT)}.
      */
-    @DeleteMapping("/delete-invoices-by-client-id/{id}")
+    @DeleteMapping("/delete-invoice-by-client-id/{id}")
     @PreAuthorize("hasAuthority(\"" + AuthoritiesConstants.COMPANY_ADMIN + "\")")
     public ResponseEntity<Void> deleteInvoice(@PathVariable Long id) {
         log.debug("REST request to delete Invoice : {}", id);

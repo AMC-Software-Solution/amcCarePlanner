@@ -168,7 +168,7 @@ public class BranchResourceExt extends BranchResource {
      * @param id the id of the branchDTO to delete.
      * @return the {@link ResponseEntity} with status {@code 204 (NO_CONTENT)}.
      */
-    @DeleteMapping("/delete-branches-by-client-id/{id}")
+    @DeleteMapping("/delete-branch-by-client-id/{id}")
     @PreAuthorize("hasAuthority(\"" + AuthoritiesConstants.ADMIN + "\")")
     public ResponseEntity<Void> deleteBranch(@PathVariable Long id) {
         log.debug("REST request to delete Branch : {}", id);

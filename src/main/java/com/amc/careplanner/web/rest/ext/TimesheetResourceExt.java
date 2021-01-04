@@ -118,7 +118,7 @@ public class TimesheetResourceExt extends TimesheetResource{
      * @param criteria the criteria which the requested entities should match.
      * @return the {@link ResponseEntity} with status {@code 200 (OK)} and the list of timesheets in body.
      */
-    @GetMapping("/timesheets")
+    @GetMapping("/get-all-timesheets-by-client-id")
     public ResponseEntity<List<TimesheetDTO>> getAllTimesheets(TimesheetCriteria criteria, Pageable pageable) {
         log.debug("REST request to get Timesheets by criteria: {}", criteria);
         TimesheetCriteria timesheetCriteria = new TimesheetCriteria();
@@ -148,7 +148,7 @@ public class TimesheetResourceExt extends TimesheetResource{
      * @param id the id of the timesheetDTO to retrieve.
      * @return the {@link ResponseEntity} with status {@code 200 (OK)} and with body the timesheetDTO, or with status {@code 404 (Not Found)}.
      */
-    @GetMapping("/timesheets/{id}")
+    @GetMapping("/get-timesheet-by-client-id/{id}")
     public ResponseEntity<TimesheetDTO> getTimesheet(@PathVariable Long id) {
         log.debug("REST request to get Timesheet : {}", id);
         Optional<TimesheetDTO> timesheetDTO = timesheetServiceExt.findOne(id);
@@ -161,7 +161,7 @@ public class TimesheetResourceExt extends TimesheetResource{
      * @param id the id of the timesheetDTO to delete.
      * @return the {@link ResponseEntity} with status {@code 204 (NO_CONTENT)}.
      */
-    @DeleteMapping("/timesheets/{id}")
+    @DeleteMapping("/delete-timesheet-by-client-id/{id}")
     @PreAuthorize("hasAuthority(\"" + AuthoritiesConstants.COMPANY_ADMIN + "\")")
     public ResponseEntity<Void> deleteTimesheet(@PathVariable Long id) {
         log.debug("REST request to delete Timesheet : {}", id);

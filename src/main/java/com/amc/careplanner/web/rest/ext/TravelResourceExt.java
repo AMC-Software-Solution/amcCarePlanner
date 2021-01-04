@@ -5,9 +5,16 @@ import com.amc.careplanner.web.rest.TravelResource;
 import com.amc.careplanner.web.rest.errors.BadRequestAlertException;
 import com.amc.careplanner.service.dto.TravelDTO;
 import com.amc.careplanner.service.ext.TravelServiceExt;
+import com.amc.careplanner.service.dto.EmployeeHolidayCriteria;
+import com.amc.careplanner.service.dto.EmployeeHolidayDTO;
 import com.amc.careplanner.service.dto.TravelCriteria;
+import com.amc.careplanner.domain.User;
+import com.amc.careplanner.repository.ext.UserRepositoryExt;
+import com.amc.careplanner.security.AuthoritiesConstants;
+import com.amc.careplanner.security.SecurityUtils;
 import com.amc.careplanner.service.TravelQueryService;
 
+import io.github.jhipster.service.filter.LongFilter;
 import io.github.jhipster.web.util.HeaderUtil;
 import io.github.jhipster.web.util.PaginationUtil;
 import io.github.jhipster.web.util.ResponseUtil;
@@ -20,11 +27,13 @@ import org.springframework.http.HttpHeaders;
 import org.springframework.http.HttpStatus;
 import org.springframework.web.servlet.support.ServletUriComponentsBuilder;
 import org.springframework.http.ResponseEntity;
+import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.web.bind.annotation.*;
 
 import javax.validation.Valid;
 import java.net.URI;
 import java.net.URISyntaxException;
+import java.time.ZonedDateTime;
 import java.util.List;
 import java.util.Optional;
 
@@ -45,11 +54,14 @@ public class TravelResourceExt extends TravelResource{
     private final TravelServiceExt travelServiceExt;
 
     private final TravelQueryService travelQueryService;
+    
+    private final UserRepositoryExt userRepositoryExt;
 
-    public TravelResourceExt(TravelServiceExt travelServiceExt, TravelQueryService travelQueryService) {
+    public TravelResourceExt(TravelServiceExt travelServiceExt, TravelQueryService travelQueryService, UserRepositoryExt userRepositoryExt) {
         super(travelServiceExt,travelQueryService);
     	this.travelServiceExt = travelServiceExt;
         this.travelQueryService = travelQueryService;
+        this.userRepositoryExt = userRepositoryExt;
     }
 
     /**
@@ -59,12 +71,15 @@ public class TravelResourceExt extends TravelResource{
      * @return the {@link ResponseEntity} with status {@code 201 (Created)} and with body the new travelDTO, or with status {@code 400 (Bad Request)} if the travel has already an ID.
      * @throws URISyntaxException if the Location URI syntax is incorrect.
      */
-    @PostMapping("/travels")
+    @PostMapping("/create-travel-by-client-id")
     public ResponseEntity<TravelDTO> createTravel(@Valid @RequestBody TravelDTO travelDTO) throws URISyntaxException {
         log.debug("REST request to save Travel : {}", travelDTO);
         if (travelDTO.getId() != null) {
             throw new BadRequestAlertException("A new travel cannot already have an ID", ENTITY_NAME, "idexists");
         }
+//      travelDTO.setDateCreated(ZonedDateTime.now());
+        travelDTO.setLastUpdatedDate(ZonedDateTime.now());
+        travelDTO.setClientId(getClientIdFromLoggedInUser());
         TravelDTO result = travelServiceExt.save(travelDTO);
         return ResponseEntity.created(new URI("/api/travels/" + result.getId()))
             .headers(HeaderUtil.createEntityCreationAlert(applicationName, true, ENTITY_NAME, result.getId().toString()))
@@ -80,12 +95,16 @@ public class TravelResourceExt extends TravelResource{
      * or with status {@code 500 (Internal Server Error)} if the travelDTO couldn't be updated.
      * @throws URISyntaxException if the Location URI syntax is incorrect.
      */
-    @PutMapping("/travels")
+    @PutMapping("/update-travel-by-client-id")
     public ResponseEntity<TravelDTO> updateTravel(@Valid @RequestBody TravelDTO travelDTO) throws URISyntaxException {
         log.debug("REST request to update Travel : {}", travelDTO);
         if (travelDTO.getId() == null) {
             throw new BadRequestAlertException("Invalid id", ENTITY_NAME, "idnull");
         }
+        if (travelDTO != null && travelDTO.getClientId() != null && travelDTO.getClientId() != getClientIdFromLoggedInUser()) {
+      	  throw new BadRequestAlertException("clientId mismatch", ENTITY_NAME, "clientIdMismatch");
+      }
+        travelDTO.setLastUpdatedDate(ZonedDateTime.now());
         TravelDTO result = travelServiceExt.save(travelDTO);
         return ResponseEntity.ok()
             .headers(HeaderUtil.createEntityUpdateAlert(applicationName, true, ENTITY_NAME, travelDTO.getId().toString()))
@@ -99,10 +118,14 @@ public class TravelResourceExt extends TravelResource{
      * @param criteria the criteria which the requested entities should match.
      * @return the {@link ResponseEntity} with status {@code 200 (OK)} and the list of travels in body.
      */
-    @GetMapping("/travels")
+    @GetMapping("/get-all-travels-by-client-id")
     public ResponseEntity<List<TravelDTO>> getAllTravels(TravelCriteria criteria, Pageable pageable) {
         log.debug("REST request to get Travels by criteria: {}", criteria);
-        Page<TravelDTO> page = travelQueryService.findByCriteria(criteria, pageable);
+        TravelCriteria travelCriteria = new TravelCriteria();
+		LongFilter longFilterForClientId = new LongFilter();
+		longFilterForClientId.setEquals(getClientIdFromLoggedInUser());
+		travelCriteria.setClientId(longFilterForClientId);
+        Page<TravelDTO> page = travelQueryService.findByCriteria(travelCriteria, pageable);
         HttpHeaders headers = PaginationUtil.generatePaginationHttpHeaders(ServletUriComponentsBuilder.fromCurrentRequest(), page);
         return ResponseEntity.ok().headers(headers).body(page.getContent());
     }
@@ -125,7 +148,7 @@ public class TravelResourceExt extends TravelResource{
      * @param id the id of the travelDTO to retrieve.
      * @return the {@link ResponseEntity} with status {@code 200 (OK)} and with body the travelDTO, or with status {@code 404 (Not Found)}.
      */
-    @GetMapping("/travels/{id}")
+    @GetMapping("/get-travel-by-client-d/{id}")
     public ResponseEntity<TravelDTO> getTravel(@PathVariable Long id) {
         log.debug("REST request to get Travel : {}", id);
         Optional<TravelDTO> travelDTO = travelServiceExt.findOne(id);
@@ -138,10 +161,22 @@ public class TravelResourceExt extends TravelResource{
      * @param id the id of the travelDTO to delete.
      * @return the {@link ResponseEntity} with status {@code 204 (NO_CONTENT)}.
      */
-    @DeleteMapping("/travels/{id}")
+    @DeleteMapping("/delete-travel-by-client-id/{id}")
+    @PreAuthorize("hasAuthority(\"" + AuthoritiesConstants.COMPANY_ADMIN + "\")")
     public ResponseEntity<Void> deleteTravel(@PathVariable Long id) {
         log.debug("REST request to delete Travel : {}", id);
         travelServiceExt.delete(id);
         return ResponseEntity.noContent().headers(HeaderUtil.createEntityDeletionAlert(applicationName, true, ENTITY_NAME, id.toString())).build();
+    }
+    private Long getClientIdFromLoggedInUser() {
+    	Long clientId = 0L;
+    	String loggedInAdminUserEmail = SecurityUtils.getCurrentUserLogin().get();
+		User loggedInAdminUser = userRepositoryExt.findOneByEmailIgnoreCase(loggedInAdminUserEmail).get();
+		
+		if(loggedInAdminUser != null) {
+			clientId = Long.valueOf(loggedInAdminUser.getLogin());
+		}
+		
+		return clientId;
     }
 }

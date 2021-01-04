@@ -149,7 +149,7 @@ public class EligibilityResourceExt extends EligibilityResource{
      * @param id the id of the eligibilityDTO to retrieve.
      * @return the {@link ResponseEntity} with status {@code 200 (OK)} and with body the eligibilityDTO, or with status {@code 404 (Not Found)}.
      */
-    @GetMapping("/get-eligibilities-by-client-id/{id}")
+    @GetMapping("/get-eligibility-by-client-id/{id}")
     public ResponseEntity<EligibilityDTO> getEligibility(@PathVariable Long id) {
         log.debug("REST request to get Eligibility : {}", id);
         Optional<EligibilityDTO> eligibilityDTO = eligibilityServiceExt.findOne(id);

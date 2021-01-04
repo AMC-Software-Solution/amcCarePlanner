@@ -5,9 +5,16 @@ import com.amc.careplanner.web.rest.ServiceUserContactResource;
 import com.amc.careplanner.web.rest.errors.BadRequestAlertException;
 import com.amc.careplanner.service.dto.ServiceUserContactDTO;
 import com.amc.careplanner.service.ext.ServiceUserContactServiceExt;
+import com.amc.careplanner.service.dto.EmployeeHolidayCriteria;
+import com.amc.careplanner.service.dto.EmployeeHolidayDTO;
 import com.amc.careplanner.service.dto.ServiceUserContactCriteria;
+import com.amc.careplanner.domain.User;
+import com.amc.careplanner.repository.ext.UserRepositoryExt;
+import com.amc.careplanner.security.AuthoritiesConstants;
+import com.amc.careplanner.security.SecurityUtils;
 import com.amc.careplanner.service.ServiceUserContactQueryService;
 
+import io.github.jhipster.service.filter.LongFilter;
 import io.github.jhipster.web.util.HeaderUtil;
 import io.github.jhipster.web.util.PaginationUtil;
 import io.github.jhipster.web.util.ResponseUtil;
@@ -20,11 +27,13 @@ import org.springframework.http.HttpHeaders;
 import org.springframework.http.HttpStatus;
 import org.springframework.web.servlet.support.ServletUriComponentsBuilder;
 import org.springframework.http.ResponseEntity;
+import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.web.bind.annotation.*;
 
 import javax.validation.Valid;
 import java.net.URI;
 import java.net.URISyntaxException;
+import java.time.ZonedDateTime;
 import java.util.List;
 import java.util.Optional;
 
@@ -45,11 +54,14 @@ public class ServiceUserContactResourceExt extends ServiceUserContactResource{
     private final ServiceUserContactServiceExt serviceUserContactServiceExt;
 
     private final ServiceUserContactQueryService serviceUserContactQueryService;
+    
+    private final UserRepositoryExt userRepositoryExt;
 
-    public ServiceUserContactResourceExt(ServiceUserContactServiceExt serviceUserContactServiceExt, ServiceUserContactQueryService serviceUserContactQueryService) {
+    public ServiceUserContactResourceExt(ServiceUserContactServiceExt serviceUserContactServiceExt, ServiceUserContactQueryService serviceUserContactQueryService, UserRepositoryExt userRepositoryExt) {
         super(serviceUserContactServiceExt,serviceUserContactQueryService);
     	this.serviceUserContactServiceExt = serviceUserContactServiceExt;
         this.serviceUserContactQueryService = serviceUserContactQueryService;
+        this.userRepositoryExt = userRepositoryExt;
     }
 
     /**
@@ -59,12 +71,15 @@ public class ServiceUserContactResourceExt extends ServiceUserContactResource{
      * @return the {@link ResponseEntity} with status {@code 201 (Created)} and with body the new serviceUserContactDTO, or with status {@code 400 (Bad Request)} if the serviceUserContact has already an ID.
      * @throws URISyntaxException if the Location URI syntax is incorrect.
      */
-    @PostMapping("/service-user-contacts")
+    @PostMapping("/create-service-user-contact-by-client-id")
     public ResponseEntity<ServiceUserContactDTO> createServiceUserContact(@Valid @RequestBody ServiceUserContactDTO serviceUserContactDTO) throws URISyntaxException {
         log.debug("REST request to save ServiceUserContact : {}", serviceUserContactDTO);
         if (serviceUserContactDTO.getId() != null) {
             throw new BadRequestAlertException("A new serviceUserContact cannot already have an ID", ENTITY_NAME, "idexists");
         }
+//      serviceUserContactDTO.setDateCreated(ZonedDateTime.now());
+        serviceUserContactDTO.setLastUpdatedDate(ZonedDateTime.now());
+        serviceUserContactDTO.setClientId(getClientIdFromLoggedInUser());
         ServiceUserContactDTO result = serviceUserContactServiceExt.save(serviceUserContactDTO);
         return ResponseEntity.created(new URI("/api/service-user-contacts/" + result.getId()))
             .headers(HeaderUtil.createEntityCreationAlert(applicationName, true, ENTITY_NAME, result.getId().toString()))
@@ -80,12 +95,16 @@ public class ServiceUserContactResourceExt extends ServiceUserContactResource{
      * or with status {@code 500 (Internal Server Error)} if the serviceUserContactDTO couldn't be updated.
      * @throws URISyntaxException if the Location URI syntax is incorrect.
      */
-    @PutMapping("/service-user-contacts")
+    @PutMapping("/update-service-user-contact-by-cliebt-id")
     public ResponseEntity<ServiceUserContactDTO> updateServiceUserContact(@Valid @RequestBody ServiceUserContactDTO serviceUserContactDTO) throws URISyntaxException {
         log.debug("REST request to update ServiceUserContact : {}", serviceUserContactDTO);
         if (serviceUserContactDTO.getId() == null) {
             throw new BadRequestAlertException("Invalid id", ENTITY_NAME, "idnull");
         }
+        if (serviceUserContactDTO != null && serviceUserContactDTO.getClientId() != null && serviceUserContactDTO.getClientId() != getClientIdFromLoggedInUser()) {
+      	  throw new BadRequestAlertException("clientId mismatch", ENTITY_NAME, "clientIdMismatch");
+      }
+        serviceUserContactDTO.setLastUpdatedDate(ZonedDateTime.now());
         ServiceUserContactDTO result = serviceUserContactServiceExt.save(serviceUserContactDTO);
         return ResponseEntity.ok()
             .headers(HeaderUtil.createEntityUpdateAlert(applicationName, true, ENTITY_NAME, serviceUserContactDTO.getId().toString()))
@@ -102,7 +121,12 @@ public class ServiceUserContactResourceExt extends ServiceUserContactResource{
     @GetMapping("/service-user-contacts")
     public ResponseEntity<List<ServiceUserContactDTO>> getAllServiceUserContacts(ServiceUserContactCriteria criteria, Pageable pageable) {
         log.debug("REST request to get ServiceUserContacts by criteria: {}", criteria);
-        Page<ServiceUserContactDTO> page = serviceUserContactQueryService.findByCriteria(criteria, pageable);
+        log.debug("REST request to get EmployeeHolidays by criteria: {}", criteria);
+        ServiceUserContactCriteria serviceUserContactCriteria = new ServiceUserContactCriteria();
+		LongFilter longFilterForClientId = new LongFilter();
+		longFilterForClientId.setEquals(getClientIdFromLoggedInUser());
+		serviceUserContactCriteria.setClientId(longFilterForClientId);
+        Page<ServiceUserContactDTO> page = serviceUserContactQueryService.findByCriteria(serviceUserContactCriteria, pageable);
         HttpHeaders headers = PaginationUtil.generatePaginationHttpHeaders(ServletUriComponentsBuilder.fromCurrentRequest(), page);
         return ResponseEntity.ok().headers(headers).body(page.getContent());
     }
@@ -125,7 +149,7 @@ public class ServiceUserContactResourceExt extends ServiceUserContactResource{
      * @param id the id of the serviceUserContactDTO to retrieve.
      * @return the {@link ResponseEntity} with status {@code 200 (OK)} and with body the serviceUserContactDTO, or with status {@code 404 (Not Found)}.
      */
-    @GetMapping("/service-user-contacts/{id}")
+    @GetMapping("/get-service-user-contact-by-client-id/{id}")
     public ResponseEntity<ServiceUserContactDTO> getServiceUserContact(@PathVariable Long id) {
         log.debug("REST request to get ServiceUserContact : {}", id);
         Optional<ServiceUserContactDTO> serviceUserContactDTO = serviceUserContactServiceExt.findOne(id);
@@ -138,10 +162,23 @@ public class ServiceUserContactResourceExt extends ServiceUserContactResource{
      * @param id the id of the serviceUserContactDTO to delete.
      * @return the {@link ResponseEntity} with status {@code 204 (NO_CONTENT)}.
      */
-    @DeleteMapping("/service-user-contacts/{id}")
+    @DeleteMapping("/delete-service-user-contact-by-client-id/{id}")
+    @PreAuthorize("hasAuthority(\"" + AuthoritiesConstants.COMPANY_ADMIN + "\")")
     public ResponseEntity<Void> deleteServiceUserContact(@PathVariable Long id) {
         log.debug("REST request to delete ServiceUserContact : {}", id);
         serviceUserContactServiceExt.delete(id);
         return ResponseEntity.noContent().headers(HeaderUtil.createEntityDeletionAlert(applicationName, true, ENTITY_NAME, id.toString())).build();
+    }
+    
+    private Long getClientIdFromLoggedInUser() {
+    	Long clientId = 0L;
+    	String loggedInAdminUserEmail = SecurityUtils.getCurrentUserLogin().get();
+		User loggedInAdminUser = userRepositoryExt.findOneByEmailIgnoreCase(loggedInAdminUserEmail).get();
+		
+		if(loggedInAdminUser != null) {
+			clientId = Long.valueOf(loggedInAdminUser.getLogin());
+		}
+		
+		return clientId;
     }
 }

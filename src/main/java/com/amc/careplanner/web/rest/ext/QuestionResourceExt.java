@@ -6,6 +6,9 @@ import com.amc.careplanner.web.rest.errors.BadRequestAlertException;
 import com.amc.careplanner.service.dto.QuestionDTO;
 import com.amc.careplanner.service.ext.QuestionServiceExt;
 import com.amc.careplanner.service.dto.QuestionCriteria;
+import com.amc.careplanner.domain.User;
+import com.amc.careplanner.repository.ext.UserRepositoryExt;
+import com.amc.careplanner.security.SecurityUtils;
 import com.amc.careplanner.service.QuestionQueryService;
 
 import io.github.jhipster.web.util.HeaderUtil;
@@ -25,6 +28,7 @@ import org.springframework.web.bind.annotation.*;
 import javax.validation.Valid;
 import java.net.URI;
 import java.net.URISyntaxException;
+import java.time.ZonedDateTime;
 import java.util.List;
 import java.util.Optional;
 
@@ -45,24 +49,40 @@ public class QuestionResourceExt extends  QuestionResource {
     private final QuestionServiceExt questionServiceExt;
 
     private final QuestionQueryService questionQueryService;
+    
+    private final UserRepositoryExt userRepositoryExt;
 
-    public QuestionResourceExt(QuestionServiceExt questionServiceExt, QuestionQueryService questionQueryService) {
+    public QuestionResourceExt(QuestionServiceExt questionServiceExt, QuestionQueryService questionQueryService, UserRepositoryExt userRepositoryExt) {
         super(questionServiceExt,questionQueryService);
     	this.questionServiceExt = questionServiceExt;
         this.questionQueryService = questionQueryService;
+        this.userRepositoryExt = userRepositoryExt;
     }
     
-    @PostMapping("/questions")
+    @PostMapping("/create-question-by-client-id")
     public ResponseEntity<QuestionDTO> createQuestion(@Valid @RequestBody QuestionDTO questionDTO) throws URISyntaxException {
         log.debug("REST request to save Question in Ext : {}", questionDTO);
         if (questionDTO.getId() != null) {
             throw new BadRequestAlertException("A new question cannot already have an ID", ENTITY_NAME, "idexists");
         }
+//      questionDTO.setDateCreated(ZonedDateTime.now());
+        questionDTO.setLastUpdatedDate(ZonedDateTime.now());
+        questionDTO.setClientId(getClientIdFromLoggedInUser());
         QuestionDTO result = questionServiceExt.save(questionDTO);
         return ResponseEntity.created(new URI("/api/questions/" + result.getId()))
             .headers(HeaderUtil.createEntityCreationAlert(applicationName, true, ENTITY_NAME, result.getId().toString()))
             .body(result);
     }
 
-   
+    private Long getClientIdFromLoggedInUser() {
+    	Long clientId = 0L;
+    	String loggedInAdminUserEmail = SecurityUtils.getCurrentUserLogin().get();
+		User loggedInAdminUser = userRepositoryExt.findOneByEmailIgnoreCase(loggedInAdminUserEmail).get();
+		
+		if(loggedInAdminUser != null) {
+			clientId = Long.valueOf(loggedInAdminUser.getLogin());
+		}
+		
+		return clientId;
+    }
 }
