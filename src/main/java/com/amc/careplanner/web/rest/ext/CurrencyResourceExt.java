@@ -67,7 +67,7 @@ public class CurrencyResourceExt extends CurrencyResource{
      * @return the {@link ResponseEntity} with status {@code 201 (Created)} and with body the new currencyDTO, or with status {@code 400 (Bad Request)} if the currency has already an ID.
      * @throws URISyntaxException if the Location URI syntax is incorrect.
      */
-    @PostMapping("/currencies")
+    @PostMapping("/create-currency-by-client-id")
     public ResponseEntity<CurrencyDTO> createCurrency(@Valid @RequestBody CurrencyDTO currencyDTO) throws URISyntaxException {
         log.debug("REST request to save Currency : {}", currencyDTO);
         if (currencyDTO.getId() != null) {
@@ -102,7 +102,7 @@ public class CurrencyResourceExt extends CurrencyResource{
      * or with status {@code 500 (Internal Server Error)} if the currencyDTO couldn't be updated.
      * @throws URISyntaxException if the Location URI syntax is incorrect.
      */
-    @PutMapping("/currencies")
+    @PutMapping("/update-currency-by-client-id")
     public ResponseEntity<CurrencyDTO> updateCurrency(@Valid @RequestBody CurrencyDTO currencyDTO) throws URISyntaxException {
         log.debug("REST request to update Currency : {}", currencyDTO);
         if (currencyDTO.getId() == null) {
@@ -135,7 +135,7 @@ public class CurrencyResourceExt extends CurrencyResource{
      * @param criteria the criteria which the requested entities should match.
      * @return the {@link ResponseEntity} with status {@code 200 (OK)} and the list of currencies in body.
      */
-    @GetMapping("/currencies")
+    @GetMapping("/get-all-currencies-by-client-id")
     public ResponseEntity<List<CurrencyDTO>> getAllCurrencies(CurrencyCriteria criteria, Pageable pageable) {
         log.debug("REST request to get Currencies by criteria: {}", criteria);
         Page<CurrencyDTO> page = currencyQueryService.findByCriteria(criteria, pageable);
@@ -161,7 +161,7 @@ public class CurrencyResourceExt extends CurrencyResource{
      * @param id the id of the currencyDTO to retrieve.
      * @return the {@link ResponseEntity} with status {@code 200 (OK)} and with body the currencyDTO, or with status {@code 404 (Not Found)}.
      */
-    @GetMapping("/currencies/{id}")
+    @GetMapping("/get-currency-by-client-id/{id}")
     public ResponseEntity<CurrencyDTO> getCurrency(@PathVariable Long id) {
         log.debug("REST request to get Currency : {}", id);
         Optional<CurrencyDTO> currencyDTO = currencyServiceExt.findOne(id);
@@ -174,7 +174,7 @@ public class CurrencyResourceExt extends CurrencyResource{
      * @param id the id of the currencyDTO to delete.
      * @return the {@link ResponseEntity} with status {@code 204 (NO_CONTENT)}.
      */
-    @DeleteMapping("/currencies/{id}")
+    @DeleteMapping("/delete-currency-by-client-id/{id}")
     public ResponseEntity<Void> deleteCurrency(@PathVariable Long id) {
         log.debug("REST request to delete Currency : {}", id);
         currencyServiceExt.delete(id);

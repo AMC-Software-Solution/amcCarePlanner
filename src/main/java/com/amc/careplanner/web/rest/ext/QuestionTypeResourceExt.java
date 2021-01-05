@@ -58,7 +58,7 @@ public class QuestionTypeResourceExt extends QuestionTypeResource{
      * @return the {@link ResponseEntity} with status {@code 201 (Created)} and with body the new questionTypeDTO, or with status {@code 400 (Bad Request)} if the questionType has already an ID.
      * @throws URISyntaxException if the Location URI syntax is incorrect.
      */
-    @PostMapping("/question-types")
+    @PostMapping("/create-question-type-by-client-id")
     public ResponseEntity<QuestionTypeDTO> createQuestionType(@RequestBody QuestionTypeDTO questionTypeDTO) throws URISyntaxException {
         log.debug("REST request to save QuestionType : {}", questionTypeDTO);
         if (questionTypeDTO.getId() != null) {
@@ -79,7 +79,7 @@ public class QuestionTypeResourceExt extends QuestionTypeResource{
      * or with status {@code 500 (Internal Server Error)} if the questionTypeDTO couldn't be updated.
      * @throws URISyntaxException if the Location URI syntax is incorrect.
      */
-    @PutMapping("/question-types")
+    @PutMapping("/update-question-type-by-client-id")
     public ResponseEntity<QuestionTypeDTO> updateQuestionType(@RequestBody QuestionTypeDTO questionTypeDTO) throws URISyntaxException {
         log.debug("REST request to update QuestionType : {}", questionTypeDTO);
         if (questionTypeDTO.getId() == null) {
@@ -98,7 +98,7 @@ public class QuestionTypeResourceExt extends QuestionTypeResource{
      * @param criteria the criteria which the requested entities should match.
      * @return the {@link ResponseEntity} with status {@code 200 (OK)} and the list of questionTypes in body.
      */
-    @GetMapping("/question-types")
+    @GetMapping("/get-all-question-types-by-client-id")
     public ResponseEntity<List<QuestionTypeDTO>> getAllQuestionTypes(QuestionTypeCriteria criteria, Pageable pageable) {
         log.debug("REST request to get QuestionTypes by criteria: {}", criteria);
         Page<QuestionTypeDTO> page = questionTypeQueryService.findByCriteria(criteria, pageable);
@@ -124,7 +124,7 @@ public class QuestionTypeResourceExt extends QuestionTypeResource{
      * @param id the id of the questionTypeDTO to retrieve.
      * @return the {@link ResponseEntity} with status {@code 200 (OK)} and with body the questionTypeDTO, or with status {@code 404 (Not Found)}.
      */
-    @GetMapping("/question-types/{id}")
+    @GetMapping("/get-question-type-by-client-id/{id}")
     public ResponseEntity<QuestionTypeDTO> getQuestionType(@PathVariable Long id) {
         log.debug("REST request to get QuestionType : {}", id);
         Optional<QuestionTypeDTO> questionTypeDTO = questionTypeServiceExt.findOne(id);
@@ -137,7 +137,7 @@ public class QuestionTypeResourceExt extends QuestionTypeResource{
      * @param id the id of the questionTypeDTO to delete.
      * @return the {@link ResponseEntity} with status {@code 204 (NO_CONTENT)}.
      */
-    @DeleteMapping("/question-types/{id}")
+    @DeleteMapping("/delete-question-type-by-client-id/{id}")
     public ResponseEntity<Void> deleteQuestionType(@PathVariable Long id) {
         log.debug("REST request to delete QuestionType : {}", id);
         questionTypeServiceExt.delete(id);

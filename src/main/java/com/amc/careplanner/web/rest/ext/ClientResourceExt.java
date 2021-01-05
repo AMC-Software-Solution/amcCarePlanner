@@ -88,7 +88,6 @@ public class ClientResourceExt extends ClientResource{
         }
 //      clientDTO.setDateCreated(ZonedDateTime.now());
         clientDTO.setLastUpdatedDate(ZonedDateTime.now());
-//        clientDTO.setClientId(getClientIdFromLoggedInUser());
         ClientDTO result = clientServiceExt.save(clientDTO);
         ClientDTO result2 = result;
         ClientDTO result3 = null;
@@ -126,10 +125,6 @@ public class ClientResourceExt extends ClientResource{
         if (clientDTO.getId() == null) {
             throw new BadRequestAlertException("Invalid id", ENTITY_NAME, "idnull");
         }
-
-//        if (clientDTO != null && clientDTO.getClientId() != null && clientDTO.getClientId() != getClientIdFromLoggedInUser()) {
-//        	  throw new BadRequestAlertException("clientId mismatch", ENTITY_NAME, "clientIdMismatch");
-//        }
         clientDTO.setLastUpdatedDate(ZonedDateTime.now());
         ClientDTO result = clientServiceExt.save(clientDTO);
         ClientDTO result2 = result;
