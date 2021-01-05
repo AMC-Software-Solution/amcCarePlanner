@@ -59,7 +59,7 @@ this.disabilityTypeQueryService = disabilityTypeQueryService;
 * @return the {@link ResponseEntity} with status {@code 201 (Created)} and with body the new disabilityTypeDTO, or with status {@code 400 (Bad Request)} if the disabilityType has already an ID.
 * @throws URISyntaxException if the Location URI syntax is incorrect.
 */
-@PostMapping("/disability-types")
+@PostMapping("/create-disability-type-by-client-id")
 public ResponseEntity<DisabilityTypeDTO> createDisabilityType(@Valid @RequestBody DisabilityTypeDTO disabilityTypeDTO) throws URISyntaxException {
 log.debug("REST request to save DisabilityType : {}", disabilityTypeDTO);
 if (disabilityTypeDTO.getId() != null) {
@@ -80,7 +80,7 @@ return ResponseEntity.created(new URI("/api/disability-types/" + result.getId())
 * or with status {@code 500 (Internal Server Error)} if the disabilityTypeDTO couldn't be updated.
 * @throws URISyntaxException if the Location URI syntax is incorrect.
 */
-@PutMapping("/disability-types")
+@PutMapping("/update-disability-type-by-client-id")
 public ResponseEntity<DisabilityTypeDTO> updateDisabilityType(@Valid @RequestBody DisabilityTypeDTO disabilityTypeDTO) throws URISyntaxException {
 log.debug("REST request to update DisabilityType : {}", disabilityTypeDTO);
 if (disabilityTypeDTO.getId() == null) {
@@ -99,7 +99,7 @@ return ResponseEntity.ok()
 * @param criteria the criteria which the requested entities should match.
 * @return the {@link ResponseEntity} with status {@code 200 (OK)} and the list of disabilityTypes in body.
 */
-@GetMapping("/disability-types")
+@GetMapping("/get-all-disability-types-by-client-id")
 public ResponseEntity<List<DisabilityTypeDTO>> getAllDisabilityTypes(DisabilityTypeCriteria criteria, Pageable pageable) {
 log.debug("REST request to get DisabilityTypes by criteria: {}", criteria);
 Page<DisabilityTypeDTO> page = disabilityTypeQueryService.findByCriteria(criteria, pageable);
@@ -125,7 +125,7 @@ return ResponseEntity.ok().body(disabilityTypeQueryService.countByCriteria(crite
 * @param id the id of the disabilityTypeDTO to retrieve.
 * @return the {@link ResponseEntity} with status {@code 200 (OK)} and with body the disabilityTypeDTO, or with status {@code 404 (Not Found)}.
 */
-@GetMapping("/disability-types/{id}")
+@GetMapping("/get-disability-type-by-client-id/{id}")
 public ResponseEntity<DisabilityTypeDTO> getDisabilityType(@PathVariable Long id) {
 log.debug("REST request to get DisabilityType : {}", id);
 Optional<DisabilityTypeDTO> disabilityTypeDTO = disabilityTypeServiceExt.findOne(id);
@@ -138,7 +138,7 @@ return ResponseUtil.wrapOrNotFound(disabilityTypeDTO);
 * @param id the id of the disabilityTypeDTO to delete.
 * @return the {@link ResponseEntity} with status {@code 204 (NO_CONTENT)}.
 */
-@DeleteMapping("/disability-types/{id}")
+@DeleteMapping("/delete-disability-type-by-client-id/{id}")
 public ResponseEntity<Void> deleteDisabilityType(@PathVariable Long id) {
 log.debug("REST request to delete DisabilityType : {}", id);
 disabilityTypeServiceExt.delete(id);

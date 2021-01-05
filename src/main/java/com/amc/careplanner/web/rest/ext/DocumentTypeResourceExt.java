@@ -59,7 +59,7 @@ public class DocumentTypeResourceExt extends DocumentTypeResource{
      * @return the {@link ResponseEntity} with status {@code 201 (Created)} and with body the new documentTypeDTO, or with status {@code 400 (Bad Request)} if the documentType has already an ID.
      * @throws URISyntaxException if the Location URI syntax is incorrect.
      */
-    @PostMapping("/document-types")
+    @PostMapping("/create-document-type-by-client-id")
     public ResponseEntity<DocumentTypeDTO> createDocumentType(@Valid @RequestBody DocumentTypeDTO documentTypeDTO) throws URISyntaxException {
         log.debug("REST request to save DocumentType : {}", documentTypeDTO);
         if (documentTypeDTO.getId() != null) {
@@ -80,7 +80,7 @@ public class DocumentTypeResourceExt extends DocumentTypeResource{
      * or with status {@code 500 (Internal Server Error)} if the documentTypeDTO couldn't be updated.
      * @throws URISyntaxException if the Location URI syntax is incorrect.
      */
-    @PutMapping("/document-types")
+    @PutMapping("/update-document-type-by-client-id")
     public ResponseEntity<DocumentTypeDTO> updateDocumentType(@Valid @RequestBody DocumentTypeDTO documentTypeDTO) throws URISyntaxException {
         log.debug("REST request to update DocumentType : {}", documentTypeDTO);
         if (documentTypeDTO.getId() == null) {
@@ -99,7 +99,7 @@ public class DocumentTypeResourceExt extends DocumentTypeResource{
      * @param criteria the criteria which the requested entities should match.
      * @return the {@link ResponseEntity} with status {@code 200 (OK)} and the list of documentTypes in body.
      */
-    @GetMapping("/document-types")
+    @GetMapping("/get-all-document-types-by-client-id")
     public ResponseEntity<List<DocumentTypeDTO>> getAllDocumentTypes(DocumentTypeCriteria criteria, Pageable pageable) {
         log.debug("REST request to get DocumentTypes by criteria: {}", criteria);
         Page<DocumentTypeDTO> page = documentTypeQueryService.findByCriteria(criteria, pageable);
@@ -125,7 +125,7 @@ public class DocumentTypeResourceExt extends DocumentTypeResource{
      * @param id the id of the documentTypeDTO to retrieve.
      * @return the {@link ResponseEntity} with status {@code 200 (OK)} and with body the documentTypeDTO, or with status {@code 404 (Not Found)}.
      */
-    @GetMapping("/document-types/{id}")
+    @GetMapping("/get-document-type-by-client-id/{id}")
     public ResponseEntity<DocumentTypeDTO> getDocumentType(@PathVariable Long id) {
         log.debug("REST request to get DocumentType : {}", id);
         Optional<DocumentTypeDTO> documentTypeDTO = documentTypeServiceExt.findOne(id);
@@ -138,7 +138,7 @@ public class DocumentTypeResourceExt extends DocumentTypeResource{
      * @param id the id of the documentTypeDTO to delete.
      * @return the {@link ResponseEntity} with status {@code 204 (NO_CONTENT)}.
      */
-    @DeleteMapping("/document-types/{id}")
+    @DeleteMapping("/delete-document-type-by-client-id/{id}")
     public ResponseEntity<Void> deleteDocumentType(@PathVariable Long id) {
         log.debug("REST request to delete DocumentType : {}", id);
         documentTypeServiceExt.delete(id);
