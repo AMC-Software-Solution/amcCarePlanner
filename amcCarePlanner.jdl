@@ -207,6 +207,8 @@ entity Client {
 	clientPhone String,
 	clientEmail String,
     createdDate ZonedDateTime,
+    enabled Boolean,
+    reason String,
     lastUpdatedDate ZonedDateTime,
 	hasExtraData Boolean
 }

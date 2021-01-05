@@ -276,6 +276,7 @@ export const Employee = (props: IEmployeeProps) => {
           )
         )}
       </div>
+
       {props.totalItems ? (
         <div className={employeeList && employeeList.length > 0 ? '' : 'd-none'}>
           <Row className="justify-content-center">
