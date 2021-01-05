@@ -10,7 +10,11 @@ import com.amc.careplanner.utils.Constants;
 import com.amc.careplanner.utils.RandomUtil;
 import com.amc.careplanner.service.dto.ClientDTO;
 import com.amc.careplanner.service.dto.CurrencyCriteria;
+import com.amc.careplanner.domain.User;
+import com.amc.careplanner.repository.ext.UserRepositoryExt;
 import com.amc.careplanner.s3.S3Service;
+import com.amc.careplanner.security.AuthoritiesConstants;
+import com.amc.careplanner.security.SecurityUtils;
 import com.amc.careplanner.service.CurrencyQueryService;
 
 import io.github.jhipster.web.util.HeaderUtil;
@@ -25,6 +29,7 @@ import org.springframework.http.HttpHeaders;
 import org.springframework.http.HttpStatus;
 import org.springframework.web.servlet.support.ServletUriComponentsBuilder;
 import org.springframework.http.ResponseEntity;
+import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.web.bind.annotation.*;
 
 import javax.validation.Valid;
@@ -51,12 +56,15 @@ public class CurrencyResourceExt extends CurrencyResource{
 
     private final CurrencyQueryService currencyQueryService;
     
+    private final UserRepositoryExt userRepositoryExt;
+    
     private final S3Service s3Service;
 
-    public CurrencyResourceExt(CurrencyServiceExt currencyServiceExt, CurrencyQueryService currencyQueryService, S3Service s3Service) {
+    public CurrencyResourceExt(CurrencyServiceExt currencyServiceExt, CurrencyQueryService currencyQueryService, UserRepositoryExt userRepositoryExt, S3Service s3Service) {
     	super(currencyServiceExt,currencyQueryService);
         this.currencyServiceExt = currencyServiceExt;
         this.currencyQueryService = currencyQueryService;
+        this.userRepositoryExt = userRepositoryExt;
         this.s3Service = s3Service;
     }
 
@@ -175,9 +183,22 @@ public class CurrencyResourceExt extends CurrencyResource{
      * @return the {@link ResponseEntity} with status {@code 204 (NO_CONTENT)}.
      */
     @DeleteMapping("/delete-currency-by-client-id/{id}")
+    @PreAuthorize("hasAuthority(\"" + AuthoritiesConstants.COMPANY_ADMIN + "\")")
     public ResponseEntity<Void> deleteCurrency(@PathVariable Long id) {
         log.debug("REST request to delete Currency : {}", id);
         currencyServiceExt.delete(id);
         return ResponseEntity.noContent().headers(HeaderUtil.createEntityDeletionAlert(applicationName, true, ENTITY_NAME, id.toString())).build();
+    }
+    
+    private Long getClientIdFromLoggedInUser() {
+    	Long clientId = 0L;
+    	String loggedInAdminUserEmail = SecurityUtils.getCurrentUserLogin().get();
+		User loggedInAdminUser = userRepositoryExt.findOneByEmailIgnoreCase(loggedInAdminUserEmail).get();
+		
+		if(loggedInAdminUser != null) {
+			clientId = Long.valueOf(loggedInAdminUser.getLogin());
+		}
+		
+		return clientId;
     }
 }

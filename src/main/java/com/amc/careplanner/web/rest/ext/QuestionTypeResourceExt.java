@@ -6,6 +6,7 @@ import com.amc.careplanner.web.rest.errors.BadRequestAlertException;
 import com.amc.careplanner.service.dto.QuestionTypeDTO;
 import com.amc.careplanner.service.ext.QuestionTypeServiceExt;
 import com.amc.careplanner.service.dto.QuestionTypeCriteria;
+import com.amc.careplanner.security.AuthoritiesConstants;
 import com.amc.careplanner.service.QuestionTypeQueryService;
 
 import io.github.jhipster.web.util.HeaderUtil;
@@ -20,6 +21,7 @@ import org.springframework.http.HttpHeaders;
 import org.springframework.http.HttpStatus;
 import org.springframework.web.servlet.support.ServletUriComponentsBuilder;
 import org.springframework.http.ResponseEntity;
+import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.web.bind.annotation.*;
 
 import java.net.URI;
@@ -138,6 +140,7 @@ public class QuestionTypeResourceExt extends QuestionTypeResource{
      * @return the {@link ResponseEntity} with status {@code 204 (NO_CONTENT)}.
      */
     @DeleteMapping("/delete-question-type-by-client-id/{id}")
+    @PreAuthorize("hasAuthority(\"" + AuthoritiesConstants.ADMIN + "\")")
     public ResponseEntity<Void> deleteQuestionType(@PathVariable Long id) {
         log.debug("REST request to delete QuestionType : {}", id);
         questionTypeServiceExt.delete(id);

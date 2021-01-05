@@ -6,6 +6,7 @@ import com.amc.careplanner.web.rest.errors.BadRequestAlertException;
 import com.amc.careplanner.service.dto.DisabilityTypeDTO;
 import com.amc.careplanner.service.ext.DisabilityTypeServiceExt;
 import com.amc.careplanner.service.dto.DisabilityTypeCriteria;
+import com.amc.careplanner.security.AuthoritiesConstants;
 import com.amc.careplanner.service.DisabilityTypeQueryService;
 
 import io.github.jhipster.web.util.HeaderUtil;
@@ -20,6 +21,7 @@ import org.springframework.http.HttpHeaders;
 import org.springframework.http.HttpStatus;
 import org.springframework.web.servlet.support.ServletUriComponentsBuilder;
 import org.springframework.http.ResponseEntity;
+import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.web.bind.annotation.*;
 
 import javax.validation.Valid;
@@ -139,6 +141,7 @@ return ResponseUtil.wrapOrNotFound(disabilityTypeDTO);
 * @return the {@link ResponseEntity} with status {@code 204 (NO_CONTENT)}.
 */
 @DeleteMapping("/delete-disability-type-by-client-id/{id}")
+@PreAuthorize("hasAuthority(\"" + AuthoritiesConstants.COMPANY_ADMIN + "\")")
 public ResponseEntity<Void> deleteDisabilityType(@PathVariable Long id) {
 log.debug("REST request to delete DisabilityType : {}", id);
 disabilityTypeServiceExt.delete(id);

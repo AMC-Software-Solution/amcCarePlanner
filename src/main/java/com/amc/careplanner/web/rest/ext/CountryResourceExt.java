@@ -79,7 +79,6 @@ public class CountryResourceExt extends CountryResource{
         }
 //      countryDTO.setDateCreated(ZonedDateTime.now());
         countryDTO.setLastUpdatedDate(ZonedDateTime.now());
-//        countryDTO.setClientId(getClientIdFromLoggedInUser());
         CountryDTO result = countryServiceExt.save(countryDTO);
         return ResponseEntity.created(new URI("/api/countries/" + result.getId()))
             .headers(HeaderUtil.createEntityCreationAlert(applicationName, true, ENTITY_NAME, result.getId().toString()))
@@ -101,9 +100,6 @@ public class CountryResourceExt extends CountryResource{
         if (countryDTO.getId() == null) {
             throw new BadRequestAlertException("Invalid id", ENTITY_NAME, "idnull");
         }
-//        if (countryDTO != null && countryDTO.getClientId() != null && countryDTO.getClientId() != getClientIdFromLoggedInUser()) {
-//      	  throw new BadRequestAlertException("clientId mismatch", ENTITY_NAME, "clientIdMismatch");
-//      }
         countryDTO.setLastUpdatedDate(ZonedDateTime.now());
         CountryDTO result = countryServiceExt.save(countryDTO);
         return ResponseEntity.ok()
@@ -124,7 +120,6 @@ public class CountryResourceExt extends CountryResource{
         CountryCriteria countryCriteria = new CountryCriteria();
 		LongFilter longFilterForClientId = new LongFilter();
 		longFilterForClientId.setEquals(getClientIdFromLoggedInUser());
-//		countryCriteria.setClientId(longFilterForClientId);
         Page<CountryDTO> page = countryQueryService.findByCriteria(countryCriteria, pageable);
         HttpHeaders headers = PaginationUtil.generatePaginationHttpHeaders(ServletUriComponentsBuilder.fromCurrentRequest(), page);
         return ResponseEntity.ok().headers(headers).body(page.getContent());

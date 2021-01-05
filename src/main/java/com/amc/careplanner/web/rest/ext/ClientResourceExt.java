@@ -161,7 +161,6 @@ public class ClientResourceExt extends ClientResource{
         ClientCriteria clientCriteria = new ClientCriteria();
 		LongFilter longFilterForClientId = new LongFilter();
 		longFilterForClientId.setEquals(getClientIdFromLoggedInUser());
-//		clientCriteria.setClientId(longFilterForClientId);
         Page<ClientDTO> page = clientQueryService.findByCriteria(clientCriteria, pageable);
         HttpHeaders headers = PaginationUtil.generatePaginationHttpHeaders(ServletUriComponentsBuilder.fromCurrentRequest(), page);
         return ResponseEntity.ok().headers(headers).body(page.getContent());

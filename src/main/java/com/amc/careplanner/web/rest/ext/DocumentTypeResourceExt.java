@@ -6,6 +6,7 @@ import com.amc.careplanner.web.rest.errors.BadRequestAlertException;
 import com.amc.careplanner.service.dto.DocumentTypeDTO;
 import com.amc.careplanner.service.ext.DocumentTypeServiceExt;
 import com.amc.careplanner.service.dto.DocumentTypeCriteria;
+import com.amc.careplanner.security.AuthoritiesConstants;
 import com.amc.careplanner.service.DocumentTypeQueryService;
 
 import io.github.jhipster.web.util.HeaderUtil;
@@ -20,6 +21,7 @@ import org.springframework.http.HttpHeaders;
 import org.springframework.http.HttpStatus;
 import org.springframework.web.servlet.support.ServletUriComponentsBuilder;
 import org.springframework.http.ResponseEntity;
+import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.web.bind.annotation.*;
 
 import javax.validation.Valid;
@@ -139,6 +141,7 @@ public class DocumentTypeResourceExt extends DocumentTypeResource{
      * @return the {@link ResponseEntity} with status {@code 204 (NO_CONTENT)}.
      */
     @DeleteMapping("/delete-document-type-by-client-id/{id}")
+    @PreAuthorize("hasAuthority(\"" + AuthoritiesConstants.COMPANY_ADMIN + "\")")
     public ResponseEntity<Void> deleteDocumentType(@PathVariable Long id) {
         log.debug("REST request to delete DocumentType : {}", id);
         documentTypeServiceExt.delete(id);
