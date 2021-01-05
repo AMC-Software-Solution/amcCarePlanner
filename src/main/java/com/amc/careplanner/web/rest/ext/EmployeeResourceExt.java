@@ -276,9 +276,6 @@ public class EmployeeResourceExt extends EmployeeResource{
         return ResponseUtil.wrapOrNotFound(Optional.of(employeeDTO));
     }
     
- 
-    
-    
     private Long getClientIdFromLoggedInUser() {
     	Long clientId = 0L;
     	String loggedInAdminUserEmail = SecurityUtils.getCurrentUserLogin().get();
