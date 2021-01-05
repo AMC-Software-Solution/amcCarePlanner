@@ -97,7 +97,7 @@ export default (state: AccessState = initialState, action): AccessState => {
   }
 };
 
-const apiUrl = 'api/accesses';
+const apiUrl = 'api/v1';
 
 // Actions
 
@@ -120,7 +120,7 @@ export const getEntity: ICrudGetAction<IAccess> = id => {
 export const createEntity: ICrudPutAction<IAccess> = entity => async dispatch => {
   const result = await dispatch({
     type: ACTION_TYPES.CREATE_ACCESS,
-    payload: axios.post('api/v1/accesses', cleanEntity(entity)),
+    payload: axios.post(apiUrl + '/create_access_by_client_id', cleanEntity(entity)),
   });
   dispatch(getEntities());
   return result;

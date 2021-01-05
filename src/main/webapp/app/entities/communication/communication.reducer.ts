@@ -109,12 +109,12 @@ export default (state: CommunicationState = initialState, action): Communication
   }
 };
 
-const apiUrl = 'api/v1/communications';
+const apiUrl = 'api/v1';
 
 // Actions
 
 export const getEntities: ICrudGetAllAction<ICommunication> = (page, size, sort) => {
-  const requestUrl = `${apiUrl}${sort ? `?page=${page}&size=${size}&sort=${sort}` : ''}`;
+  const requestUrl = `${apiUrl}/get-all-communications-by-client-id${sort ? `?page=${page}&size=${size}&sort=${sort}` : ''}`;
   return {
     type: ACTION_TYPES.FETCH_COMMUNICATION_LIST,
     payload: axios.get<ICommunication>(`${requestUrl}${sort ? '&' : '?'}cacheBuster=${new Date().getTime()}`),
@@ -122,7 +122,7 @@ export const getEntities: ICrudGetAllAction<ICommunication> = (page, size, sort)
 };
 
 export const getEntity: ICrudGetAction<ICommunication> = id => {
-  const requestUrl = `${apiUrl}/${id}`;
+  const requestUrl = `${apiUrl}/get-communication-by-client-id/{id}/${id}`;
   return {
     type: ACTION_TYPES.FETCH_COMMUNICATION,
     payload: axios.get<ICommunication>(requestUrl),
@@ -132,7 +132,7 @@ export const getEntity: ICrudGetAction<ICommunication> = id => {
 export const createEntity: ICrudPutAction<ICommunication> = entity => async dispatch => {
   const result = await dispatch({
     type: ACTION_TYPES.CREATE_COMMUNICATION,
-    payload: axios.post(apiUrl, cleanEntity(entity)),
+    payload: axios.post(apiUrl + '/create-communication-by-client-id', cleanEntity(entity)),
   });
   dispatch(getEntities());
   return result;
@@ -141,13 +141,13 @@ export const createEntity: ICrudPutAction<ICommunication> = entity => async disp
 export const updateEntity: ICrudPutAction<ICommunication> = entity => async dispatch => {
   const result = await dispatch({
     type: ACTION_TYPES.UPDATE_COMMUNICATION,
-    payload: axios.put(apiUrl, cleanEntity(entity)),
+    payload: axios.put(apiUrl + '/update-communication-by-client-id', cleanEntity(entity)),
   });
   return result;
 };
 
 export const deleteEntity: ICrudDeleteAction<ICommunication> = id => async dispatch => {
-  const requestUrl = `${apiUrl}/${id}`;
+  const requestUrl = `${apiUrl}/delete-communication-by-client-id/{id}/${id}`;
   const result = await dispatch({
     type: ACTION_TYPES.DELETE_COMMUNICATION,
     payload: axios.delete(requestUrl),

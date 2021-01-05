@@ -97,12 +97,12 @@ export default (state: DisabilityTypeState = initialState, action): DisabilityTy
   }
 };
 
-const apiUrl = 'api/v1/disability-types';
+const apiUrl = 'api/v1';
 
 // Actions
 
 export const getEntities: ICrudGetAllAction<IDisabilityType> = (page, size, sort) => {
-  const requestUrl = `${apiUrl}${sort ? `?page=${page}&size=${size}&sort=${sort}` : ''}`;
+  const requestUrl = `${apiUrl}/get-all-disability-types-by-client-id${sort ? `?page=${page}&size=${size}&sort=${sort}` : ''}`;
   return {
     type: ACTION_TYPES.FETCH_DISABILITYTYPE_LIST,
     payload: axios.get<IDisabilityType>(`${requestUrl}${sort ? '&' : '?'}cacheBuster=${new Date().getTime()}`),
@@ -110,7 +110,7 @@ export const getEntities: ICrudGetAllAction<IDisabilityType> = (page, size, sort
 };
 
 export const getEntity: ICrudGetAction<IDisabilityType> = id => {
-  const requestUrl = `${apiUrl}/${id}`;
+  const requestUrl = `${apiUrl}/get-disability-type-by-client-id/${id}`;
   return {
     type: ACTION_TYPES.FETCH_DISABILITYTYPE,
     payload: axios.get<IDisabilityType>(requestUrl),
@@ -120,7 +120,7 @@ export const getEntity: ICrudGetAction<IDisabilityType> = id => {
 export const createEntity: ICrudPutAction<IDisabilityType> = entity => async dispatch => {
   const result = await dispatch({
     type: ACTION_TYPES.CREATE_DISABILITYTYPE,
-    payload: axios.post(apiUrl, cleanEntity(entity)),
+    payload: axios.post(apiUrl + '/create-disability-type-by-client-id', cleanEntity(entity)),
   });
   dispatch(getEntities());
   return result;
@@ -129,13 +129,13 @@ export const createEntity: ICrudPutAction<IDisabilityType> = entity => async dis
 export const updateEntity: ICrudPutAction<IDisabilityType> = entity => async dispatch => {
   const result = await dispatch({
     type: ACTION_TYPES.UPDATE_DISABILITYTYPE,
-    payload: axios.put(apiUrl, cleanEntity(entity)),
+    payload: axios.put(apiUrl + '/update-disability-type-by-client-id', cleanEntity(entity)),
   });
   return result;
 };
 
 export const deleteEntity: ICrudDeleteAction<IDisabilityType> = id => async dispatch => {
-  const requestUrl = `${apiUrl}/${id}`;
+  const requestUrl = `${apiUrl}/delete-disability-type-by-client-id/${id}`;
   const result = await dispatch({
     type: ACTION_TYPES.DELETE_DISABILITYTYPE,
     payload: axios.delete(requestUrl),

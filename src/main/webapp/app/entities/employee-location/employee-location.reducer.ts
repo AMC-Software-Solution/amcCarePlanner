@@ -97,12 +97,12 @@ export default (state: EmployeeLocationState = initialState, action): EmployeeLo
   }
 };
 
-const apiUrl = 'api/employee-locations';
+const apiUrl = 'api/v1';
 
 // Actions
 
 export const getEntities: ICrudGetAllAction<IEmployeeLocation> = (page, size, sort) => {
-  const requestUrl = `${apiUrl}${sort ? `?page=${page}&size=${size}&sort=${sort}` : ''}`;
+  const requestUrl = `${apiUrl}/get-all-employee-locations-by-client-id/${sort ? `?page=${page}&size=${size}&sort=${sort}` : ''}`;
   return {
     type: ACTION_TYPES.FETCH_EMPLOYEELOCATION_LIST,
     payload: axios.get<IEmployeeLocation>(`${requestUrl}${sort ? '&' : '?'}cacheBuster=${new Date().getTime()}`),
@@ -110,7 +110,7 @@ export const getEntities: ICrudGetAllAction<IEmployeeLocation> = (page, size, so
 };
 
 export const getEntity: ICrudGetAction<IEmployeeLocation> = id => {
-  const requestUrl = `${apiUrl}/${id}`;
+  const requestUrl = `${apiUrl}//get-all-employee-locations-by-client-id${id}`;
   return {
     type: ACTION_TYPES.FETCH_EMPLOYEELOCATION,
     payload: axios.get<IEmployeeLocation>(requestUrl),
@@ -120,7 +120,7 @@ export const getEntity: ICrudGetAction<IEmployeeLocation> = id => {
 export const createEntity: ICrudPutAction<IEmployeeLocation> = entity => async dispatch => {
   const result = await dispatch({
     type: ACTION_TYPES.CREATE_EMPLOYEELOCATION,
-    payload: axios.post(apiUrl, cleanEntity(entity)),
+    payload: axios.post(apiUrl + '/create-employee-location-by-client-id', cleanEntity(entity)),
   });
   dispatch(getEntities());
   return result;

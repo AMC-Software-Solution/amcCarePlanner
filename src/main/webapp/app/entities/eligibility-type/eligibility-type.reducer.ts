@@ -97,7 +97,7 @@ export default (state: EligibilityTypeState = initialState, action): Eligibility
   }
 };
 
-const apiUrl = 'api/eligibility-types';
+const apiUrl = 'api/v1';
 
 // Actions
 

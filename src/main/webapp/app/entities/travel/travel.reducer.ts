@@ -97,12 +97,12 @@ export default (state: TravelState = initialState, action): TravelState => {
   }
 };
 
-const apiUrl = 'api/travels';
+const apiUrl = 'api/v1';
 
 // Actions
 
 export const getEntities: ICrudGetAllAction<ITravel> = (page, size, sort) => {
-  const requestUrl = `${apiUrl}${sort ? `?page=${page}&size=${size}&sort=${sort}` : ''}`;
+  const requestUrl = `${apiUrl}/get-all-travels-by-client-id${sort ? `?page=${page}&size=${size}&sort=${sort}` : ''}`;
   return {
     type: ACTION_TYPES.FETCH_TRAVEL_LIST,
     payload: axios.get<ITravel>(`${requestUrl}${sort ? '&' : '?'}cacheBuster=${new Date().getTime()}`),
@@ -110,7 +110,7 @@ export const getEntities: ICrudGetAllAction<ITravel> = (page, size, sort) => {
 };
 
 export const getEntity: ICrudGetAction<ITravel> = id => {
-  const requestUrl = `${apiUrl}/${id}`;
+  const requestUrl = `${apiUrl}/get-travel-by-client-d/${id}`;
   return {
     type: ACTION_TYPES.FETCH_TRAVEL,
     payload: axios.get<ITravel>(requestUrl),
@@ -120,7 +120,7 @@ export const getEntity: ICrudGetAction<ITravel> = id => {
 export const createEntity: ICrudPutAction<ITravel> = entity => async dispatch => {
   const result = await dispatch({
     type: ACTION_TYPES.CREATE_TRAVEL,
-    payload: axios.post(apiUrl, cleanEntity(entity)),
+    payload: axios.post(apiUrl + '/create-travel-by-client-id', cleanEntity(entity)),
   });
   dispatch(getEntities());
   return result;
@@ -129,13 +129,13 @@ export const createEntity: ICrudPutAction<ITravel> = entity => async dispatch =>
 export const updateEntity: ICrudPutAction<ITravel> = entity => async dispatch => {
   const result = await dispatch({
     type: ACTION_TYPES.UPDATE_TRAVEL,
-    payload: axios.put(apiUrl, cleanEntity(entity)),
+    payload: axios.put(apiUrl + '/update-travel-by-client-id', cleanEntity(entity)),
   });
   return result;
 };
 
 export const deleteEntity: ICrudDeleteAction<ITravel> = id => async dispatch => {
-  const requestUrl = `${apiUrl}/${id}`;
+  const requestUrl = `${apiUrl}/delete-travel-by-client-id/${id}`;
   const result = await dispatch({
     type: ACTION_TYPES.DELETE_TRAVEL,
     payload: axios.delete(requestUrl),

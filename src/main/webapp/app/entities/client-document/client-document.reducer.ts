@@ -109,12 +109,12 @@ export default (state: ClientDocumentState = initialState, action): ClientDocume
   }
 };
 
-const apiUrl = 'api/v1/client-documents';
+const apiUrl = 'api/v1';
 
 // Actions
 
 export const getEntities: ICrudGetAllAction<IClientDocument> = (page, size, sort) => {
-  const requestUrl = `${apiUrl}${sort ? `?page=${page}&size=${size}&sort=${sort}` : ''}`;
+  const requestUrl = `${apiUrl}/get-all-client-documents-by-client-id${sort ? `?page=${page}&size=${size}&sort=${sort}` : ''}`;
   return {
     type: ACTION_TYPES.FETCH_CLIENTDOCUMENT_LIST,
     payload: axios.get<IClientDocument>(`${requestUrl}${sort ? '&' : '?'}cacheBuster=${new Date().getTime()}`),
@@ -122,7 +122,7 @@ export const getEntities: ICrudGetAllAction<IClientDocument> = (page, size, sort
 };
 
 export const getEntity: ICrudGetAction<IClientDocument> = id => {
-  const requestUrl = `${apiUrl}/${id}`;
+  const requestUrl = `${apiUrl}/get-client-documents-by-client-id/${id}`;
   return {
     type: ACTION_TYPES.FETCH_CLIENTDOCUMENT,
     payload: axios.get<IClientDocument>(requestUrl),
@@ -132,7 +132,7 @@ export const getEntity: ICrudGetAction<IClientDocument> = id => {
 export const createEntity: ICrudPutAction<IClientDocument> = entity => async dispatch => {
   const result = await dispatch({
     type: ACTION_TYPES.CREATE_CLIENTDOCUMENT,
-    payload: axios.post(apiUrl, cleanEntity(entity)),
+    payload: axios.post(apiUrl + '/create-client-document-by-client-id', cleanEntity(entity)),
   });
   dispatch(getEntities());
   return result;
@@ -141,13 +141,13 @@ export const createEntity: ICrudPutAction<IClientDocument> = entity => async dis
 export const updateEntity: ICrudPutAction<IClientDocument> = entity => async dispatch => {
   const result = await dispatch({
     type: ACTION_TYPES.UPDATE_CLIENTDOCUMENT,
-    payload: axios.put(apiUrl, cleanEntity(entity)),
+    payload: axios.put(apiUrl + '/update-client-document-by-client-id', cleanEntity(entity)),
   });
   return result;
 };
 
 export const deleteEntity: ICrudDeleteAction<IClientDocument> = id => async dispatch => {
-  const requestUrl = `${apiUrl}/${id}`;
+  const requestUrl = `${apiUrl}/delete-client-document-by-client-id/${id}`;
   const result = await dispatch({
     type: ACTION_TYPES.DELETE_CLIENTDOCUMENT,
     payload: axios.delete(requestUrl),

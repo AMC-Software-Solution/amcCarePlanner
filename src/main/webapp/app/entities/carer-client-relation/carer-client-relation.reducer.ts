@@ -97,12 +97,12 @@ export default (state: CarerClientRelationState = initialState, action): CarerCl
   }
 };
 
-const apiUrl = 'api/v1/carer-client-relations';
+const apiUrl = 'api/v1';
 
 // Actions
 
 export const getEntities: ICrudGetAllAction<ICarerClientRelation> = (page, size, sort) => {
-  const requestUrl = `${apiUrl}${sort ? `?page=${page}&size=${size}&sort=${sort}` : ''}`;
+  const requestUrl = `${apiUrl}/get-all-carer-client-relations-by-client-id${sort ? `?page=${page}&size=${size}&sort=${sort}` : ''}`;
   return {
     type: ACTION_TYPES.FETCH_CARERCLIENTRELATION_LIST,
     payload: axios.get<ICarerClientRelation>(`${requestUrl}${sort ? '&' : '?'}cacheBuster=${new Date().getTime()}`),
@@ -110,7 +110,7 @@ export const getEntities: ICrudGetAllAction<ICarerClientRelation> = (page, size,
 };
 
 export const getEntity: ICrudGetAction<ICarerClientRelation> = id => {
-  const requestUrl = `${apiUrl}/${id}`;
+  const requestUrl = `${apiUrl}/get-carer-client-relation-by-client-id/{id}/${id}`;
   return {
     type: ACTION_TYPES.FETCH_CARERCLIENTRELATION,
     payload: axios.get<ICarerClientRelation>(requestUrl),
@@ -120,7 +120,7 @@ export const getEntity: ICrudGetAction<ICarerClientRelation> = id => {
 export const createEntity: ICrudPutAction<ICarerClientRelation> = entity => async dispatch => {
   const result = await dispatch({
     type: ACTION_TYPES.CREATE_CARERCLIENTRELATION,
-    payload: axios.post(apiUrl, cleanEntity(entity)),
+    payload: axios.post(apiUrl + '/create-carer-client-relation-by-client-id', cleanEntity(entity)),
   });
   dispatch(getEntities());
   return result;
@@ -129,13 +129,13 @@ export const createEntity: ICrudPutAction<ICarerClientRelation> = entity => asyn
 export const updateEntity: ICrudPutAction<ICarerClientRelation> = entity => async dispatch => {
   const result = await dispatch({
     type: ACTION_TYPES.UPDATE_CARERCLIENTRELATION,
-    payload: axios.put(apiUrl, cleanEntity(entity)),
+    payload: axios.put(apiUrl + '/update-carer-client-relation-by-client-id', cleanEntity(entity)),
   });
   return result;
 };
 
 export const deleteEntity: ICrudDeleteAction<ICarerClientRelation> = id => async dispatch => {
-  const requestUrl = `${apiUrl}/${id}`;
+  const requestUrl = `${apiUrl}/delete-carer-client-relation-by-client-id/{id}/${id}`;
   const result = await dispatch({
     type: ACTION_TYPES.DELETE_CARERCLIENTRELATION,
     payload: axios.delete(requestUrl),
