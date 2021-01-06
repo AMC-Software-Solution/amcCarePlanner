@@ -133,7 +133,7 @@ public class CurrencyResourceExt extends CurrencyResource{
   		}
         return ResponseEntity.ok()
             .headers(HeaderUtil.createEntityUpdateAlert(applicationName, true, ENTITY_NAME, currencyDTO.getId().toString()))
-            .body(result);
+            .body(result3);
     }
 
     /**

@@ -58,7 +58,7 @@ public class EmployeeAvailabilityResourceExt extends EmployeeAvailabilityResourc
      * @return the {@link ResponseEntity} with status {@code 201 (Created)} and with body the new employeeAvailabilityDTO, or with status {@code 400 (Bad Request)} if the employeeAvailability has already an ID.
      * @throws URISyntaxException if the Location URI syntax is incorrect.
      */
-    @PostMapping("/employee-availabilities")
+    @PostMapping("/create-employee-availability-by-client-id")
     public ResponseEntity<EmployeeAvailabilityDTO> createEmployeeAvailability(@RequestBody EmployeeAvailabilityDTO employeeAvailabilityDTO) throws URISyntaxException {
         log.debug("REST request to save EmployeeAvailability : {}", employeeAvailabilityDTO);
         if (employeeAvailabilityDTO.getId() != null) {
@@ -79,7 +79,7 @@ public class EmployeeAvailabilityResourceExt extends EmployeeAvailabilityResourc
      * or with status {@code 500 (Internal Server Error)} if the employeeAvailabilityDTO couldn't be updated.
      * @throws URISyntaxException if the Location URI syntax is incorrect.
      */
-    @PutMapping("/employee-availabilities")
+    @PutMapping("/update-employee-availability-by-client-id")
     public ResponseEntity<EmployeeAvailabilityDTO> updateEmployeeAvailability(@RequestBody EmployeeAvailabilityDTO employeeAvailabilityDTO) throws URISyntaxException {
         log.debug("REST request to update EmployeeAvailability : {}", employeeAvailabilityDTO);
         if (employeeAvailabilityDTO.getId() == null) {
@@ -98,7 +98,7 @@ public class EmployeeAvailabilityResourceExt extends EmployeeAvailabilityResourc
      * @param criteria the criteria which the requested entities should match.
      * @return the {@link ResponseEntity} with status {@code 200 (OK)} and the list of employeeAvailabilities in body.
      */
-    @GetMapping("/employee-availabilities")
+    @GetMapping("/get-all-employee-availabilities-by-client-id")
     public ResponseEntity<List<EmployeeAvailabilityDTO>> getAllEmployeeAvailabilities(EmployeeAvailabilityCriteria criteria, Pageable pageable) {
         log.debug("REST request to get EmployeeAvailabilities by criteria: {}", criteria);
         Page<EmployeeAvailabilityDTO> page = employeeAvailabilityQueryService.findByCriteria(criteria, pageable);
@@ -124,7 +124,7 @@ public class EmployeeAvailabilityResourceExt extends EmployeeAvailabilityResourc
      * @param id the id of the employeeAvailabilityDTO to retrieve.
      * @return the {@link ResponseEntity} with status {@code 200 (OK)} and with body the employeeAvailabilityDTO, or with status {@code 404 (Not Found)}.
      */
-    @GetMapping("/employee-availabilities/{id}")
+    @GetMapping("/get-employee-availability-by-client-id/{id}")
     public ResponseEntity<EmployeeAvailabilityDTO> getEmployeeAvailability(@PathVariable Long id) {
         log.debug("REST request to get EmployeeAvailability : {}", id);
         Optional<EmployeeAvailabilityDTO> employeeAvailabilityDTO = employeeAvailabilityServiceExt.findOne(id);
@@ -137,7 +137,7 @@ public class EmployeeAvailabilityResourceExt extends EmployeeAvailabilityResourc
      * @param id the id of the employeeAvailabilityDTO to delete.
      * @return the {@link ResponseEntity} with status {@code 204 (NO_CONTENT)}.
      */
-    @DeleteMapping("/employee-availabilities/{id}")
+    @DeleteMapping("/delete-employee-availability-by-client-id/{id}")
     public ResponseEntity<Void> deleteEmployeeAvailability(@PathVariable Long id) {
         log.debug("REST request to delete EmployeeAvailability : {}", id);
         employeeAvailabilityServiceExt.delete(id);

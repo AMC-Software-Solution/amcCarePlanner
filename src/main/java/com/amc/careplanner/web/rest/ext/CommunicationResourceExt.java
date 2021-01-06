@@ -77,7 +77,7 @@ public class CommunicationResourceExt extends CommunicationResource{
         if (communicationDTO.getId() != null) {
             throw new BadRequestAlertException("A new communication cannot already have an ID", ENTITY_NAME, "idexists");
         }
-        //communicationDTO.setDateCreated(ZonedDateTime.now());
+//        communicationDTO.setDateCreated(ZonedDateTime.now());
         communicationDTO.setLastUpdatedDate(ZonedDateTime.now());
         communicationDTO.setClientId(getClientIdFromLoggedInUser());
         CommunicationDTO result = communicationServiceExt.save(communicationDTO);
