@@ -38,8 +38,8 @@ spring:
   datasource:
     type: com.zaxxer.hikari.HikariDataSource
     url: jdbc:h2:file:./target/h2db/db/careplanner;DB_CLOSE_DELAY=-1
-    username: CarePlanner
-    password:
+    username: ${MYSQL_USERNAME}
+    password: ${MYSQL_PASSWORD}
     hikari:
       poolName: Hikari
       auto-commit: false
@@ -53,26 +53,26 @@ spring:
     # Remove 'faker' if you do not want the sample data to be loaded automatically
     contexts: dev
   mail:
-    host: smtp.gmail.com
-    port: 587
-    username: natpropreg@gmail.com
-    password: Admin1234
-    protocol: smtp
+    host: ${MAIL_HOST}
+    port: ${MAIL_PORT}
+    username: ${MAIL_USERNAME}
+    password: ${MAIL_PASSWORD}
+    protocol: ${MAIL_PROTOCOL}
     tls: true
     properties.mail.smtp:
       auth: true
       starttls.enable: true
-      ssl.trust: smtp.gmail.com
+      ssl.trust: ${MAIL_SSL_TRUST}
   messages:
     cache-duration: PT1S # 1 second, see the ISO 8601 standard
   thymeleaf:
     cache: false
 
 amazonProperties:
-  endpointUrl: https://s3.eu-west-2.amazonaws.com
-  accessKey: YOurACCESSKEY #
-  secretKey: YourSECretKee
-  bucketName: YourBucket # S3 bucketName
+  endpointUrl: ${AWS_S3_ENDPOINT}
+  accessKey: ${AWS_S3_ACCESS_KEY} #
+  secretKey: ${AWS_S3_SECRET_KEY}
+  bucketName: ${AWS_S3_BUCKET_NAME} # S3 bucketName
 
 server:
   port: 8080
