@@ -110,7 +110,7 @@ export const getEntities: ICrudGetAllAction<IAnswer> = (page, size, sort) => {
 };
 
 export const getEntity: ICrudGetAction<IAnswer> = id => {
-  const requestUrl = `${apiUrl}/get-answer-by-client-id/{id}/${id}`;
+  const requestUrl = `${apiUrl}/get-answer-by-client-id/${id}`;
   return {
     type: ACTION_TYPES.FETCH_ANSWER,
     payload: axios.get<IAnswer>(requestUrl),
@@ -135,7 +135,7 @@ export const updateEntity: ICrudPutAction<IAnswer> = entity => async dispatch =>
 };
 
 export const deleteEntity: ICrudDeleteAction<IAnswer> = id => async dispatch => {
-  const requestUrl = `${apiUrl}/delete-answer-by-client-id/{id}/${id}`;
+  const requestUrl = `${apiUrl}/delete-answer-by-client-id/${id}`;
   const result = await dispatch({
     type: ACTION_TYPES.DELETE_ANSWER,
     payload: axios.delete(requestUrl),

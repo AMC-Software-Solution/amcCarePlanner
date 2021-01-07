@@ -110,7 +110,7 @@ export const getEntities: ICrudGetAllAction<ICarerClientRelation> = (page, size,
 };
 
 export const getEntity: ICrudGetAction<ICarerClientRelation> = id => {
-  const requestUrl = `${apiUrl}/get-carer-client-relation-by-client-id/{id}/${id}`;
+  const requestUrl = `${apiUrl}/get-carer-client-relation-by-client-id/${id}`;
   return {
     type: ACTION_TYPES.FETCH_CARERCLIENTRELATION,
     payload: axios.get<ICarerClientRelation>(requestUrl),
@@ -135,7 +135,7 @@ export const updateEntity: ICrudPutAction<ICarerClientRelation> = entity => asyn
 };
 
 export const deleteEntity: ICrudDeleteAction<ICarerClientRelation> = id => async dispatch => {
-  const requestUrl = `${apiUrl}/delete-carer-client-relation-by-client-id/{id}/${id}`;
+  const requestUrl = `${apiUrl}/delete-carer-client-relation-by-client-id/${id}`;
   const result = await dispatch({
     type: ACTION_TYPES.DELETE_CARERCLIENTRELATION,
     payload: axios.delete(requestUrl),

@@ -122,7 +122,7 @@ export const getEntities: ICrudGetAllAction<ICommunication> = (page, size, sort)
 };
 
 export const getEntity: ICrudGetAction<ICommunication> = id => {
-  const requestUrl = `${apiUrl}/get-communication-by-client-id/{id}/${id}`;
+  const requestUrl = `${apiUrl}/get-communication-by-client-id/${id}`;
   return {
     type: ACTION_TYPES.FETCH_COMMUNICATION,
     payload: axios.get<ICommunication>(requestUrl),
@@ -147,7 +147,7 @@ export const updateEntity: ICrudPutAction<ICommunication> = entity => async disp
 };
 
 export const deleteEntity: ICrudDeleteAction<ICommunication> = id => async dispatch => {
-  const requestUrl = `${apiUrl}/delete-communication-by-client-id/{id}/${id}`;
+  const requestUrl = `${apiUrl}/delete-communication-by-client-id/${id}`;
   const result = await dispatch({
     type: ACTION_TYPES.DELETE_COMMUNICATION,
     payload: axios.delete(requestUrl),
