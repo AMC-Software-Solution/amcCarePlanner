@@ -97,12 +97,12 @@ export default (state: QuestionTypeState = initialState, action): QuestionTypeSt
   }
 };
 
-const apiUrl = 'api/question-types';
+const apiUrl = 'api/v1';
 
 // Actions
 
 export const getEntities: ICrudGetAllAction<IQuestionType> = (page, size, sort) => {
-  const requestUrl = `${apiUrl}${sort ? `?page=${page}&size=${size}&sort=${sort}` : ''}`;
+  const requestUrl = `${apiUrl}/get-all-question-types-by-client-id${sort ? `?page=${page}&size=${size}&sort=${sort}` : ''}`;
   return {
     type: ACTION_TYPES.FETCH_QUESTIONTYPE_LIST,
     payload: axios.get<IQuestionType>(`${requestUrl}${sort ? '&' : '?'}cacheBuster=${new Date().getTime()}`),
@@ -110,7 +110,7 @@ export const getEntities: ICrudGetAllAction<IQuestionType> = (page, size, sort) 
 };
 
 export const getEntity: ICrudGetAction<IQuestionType> = id => {
-  const requestUrl = `${apiUrl}/${id}`;
+  const requestUrl = `${apiUrl}/get-question-type-by-client-id/${id}`;
   return {
     type: ACTION_TYPES.FETCH_QUESTIONTYPE,
     payload: axios.get<IQuestionType>(requestUrl),
@@ -120,7 +120,7 @@ export const getEntity: ICrudGetAction<IQuestionType> = id => {
 export const createEntity: ICrudPutAction<IQuestionType> = entity => async dispatch => {
   const result = await dispatch({
     type: ACTION_TYPES.CREATE_QUESTIONTYPE,
-    payload: axios.post(apiUrl, cleanEntity(entity)),
+    payload: axios.post(apiUrl + '/create-question-type-by-client-id', cleanEntity(entity)),
   });
   dispatch(getEntities());
   return result;
@@ -129,13 +129,13 @@ export const createEntity: ICrudPutAction<IQuestionType> = entity => async dispa
 export const updateEntity: ICrudPutAction<IQuestionType> = entity => async dispatch => {
   const result = await dispatch({
     type: ACTION_TYPES.UPDATE_QUESTIONTYPE,
-    payload: axios.put(apiUrl, cleanEntity(entity)),
+    payload: axios.put(apiUrl + '/update-question-type-by-client-id', cleanEntity(entity)),
   });
   return result;
 };
 
 export const deleteEntity: ICrudDeleteAction<IQuestionType> = id => async dispatch => {
-  const requestUrl = `${apiUrl}/${id}`;
+  const requestUrl = `${apiUrl}/delete-question-type-by-client-id/${id}`;
   const result = await dispatch({
     type: ACTION_TYPES.DELETE_QUESTIONTYPE,
     payload: axios.delete(requestUrl),

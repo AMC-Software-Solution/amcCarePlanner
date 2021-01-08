@@ -109,12 +109,12 @@ export default (state: EmployeeState = initialState, action): EmployeeState => {
   }
 };
 
-const apiUrl = 'api/employees';
+const apiUrl = 'api/v1';
 
 // Actions
 
 export const getEntities: ICrudGetAllAction<IEmployee> = (page, size, sort) => {
-  const requestUrl = `api/v1/get-all-employees-by-client-id${sort ? `?page=${page}&size=${size}&sort=${sort}` : ''}`;
+  const requestUrl = `${apiUrl}/get-all-employees-by-client-id${sort ? `?page=${page}&size=${size}&sort=${sort}` : ''}`;
   return {
     type: ACTION_TYPES.FETCH_EMPLOYEE_LIST,
     payload: axios.get<IEmployee>(`${requestUrl}${sort ? '&' : '?'}cacheBuster=${new Date().getTime()}`),
@@ -122,7 +122,7 @@ export const getEntities: ICrudGetAllAction<IEmployee> = (page, size, sort) => {
 };
 
 export const getEntity: ICrudGetAction<IEmployee> = id => {
-  const requestUrl = `api/v1/get-employee-by-client-id/${id}`;
+  const requestUrl = `${apiUrl}/get-employee-by-client-id/${id}`;
   return {
     type: ACTION_TYPES.FETCH_EMPLOYEE,
     payload: axios.get<IEmployee>(requestUrl),
@@ -132,7 +132,7 @@ export const getEntity: ICrudGetAction<IEmployee> = id => {
 export const createEntity: ICrudPutAction<IEmployee> = entity => async dispatch => {
   const result = await dispatch({
     type: ACTION_TYPES.CREATE_EMPLOYEE,
-    payload: axios.post('api/v1/create-employee-login', cleanEntity(entity)),
+    payload: axios.post(apiUrl + '/create-employee-login-by-client-id', cleanEntity(entity)),
   });
   dispatch(getEntities());
   return result;
@@ -141,7 +141,7 @@ export const createEntity: ICrudPutAction<IEmployee> = entity => async dispatch 
 export const updateEntity: ICrudPutAction<IEmployee> = entity => async dispatch => {
   const result = await dispatch({
     type: ACTION_TYPES.UPDATE_EMPLOYEE,
-    payload: axios.put('api/v1/update-employee-by-client-id', cleanEntity(entity)),
+    payload: axios.put(apiUrl + '/update-employee-by-client-id', cleanEntity(entity)),
   });
   return result;
 };

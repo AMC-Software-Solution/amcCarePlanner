@@ -109,12 +109,12 @@ export default (state: NotificationState = initialState, action): NotificationSt
   }
 };
 
-const apiUrl = 'api/notifications';
+const apiUrl = 'api/v1';
 
 // Actions
 
 export const getEntities: ICrudGetAllAction<INotification> = (page, size, sort) => {
-  const requestUrl = `${apiUrl}${sort ? `?page=${page}&size=${size}&sort=${sort}` : ''}`;
+  const requestUrl = `${apiUrl}/get-all-notifications-by-client-id${sort ? `?page=${page}&size=${size}&sort=${sort}` : ''}`;
   return {
     type: ACTION_TYPES.FETCH_NOTIFICATION_LIST,
     payload: axios.get<INotification>(`${requestUrl}${sort ? '&' : '?'}cacheBuster=${new Date().getTime()}`),
@@ -122,7 +122,7 @@ export const getEntities: ICrudGetAllAction<INotification> = (page, size, sort) 
 };
 
 export const getEntity: ICrudGetAction<INotification> = id => {
-  const requestUrl = `${apiUrl}/${id}`;
+  const requestUrl = `${apiUrl}/get-notification-by-client-id/${id}`;
   return {
     type: ACTION_TYPES.FETCH_NOTIFICATION,
     payload: axios.get<INotification>(requestUrl),
@@ -132,7 +132,7 @@ export const getEntity: ICrudGetAction<INotification> = id => {
 export const createEntity: ICrudPutAction<INotification> = entity => async dispatch => {
   const result = await dispatch({
     type: ACTION_TYPES.CREATE_NOTIFICATION,
-    payload: axios.post(apiUrl, cleanEntity(entity)),
+    payload: axios.post(apiUrl + '/create-notification-by-client-id', cleanEntity(entity)),
   });
   dispatch(getEntities());
   return result;
@@ -141,13 +141,13 @@ export const createEntity: ICrudPutAction<INotification> = entity => async dispa
 export const updateEntity: ICrudPutAction<INotification> = entity => async dispatch => {
   const result = await dispatch({
     type: ACTION_TYPES.UPDATE_NOTIFICATION,
-    payload: axios.put(apiUrl, cleanEntity(entity)),
+    payload: axios.put(apiUrl + '/update-notification-by-client-id', cleanEntity(entity)),
   });
   return result;
 };
 
 export const deleteEntity: ICrudDeleteAction<INotification> = id => async dispatch => {
-  const requestUrl = `${apiUrl}/${id}`;
+  const requestUrl = `${apiUrl}/delete-notification-by-client-id/${id}`;
   const result = await dispatch({
     type: ACTION_TYPES.DELETE_NOTIFICATION,
     payload: axios.delete(requestUrl),

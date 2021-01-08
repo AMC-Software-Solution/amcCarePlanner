@@ -110,7 +110,7 @@ export const getEntities: ICrudGetAllAction<IEmployeeLocation> = (page, size, so
 };
 
 export const getEntity: ICrudGetAction<IEmployeeLocation> = id => {
-  const requestUrl = `${apiUrl}//get-all-employee-locations-by-client-id${id}`;
+  const requestUrl = `${apiUrl}//get-all-employee-location-by-client-id${id}`;
   return {
     type: ACTION_TYPES.FETCH_EMPLOYEELOCATION,
     payload: axios.get<IEmployeeLocation>(requestUrl),
@@ -129,13 +129,13 @@ export const createEntity: ICrudPutAction<IEmployeeLocation> = entity => async d
 export const updateEntity: ICrudPutAction<IEmployeeLocation> = entity => async dispatch => {
   const result = await dispatch({
     type: ACTION_TYPES.UPDATE_EMPLOYEELOCATION,
-    payload: axios.put(apiUrl, cleanEntity(entity)),
+    payload: axios.put(apiUrl + '/update-employee-location-by-client-id', cleanEntity(entity)),
   });
   return result;
 };
 
 export const deleteEntity: ICrudDeleteAction<IEmployeeLocation> = id => async dispatch => {
-  const requestUrl = `${apiUrl}/${id}`;
+  const requestUrl = `${apiUrl}/delete-employee-location-by-client-id/${id}`;
   const result = await dispatch({
     type: ACTION_TYPES.DELETE_EMPLOYEELOCATION,
     payload: axios.delete(requestUrl),

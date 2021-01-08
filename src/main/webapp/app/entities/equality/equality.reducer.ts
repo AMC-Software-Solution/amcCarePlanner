@@ -97,12 +97,12 @@ export default (state: EqualityState = initialState, action): EqualityState => {
   }
 };
 
-const apiUrl = 'api/equalities';
+const apiUrl = 'api/v1';
 
 // Actions
 
 export const getEntities: ICrudGetAllAction<IEquality> = (page, size, sort) => {
-  const requestUrl = `${apiUrl}${sort ? `?page=${page}&size=${size}&sort=${sort}` : ''}`;
+  const requestUrl = `${apiUrl}/get-all-equalities-by-client-id${sort ? `?page=${page}&size=${size}&sort=${sort}` : ''}`;
   return {
     type: ACTION_TYPES.FETCH_EQUALITY_LIST,
     payload: axios.get<IEquality>(`${requestUrl}${sort ? '&' : '?'}cacheBuster=${new Date().getTime()}`),
@@ -110,7 +110,7 @@ export const getEntities: ICrudGetAllAction<IEquality> = (page, size, sort) => {
 };
 
 export const getEntity: ICrudGetAction<IEquality> = id => {
-  const requestUrl = `${apiUrl}/${id}`;
+  const requestUrl = `${apiUrl}/get-equality-by-client-id/${id}`;
   return {
     type: ACTION_TYPES.FETCH_EQUALITY,
     payload: axios.get<IEquality>(requestUrl),
@@ -120,7 +120,7 @@ export const getEntity: ICrudGetAction<IEquality> = id => {
 export const createEntity: ICrudPutAction<IEquality> = entity => async dispatch => {
   const result = await dispatch({
     type: ACTION_TYPES.CREATE_EQUALITY,
-    payload: axios.post(apiUrl, cleanEntity(entity)),
+    payload: axios.post(apiUrl + '/create-equality-by-client-id', cleanEntity(entity)),
   });
   dispatch(getEntities());
   return result;
@@ -129,13 +129,13 @@ export const createEntity: ICrudPutAction<IEquality> = entity => async dispatch 
 export const updateEntity: ICrudPutAction<IEquality> = entity => async dispatch => {
   const result = await dispatch({
     type: ACTION_TYPES.UPDATE_EQUALITY,
-    payload: axios.put(apiUrl, cleanEntity(entity)),
+    payload: axios.put(apiUrl + '/update-equality-by-client-id', cleanEntity(entity)),
   });
   return result;
 };
 
 export const deleteEntity: ICrudDeleteAction<IEquality> = id => async dispatch => {
-  const requestUrl = `${apiUrl}/${id}`;
+  const requestUrl = `${apiUrl}/delete-equality-by-client-id/${id}`;
   const result = await dispatch({
     type: ACTION_TYPES.DELETE_EQUALITY,
     payload: axios.delete(requestUrl),

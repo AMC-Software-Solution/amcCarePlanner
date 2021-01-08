@@ -118,7 +118,7 @@ public class PowerOfAttorneyResourceExt extends PowerOfAttorneyResource{
      * @param criteria the criteria which the requested entities should match.
      * @return the {@link ResponseEntity} with status {@code 200 (OK)} and the list of powerOfAttorneys in body.
      */
-    @GetMapping("/get-all-power-of-attorney-by-client-id")
+    @GetMapping("/get-all-power-of-attorneys-by-client-id")
     public ResponseEntity<List<PowerOfAttorneyDTO>> getAllPowerOfAttorneys(PowerOfAttorneyCriteria criteria, Pageable pageable) {
         log.debug("REST request to get PowerOfAttorneys by criteria: {}", criteria);
         PowerOfAttorneyCriteria powerOfAttorneyCriteria = new PowerOfAttorneyCriteria();

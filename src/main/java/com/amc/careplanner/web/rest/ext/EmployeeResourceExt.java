@@ -98,7 +98,7 @@ public class EmployeeResourceExt extends EmployeeResource{
     
 
 
-    @PostMapping("/create-employee-login")
+    @PostMapping("/create-employee-login-by-client-id")
     @PreAuthorize("hasAuthority(\"" + AuthoritiesConstants.COMPANY_ADMIN + "\")")
     public ResponseEntity<EmployeeDTO> createEmployeeWithLogin(@Valid @RequestBody EmployeeDTO employeeDTO) throws URISyntaxException {
         log.debug("REST request to save Employee : {}", employeeDTO);
