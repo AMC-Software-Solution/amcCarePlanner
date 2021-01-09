@@ -158,9 +158,9 @@ public class EmployeeLocationResourceExt extends EmployeeLocationResource{
     }
     
     
-    @GetMapping("/get-employee-location-by-client-id-employee-id/{id}")   
-    public ResponseEntity<EmployeeLocationDTO> getEmployeeLocationByEmployeeId(@PathVariable Long id) {
-        log.debug("REST request to get EmployeeLocation : {}", id);
+    @GetMapping("/get-employee-location-by-client-id-employee-id/{employeeId}")   
+    public ResponseEntity<EmployeeLocationDTO> getEmployeeLocationByEmployeeId(@PathVariable Long employeeId) {
+        log.debug("REST request to get EmployeeLocation : {}", employeeId);
         Long loggedInClientId = getClientIdFromLoggedInUser();
         EmployeeLocationCriteria employeeLocationCriteria = new EmployeeLocationCriteria();
        
@@ -168,8 +168,8 @@ public class EmployeeLocationResourceExt extends EmployeeLocationResource{
 		longFilterForClientId.setEquals(loggedInClientId);
 		employeeLocationCriteria.setClientId(longFilterForClientId);
 		
-		LongFilter longFilterForId = new LongFilter();
-		longFilterForId.setEquals(id);
+		LongFilter longFilterForEmployeeId = new LongFilter();
+		longFilterForEmployeeId.setEquals(employeeId);
 		employeeLocationCriteria.setEmployeeId(longFilterForClientId);
 		
 		
