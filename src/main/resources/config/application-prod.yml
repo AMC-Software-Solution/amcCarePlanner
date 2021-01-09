@@ -35,7 +35,7 @@ spring:
     type: com.zaxxer.hikari.HikariDataSource
     url: jdbc:mysql://localhost:3306/CarePlanner?useUnicode=true&characterEncoding=utf8&useSSL=false&useLegacyDatetimeCode=false&serverTimezone=UTC&createDatabaseIfNotExist=true
     username: root
-    password:
+    password: ${MYSQL_PASSWORD}
     hikari:
       poolName: Hikari
       auto-commit: false
@@ -50,11 +50,11 @@ spring:
   liquibase:
     contexts: prod
   mail:
-    host: smtp.gmail.com
-    port: 587
-    username: natpropreg@gmail.com
-    password: Admin1234
-    protocol: smtp
+    host: ${MAIL_HOST}
+    port: ${MAIL_PORT}
+    username: ${MAIL_USERNAME}
+    password: ${MAIL_PASSWORD}
+    protocol: ${MAIL_PROTOCOL}
     tls: true
     properties.mail.smtp:
       auth: true
@@ -64,10 +64,10 @@ spring:
     cache: true
 
 amazonProperties:
-  endpointUrl: https://s3.eu-west-2.amazonaws.com
-  accessKey: YOurACCESSKEY #
-  secretKey: YourSECretKee
-  bucketName: YourBucket # S3 bucketName
+  endpointUrl: ${AWS_S3_ENDPOINT}
+  accessKey: ${AWS_S3_ACCESS_KEY} #
+  secretKey: ${AWS_S3_SECRET_KEY}
+  bucketName: ${AWS_S3_BUCKET_NAME} # S3 bucketName
 
 # ===================================================================
 # To enable TLS in production, generate a certificate using:
@@ -117,7 +117,7 @@ jhipster:
         # - In the JHipster Registry (which includes a Spring Cloud Config server)
         # - In a separate `application-prod.yml` file, in the same folder as your executable JAR file
         # - In the `JHIPSTER_SECURITY_AUTHENTICATION_JWT_BASE64_SECRET` environment variable
-        base64-secret: ZWYzMzdkNjk5ZDAyN2Q1Zjg4NWJkOTc4MzFiMDk1MGJkYTE3NjgxMDlmNmRjYjVjNzcyM2ViOTUxZDJlNmE4ZjgyYmMyMjJlYzNkNzBmYWZkYzk5NTZkMjJkNDljZjgyNGFhMzMzNTgxNTM4YWI1NzE4MGJkOWI0MDM5MzZiOTE=
+        base64-secret: ${BASE64_SECRET}
         # Token is valid 24 hours
         token-validity-in-seconds: 86400
         token-validity-in-seconds-for-remember-me: 2592000
