@@ -97,12 +97,12 @@ export default (state: TerminalDeviceState = initialState, action): TerminalDevi
   }
 };
 
-const apiUrl = 'api/terminal-devices';
+const apiUrl = 'api/v1';
 
 // Actions
 
 export const getEntities: ICrudGetAllAction<ITerminalDevice> = (page, size, sort) => {
-  const requestUrl = `${apiUrl}${sort ? `?page=${page}&size=${size}&sort=${sort}` : ''}`;
+  const requestUrl = `${apiUrl}/get-all-terminal-devices-by-client-id${sort ? `?page=${page}&size=${size}&sort=${sort}` : ''}`;
   return {
     type: ACTION_TYPES.FETCH_TERMINALDEVICE_LIST,
     payload: axios.get<ITerminalDevice>(`${requestUrl}${sort ? '&' : '?'}cacheBuster=${new Date().getTime()}`),
@@ -110,7 +110,7 @@ export const getEntities: ICrudGetAllAction<ITerminalDevice> = (page, size, sort
 };
 
 export const getEntity: ICrudGetAction<ITerminalDevice> = id => {
-  const requestUrl = `${apiUrl}/${id}`;
+  const requestUrl = `${apiUrl}/get-terminal-device-by-client-id/${id}`;
   return {
     type: ACTION_TYPES.FETCH_TERMINALDEVICE,
     payload: axios.get<ITerminalDevice>(requestUrl),
@@ -120,7 +120,7 @@ export const getEntity: ICrudGetAction<ITerminalDevice> = id => {
 export const createEntity: ICrudPutAction<ITerminalDevice> = entity => async dispatch => {
   const result = await dispatch({
     type: ACTION_TYPES.CREATE_TERMINALDEVICE,
-    payload: axios.post(apiUrl, cleanEntity(entity)),
+    payload: axios.post(apiUrl + '/create-terminal-device-by-client-id', cleanEntity(entity)),
   });
   dispatch(getEntities());
   return result;
@@ -129,13 +129,13 @@ export const createEntity: ICrudPutAction<ITerminalDevice> = entity => async dis
 export const updateEntity: ICrudPutAction<ITerminalDevice> = entity => async dispatch => {
   const result = await dispatch({
     type: ACTION_TYPES.UPDATE_TERMINALDEVICE,
-    payload: axios.put(apiUrl, cleanEntity(entity)),
+    payload: axios.put(apiUrl + '/update-terminal-device-by-client-id', cleanEntity(entity)),
   });
   return result;
 };
 
 export const deleteEntity: ICrudDeleteAction<ITerminalDevice> = id => async dispatch => {
-  const requestUrl = `${apiUrl}/${id}`;
+  const requestUrl = `${apiUrl}/delete-terminal-device-by-client-id/${id}`;
   const result = await dispatch({
     type: ACTION_TYPES.DELETE_TERMINALDEVICE,
     payload: axios.delete(requestUrl),

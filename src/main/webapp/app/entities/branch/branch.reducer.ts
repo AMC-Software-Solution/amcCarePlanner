@@ -135,7 +135,7 @@ export const updateEntity: ICrudPutAction<IBranch> = entity => async dispatch =>
 };
 
 export const deleteEntity: ICrudDeleteAction<IBranch> = id => async dispatch => {
-  const requestUrl = `${apiUrl}/delete-branches-by-client-id/${id}`;
+  const requestUrl = `${apiUrl}/delete-branch-by-client-id/${id}`;
   const result = await dispatch({
     type: ACTION_TYPES.DELETE_BRANCH,
     payload: axios.delete(requestUrl),

@@ -97,12 +97,12 @@ export default (state: PowerOfAttorneyState = initialState, action): PowerOfAtto
   }
 };
 
-const apiUrl = 'api/power-of-attorneys';
+const apiUrl = 'api/v1';
 
 // Actions
 
 export const getEntities: ICrudGetAllAction<IPowerOfAttorney> = (page, size, sort) => {
-  const requestUrl = `${apiUrl}${sort ? `?page=${page}&size=${size}&sort=${sort}` : ''}`;
+  const requestUrl = `${apiUrl}/get-all-power-of-attorneys-by-client-id${sort ? `?page=${page}&size=${size}&sort=${sort}` : ''}`;
   return {
     type: ACTION_TYPES.FETCH_POWEROFATTORNEY_LIST,
     payload: axios.get<IPowerOfAttorney>(`${requestUrl}${sort ? '&' : '?'}cacheBuster=${new Date().getTime()}`),
@@ -110,7 +110,7 @@ export const getEntities: ICrudGetAllAction<IPowerOfAttorney> = (page, size, sor
 };
 
 export const getEntity: ICrudGetAction<IPowerOfAttorney> = id => {
-  const requestUrl = `${apiUrl}/${id}`;
+  const requestUrl = `${apiUrl}/get-power-of-attorney-by-client-id/${id}`;
   return {
     type: ACTION_TYPES.FETCH_POWEROFATTORNEY,
     payload: axios.get<IPowerOfAttorney>(requestUrl),
@@ -120,7 +120,7 @@ export const getEntity: ICrudGetAction<IPowerOfAttorney> = id => {
 export const createEntity: ICrudPutAction<IPowerOfAttorney> = entity => async dispatch => {
   const result = await dispatch({
     type: ACTION_TYPES.CREATE_POWEROFATTORNEY,
-    payload: axios.post(apiUrl, cleanEntity(entity)),
+    payload: axios.post(apiUrl + '/create-power-of-attorney-by-client-id', cleanEntity(entity)),
   });
   dispatch(getEntities());
   return result;
@@ -129,13 +129,13 @@ export const createEntity: ICrudPutAction<IPowerOfAttorney> = entity => async di
 export const updateEntity: ICrudPutAction<IPowerOfAttorney> = entity => async dispatch => {
   const result = await dispatch({
     type: ACTION_TYPES.UPDATE_POWEROFATTORNEY,
-    payload: axios.put(apiUrl, cleanEntity(entity)),
+    payload: axios.put(apiUrl + '/update-power-of-attorney-by-client-id', cleanEntity(entity)),
   });
   return result;
 };
 
 export const deleteEntity: ICrudDeleteAction<IPowerOfAttorney> = id => async dispatch => {
-  const requestUrl = `${apiUrl}/${id}`;
+  const requestUrl = `${apiUrl}/delete-power-of-attorney-by-client-id/${id}`;
   const result = await dispatch({
     type: ACTION_TYPES.DELETE_POWEROFATTORNEY,
     payload: axios.delete(requestUrl),

@@ -109,12 +109,12 @@ export default (state: ServiceUserState = initialState, action): ServiceUserStat
   }
 };
 
-const apiUrl = 'api/service-users';
+const apiUrl = 'api/v1';
 
 // Actions
 
 export const getEntities: ICrudGetAllAction<IServiceUser> = (page, size, sort) => {
-  const requestUrl = `${apiUrl}${sort ? `?page=${page}&size=${size}&sort=${sort}` : ''}`;
+  const requestUrl = `${apiUrl}/get-all-service-users-by-client-id${sort ? `?page=${page}&size=${size}&sort=${sort}` : ''}`;
   return {
     type: ACTION_TYPES.FETCH_SERVICEUSER_LIST,
     payload: axios.get<IServiceUser>(`${requestUrl}${sort ? '&' : '?'}cacheBuster=${new Date().getTime()}`),
@@ -122,7 +122,7 @@ export const getEntities: ICrudGetAllAction<IServiceUser> = (page, size, sort) =
 };
 
 export const getEntity: ICrudGetAction<IServiceUser> = id => {
-  const requestUrl = `${apiUrl}/${id}`;
+  const requestUrl = `${apiUrl}/get-service-user-by-client-id/${id}`;
   return {
     type: ACTION_TYPES.FETCH_SERVICEUSER,
     payload: axios.get<IServiceUser>(requestUrl),
@@ -132,7 +132,7 @@ export const getEntity: ICrudGetAction<IServiceUser> = id => {
 export const createEntity: ICrudPutAction<IServiceUser> = entity => async dispatch => {
   const result = await dispatch({
     type: ACTION_TYPES.CREATE_SERVICEUSER,
-    payload: axios.post(apiUrl, cleanEntity(entity)),
+    payload: axios.post(apiUrl + '/create-service-user-by-client-id', cleanEntity(entity)),
   });
   dispatch(getEntities());
   return result;
@@ -141,13 +141,13 @@ export const createEntity: ICrudPutAction<IServiceUser> = entity => async dispat
 export const updateEntity: ICrudPutAction<IServiceUser> = entity => async dispatch => {
   const result = await dispatch({
     type: ACTION_TYPES.UPDATE_SERVICEUSER,
-    payload: axios.put(apiUrl, cleanEntity(entity)),
+    payload: axios.put(apiUrl + '/update-service-user-by-client-id', cleanEntity(entity)),
   });
   return result;
 };
 
 export const deleteEntity: ICrudDeleteAction<IServiceUser> = id => async dispatch => {
-  const requestUrl = `${apiUrl}/${id}`;
+  const requestUrl = `${apiUrl}/delete-service-user-by-client-id/${id}`;
   const result = await dispatch({
     type: ACTION_TYPES.DELETE_SERVICEUSER,
     payload: axios.delete(requestUrl),

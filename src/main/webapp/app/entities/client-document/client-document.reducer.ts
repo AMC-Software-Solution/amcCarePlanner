@@ -122,7 +122,7 @@ export const getEntities: ICrudGetAllAction<IClientDocument> = (page, size, sort
 };
 
 export const getEntity: ICrudGetAction<IClientDocument> = id => {
-  const requestUrl = `${apiUrl}/get-client-documents-by-client-id/${id}`;
+  const requestUrl = `${apiUrl}/get-client-document-by-client-id/${id}`;
   return {
     type: ACTION_TYPES.FETCH_CLIENTDOCUMENT,
     payload: axios.get<IClientDocument>(requestUrl),
