@@ -7,6 +7,8 @@ import com.amc.careplanner.service.dto.CommunicationDTO;
 import com.amc.careplanner.service.dto.TaskCriteria;
 import com.amc.careplanner.service.dto.TaskDTO;
 import com.amc.careplanner.service.ext.CommunicationServiceExt;
+import com.amc.careplanner.service.dto.CarerClientRelationCriteria;
+import com.amc.careplanner.service.dto.CarerClientRelationDTO;
 import com.amc.careplanner.service.dto.CommunicationCriteria;
 import com.amc.careplanner.domain.User;
 import com.amc.careplanner.repository.ext.UserRepositoryExt;
@@ -128,6 +130,33 @@ public class CommunicationResourceExt extends CommunicationResource{
         Page<CommunicationDTO> page = communicationQueryService.findByCriteria(communicationCriteria, pageable);
         HttpHeaders headers = PaginationUtil.generatePaginationHttpHeaders(ServletUriComponentsBuilder.fromCurrentRequest(), page);
         return ResponseEntity.ok().headers(headers).body(page.getContent());
+    }
+    
+    @GetMapping("/get-all-communications-by-client-id-employee-id/{employeeId}")   
+    public ResponseEntity< List<CommunicationDTO>> getAllCommunicationsByEmployeeId(@PathVariable Long employeeId, Pageable pageable) {
+        log.debug("REST request to get Communication : {}", employeeId);
+        Long loggedInClientId = getClientIdFromLoggedInUser();
+        CommunicationCriteria communicationCriteria = new CommunicationCriteria();
+       
+		
+        LongFilter longFilterForClientId = new LongFilter();
+		longFilterForClientId.setEquals(loggedInClientId);
+		communicationCriteria.setClientId(longFilterForClientId);
+		
+		LongFilter longFilterForEmployeeId = new LongFilter();
+		longFilterForEmployeeId.setEquals(employeeId);
+//		communicationCriteria.setEmployeeId(longFilterForEmployeeId);
+		
+		
+		 Page<CommunicationDTO> listOfPages = communicationQueryService.findByCriteria(communicationCriteria,pageable);
+		 List <CommunicationDTO> listOfDTOs = listOfPages.getContent();
+		 if (listOfDTOs != null && listOfDTOs.size() > 0) {
+			 CommunicationDTO communicationDTO =  listOfDTOs.get(0);
+        	if (communicationDTO.getClientId() != null && communicationDTO.getClientId() != loggedInClientId) {
+	        	  throw new BadRequestAlertException("clientId mismatch", ENTITY_NAME, "clientIdMismatch");
+	         }
+        }
+        return ResponseUtil.wrapOrNotFound(Optional.of(listOfDTOs));
     }
 
     /**
