@@ -391,7 +391,7 @@ entity PowerOfAttorney {
 // Many to one relation  with ServiceUser
 entity Consent {
 	title String required,
-	description String,
+	description String, 
 	giveConsent Boolean,
 	arrangements String,
 	serviceUserSignature String,
@@ -616,7 +616,7 @@ entity RelationshipType {
 }
 
 // Modified
-entity CarerClientRelation {
+entity CarerServiceUserRelation {
 	reason String,
 	count Long,
 	createdDate ZonedDateTime,
@@ -627,15 +627,15 @@ lastUpdatedDate ZonedDateTime,
 
 
 relationship ManyToOne  {
-   CarerClientRelation{relationType(relationType)} to RelationshipType
+   CarerServiceUserRelation{relationType(relationType)} to RelationshipType
  
 }
 relationship ManyToOne  {
-   CarerClientRelation{employee(employeeCode)} to Employee
+   CarerServiceUserRelation{employee(employeeCode)} to Employee
  
 }
  relationship ManyToOne {
-    CarerClientRelation {serviceUser (serviceUserCode) } to ServiceUser
+    CarerServiceUserRelation {serviceUser (serviceUserCode) } to ServiceUser
  }
 
 
@@ -1127,10 +1127,10 @@ entity ExtraData {
  
  
 
-paginate Client,Branch,ServiceUser,MedicalContact,ServiceUserContact,EmergencyContact,ServiceUserLocation,PowerOfAttorney, Consent,Access,Equality,QuestionType,Question,Answer,Employee,EmployeeLocation,EmployeeAvailability,CarerClientRelation,DisabilityType,Disability,EligibilityType,Eligibility,Travel,Payroll,EmployeeHoliday,ServceUserDocument,TerminalDevice,EmployeeDocument,Communication,DocumentType,Notification,Country,Task,ServiceUserEvent,ServiceOrder,Invoice,Timesheet,ClientDocument,SystemEventsHistory,SystemSetting,Currency,ExtraData,CarerClientRelation,EmployeeDesignation with pagination
-dto Client,Branch,ServiceUser,MedicalContact,ServiceUserContact,EmergencyContact,ServiceUserLocation,PowerOfAttorney, Consent,Access,Equality,QuestionType,Question,Answer,Employee,EmployeeLocation,EmployeeAvailability,CarerClientRelation,DisabilityType,Disability,EligibilityType,Eligibility,Travel,Payroll,EmployeeHoliday,ServceUserDocument,TerminalDevice,EmployeeDocument,Communication,DocumentType,Notification,Country,Task,ServiceUserEvent,ServiceOrder,Invoice,Timesheet,ClientDocument,SystemEventsHistory,SystemSetting,Currency,ExtraData,CarerClientRelation,EmployeeDesignation with mapstruct
-service Client,Branch,ServiceUser,MedicalContact,ServiceUserContact,EmergencyContact,ServiceUserLocation,PowerOfAttorney, Consent,Access,Equality,QuestionType,Question,Answer,Employee,EmployeeLocation,EmployeeAvailability,CarerClientRelation,DisabilityType,Disability,EligibilityType,Eligibility,Travel,Payroll,EmployeeHoliday,ServceUserDocument,TerminalDevice,EmployeeDocument,Communication,DocumentType,Notification,Country,Task,ServiceUserEvent,ServiceOrder,Invoice,Timesheet,ClientDocument,SystemEventsHistory,SystemSetting,Currency,ExtraData,CarerClientRelation,EmployeeDesignation with serviceClass
+paginate Client,Branch,ServiceUser,MedicalContact,ServiceUserContact,EmergencyContact,ServiceUserLocation,PowerOfAttorney, Consent,Access,Equality,QuestionType,Question,Answer,Employee,EmployeeLocation,EmployeeAvailability,CarerServiceUserRelation,DisabilityType,Disability,EligibilityType,Eligibility,Travel,Payroll,EmployeeHoliday,ServceUserDocument,TerminalDevice,EmployeeDocument,Communication,DocumentType,Notification,Country,Task,ServiceUserEvent,ServiceOrder,Invoice,Timesheet,ClientDocument,SystemEventsHistory,SystemSetting,Currency,ExtraData,CarerServiceUserRelation,EmployeeDesignation with pagination
+dto Client,Branch,ServiceUser,MedicalContact,ServiceUserContact,EmergencyContact,ServiceUserLocation,PowerOfAttorney, Consent,Access,Equality,QuestionType,Question,Answer,Employee,EmployeeLocation,EmployeeAvailability,CarerServiceUserRelation,DisabilityType,Disability,EligibilityType,Eligibility,Travel,Payroll,EmployeeHoliday,ServceUserDocument,TerminalDevice,EmployeeDocument,Communication,DocumentType,Notification,Country,Task,ServiceUserEvent,ServiceOrder,Invoice,Timesheet,ClientDocument,SystemEventsHistory,SystemSetting,Currency,ExtraData,CarerServiceUserRelation,EmployeeDesignation with mapstruct
+service Client,Branch,ServiceUser,MedicalContact,ServiceUserContact,EmergencyContact,ServiceUserLocation,PowerOfAttorney, Consent,Access,Equality,QuestionType,Question,Answer,Employee,EmployeeLocation,EmployeeAvailability,CarerServiceUserRelation,DisabilityType,Disability,EligibilityType,Eligibility,Travel,Payroll,EmployeeHoliday,ServceUserDocument,TerminalDevice,EmployeeDocument,Communication,DocumentType,Notification,Country,Task,ServiceUserEvent,ServiceOrder,Invoice,Timesheet,ClientDocument,SystemEventsHistory,SystemSetting,Currency,ExtraData,CarerServiceUserRelation,EmployeeDesignation with serviceClass
 //search Client,Branch,ServiceUser,MedicalContact,ServiceUserContact,EmergencyContact,ServiceUserLocation,PowerOfAttorney, Consent,Access,Equality,QuestionType,Question,Answer,Employee,EmployeeLocation,EmployeeAvailability,CarerClientRelation,DisabilityType,Disability,EligibilityType,Eligibility,Travel,Payroll,EmployeeHoliday,ServceUserDocument,TerminalDevice,EmployeeDocument,Communication,DocumentType,Notification,Country,Task,ServiceUserEvent,ServiceOrder,Invoice,Timesheet,ClientDocument,SystemEventsHistory,SystemSetting,Currency,ExtraData,CarerClientRelation,EmployeeDesignation with elasticsearch
-filter Client,Branch,ServiceUser,MedicalContact,ServiceUserContact,EmergencyContact,ServiceUserLocation,PowerOfAttorney, Consent,Access,Equality,QuestionType,Question,Answer,Employee,EmployeeLocation,EmployeeAvailability,CarerClientRelation,DisabilityType,Disability,EligibilityType,Eligibility,Travel,Payroll,EmployeeHoliday,ServceUserDocument,TerminalDevice,EmployeeDocument,Communication,DocumentType,Notification,Country,Task,ServiceUserEvent,ServiceOrder,Invoice,Timesheet,ClientDocument,SystemEventsHistory,SystemSetting,Currency,ExtraData,CarerClientRelation,EmployeeDesignation
+filter Client,Branch,ServiceUser,MedicalContact,ServiceUserContact,EmergencyContact,ServiceUserLocation,PowerOfAttorney, Consent,Access,Equality,QuestionType,Question,Answer,Employee,EmployeeLocation,EmployeeAvailability,CarerServiceUserRelation,DisabilityType,Disability,EligibilityType,Eligibility,Travel,Payroll,EmployeeHoliday,ServceUserDocument,TerminalDevice,EmployeeDocument,Communication,DocumentType,Notification,Country,Task,ServiceUserEvent,ServiceOrder,Invoice,Timesheet,ClientDocument,SystemEventsHistory,SystemSetting,Currency,ExtraData,CarerServiceUserRelation,EmployeeDesignation
 
  

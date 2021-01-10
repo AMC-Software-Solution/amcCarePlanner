@@ -4,6 +4,8 @@ import com.amc.careplanner.service.EmployeeDocumentService;
 import com.amc.careplanner.web.rest.EmployeeDocumentResource;
 import com.amc.careplanner.web.rest.errors.BadRequestAlertException;
 import com.amc.careplanner.service.dto.EmployeeDocumentDTO;
+import com.amc.careplanner.service.dto.EmployeeLocationCriteria;
+import com.amc.careplanner.service.dto.EmployeeLocationDTO;
 import com.amc.careplanner.service.dto.TaskCriteria;
 import com.amc.careplanner.service.dto.TaskDTO;
 import com.amc.careplanner.service.ext.EmployeeDocumentServiceExt;
@@ -128,6 +130,34 @@ public class EmployeeDocumentResourceExt extends EmployeeDocumentResource{
         Page<EmployeeDocumentDTO> page = employeeDocumentQueryService.findByCriteria(employeeDocumentCriteria, pageable);
         HttpHeaders headers = PaginationUtil.generatePaginationHttpHeaders(ServletUriComponentsBuilder.fromCurrentRequest(), page);
         return ResponseEntity.ok().headers(headers).body(page.getContent());
+    }
+    
+    
+    @GetMapping("/get-all-employee-documents-by-client-id-employee-id/{employeeId}")   
+    public ResponseEntity< List<EmployeeDocumentDTO>> getAllEmployeeDocumentsByEmployeeId(@PathVariable Long employeeId, Pageable pageable) {
+        log.debug("REST request to get EmployeeDocuments : {}", employeeId);
+        Long loggedInClientId = getClientIdFromLoggedInUser();
+        EmployeeDocumentCriteria employeeDocumentCriteria = new EmployeeDocumentCriteria();
+       
+		
+        LongFilter longFilterForClientId = new LongFilter();
+		longFilterForClientId.setEquals(loggedInClientId);
+		employeeDocumentCriteria.setClientId(longFilterForClientId);
+		
+		LongFilter longFilterForEmployeeId = new LongFilter();
+		longFilterForEmployeeId.setEquals(employeeId);
+		employeeDocumentCriteria.setEmployeeId(longFilterForEmployeeId);
+		
+		
+		 Page<EmployeeDocumentDTO> listOfEmployeeDocumentsPage = employeeDocumentQueryService.findByCriteria(employeeDocumentCriteria,pageable);
+		 List <EmployeeDocumentDTO> listOfEmployeeDocuments = listOfEmployeeDocumentsPage.getContent();
+		 if (listOfEmployeeDocuments != null && listOfEmployeeDocuments.size() > 0) {
+        	EmployeeDocumentDTO employeeDocumentDTO =  listOfEmployeeDocuments.get(0);
+        	if (employeeDocumentDTO.getClientId() != null && employeeDocumentDTO.getClientId() != loggedInClientId) {
+	        	  throw new BadRequestAlertException("clientId mismatch", ENTITY_NAME, "clientIdMismatch");
+	         }
+        }
+        return ResponseUtil.wrapOrNotFound(Optional.of(listOfEmployeeDocuments));
     }
 
     /**

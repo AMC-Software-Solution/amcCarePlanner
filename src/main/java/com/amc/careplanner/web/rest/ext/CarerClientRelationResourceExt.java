@@ -4,6 +4,8 @@ import com.amc.careplanner.service.CarerClientRelationService;
 import com.amc.careplanner.web.rest.CarerClientRelationResource;
 import com.amc.careplanner.web.rest.errors.BadRequestAlertException;
 import com.amc.careplanner.service.dto.CarerClientRelationDTO;
+import com.amc.careplanner.service.dto.EmployeeDocumentCriteria;
+import com.amc.careplanner.service.dto.EmployeeDocumentDTO;
 import com.amc.careplanner.service.dto.TaskCriteria;
 import com.amc.careplanner.service.dto.TaskDTO;
 import com.amc.careplanner.service.ext.CarerClientRelationServiceExt;
@@ -85,6 +87,34 @@ public class CarerClientRelationResourceExt extends CarerClientRelationResource{
             .headers(HeaderUtil.createEntityCreationAlert(applicationName, true, ENTITY_NAME, result.getId().toString()))
             .body(result);
     }
+    
+    @GetMapping("/get-all-carer-client-relations-by-client-id-employee-id/{employeeId}")   
+    public ResponseEntity< List<CarerClientRelationDTO>> getAllCarerClientRelationsByEmployeeId(@PathVariable Long employeeId, Pageable pageable) {
+        log.debug("REST request to get CarerClientRelations : {}", employeeId);
+        Long loggedInClientId = getClientIdFromLoggedInUser();
+        CarerClientRelationCriteria carerClientRelationCriteria = new CarerClientRelationCriteria();
+       
+		
+        LongFilter longFilterForClientId = new LongFilter();
+		longFilterForClientId.setEquals(loggedInClientId);
+		carerClientRelationCriteria.setClientId(longFilterForClientId);
+		
+		LongFilter longFilterForEmployeeId = new LongFilter();
+		longFilterForEmployeeId.setEquals(employeeId);
+		carerClientRelationCriteria.setEmployeeId(longFilterForEmployeeId);
+		
+		
+		 Page<CarerClientRelationDTO> listOfPages = carerClientRelationQueryService.findByCriteria(carerClientRelationCriteria,pageable);
+		 List <CarerClientRelationDTO> listOfDTOs = listOfPages.getContent();
+		 if (listOfDTOs != null && listOfDTOs.size() > 0) {
+        	CarerClientRelationDTO carerClientRelationDTO =  listOfDTOs.get(0);
+        	if (carerClientRelationDTO.getClientId() != null && carerClientRelationDTO.getClientId() != loggedInClientId) {
+	        	  throw new BadRequestAlertException("clientId mismatch", ENTITY_NAME, "clientIdMismatch");
+	         }
+        }
+        return ResponseUtil.wrapOrNotFound(Optional.of(listOfDTOs));
+    }
+
 
     /**
      * {@code PUT  /carer-client-relations} : Updates an existing carerClientRelation.
