@@ -7,6 +7,8 @@ import com.amc.careplanner.service.dto.ConsentDTO;
 import com.amc.careplanner.service.dto.EmployeeHolidayCriteria;
 import com.amc.careplanner.service.dto.EmployeeHolidayDTO;
 import com.amc.careplanner.service.ext.ConsentServiceExt;
+import com.amc.careplanner.service.dto.CarerClientRelationCriteria;
+import com.amc.careplanner.service.dto.CarerClientRelationDTO;
 import com.amc.careplanner.service.dto.ConsentCriteria;
 import com.amc.careplanner.domain.User;
 import com.amc.careplanner.repository.ext.UserRepositoryExt;
@@ -128,6 +130,33 @@ public class ConsentResourceExt extends ConsentResource{
         Page<ConsentDTO> page = consentQueryService.findByCriteria(consentCriteria, pageable);
         HttpHeaders headers = PaginationUtil.generatePaginationHttpHeaders(ServletUriComponentsBuilder.fromCurrentRequest(), page);
         return ResponseEntity.ok().headers(headers).body(page.getContent());
+    }
+    
+    @GetMapping("/get-all-consents-by-client-id-employee-id/{employeeId}")   
+    public ResponseEntity< List<ConsentDTO>> getAllConsentsByEmployeeId(@PathVariable Long employeeId, Pageable pageable) {
+        log.debug("REST request to get Consents : {}", employeeId);
+        Long loggedInClientId = getClientIdFromLoggedInUser();
+        ConsentCriteria consentCriteria = new ConsentCriteria();
+       
+		
+        LongFilter longFilterForClientId = new LongFilter();
+		longFilterForClientId.setEquals(loggedInClientId);
+		consentCriteria.setClientId(longFilterForClientId);
+		
+		LongFilter longFilterForEmployeeId = new LongFilter();
+		longFilterForEmployeeId.setEquals(employeeId);
+//		consentCriteria.setEmployeeId(longFilterForEmployeeId);
+		
+		
+		 Page<ConsentDTO> listOfPages = consentQueryService.findByCriteria(consentCriteria,pageable);
+		 List <ConsentDTO> listOfDTOs = listOfPages.getContent();
+		 if (listOfDTOs != null && listOfDTOs.size() > 0) {
+			 ConsentDTO consentDTO =  listOfDTOs.get(0);
+        	if (consentDTO.getClientId() != null && consentDTO.getClientId() != loggedInClientId) {
+	        	  throw new BadRequestAlertException("clientId mismatch", ENTITY_NAME, "clientIdMismatch");
+	         }
+        }
+        return ResponseUtil.wrapOrNotFound(Optional.of(listOfDTOs));
     }
 
     /**

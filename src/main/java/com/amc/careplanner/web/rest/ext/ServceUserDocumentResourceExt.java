@@ -5,6 +5,8 @@ import com.amc.careplanner.web.rest.ServceUserDocumentResource;
 import com.amc.careplanner.web.rest.errors.BadRequestAlertException;
 import com.amc.careplanner.service.dto.ServceUserDocumentDTO;
 import com.amc.careplanner.service.ext.ServceUserDocumentServiceExt;
+import com.amc.careplanner.service.dto.CarerClientRelationCriteria;
+import com.amc.careplanner.service.dto.CarerClientRelationDTO;
 import com.amc.careplanner.service.dto.EmployeeHolidayCriteria;
 import com.amc.careplanner.service.dto.EmployeeHolidayDTO;
 import com.amc.careplanner.service.dto.ServceUserDocumentCriteria;
@@ -128,6 +130,33 @@ public class ServceUserDocumentResourceExt extends ServceUserDocumentResource{
         Page<ServceUserDocumentDTO> page = servceUserDocumentQueryService.findByCriteria(servceUserDocumentCriteria, pageable);
         HttpHeaders headers = PaginationUtil.generatePaginationHttpHeaders(ServletUriComponentsBuilder.fromCurrentRequest(), page);
         return ResponseEntity.ok().headers(headers).body(page.getContent());
+    }
+    
+    @GetMapping("/get-all-servce-user-documents-by-client-id-employee-id/{employeeId}")   
+    public ResponseEntity< List<ServceUserDocumentDTO>> getAllServceUserDocumentsByEmployeeId(@PathVariable Long employeeId, Pageable pageable) {
+        log.debug("REST request to get CarerClientRelations : {}", employeeId);
+        Long loggedInClientId = getClientIdFromLoggedInUser();
+        ServceUserDocumentCriteria servceUserDocumentCriteria = new ServceUserDocumentCriteria();
+       
+		
+        LongFilter longFilterForClientId = new LongFilter();
+		longFilterForClientId.setEquals(loggedInClientId);
+		servceUserDocumentCriteria.setClientId(longFilterForClientId);
+		
+		LongFilter longFilterForEmployeeId = new LongFilter();
+		longFilterForEmployeeId.setEquals(employeeId);
+//		servceUserDocumentCriteria.setEmployeeId(longFilterForEmployeeId);
+		
+		
+		 Page<ServceUserDocumentDTO> listOfPages = servceUserDocumentQueryService.findByCriteria(servceUserDocumentCriteria,pageable);
+		 List <ServceUserDocumentDTO> listOfDTOs = listOfPages.getContent();
+		 if (listOfDTOs != null && listOfDTOs.size() > 0) {
+			 ServceUserDocumentDTO servceUserDocumentDTO =  listOfDTOs.get(0);
+        	if (servceUserDocumentDTO.getClientId() != null && servceUserDocumentDTO.getClientId() != loggedInClientId) {
+	        	  throw new BadRequestAlertException("clientId mismatch", ENTITY_NAME, "clientIdMismatch");
+	         }
+        }
+        return ResponseUtil.wrapOrNotFound(Optional.of(listOfDTOs));
     }
 
     /**

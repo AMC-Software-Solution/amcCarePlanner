@@ -5,6 +5,8 @@ import com.amc.careplanner.web.rest.ServiceUserLocationResource;
 import com.amc.careplanner.web.rest.errors.BadRequestAlertException;
 import com.amc.careplanner.service.dto.ServiceUserLocationDTO;
 import com.amc.careplanner.service.ext.ServiceUserLocationServiceExt;
+import com.amc.careplanner.service.dto.CarerClientRelationCriteria;
+import com.amc.careplanner.service.dto.CarerClientRelationDTO;
 import com.amc.careplanner.service.dto.EmployeeHolidayCriteria;
 import com.amc.careplanner.service.dto.EmployeeHolidayDTO;
 import com.amc.careplanner.service.dto.ServiceUserLocationCriteria;
@@ -128,6 +130,33 @@ public class ServiceUserLocationResourceExt extends ServiceUserLocationResource{
         Page<ServiceUserLocationDTO> page = serviceUserLocationQueryService.findByCriteria(serviceUserLocationCriteria, pageable);
         HttpHeaders headers = PaginationUtil.generatePaginationHttpHeaders(ServletUriComponentsBuilder.fromCurrentRequest(), page);
         return ResponseEntity.ok().headers(headers).body(page.getContent());
+    }
+    
+    @GetMapping("/get-all-service-user-locations-by-client-id-employee-id/{employeeId}")   
+    public ResponseEntity< List<ServiceUserLocationDTO>> getAllServiceUserLocationsByEmployeeId(@PathVariable Long employeeId, Pageable pageable) {
+        log.debug("REST request to get ServiceUserLocations : {}", employeeId);
+        Long loggedInClientId = getClientIdFromLoggedInUser();
+        ServiceUserLocationCriteria serviceUserLocationCriteria = new ServiceUserLocationCriteria();
+       
+		
+        LongFilter longFilterForClientId = new LongFilter();
+		longFilterForClientId.setEquals(loggedInClientId);
+		serviceUserLocationCriteria.setClientId(longFilterForClientId);
+		
+		LongFilter longFilterForEmployeeId = new LongFilter();
+		longFilterForEmployeeId.setEquals(employeeId);
+		serviceUserLocationCriteria.setEmployeeId(longFilterForEmployeeId);
+		
+		
+		 Page<ServiceUserLocationDTO> listOfPages = serviceUserLocationQueryService.findByCriteria(serviceUserLocationCriteria,pageable);
+		 List <ServiceUserLocationDTO> listOfDTOs = listOfPages.getContent();
+		 if (listOfDTOs != null && listOfDTOs.size() > 0) {
+			 ServiceUserLocationDTO serviceUserLocationDTO =  listOfDTOs.get(0);
+        	if (serviceUserLocationDTO.getClientId() != null && serviceUserLocationDTO.getClientId() != loggedInClientId) {
+	        	  throw new BadRequestAlertException("clientId mismatch", ENTITY_NAME, "clientIdMismatch");
+	         }
+        }
+        return ResponseUtil.wrapOrNotFound(Optional.of(listOfDTOs));
     }
 
     /**

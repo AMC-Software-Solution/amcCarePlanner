@@ -4,6 +4,8 @@ import com.amc.careplanner.service.AnswerService;
 import com.amc.careplanner.web.rest.AnswerResource;
 import com.amc.careplanner.web.rest.errors.BadRequestAlertException;
 import com.amc.careplanner.service.dto.AnswerDTO;
+import com.amc.careplanner.service.dto.CarerClientRelationCriteria;
+import com.amc.careplanner.service.dto.CarerClientRelationDTO;
 import com.amc.careplanner.service.dto.EmployeeDocumentCriteria;
 import com.amc.careplanner.service.dto.EmployeeDocumentDTO;
 import com.amc.careplanner.service.ext.AnswerServiceExt;
@@ -129,6 +131,33 @@ public class AnswerResourceExt extends AnswerResource{
         Page<AnswerDTO> page = answerQueryService.findByCriteria(answerCriteria, pageable);
         HttpHeaders headers = PaginationUtil.generatePaginationHttpHeaders(ServletUriComponentsBuilder.fromCurrentRequest(), page);
         return ResponseEntity.ok().headers(headers).body(page.getContent());
+    }
+    
+    @GetMapping("/get-all-answers-by-client-id-employee-id/{employeeId}")   
+    public ResponseEntity< List<AnswerDTO>> getAllanswersByEmployeeId(@PathVariable Long employeeId, Pageable pageable) {
+        log.debug("REST request to get Answers : {}", employeeId);
+        Long loggedInClientId = getClientIdFromLoggedInUser();
+        AnswerCriteria answerCriteria = new AnswerCriteria();
+       
+		
+        LongFilter longFilterForClientId = new LongFilter();
+		longFilterForClientId.setEquals(loggedInClientId);
+		answerCriteria.setClientId(longFilterForClientId);
+		
+		LongFilter longFilterForEmployeeId = new LongFilter();
+		longFilterForEmployeeId.setEquals(employeeId);
+//		answerCriteria.setEmployeeId(longFilterForEmployeeId);
+		
+		
+		 Page<AnswerDTO> listOfPages = answerQueryService.findByCriteria(answerCriteria,pageable);
+		 List <AnswerDTO> listOfDTOs = listOfPages.getContent();
+		 if (listOfDTOs != null && listOfDTOs.size() > 0) {
+			 AnswerDTO answerDTO =  listOfDTOs.get(0);
+        	if (answerDTO.getClientId() != null && answerDTO.getClientId() != loggedInClientId) {
+	        	  throw new BadRequestAlertException("clientId mismatch", ENTITY_NAME, "clientIdMismatch");
+	         }
+        }
+        return ResponseUtil.wrapOrNotFound(Optional.of(listOfDTOs));
     }
 
     /**

@@ -5,6 +5,8 @@ import com.amc.careplanner.web.rest.EmployeeLocationResource;
 import com.amc.careplanner.web.rest.errors.BadRequestAlertException;
 import com.amc.careplanner.service.dto.EmployeeLocationDTO;
 import com.amc.careplanner.service.ext.EmployeeLocationServiceExt;
+import com.amc.careplanner.service.dto.CarerClientRelationCriteria;
+import com.amc.careplanner.service.dto.CarerClientRelationDTO;
 import com.amc.careplanner.service.dto.EmployeeCriteria;
 import com.amc.careplanner.service.dto.EmployeeDTO;
 import com.amc.careplanner.service.dto.EmployeeHolidayCriteria;
@@ -130,6 +132,33 @@ public class EmployeeLocationResourceExt extends EmployeeLocationResource{
         Page<EmployeeLocationDTO> page = employeeLocationQueryService.findByCriteria(employeeLocationCriteria, pageable);
         HttpHeaders headers = PaginationUtil.generatePaginationHttpHeaders(ServletUriComponentsBuilder.fromCurrentRequest(), page);
         return ResponseEntity.ok().headers(headers).body(page.getContent());
+    }
+    
+    @GetMapping("/get-all-employee-locations-id-employee-id/{employeeId}")   
+    public ResponseEntity< List<EmployeeLocationDTO>> getAllEmployeeLocationsByEmployeeId(@PathVariable Long employeeId, Pageable pageable) {
+        log.debug("REST request to get EmployeeLocations : {}", employeeId);
+        Long loggedInClientId = getClientIdFromLoggedInUser();
+        EmployeeLocationCriteria employeeLocationCriteria = new EmployeeLocationCriteria();
+       
+		
+        LongFilter longFilterForClientId = new LongFilter();
+		longFilterForClientId.setEquals(loggedInClientId);
+		employeeLocationCriteria.setClientId(longFilterForClientId);
+		
+		LongFilter longFilterForEmployeeId = new LongFilter();
+		longFilterForEmployeeId.setEquals(employeeId);
+		employeeLocationCriteria.setEmployeeId(longFilterForEmployeeId);
+		
+		
+		 Page<EmployeeLocationDTO> listOfPages = employeeLocationQueryService.findByCriteria(employeeLocationCriteria,pageable);
+		 List <EmployeeLocationDTO> listOfDTOs = listOfPages.getContent();
+		 if (listOfDTOs != null && listOfDTOs.size() > 0) {
+			 EmployeeLocationDTO employeeLocationDTO =  listOfDTOs.get(0);
+        	if (employeeLocationDTO.getClientId() != null && employeeLocationDTO.getClientId() != loggedInClientId) {
+	        	  throw new BadRequestAlertException("clientId mismatch", ENTITY_NAME, "clientIdMismatch");
+	         }
+        }
+        return ResponseUtil.wrapOrNotFound(Optional.of(listOfDTOs));
     }
 
     /**

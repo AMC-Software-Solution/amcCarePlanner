@@ -7,6 +7,8 @@ import com.amc.careplanner.service.dto.EmployeeHolidayDTO;
 import com.amc.careplanner.service.dto.TaskCriteria;
 import com.amc.careplanner.service.dto.TaskDTO;
 import com.amc.careplanner.service.ext.EmployeeHolidayServiceExt;
+import com.amc.careplanner.service.dto.CarerClientRelationCriteria;
+import com.amc.careplanner.service.dto.CarerClientRelationDTO;
 import com.amc.careplanner.service.dto.EmployeeHolidayCriteria;
 import com.amc.careplanner.domain.User;
 import com.amc.careplanner.repository.ext.UserRepositoryExt;
@@ -129,6 +131,33 @@ public class EmployeeHolidayResourceExt extends EmployeeHolidayResource{
         Page<EmployeeHolidayDTO> page = employeeHolidayQueryService.findByCriteria(employeeHolidayCriteria, pageable);
         HttpHeaders headers = PaginationUtil.generatePaginationHttpHeaders(ServletUriComponentsBuilder.fromCurrentRequest(), page);
         return ResponseEntity.ok().headers(headers).body(page.getContent());
+    }
+    
+    @GetMapping("/get-all-employee-holidays-by-client-id-employee-id/{employeeId}")   
+    public ResponseEntity< List<EmployeeHolidayDTO>> getAllEmployeeHolidaysByEmployeeId(@PathVariable Long employeeId, Pageable pageable) {
+        log.debug("REST request to get EmployeeHolidays : {}", employeeId);
+        Long loggedInClientId = getClientIdFromLoggedInUser();
+        EmployeeHolidayCriteria employeeHolidayCriteria = new EmployeeHolidayCriteria();
+       
+		
+        LongFilter longFilterForClientId = new LongFilter();
+		longFilterForClientId.setEquals(loggedInClientId);
+		employeeHolidayCriteria.setClientId(longFilterForClientId);
+		
+		LongFilter longFilterForEmployeeId = new LongFilter();
+		longFilterForEmployeeId.setEquals(employeeId);
+		employeeHolidayCriteria.setEmployeeId(longFilterForEmployeeId);
+		
+		
+		 Page<EmployeeHolidayDTO> listOfPages = employeeHolidayQueryService.findByCriteria(employeeHolidayCriteria,pageable);
+		 List <EmployeeHolidayDTO> listOfDTOs = listOfPages.getContent();
+		 if (listOfDTOs != null && listOfDTOs.size() > 0) {
+			 EmployeeHolidayDTO employeeHolidayDTO =  listOfDTOs.get(0);
+        	if (employeeHolidayDTO.getClientId() != null && employeeHolidayDTO.getClientId() != loggedInClientId) {
+	        	  throw new BadRequestAlertException("clientId mismatch", ENTITY_NAME, "clientIdMismatch");
+	         }
+        }
+        return ResponseUtil.wrapOrNotFound(Optional.of(listOfDTOs));
     }
 
     /**

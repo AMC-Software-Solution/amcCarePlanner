@@ -5,6 +5,8 @@ import com.amc.careplanner.web.rest.PowerOfAttorneyResource;
 import com.amc.careplanner.web.rest.errors.BadRequestAlertException;
 import com.amc.careplanner.service.dto.PowerOfAttorneyDTO;
 import com.amc.careplanner.service.ext.PowerOfAttorneyServiceExt;
+import com.amc.careplanner.service.dto.CarerClientRelationCriteria;
+import com.amc.careplanner.service.dto.CarerClientRelationDTO;
 import com.amc.careplanner.service.dto.EmployeeHolidayCriteria;
 import com.amc.careplanner.service.dto.EmployeeHolidayDTO;
 import com.amc.careplanner.service.dto.PowerOfAttorneyCriteria;
@@ -128,6 +130,33 @@ public class PowerOfAttorneyResourceExt extends PowerOfAttorneyResource{
         Page<PowerOfAttorneyDTO> page = powerOfAttorneyQueryService.findByCriteria(powerOfAttorneyCriteria, pageable);
         HttpHeaders headers = PaginationUtil.generatePaginationHttpHeaders(ServletUriComponentsBuilder.fromCurrentRequest(), page);
         return ResponseEntity.ok().headers(headers).body(page.getContent());
+    }
+    
+    @GetMapping("/get-all-power-of-attorneys-by-client-id-employee-id/{employeeId}")   
+    public ResponseEntity< List<PowerOfAttorneyDTO>> getAllPoweOfAttorneyssByEmployeeId(@PathVariable Long employeeId, Pageable pageable) {
+        log.debug("REST request to get PowerOfAttorneys : {}", employeeId);
+        Long loggedInClientId = getClientIdFromLoggedInUser();
+        PowerOfAttorneyCriteria powerOfAttorneyCriteria = new PowerOfAttorneyCriteria();
+       
+		
+        LongFilter longFilterForClientId = new LongFilter();
+		longFilterForClientId.setEquals(loggedInClientId);
+		powerOfAttorneyCriteria.setClientId(longFilterForClientId);
+		
+		LongFilter longFilterForEmployeeId = new LongFilter();
+		longFilterForEmployeeId.setEquals(employeeId);
+//		powerOfAttorneyCriteria.setEmployeeId(longFilterForEmployeeId);
+		
+		
+		 Page<PowerOfAttorneyDTO> listOfPages = powerOfAttorneyQueryService.findByCriteria(powerOfAttorneyCriteria,pageable);
+		 List <PowerOfAttorneyDTO> listOfDTOs = listOfPages.getContent();
+		 if (listOfDTOs != null && listOfDTOs.size() > 0) {
+			 PowerOfAttorneyDTO powerOfAttorneyDTO =  listOfDTOs.get(0);
+        	if (powerOfAttorneyDTO.getClientId() != null && powerOfAttorneyDTO.getClientId() != loggedInClientId) {
+	        	  throw new BadRequestAlertException("clientId mismatch", ENTITY_NAME, "clientIdMismatch");
+	         }
+        }
+        return ResponseUtil.wrapOrNotFound(Optional.of(listOfDTOs));
     }
 
     /**
