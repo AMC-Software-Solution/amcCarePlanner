@@ -129,6 +129,36 @@ public class ServiceUserEventResourceExt extends ServiceUserEventResource{
         HttpHeaders headers = PaginationUtil.generatePaginationHttpHeaders(ServletUriComponentsBuilder.fromCurrentRequest(), page);
         return ResponseEntity.ok().headers(headers).body(page.getContent());
     }
+    
+    
+    @GetMapping("/get-all-service-user-events-by-client-id-employee-id/{employeeId}")   
+    public ResponseEntity< List<ServiceUserEventDTO>> getAllServiceUserEvensByEmployeeId(@PathVariable Long employeeId, Pageable pageable) {
+        log.debug("REST request to get ServiceUserEvens : {}", employeeId);
+        Long loggedInClientId = getClientIdFromLoggedInUser();
+        ServiceUserEventCriteria serviceUserEventCriteria = new ServiceUserEventCriteria();
+
+
+        LongFilter longFilterForClientId = new LongFilter();
+		longFilterForClientId.setEquals(loggedInClientId);
+		serviceUserEventCriteria.setClientId(longFilterForClientId);
+
+		LongFilter longFilterForEmployeeId = new LongFilter();
+		longFilterForEmployeeId.setEquals(employeeId);
+		//serviceUserEventCriteria.setEmployeeId(longFilterForEmployeeId);
+
+
+		 Page<ServiceUserEventDTO> listOfPages = serviceUserEventQueryService.findByCriteria(serviceUserEventCriteria,pageable);
+		 List <ServiceUserEventDTO> listOfDTOs = listOfPages.getContent();
+		 if (listOfDTOs != null && listOfDTOs.size() > 0) {
+			 ServiceUserEventDTO serviceUserEventDTO =  listOfDTOs.get(0);
+        	if (serviceUserEventDTO.getClientId() != null && serviceUserEventDTO.getClientId() != loggedInClientId) {
+	        	  throw new BadRequestAlertException("clientId mismatch", ENTITY_NAME, "clientIdMismatch");
+	         }
+        }
+        return ResponseUtil.wrapOrNotFound(Optional.of(listOfDTOs));
+    }
+
+    
 
     /**
      * {@code GET  /service-user-events/count} : count all the serviceUserEvents.

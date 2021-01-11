@@ -130,6 +130,36 @@ public class DisabilityResourceExt extends DisabilityResource{
         HttpHeaders headers = PaginationUtil.generatePaginationHttpHeaders(ServletUriComponentsBuilder.fromCurrentRequest(), page);
         return ResponseEntity.ok().headers(headers).body(page.getContent());
     }
+    
+    
+    
+    @GetMapping("/get-all-disabilities-by-client-id-employee-id/{employeeId}")   
+    public ResponseEntity< List<DisabilityDTO>> getAllDisabilitiesByEmployeeId(@PathVariable Long employeeId, Pageable pageable) {
+        log.debug("REST request to get Disabilities : {}", employeeId);
+        Long loggedInClientId = getClientIdFromLoggedInUser();
+        DisabilityCriteria disabilityCriteria = new DisabilityCriteria();
+
+
+        LongFilter longFilterForClientId = new LongFilter();
+		longFilterForClientId.setEquals(loggedInClientId);
+		disabilityCriteria.setClientId(longFilterForClientId);
+
+		LongFilter longFilterForEmployeeId = new LongFilter();
+		longFilterForEmployeeId.setEquals(employeeId);
+		disabilityCriteria.setEmployeeId(longFilterForEmployeeId);
+
+
+		 Page<DisabilityDTO> listOfPages = disabilityQueryService.findByCriteria(disabilityCriteria,pageable);
+		 List <DisabilityDTO> listOfDTOs = listOfPages.getContent();
+		 if (listOfDTOs != null && listOfDTOs.size() > 0) {
+			 DisabilityDTO disabilityDTO =  listOfDTOs.get(0);
+        	if (disabilityDTO.getClientId() != null && disabilityDTO.getClientId() != loggedInClientId) {
+	        	  throw new BadRequestAlertException("clientId mismatch", ENTITY_NAME, "clientIdMismatch");
+	         }
+        }
+        return ResponseUtil.wrapOrNotFound(Optional.of(listOfDTOs));
+    }
+
 
     /**
      * {@code GET  /disabilities/count} : count all the disabilities.

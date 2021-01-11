@@ -130,6 +130,36 @@ public class EligibilityResourceExt extends EligibilityResource{
         HttpHeaders headers = PaginationUtil.generatePaginationHttpHeaders(ServletUriComponentsBuilder.fromCurrentRequest(), page);
         return ResponseEntity.ok().headers(headers).body(page.getContent());
     }
+    
+    
+    @GetMapping("/get-all- eligibilities-by-client-id-employee-id/{employeeId}")   
+    public ResponseEntity< List< EligibilityDTO>> getAllEligibilitiesByEmployeeId(@PathVariable Long employeeId, Pageable pageable) {
+        log.debug("REST request to get Eligibilities : {}", employeeId);
+        Long loggedInClientId = getClientIdFromLoggedInUser();
+        EligibilityCriteria  eligibilityCriteria = new  EligibilityCriteria();
+
+
+        LongFilter longFilterForClientId = new LongFilter();
+		longFilterForClientId.setEquals(loggedInClientId);
+		eligibilityCriteria.setClientId(longFilterForClientId);
+
+		LongFilter longFilterForEmployeeId = new LongFilter();
+		longFilterForEmployeeId.setEquals(employeeId);
+		eligibilityCriteria.setEmployeeId(longFilterForEmployeeId);
+
+
+		 Page< EligibilityDTO> listOfPages = eligibilityQueryService.findByCriteria(eligibilityCriteria,pageable);
+		 List < EligibilityDTO> listOfDTOs = listOfPages.getContent();
+		 if (listOfDTOs != null && listOfDTOs.size() > 0) {
+			 EligibilityDTO eligibilityDTO =  listOfDTOs.get(0);
+        	if (eligibilityDTO.getClientId() != null && eligibilityDTO.getClientId() != loggedInClientId) {
+	        	  throw new BadRequestAlertException("clientId mismatch", ENTITY_NAME, "clientIdMismatch");
+	         }
+        }
+        return ResponseUtil.wrapOrNotFound(Optional.of(listOfDTOs));
+    }
+
+    
 
     /**
      * {@code GET  /eligibilities/count} : count all the eligibilities.

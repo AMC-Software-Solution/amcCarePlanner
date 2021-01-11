@@ -129,6 +129,34 @@ public class PayrollResourceExt extends PayrollResource{
         HttpHeaders headers = PaginationUtil.generatePaginationHttpHeaders(ServletUriComponentsBuilder.fromCurrentRequest(), page);
         return ResponseEntity.ok().headers(headers).body(page.getContent());
     }
+    
+    @GetMapping("/get-all-payrolls-by-client-id-employee-id/{employeeId}")   
+    public ResponseEntity< List<PayrollDTO>> getAllPayrollsByEmployeeId(@PathVariable Long employeeId, Pageable pageable) {
+        log.debug("REST request to get Payrolls : {}", employeeId);
+        Long loggedInClientId = getClientIdFromLoggedInUser();
+        PayrollCriteria payrollCriteria = new PayrollCriteria();
+
+
+        LongFilter longFilterForClientId = new LongFilter();
+		longFilterForClientId.setEquals(loggedInClientId);
+		payrollCriteria.setClientId(longFilterForClientId);
+
+		LongFilter longFilterForEmployeeId = new LongFilter();
+		longFilterForEmployeeId.setEquals(employeeId);
+		payrollCriteria.setEmployeeId(longFilterForEmployeeId);
+
+
+		 Page< PayrollDTO> listOfPages = payrollQueryService.findByCriteria(payrollCriteria,pageable);
+		 List < PayrollDTO> listOfDTOs = listOfPages.getContent();
+		 if (listOfDTOs != null && listOfDTOs.size() > 0) {
+			 PayrollDTO payrollDTO =  listOfDTOs.get(0);
+        	if (payrollDTO.getClientId() != null && payrollDTO.getClientId() != loggedInClientId) {
+	        	  throw new BadRequestAlertException("clientId mismatch", ENTITY_NAME, "clientIdMismatch");
+	         }
+        }
+        return ResponseUtil.wrapOrNotFound(Optional.of(listOfDTOs));
+    }
+
 
     /**
      * {@code GET  /payrolls/count} : count all the payrolls.

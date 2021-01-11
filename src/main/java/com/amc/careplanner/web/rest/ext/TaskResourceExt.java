@@ -131,6 +131,35 @@ public class TaskResourceExt extends TaskResource{
         HttpHeaders headers = PaginationUtil.generatePaginationHttpHeaders(ServletUriComponentsBuilder.fromCurrentRequest(), page);
         return ResponseEntity.ok().headers(headers).body(page.getContent());
     }
+    
+    
+    @GetMapping("/get-all-tasks-by-client-id-employee-id/{employeeId}")   
+    public ResponseEntity< List<TaskDTO>> getAllTasksByEmployeeId(@PathVariable Long employeeId, Pageable pageable) {
+        log.debug("REST request to get Tasks : {}", employeeId);
+        Long loggedInClientId = getClientIdFromLoggedInUser();
+        TaskCriteria taskCriteria = new TaskCriteria();
+
+
+        LongFilter longFilterForClientId = new LongFilter();
+		longFilterForClientId.setEquals(loggedInClientId);
+		taskCriteria.setClientId(longFilterForClientId);
+
+		LongFilter longFilterForEmployeeId = new LongFilter();
+		longFilterForEmployeeId.setEquals(employeeId);
+		//taskCriteria.setEmployeeId(longFilterForEmployeeId);
+
+
+		 Page<TaskDTO> listOfPages = taskQueryService.findByCriteria(taskCriteria,pageable);
+		 List <TaskDTO> listOfDTOs = listOfPages.getContent();
+		 if (listOfDTOs != null && listOfDTOs.size() > 0) {
+			 TaskDTO taskDTO =  listOfDTOs.get(0);
+        	if (taskDTO.getClientId() != null && taskDTO.getClientId() != loggedInClientId) {
+	        	  throw new BadRequestAlertException("clientId mismatch", ENTITY_NAME, "clientIdMismatch");
+	         }
+        }
+        return ResponseUtil.wrapOrNotFound(Optional.of(listOfDTOs));
+    }
+
 
     /**
      * {@code GET  /tasks/count} : count all the tasks.
