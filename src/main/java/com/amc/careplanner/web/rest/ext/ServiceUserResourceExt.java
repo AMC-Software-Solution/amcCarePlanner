@@ -5,6 +5,8 @@ import com.amc.careplanner.web.rest.ServiceUserResource;
 import com.amc.careplanner.web.rest.errors.BadRequestAlertException;
 import com.amc.careplanner.service.dto.ServiceUserDTO;
 import com.amc.careplanner.service.ext.ServiceUserServiceExt;
+import com.amc.careplanner.service.dto.CarerClientRelationCriteria;
+import com.amc.careplanner.service.dto.CarerClientRelationDTO;
 import com.amc.careplanner.service.dto.EmployeeHolidayCriteria;
 import com.amc.careplanner.service.dto.EmployeeHolidayDTO;
 import com.amc.careplanner.service.dto.ServiceUserCriteria;
@@ -128,6 +130,33 @@ public class ServiceUserResourceExt extends ServiceUserResource{
         Page<ServiceUserDTO> page = serviceUserQueryService.findByCriteria(serviceUserCriteria, pageable);
         HttpHeaders headers = PaginationUtil.generatePaginationHttpHeaders(ServletUriComponentsBuilder.fromCurrentRequest(), page);
         return ResponseEntity.ok().headers(headers).body(page.getContent());
+    }
+    
+    @GetMapping("/get-all-service-users-by-client-id-employee-id/{employeeId}")   
+    public ResponseEntity< List<ServiceUserDTO>> getAllServiceUsersByEmployeeId(@PathVariable Long employeeId, Pageable pageable) {
+        log.debug("REST request to get ServiceUsers : {}", employeeId);
+        Long loggedInClientId = getClientIdFromLoggedInUser();
+        ServiceUserCriteria serviceUserCriteria = new ServiceUserCriteria();
+       
+		
+        LongFilter longFilterForClientId = new LongFilter();
+		longFilterForClientId.setEquals(loggedInClientId);
+		serviceUserCriteria.setClientId(longFilterForClientId);
+		
+		LongFilter longFilterForEmployeeId = new LongFilter();
+		longFilterForEmployeeId.setEquals(employeeId);
+//		serviceUserCriteria.setEmployeeId(longFilterForEmployeeId);
+		
+		
+		 Page<ServiceUserDTO> listOfPages = serviceUserQueryService.findByCriteria(serviceUserCriteria,pageable);
+		 List <ServiceUserDTO> listOfDTOs = listOfPages.getContent();
+		 if (listOfDTOs != null && listOfDTOs.size() > 0) {
+			 ServiceUserDTO serviceUserDTO =  listOfDTOs.get(0);
+        	if (serviceUserDTO.getClientId() != null && serviceUserDTO.getClientId() != loggedInClientId) {
+	        	  throw new BadRequestAlertException("clientId mismatch", ENTITY_NAME, "clientIdMismatch");
+	         }
+        }
+        return ResponseUtil.wrapOrNotFound(Optional.of(listOfDTOs));
     }
 
     /**

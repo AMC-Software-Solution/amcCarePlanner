@@ -7,6 +7,8 @@ import com.amc.careplanner.service.dto.ClientDocumentDTO;
 import com.amc.careplanner.service.dto.EmployeeDocumentCriteria;
 import com.amc.careplanner.service.dto.EmployeeDocumentDTO;
 import com.amc.careplanner.service.ext.ClientDocumentServiceExt;
+import com.amc.careplanner.service.dto.CarerClientRelationCriteria;
+import com.amc.careplanner.service.dto.CarerClientRelationDTO;
 import com.amc.careplanner.service.dto.ClientDocumentCriteria;
 import com.amc.careplanner.domain.User;
 import com.amc.careplanner.repository.ext.UserRepositoryExt;
@@ -128,6 +130,33 @@ public class ClientDocumentResourceExt extends ClientDocumentResource{
         Page<ClientDocumentDTO> page = clientDocumentQueryService.findByCriteria(clientDocumentCriteria, pageable);
         HttpHeaders headers = PaginationUtil.generatePaginationHttpHeaders(ServletUriComponentsBuilder.fromCurrentRequest(), page);
         return ResponseEntity.ok().headers(headers).body(page.getContent());
+    }
+    
+    @GetMapping("/get-all-client-documents-by-client-id-employee-id/{employeeId}")   
+    public ResponseEntity< List<ClientDocumentDTO>> getAllClientDocumentsByEmployeeId(@PathVariable Long employeeId, Pageable pageable) {
+        log.debug("REST request to get ClientDocuments : {}", employeeId);
+        Long loggedInClientId = getClientIdFromLoggedInUser();
+        ClientDocumentCriteria clientDocumentCriteria = new ClientDocumentCriteria();
+       
+		
+        LongFilter longFilterForClientId = new LongFilter();
+		longFilterForClientId.setEquals(loggedInClientId);
+		clientDocumentCriteria.setClientId(longFilterForClientId);
+		
+		LongFilter longFilterForEmployeeId = new LongFilter();
+		longFilterForEmployeeId.setEquals(employeeId);
+//		clientDocumentCriteria.setEmployeeId(longFilterForEmployeeId);
+		
+		
+		 Page<ClientDocumentDTO> listOfPages = clientDocumentQueryService.findByCriteria(clientDocumentCriteria,pageable);
+		 List <ClientDocumentDTO> listOfDTOs = listOfPages.getContent();
+		 if (listOfDTOs != null && listOfDTOs.size() > 0) {
+			 ClientDocumentDTO clientDocumentDTO =  listOfDTOs.get(0);
+        	if (clientDocumentDTO.getClientId() != null && clientDocumentDTO.getClientId() != loggedInClientId) {
+	        	  throw new BadRequestAlertException("clientId mismatch", ENTITY_NAME, "clientIdMismatch");
+	         }
+        }
+        return ResponseUtil.wrapOrNotFound(Optional.of(listOfDTOs));
     }
 
     /**

@@ -5,6 +5,8 @@ import com.amc.careplanner.web.rest.TerminalDeviceResource;
 import com.amc.careplanner.web.rest.errors.BadRequestAlertException;
 import com.amc.careplanner.service.dto.TerminalDeviceDTO;
 import com.amc.careplanner.service.ext.TerminalDeviceServiceExt;
+import com.amc.careplanner.service.dto.CarerClientRelationCriteria;
+import com.amc.careplanner.service.dto.CarerClientRelationDTO;
 import com.amc.careplanner.service.dto.TaskCriteria;
 import com.amc.careplanner.service.dto.TaskDTO;
 import com.amc.careplanner.service.dto.TerminalDeviceCriteria;
@@ -130,6 +132,33 @@ public class TerminalDeviceResourceExt extends TerminalDeviceResource{
 		Page<TerminalDeviceDTO> page = terminalDeviceQueryService.findByCriteria(terminalDeviceCriteria, pageable);
         HttpHeaders headers = PaginationUtil.generatePaginationHttpHeaders(ServletUriComponentsBuilder.fromCurrentRequest(), page);
         return ResponseEntity.ok().headers(headers).body(page.getContent());
+    }
+    
+    @GetMapping("/get-all-terminal-devices-by-client-id-employee-id/{employeeId}")   
+    public ResponseEntity< List<TerminalDeviceDTO>> getAllTerminalDevicesByEmployeeId(@PathVariable Long employeeId, Pageable pageable) {
+        log.debug("REST request to get TerminalDevices : {}", employeeId);
+        Long loggedInClientId = getClientIdFromLoggedInUser();
+        TerminalDeviceCriteria terminalDeviceCriteria = new TerminalDeviceCriteria();
+       
+		
+        LongFilter longFilterForClientId = new LongFilter();
+		longFilterForClientId.setEquals(loggedInClientId);
+		terminalDeviceCriteria.setClientId(longFilterForClientId);
+		
+		LongFilter longFilterForEmployeeId = new LongFilter();
+		longFilterForEmployeeId.setEquals(employeeId);
+		terminalDeviceCriteria.setEmployeeId(longFilterForEmployeeId);
+		
+		
+		 Page<TerminalDeviceDTO> listOfPages = terminalDeviceQueryService.findByCriteria(terminalDeviceCriteria,pageable);
+		 List <TerminalDeviceDTO> listOfDTOs = listOfPages.getContent();
+		 if (listOfDTOs != null && listOfDTOs.size() > 0) {
+			 TerminalDeviceDTO terminalDeviceDTO =  listOfDTOs.get(0);
+        	if (terminalDeviceDTO.getClientId() != null && terminalDeviceDTO.getClientId() != loggedInClientId) {
+	        	  throw new BadRequestAlertException("clientId mismatch", ENTITY_NAME, "clientIdMismatch");
+	         }
+        }
+        return ResponseUtil.wrapOrNotFound(Optional.of(listOfDTOs));
     }
 
     /**
