@@ -7,11 +7,16 @@ import com.amc.careplanner.service.dto.CommunicationDTO;
 import com.amc.careplanner.service.dto.TaskCriteria;
 import com.amc.careplanner.service.dto.TaskDTO;
 import com.amc.careplanner.service.ext.CommunicationServiceExt;
+import com.amc.careplanner.utils.CommonUtils;
+import com.amc.careplanner.utils.Constants;
+import com.amc.careplanner.utils.RandomUtil;
 import com.amc.careplanner.service.dto.CarerClientRelationCriteria;
 import com.amc.careplanner.service.dto.CarerClientRelationDTO;
+import com.amc.careplanner.service.dto.ClientDocumentDTO;
 import com.amc.careplanner.service.dto.CommunicationCriteria;
 import com.amc.careplanner.domain.User;
 import com.amc.careplanner.repository.ext.UserRepositoryExt;
+import com.amc.careplanner.s3.S3Service;
 import com.amc.careplanner.security.AuthoritiesConstants;
 import com.amc.careplanner.security.SecurityUtils;
 import com.amc.careplanner.service.CommunicationQueryService;
@@ -58,12 +63,17 @@ public class CommunicationResourceExt extends CommunicationResource{
     private final CommunicationQueryService communicationQueryService;
     
     private final UserRepositoryExt userRepositoryExt;
+    
+    private final S3Service  s3Service;
 
-    public CommunicationResourceExt(CommunicationServiceExt communicationServiceExt, CommunicationQueryService communicationQueryService,  UserRepositoryExt userRepositoryExt) {
+
+    public CommunicationResourceExt(CommunicationServiceExt communicationServiceExt, CommunicationQueryService communicationQueryService,  UserRepositoryExt userRepositoryExt, S3Service  s3Service) {
     	super(communicationServiceExt,communicationQueryService);
         this.communicationServiceExt = communicationServiceExt;
         this.communicationQueryService = communicationQueryService;
         this.userRepositoryExt = userRepositoryExt;
+        this.s3Service = s3Service;
+
     }
 
     /**
@@ -83,9 +93,23 @@ public class CommunicationResourceExt extends CommunicationResource{
         communicationDTO.setLastUpdatedDate(ZonedDateTime.now());
         communicationDTO.setClientId(getClientIdFromLoggedInUser());
         CommunicationDTO result = communicationServiceExt.save(communicationDTO);
+        CommunicationDTO result2 = result;
+        CommunicationDTO result3 = null;
+  		if (communicationDTO.getAttachmentContentType()!= null) {
+  			String fileName = ENTITY_NAME + RandomUtil.generateRandomAlphaNum(10) + "-" + result.getId() + ".png";
+  			String url = Constants.S3_ENDPOINT + fileName;
+  			result.setAttachmentUrl(url);
+  			byte[] logoBytes = CommonUtils.resize(CommonUtils.createImageFromBytes(communicationDTO.getAttachment()),
+  					Constants.FULL_IMAGE_HEIGHT, Constants.FULL_IMAGE_WIDTH);
+  			CommonUtils.uploadToS3(logoBytes, fileName, s3Service.getAmazonS3(),communicationDTO.getAttachmentContentType());
+  			result2 = communicationServiceExt.save(result);
+  			result2.setAttachment(null);
+  			result2.setAttachmentContentType(null);
+  			 result3 = communicationServiceExt.save(result2);
+  		} 
         return ResponseEntity.created(new URI("/api/communications/" + result.getId()))
             .headers(HeaderUtil.createEntityCreationAlert(applicationName, true, ENTITY_NAME, result.getId().toString()))
-            .body(result);
+            .body(result3);
     }
 
     /**
@@ -108,9 +132,23 @@ public class CommunicationResourceExt extends CommunicationResource{
         }
         communicationDTO.setLastUpdatedDate(ZonedDateTime.now());
         CommunicationDTO result = communicationServiceExt.save(communicationDTO);
+        CommunicationDTO result2 = result;
+        CommunicationDTO result3 = null;
+  		if (communicationDTO.getAttachmentContentType()!= null) {
+  			String fileName = ENTITY_NAME + RandomUtil.generateRandomAlphaNum(10) + "-" + result.getId() + ".png";
+  			String url = Constants.S3_ENDPOINT + fileName;
+  			result.setAttachmentUrl(url);
+  			byte[] logoBytes = CommonUtils.resize(CommonUtils.createImageFromBytes(communicationDTO.getAttachment()),
+  					Constants.FULL_IMAGE_HEIGHT, Constants.FULL_IMAGE_WIDTH);
+  			CommonUtils.uploadToS3(logoBytes, fileName, s3Service.getAmazonS3(),communicationDTO.getAttachmentContentType());
+  			result2 = communicationServiceExt.save(result);
+  			result2.setAttachment(null);
+  			result2.setAttachmentContentType(null);
+  			 result3 = communicationServiceExt.save(result2);
+  		} 
         return ResponseEntity.ok()
             .headers(HeaderUtil.createEntityUpdateAlert(applicationName, true, ENTITY_NAME, communicationDTO.getId().toString()))
-            .body(result);
+            .body(result3);
     }
 
     /**

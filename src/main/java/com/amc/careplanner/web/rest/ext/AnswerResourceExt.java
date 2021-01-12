@@ -146,7 +146,7 @@ public class AnswerResourceExt extends AnswerResource{
 		
 		LongFilter longFilterForEmployeeId = new LongFilter();
 		longFilterForEmployeeId.setEquals(employeeId);
-//		answerCriteria.setEmployeeId(longFilterForEmployeeId);
+    	//answerCriteria.setEmployeeId(longFilterForEmployeeId);
 		
 		
 		 Page<AnswerDTO> listOfPages = answerQueryService.findByCriteria(answerCriteria,pageable);

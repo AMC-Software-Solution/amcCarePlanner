@@ -11,6 +11,7 @@ import com.amc.careplanner.utils.CommonUtils;
 import com.amc.careplanner.utils.Constants;
 import com.amc.careplanner.utils.RandomUtil;
 import com.amc.careplanner.service.dto.ClientDTO;
+import com.amc.careplanner.service.dto.CurrencyDTO;
 import com.amc.careplanner.service.dto.NotificationCriteria;
 import com.amc.careplanner.domain.User;
 import com.amc.careplanner.repository.ext.UserRepositoryExt;
@@ -86,15 +87,29 @@ public class NotificationResourceExt extends NotificationResource{
             throw new BadRequestAlertException("A new notification cannot already have an ID", ENTITY_NAME, "idexists");
         }
         
-        //notificationDTO.setDateCreated(ZonedDateTime.now());
+       //notificationDTO.setDateCreated(ZonedDateTime.now());
         notificationDTO.setLastUpdatedDate(ZonedDateTime.now());
         notificationDTO.setClientId(getClientIdFromLoggedInUser());
         NotificationDTO result = notificationServiceExt.save(notificationDTO);
+        NotificationDTO result2 = result;
+        NotificationDTO result3 = null;
+  		if (notificationDTO.getImageContentType()!= null) {
+  			String fileName = ENTITY_NAME + RandomUtil.generateRandomAlphaNum(10) + "-" + result.getId() + ".png";
+  			String url = Constants.S3_ENDPOINT + fileName;
+  			result.setImageUrl(url);
+  			byte[] logoBytes = CommonUtils.resize(CommonUtils.createImageFromBytes(notificationDTO.getImage()),
+  					Constants.FULL_IMAGE_HEIGHT, Constants.FULL_IMAGE_WIDTH);
+  			CommonUtils.uploadToS3(logoBytes, fileName, s3Service.getAmazonS3(),notificationDTO.getImageContentType());
+  			result2 = notificationServiceExt.save(result);
+  			result2.setImage(null);
+  			result2.setImageContentType(null);
+  			 result3 = notificationServiceExt.save(result2);
+  		} 
         return ResponseEntity.created(new URI("/api/notifications/" + result.getId()))
             .headers(HeaderUtil.createEntityCreationAlert(applicationName, true, ENTITY_NAME, result.getId().toString()))
-            .body(result);
-    }
-
+            .body(result3);
+     }
+   
     /**
      * {@code PUT  /notifications} : Updates an existing notification.
      *
@@ -115,9 +130,23 @@ public class NotificationResourceExt extends NotificationResource{
         }
         notificationDTO.setLastUpdatedDate(ZonedDateTime.now());
         NotificationDTO result = notificationServiceExt.save(notificationDTO);
+        NotificationDTO result2 = result;
+        NotificationDTO result3 = null;
+  		if (notificationDTO.getImageContentType()!= null) {
+  			String fileName = ENTITY_NAME + RandomUtil.generateRandomAlphaNum(10) + "-" + result.getId() + ".png";
+  			String url = Constants.S3_ENDPOINT + fileName;
+  			result.setImageUrl(url);
+  			byte[] logoBytes = CommonUtils.resize(CommonUtils.createImageFromBytes(notificationDTO.getImage()),
+  					Constants.FULL_IMAGE_HEIGHT, Constants.FULL_IMAGE_WIDTH);
+  			CommonUtils.uploadToS3(logoBytes, fileName, s3Service.getAmazonS3(),notificationDTO.getImageContentType());
+  			result2 = notificationServiceExt.save(result);
+  			result2.setImage(null);
+  			result2.setImageContentType(null);
+  			 result3 = notificationServiceExt.save(result2);
+  		}
         return ResponseEntity.ok()
             .headers(HeaderUtil.createEntityUpdateAlert(applicationName, true, ENTITY_NAME, notificationDTO.getId().toString()))
-            .body(result);
+            .body(result3);
     }
 
     /**

@@ -6,12 +6,17 @@ import com.amc.careplanner.web.rest.errors.BadRequestAlertException;
 import com.amc.careplanner.service.dto.ConsentDTO;
 import com.amc.careplanner.service.dto.EmployeeHolidayCriteria;
 import com.amc.careplanner.service.dto.EmployeeHolidayDTO;
+import com.amc.careplanner.service.dto.NotificationDTO;
 import com.amc.careplanner.service.ext.ConsentServiceExt;
+import com.amc.careplanner.utils.CommonUtils;
+import com.amc.careplanner.utils.Constants;
+import com.amc.careplanner.utils.RandomUtil;
 import com.amc.careplanner.service.dto.CarerClientRelationCriteria;
 import com.amc.careplanner.service.dto.CarerClientRelationDTO;
 import com.amc.careplanner.service.dto.ConsentCriteria;
 import com.amc.careplanner.domain.User;
 import com.amc.careplanner.repository.ext.UserRepositoryExt;
+import com.amc.careplanner.s3.S3Service;
 import com.amc.careplanner.security.AuthoritiesConstants;
 import com.amc.careplanner.security.SecurityUtils;
 import com.amc.careplanner.service.ConsentQueryService;
@@ -58,12 +63,17 @@ public class ConsentResourceExt extends ConsentResource{
     private final ConsentQueryService consentQueryService;
     
     private final UserRepositoryExt userRepositoryExt;
+    
+    private final S3Service  s3Service;
 
-    public ConsentResourceExt(ConsentServiceExt consentServiceExt, ConsentQueryService consentQueryService, UserRepositoryExt userRepositoryExt) {
+
+    public ConsentResourceExt(ConsentServiceExt consentServiceExt, ConsentQueryService consentQueryService, UserRepositoryExt userRepositoryExt, S3Service  s3Service) {
     	super(consentServiceExt,consentQueryService);
         this.consentServiceExt = consentServiceExt;
         this.consentQueryService = consentQueryService;
         this.userRepositoryExt = userRepositoryExt;
+        this.s3Service = s3Service;
+
     }
 
     /**
@@ -79,13 +89,27 @@ public class ConsentResourceExt extends ConsentResource{
         if (consentDTO.getId() != null) {
             throw new BadRequestAlertException("A new consent cannot already have an ID", ENTITY_NAME, "idexists");
         }
-//        consentDTO.setDateCreated(ZonedDateTime.now());
+//      consentDTO.setDateCreated(ZonedDateTime.now());
         consentDTO.setLastUpdatedDate(ZonedDateTime.now());
         consentDTO.setClientId(getClientIdFromLoggedInUser());
         ConsentDTO result = consentServiceExt.save(consentDTO);
+        ConsentDTO result2 = result;
+        ConsentDTO result3 = null;
+  		if (consentDTO.getSignatureImageContentType()!= null) {
+  			String fileName = ENTITY_NAME + RandomUtil.generateRandomAlphaNum(10) + "-" + result.getId() + ".png";
+  			String url = Constants.S3_ENDPOINT + fileName;
+  			result.setSignatureImageUrl(url);
+  			byte[] logoBytes = CommonUtils.resize(CommonUtils.createImageFromBytes(consentDTO.getSignatureImage()),
+  					Constants.FULL_IMAGE_HEIGHT, Constants.FULL_IMAGE_WIDTH);
+  			CommonUtils.uploadToS3(logoBytes, fileName, s3Service.getAmazonS3(),consentDTO.getSignatureImageContentType());
+  			result2 = consentServiceExt.save(result);
+  			result2.setSignatureImage(null);
+  			result2.setSignatureImageContentType(null);
+  			 result3 = consentServiceExt.save(result2);
+  		} 
         return ResponseEntity.created(new URI("/api/consents/" + result.getId()))
             .headers(HeaderUtil.createEntityCreationAlert(applicationName, true, ENTITY_NAME, result.getId().toString()))
-            .body(result);
+            .body(result3);
     }
 
     /**
@@ -108,9 +132,23 @@ public class ConsentResourceExt extends ConsentResource{
       }
         consentDTO.setLastUpdatedDate(ZonedDateTime.now());
         ConsentDTO result = consentServiceExt.save(consentDTO);
+        ConsentDTO result2 = result;
+        ConsentDTO result3 = null;
+  		if (consentDTO.getSignatureImageContentType()!= null) {
+  			String fileName = ENTITY_NAME + RandomUtil.generateRandomAlphaNum(10) + "-" + result.getId() + ".png";
+  			String url = Constants.S3_ENDPOINT + fileName;
+  			result.setSignatureImageUrl(url);
+  			byte[] logoBytes = CommonUtils.resize(CommonUtils.createImageFromBytes(consentDTO.getSignatureImage()),
+  					Constants.FULL_IMAGE_HEIGHT, Constants.FULL_IMAGE_WIDTH);
+  			CommonUtils.uploadToS3(logoBytes, fileName, s3Service.getAmazonS3(),consentDTO.getSignatureImageContentType());
+  			result2 = consentServiceExt.save(result);
+  			result2.setSignatureImage(null);
+  			result2.setSignatureImageContentType(null);
+  			 result3 = consentServiceExt.save(result2);
+    }
         return ResponseEntity.ok()
             .headers(HeaderUtil.createEntityUpdateAlert(applicationName, true, ENTITY_NAME, consentDTO.getId().toString()))
-            .body(result);
+            .body(result3);
     }
 
     /**

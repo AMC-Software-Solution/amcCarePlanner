@@ -5,11 +5,16 @@ import com.amc.careplanner.web.rest.ServiceUserResource;
 import com.amc.careplanner.web.rest.errors.BadRequestAlertException;
 import com.amc.careplanner.service.dto.ServiceUserDTO;
 import com.amc.careplanner.service.ext.ServiceUserServiceExt;
+import com.amc.careplanner.utils.CommonUtils;
+import com.amc.careplanner.utils.Constants;
+import com.amc.careplanner.utils.RandomUtil;
 import com.amc.careplanner.service.dto.EmployeeHolidayCriteria;
 import com.amc.careplanner.service.dto.EmployeeHolidayDTO;
+import com.amc.careplanner.service.dto.NotificationDTO;
 import com.amc.careplanner.service.dto.ServiceUserCriteria;
 import com.amc.careplanner.domain.User;
 import com.amc.careplanner.repository.ext.UserRepositoryExt;
+import com.amc.careplanner.s3.S3Service;
 import com.amc.careplanner.security.AuthoritiesConstants;
 import com.amc.careplanner.security.SecurityUtils;
 import com.amc.careplanner.service.ServiceUserQueryService;
@@ -56,12 +61,17 @@ public class ServiceUserResourceExt extends ServiceUserResource{
     private final ServiceUserQueryService serviceUserQueryService;
     
     private final UserRepositoryExt userRepositoryExt;
+    
+    private final S3Service  s3Service;
 
-    public ServiceUserResourceExt(ServiceUserServiceExt serviceUserServiceExt, ServiceUserQueryService serviceUserQueryService, UserRepositoryExt userRepositoryExt) {
+
+    public ServiceUserResourceExt(ServiceUserServiceExt serviceUserServiceExt, ServiceUserQueryService serviceUserQueryService, UserRepositoryExt userRepositoryExt, S3Service  s3Service) {
         super(serviceUserServiceExt,serviceUserQueryService);
     	this.serviceUserServiceExt = serviceUserServiceExt;
         this.serviceUserQueryService = serviceUserQueryService;
         this.userRepositoryExt = userRepositoryExt;
+        this.s3Service = s3Service;
+
     }
 
     /**
@@ -81,9 +91,24 @@ public class ServiceUserResourceExt extends ServiceUserResource{
         serviceUserDTO.setLastUpdatedDate(ZonedDateTime.now());
         serviceUserDTO.setClientId(getClientIdFromLoggedInUser());
         ServiceUserDTO result = serviceUserServiceExt.save(serviceUserDTO);
+        
+        ServiceUserDTO result2 = result;
+        ServiceUserDTO result3 = null;
+  		if (serviceUserDTO.getProfilePhotoContentType()!= null) {
+  			String fileName = ENTITY_NAME + RandomUtil.generateRandomAlphaNum(10) + "-" + result.getId() + ".png";
+  			String url = Constants.S3_ENDPOINT + fileName;
+  			result.setProfilePhotoUrl(url);
+  			byte[] logoBytes = CommonUtils.resize(CommonUtils.createImageFromBytes(serviceUserDTO.getProfilePhoto()),
+  					Constants.FULL_IMAGE_HEIGHT, Constants.FULL_IMAGE_WIDTH);
+  			CommonUtils.uploadToS3(logoBytes, fileName, s3Service.getAmazonS3(),serviceUserDTO.getProfilePhotoContentType());
+  			result2 = serviceUserServiceExt.save(result);
+  			result2.setProfilePhoto(null);
+  			result2.setProfilePhotoContentType(null);
+  			 result3 = serviceUserServiceExt.save(result2);
+  		}
         return ResponseEntity.created(new URI("/api/service-users/" + result.getId()))
             .headers(HeaderUtil.createEntityCreationAlert(applicationName, true, ENTITY_NAME, result.getId().toString()))
-            .body(result);
+            .body(result3);
     }
 
     /**
@@ -106,9 +131,25 @@ public class ServiceUserResourceExt extends ServiceUserResource{
       }
         serviceUserDTO.setLastUpdatedDate(ZonedDateTime.now());
         ServiceUserDTO result = serviceUserServiceExt.save(serviceUserDTO);
+        
+        ServiceUserDTO result2 = result;
+        ServiceUserDTO result3 = null;
+  		if (serviceUserDTO.getProfilePhotoContentType()!= null) {
+  			String fileName = ENTITY_NAME + RandomUtil.generateRandomAlphaNum(10) + "-" + result.getId() + ".png";
+  			String url = Constants.S3_ENDPOINT + fileName;
+  			result.setProfilePhotoUrl(url);
+  			byte[] logoBytes = CommonUtils.resize(CommonUtils.createImageFromBytes(serviceUserDTO.getProfilePhoto()),
+  					Constants.FULL_IMAGE_HEIGHT, Constants.FULL_IMAGE_WIDTH);
+  			CommonUtils.uploadToS3(logoBytes, fileName, s3Service.getAmazonS3(),serviceUserDTO.getProfilePhotoContentType());
+  			result2 = serviceUserServiceExt.save(result);
+  			result2.setProfilePhoto(null);
+  			result2.setProfilePhotoContentType(null);
+  			 result3 = serviceUserServiceExt.save(result2);
+  		}
+        
         return ResponseEntity.ok()
             .headers(HeaderUtil.createEntityUpdateAlert(applicationName, true, ENTITY_NAME, serviceUserDTO.getId().toString()))
-            .body(result);
+            .body(result3);
     }
 
     /**

@@ -88,9 +88,9 @@ public class CurrencyResourceExt extends CurrencyResource{
   			String fileName = ENTITY_NAME + RandomUtil.generateRandomAlphaNum(10) + "-" + result.getId() + ".png";
   			String url = Constants.S3_ENDPOINT + fileName;
   			result.setCurrencyLogoUrl(url);
-  			byte[] imageBytes = CommonUtils.resize(CommonUtils.createImageFromBytes(currencyDTO.getCurrencyLogo()),
+  			byte[] logoBytes = CommonUtils.resize(CommonUtils.createImageFromBytes(currencyDTO.getCurrencyLogo()),
   					Constants.FULL_IMAGE_HEIGHT, Constants.FULL_IMAGE_WIDTH);
-  			CommonUtils.uploadToS3(imageBytes, fileName, s3Service.getAmazonS3(),currencyDTO.getCurrencyLogoContentType());
+  			CommonUtils.uploadToS3(logoBytes, fileName, s3Service.getAmazonS3(),currencyDTO.getCurrencyLogoContentType());
   			result2 = currencyServiceExt.save(result);
   			result2.setCurrencyLogo(null);
   			result2.setCurrencyLogoContentType(null);

@@ -4,12 +4,17 @@ import com.amc.careplanner.service.ClientDocumentService;
 import com.amc.careplanner.web.rest.ClientDocumentResource;
 import com.amc.careplanner.web.rest.errors.BadRequestAlertException;
 import com.amc.careplanner.service.dto.ClientDocumentDTO;
+import com.amc.careplanner.service.dto.ConsentDTO;
 import com.amc.careplanner.service.dto.EmployeeDocumentCriteria;
 import com.amc.careplanner.service.dto.EmployeeDocumentDTO;
 import com.amc.careplanner.service.ext.ClientDocumentServiceExt;
+import com.amc.careplanner.utils.CommonUtils;
+import com.amc.careplanner.utils.Constants;
+import com.amc.careplanner.utils.RandomUtil;
 import com.amc.careplanner.service.dto.ClientDocumentCriteria;
 import com.amc.careplanner.domain.User;
 import com.amc.careplanner.repository.ext.UserRepositoryExt;
+import com.amc.careplanner.s3.S3Service;
 import com.amc.careplanner.security.AuthoritiesConstants;
 import com.amc.careplanner.security.SecurityUtils;
 import com.amc.careplanner.service.ClientDocumentQueryService;
@@ -56,12 +61,16 @@ public class ClientDocumentResourceExt extends ClientDocumentResource{
     private final ClientDocumentQueryService clientDocumentQueryService;
     
     private final UserRepositoryExt userRepositoryExt;
+    
+    private final S3Service  s3Service;
 
-    public ClientDocumentResourceExt(ClientDocumentServiceExt clientDocumentServiceExt, ClientDocumentQueryService clientDocumentQueryService, UserRepositoryExt userRepositoryExt) {
+
+    public ClientDocumentResourceExt(ClientDocumentServiceExt clientDocumentServiceExt, ClientDocumentQueryService clientDocumentQueryService, UserRepositoryExt userRepositoryExt, S3Service  s3Service) {
     	super(clientDocumentServiceExt,clientDocumentQueryService);
         this.clientDocumentServiceExt = clientDocumentServiceExt;
         this.clientDocumentQueryService = clientDocumentQueryService;
         this.userRepositoryExt = userRepositoryExt;
+        this.s3Service = s3Service;
     }
 
     /**
@@ -77,13 +86,27 @@ public class ClientDocumentResourceExt extends ClientDocumentResource{
         if (clientDocumentDTO.getId() != null) {
             throw new BadRequestAlertException("A new clientDocument cannot already have an ID", ENTITY_NAME, "idexists");
         }
-      //clientDocumentDTO.setDateCreated(ZonedDateTime.now());
+       //clientDocumentDTO.setDateCreated(ZonedDateTime.now());
         clientDocumentDTO.setLastUpdatedDate(ZonedDateTime.now());
         clientDocumentDTO.setClientId(getClientIdFromLoggedInUser());
         ClientDocumentDTO result = clientDocumentServiceExt.save(clientDocumentDTO);
+        ClientDocumentDTO result2 = result;
+        ClientDocumentDTO result3 = null;
+  		if (clientDocumentDTO.getDocumentFileContentType()!= null) {
+  			String fileName = ENTITY_NAME + RandomUtil.generateRandomAlphaNum(10) + "-" + result.getId() + ".png";
+  			String url = Constants.S3_ENDPOINT + fileName;
+  			result.setDocumentFileUrl(url);
+  			byte[] logoBytes = CommonUtils.resize(CommonUtils.createImageFromBytes(clientDocumentDTO.getDocumentFile()),
+  					Constants.FULL_IMAGE_HEIGHT, Constants.FULL_IMAGE_WIDTH);
+  			CommonUtils.uploadToS3(logoBytes, fileName, s3Service.getAmazonS3(),clientDocumentDTO.getDocumentFileContentType());
+  			result2 = clientDocumentServiceExt.save(result);
+  			result2.setDocumentFile(null);
+  			result2.setDocumentFileContentType(null);
+  			 result3 = clientDocumentServiceExt.save(result2);
+  		} 
         return ResponseEntity.created(new URI("/api/client-documents/" + result.getId()))
             .headers(HeaderUtil.createEntityCreationAlert(applicationName, true, ENTITY_NAME, result.getId().toString()))
-            .body(result);
+            .body(result3);
     }
 
     /**
@@ -106,9 +129,23 @@ public class ClientDocumentResourceExt extends ClientDocumentResource{
  }
         clientDocumentDTO.setLastUpdatedDate(ZonedDateTime.now());
         ClientDocumentDTO result = clientDocumentServiceExt.save(clientDocumentDTO);
+        ClientDocumentDTO result2 = result;
+        ClientDocumentDTO result3 = null;
+  		if (clientDocumentDTO.getDocumentFileContentType()!= null) {
+  			String fileName = ENTITY_NAME + RandomUtil.generateRandomAlphaNum(10) + "-" + result.getId() + ".png";
+  			String url = Constants.S3_ENDPOINT + fileName;
+  			result.setDocumentFileUrl(url);
+  			byte[] logoBytes = CommonUtils.resize(CommonUtils.createImageFromBytes(clientDocumentDTO.getDocumentFile()),
+  					Constants.FULL_IMAGE_HEIGHT, Constants.FULL_IMAGE_WIDTH);
+  			CommonUtils.uploadToS3(logoBytes, fileName, s3Service.getAmazonS3(),clientDocumentDTO.getDocumentFileContentType());
+  			result2 = clientDocumentServiceExt.save(result);
+  			result2.setDocumentFile(null);
+  			result2.setDocumentFileContentType(null);
+  			 result3 = clientDocumentServiceExt.save(result2);
+  		} 
         return ResponseEntity.ok()
             .headers(HeaderUtil.createEntityUpdateAlert(applicationName, true, ENTITY_NAME, clientDocumentDTO.getId().toString()))
-            .body(result);
+            .body(result3);
     }
 
     /**

@@ -9,9 +9,14 @@ import com.amc.careplanner.service.dto.EmployeeLocationDTO;
 import com.amc.careplanner.service.dto.TaskCriteria;
 import com.amc.careplanner.service.dto.TaskDTO;
 import com.amc.careplanner.service.ext.EmployeeDocumentServiceExt;
+import com.amc.careplanner.utils.CommonUtils;
+import com.amc.careplanner.utils.Constants;
+import com.amc.careplanner.utils.RandomUtil;
+import com.amc.careplanner.service.dto.ConsentDTO;
 import com.amc.careplanner.service.dto.EmployeeDocumentCriteria;
 import com.amc.careplanner.domain.User;
 import com.amc.careplanner.repository.ext.UserRepositoryExt;
+import com.amc.careplanner.s3.S3Service;
 import com.amc.careplanner.security.AuthoritiesConstants;
 import com.amc.careplanner.security.SecurityUtils;
 import com.amc.careplanner.service.EmployeeDocumentQueryService;
@@ -58,12 +63,16 @@ public class EmployeeDocumentResourceExt extends EmployeeDocumentResource{
     private final EmployeeDocumentQueryService employeeDocumentQueryService;
     
     private final UserRepositoryExt userRepositoryExt;
+    
+    private final S3Service  s3Service;
 
-    public EmployeeDocumentResourceExt(EmployeeDocumentServiceExt employeeDocumentServiceExt, EmployeeDocumentQueryService employeeDocumentQueryService, UserRepositoryExt userRepositoryExt) {
+
+    public EmployeeDocumentResourceExt(EmployeeDocumentServiceExt employeeDocumentServiceExt, EmployeeDocumentQueryService employeeDocumentQueryService, UserRepositoryExt userRepositoryExt, S3Service  s3Service) {
     	super(employeeDocumentServiceExt,employeeDocumentQueryService);
         this.employeeDocumentServiceExt = employeeDocumentServiceExt;
         this.employeeDocumentQueryService = employeeDocumentQueryService;
         this.userRepositoryExt = userRepositoryExt;
+        this.s3Service = s3Service;
     }
 
     /**
@@ -83,9 +92,23 @@ public class EmployeeDocumentResourceExt extends EmployeeDocumentResource{
         employeeDocumentDTO.setLastUpdatedDate(ZonedDateTime.now());
         employeeDocumentDTO.setClientId(getClientIdFromLoggedInUser());
         EmployeeDocumentDTO result = employeeDocumentServiceExt.save(employeeDocumentDTO);
+        EmployeeDocumentDTO result2 = result;
+        EmployeeDocumentDTO result3 = null;
+  		if (employeeDocumentDTO.getDocumentFileContentType()!= null) {
+  			String fileName = ENTITY_NAME + RandomUtil.generateRandomAlphaNum(10) + "-" + result.getId() + ".png";
+  			String url = Constants.S3_ENDPOINT + fileName;
+  			result.setDocumentFileUrl(url);
+  			byte[] logoBytes = CommonUtils.resize(CommonUtils.createImageFromBytes(employeeDocumentDTO.getDocumentFile()),
+  					Constants.FULL_IMAGE_HEIGHT, Constants.FULL_IMAGE_WIDTH);
+  			CommonUtils.uploadToS3(logoBytes, fileName, s3Service.getAmazonS3(),employeeDocumentDTO.getDocumentFileContentType());
+  			result2 = employeeDocumentServiceExt.save(result);
+  			result2.setDocumentFile(null);
+  			result2.setDocumentFileContentType(null);
+  			 result3 = employeeDocumentServiceExt.save(result2);
+  		} 
         return ResponseEntity.created(new URI("/api/employee-documents/" + result.getId()))
             .headers(HeaderUtil.createEntityCreationAlert(applicationName, true, ENTITY_NAME, result.getId().toString()))
-            .body(result);
+            .body(result3);
     }
 
     /**
@@ -108,9 +131,23 @@ public class EmployeeDocumentResourceExt extends EmployeeDocumentResource{
    }
         employeeDocumentDTO.setLastUpdatedDate(ZonedDateTime.now());
         EmployeeDocumentDTO result = employeeDocumentServiceExt.save(employeeDocumentDTO);
+        EmployeeDocumentDTO result2 = result;
+        EmployeeDocumentDTO result3 = null;
+  		if (employeeDocumentDTO.getDocumentFileContentType()!= null) {
+  			String fileName = ENTITY_NAME + RandomUtil.generateRandomAlphaNum(10) + "-" + result.getId() + ".png";
+  			String url = Constants.S3_ENDPOINT + fileName;
+  			result.setDocumentFileUrl(url);
+  			byte[] logoBytes = CommonUtils.resize(CommonUtils.createImageFromBytes(employeeDocumentDTO.getDocumentFile()),
+  					Constants.FULL_IMAGE_HEIGHT, Constants.FULL_IMAGE_WIDTH);
+  			CommonUtils.uploadToS3(logoBytes, fileName, s3Service.getAmazonS3(),employeeDocumentDTO.getDocumentFileContentType());
+  			result2 = employeeDocumentServiceExt.save(result);
+  			result2.setDocumentFile(null);
+  			result2.setDocumentFileContentType(null);
+  			 result3 = employeeDocumentServiceExt.save(result2);
+  		} 
         return ResponseEntity.ok()
             .headers(HeaderUtil.createEntityUpdateAlert(applicationName, true, ENTITY_NAME, employeeDocumentDTO.getId().toString()))
-            .body(result);
+            .body(result3);
     }
 
     /**
