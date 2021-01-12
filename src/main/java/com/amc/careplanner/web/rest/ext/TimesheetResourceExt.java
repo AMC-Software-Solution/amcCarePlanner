@@ -5,6 +5,8 @@ import com.amc.careplanner.web.rest.TimesheetResource;
 import com.amc.careplanner.web.rest.errors.BadRequestAlertException;
 import com.amc.careplanner.service.dto.TimesheetDTO;
 import com.amc.careplanner.service.ext.TimesheetServiceExt;
+import com.amc.careplanner.service.dto.CarerClientRelationCriteria;
+import com.amc.careplanner.service.dto.CarerClientRelationDTO;
 import com.amc.careplanner.service.dto.TaskCriteria;
 import com.amc.careplanner.service.dto.TaskDTO;
 import com.amc.careplanner.service.dto.TimesheetCriteria;
@@ -128,6 +130,33 @@ public class TimesheetResourceExt extends TimesheetResource{
         Page<TimesheetDTO> page = timesheetQueryService.findByCriteria(timesheetCriteria, pageable);
         HttpHeaders headers = PaginationUtil.generatePaginationHttpHeaders(ServletUriComponentsBuilder.fromCurrentRequest(), page);
         return ResponseEntity.ok().headers(headers).body(page.getContent());
+    }
+    
+    @GetMapping("/get-all-timesheets-by-client-id-employee-id/{employeeId}")   
+    public ResponseEntity< List<TimesheetDTO>> getAllTimesheetsByEmployeeId(@PathVariable Long employeeId, Pageable pageable) {
+        log.debug("REST request to get Timesheets : {}", employeeId);
+        Long loggedInClientId = getClientIdFromLoggedInUser();
+        TimesheetCriteria timesheetCriteria = new TimesheetCriteria();
+       
+		
+        LongFilter longFilterForClientId = new LongFilter();
+		longFilterForClientId.setEquals(loggedInClientId);
+		timesheetCriteria.setClientId(longFilterForClientId);
+		
+		LongFilter longFilterForEmployeeId = new LongFilter();
+		longFilterForEmployeeId.setEquals(employeeId);
+//		timesheetCriteria.setEmployeeId(longFilterForEmployeeId);
+		
+		
+		 Page<TimesheetDTO> listOfPages = timesheetQueryService.findByCriteria(timesheetCriteria,pageable);
+		 List <TimesheetDTO> listOfDTOs = listOfPages.getContent();
+		 if (listOfDTOs != null && listOfDTOs.size() > 0) {
+			 TimesheetDTO timesheetDTO =  listOfDTOs.get(0);
+        	if (timesheetDTO.getClientId() != null && timesheetDTO.getClientId() != loggedInClientId) {
+	        	  throw new BadRequestAlertException("clientId mismatch", ENTITY_NAME, "clientIdMismatch");
+	         }
+        }
+        return ResponseUtil.wrapOrNotFound(Optional.of(listOfDTOs));
     }
 
     /**

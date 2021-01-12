@@ -5,9 +5,14 @@ import com.amc.careplanner.web.rest.ServiceUserResource;
 import com.amc.careplanner.web.rest.errors.BadRequestAlertException;
 import com.amc.careplanner.service.dto.ServiceUserDTO;
 import com.amc.careplanner.service.ext.ServiceUserServiceExt;
+<<<<<<< HEAD
 import com.amc.careplanner.utils.CommonUtils;
 import com.amc.careplanner.utils.Constants;
 import com.amc.careplanner.utils.RandomUtil;
+=======
+import com.amc.careplanner.service.dto.CarerClientRelationCriteria;
+import com.amc.careplanner.service.dto.CarerClientRelationDTO;
+>>>>>>> 6505401d283644f03343a1fe92958ca14b9bff30
 import com.amc.careplanner.service.dto.EmployeeHolidayCriteria;
 import com.amc.careplanner.service.dto.EmployeeHolidayDTO;
 import com.amc.careplanner.service.dto.NotificationDTO;
@@ -169,6 +174,33 @@ public class ServiceUserResourceExt extends ServiceUserResource{
         Page<ServiceUserDTO> page = serviceUserQueryService.findByCriteria(serviceUserCriteria, pageable);
         HttpHeaders headers = PaginationUtil.generatePaginationHttpHeaders(ServletUriComponentsBuilder.fromCurrentRequest(), page);
         return ResponseEntity.ok().headers(headers).body(page.getContent());
+    }
+    
+    @GetMapping("/get-all-service-users-by-client-id-employee-id/{employeeId}")   
+    public ResponseEntity< List<ServiceUserDTO>> getAllServiceUsersByEmployeeId(@PathVariable Long employeeId, Pageable pageable) {
+        log.debug("REST request to get ServiceUsers : {}", employeeId);
+        Long loggedInClientId = getClientIdFromLoggedInUser();
+        ServiceUserCriteria serviceUserCriteria = new ServiceUserCriteria();
+       
+		
+        LongFilter longFilterForClientId = new LongFilter();
+		longFilterForClientId.setEquals(loggedInClientId);
+		serviceUserCriteria.setClientId(longFilterForClientId);
+		
+		LongFilter longFilterForEmployeeId = new LongFilter();
+		longFilterForEmployeeId.setEquals(employeeId);
+//		serviceUserCriteria.setEmployeeId(longFilterForEmployeeId);
+		
+		
+		 Page<ServiceUserDTO> listOfPages = serviceUserQueryService.findByCriteria(serviceUserCriteria,pageable);
+		 List <ServiceUserDTO> listOfDTOs = listOfPages.getContent();
+		 if (listOfDTOs != null && listOfDTOs.size() > 0) {
+			 ServiceUserDTO serviceUserDTO =  listOfDTOs.get(0);
+        	if (serviceUserDTO.getClientId() != null && serviceUserDTO.getClientId() != loggedInClientId) {
+	        	  throw new BadRequestAlertException("clientId mismatch", ENTITY_NAME, "clientIdMismatch");
+	         }
+        }
+        return ResponseUtil.wrapOrNotFound(Optional.of(listOfDTOs));
     }
 
     /**
