@@ -5,9 +5,9 @@ import com.amc.careplanner.service.MailService;
 import com.amc.careplanner.web.rest.EmployeeResource;
 import com.amc.careplanner.web.rest.errors.BadRequestAlertException;
 import com.amc.careplanner.web.rest.vm.ManagedUserVM;
-
 import com.amc.careplanner.service.dto.EmployeeDTO;
 import com.amc.careplanner.service.ext.EmployeeServiceExt;
+import com.amc.careplanner.service.ext.SystemEventsHistoryServiceExt;
 import com.amc.careplanner.service.ext.UserServiceExt;
 import com.amc.careplanner.service.mapper.UserMapper;
 import com.amc.careplanner.utils.CommonUtils;
@@ -81,10 +81,12 @@ public class EmployeeResourceExt extends EmployeeResource{
 	
 	private final S3Service s3Service;
 	
+	private final SystemEventsHistoryServiceExt systemEventsHistoryServiceExt;
+	
 
 
     public EmployeeResourceExt(EmployeeServiceExt employeeServiceExt, EmployeeQueryService employeeQueryService,
-    	    UserRepositoryExt userRepositoryExt, UserServiceExt userServiceExt, UserMapper userMapper, MailService mailService, S3Service s3Service) {
+    	    UserRepositoryExt userRepositoryExt, UserServiceExt userServiceExt, UserMapper userMapper, MailService mailService, S3Service s3Service, SystemEventsHistoryServiceExt systemEventsHistoryServiceExt) {
         super(employeeServiceExt,employeeQueryService);
     	this.employeeServiceExt = employeeServiceExt;
         this.employeeQueryService = employeeQueryService;
@@ -93,6 +95,7 @@ public class EmployeeResourceExt extends EmployeeResource{
         this.userMapper = userMapper;
         this.mailService = mailService;
         this.s3Service = s3Service;
+        this.systemEventsHistoryServiceExt = systemEventsHistoryServiceExt;
    
     }
     
@@ -195,6 +198,10 @@ public class EmployeeResourceExt extends EmployeeResource{
 					"usercouldnotbecreated");
         }
         mailService.sendCreationEmail(user);
+        
+        CommonUtils.fireSystemEvent(systemEventsHistoryServiceExt, "createEmployeeWithLogin", "/api/v1/create-employee-login-by-client-id",
+        		result.getFirstName() + " has just been created", "Employee", result.getId(), loggedInAdminUser.getId(),
+        		loggedInAdminUser.getEmail(), result.getClientId());
         return ResponseEntity.created(new URI("/v1/api/get_employee_by_client_id/" + result.getId()))
             .headers(HeaderUtil.createEntityCreationAlert(applicationName, true, ENTITY_NAME, result.getId().toString()))
             .body(result);
@@ -220,6 +227,15 @@ public class EmployeeResourceExt extends EmployeeResource{
         if (employeeDTO.getId() == null) {
             throw new BadRequestAlertException("Invalid id", ENTITY_NAME, "idnull");
         }
+        
+        // We have decided to use and store the user.login as clientID
+		String loggedInAdminUserEmail = SecurityUtils.getCurrentUserLogin().get();
+		User loggedInAdminUser = userRepositoryExt.findOneByEmailIgnoreCase(loggedInAdminUserEmail).get();
+		if (StringUtils.isEmpty(loggedInAdminUser.getLogin())) {
+			throw new BadRequestAlertException("Employee Creation error, registered has no client", ENTITY_NAME,
+					"employeewithnoclient");
+		}
+		
         
         User user = userRepositoryExt.findOneWithAuthoritiesByEmailIgnoreCase(employeeDTO.getEmail()).get();
         
@@ -253,6 +269,10 @@ public class EmployeeResourceExt extends EmployeeResource{
 		}
         
         EmployeeDTO result = employeeServiceExt.save(employeeDTO);
+        
+        CommonUtils.fireSystemEvent(systemEventsHistoryServiceExt, "updateEmployee", "/api/v1/update-employee-by-client-id",
+        		result.getFirstName() + " has just been updated", "Employee", result.getId(), loggedInAdminUser.getId(),
+        		loggedInAdminUser.getEmail(), result.getClientId());
         return ResponseEntity.ok()
             .headers(HeaderUtil.createEntityUpdateAlert(applicationName, true, ENTITY_NAME, employeeDTO.getId().toString()))
             .body(result);

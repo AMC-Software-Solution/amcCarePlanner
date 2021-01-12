@@ -1,21 +1,13 @@
 package com.amc.careplanner.web.rest.ext;
 
-import com.amc.careplanner.service.ServiceUserService;
+
 import com.amc.careplanner.web.rest.ServiceUserResource;
 import com.amc.careplanner.web.rest.errors.BadRequestAlertException;
 import com.amc.careplanner.service.dto.ServiceUserDTO;
 import com.amc.careplanner.service.ext.ServiceUserServiceExt;
-<<<<<<< HEAD
 import com.amc.careplanner.utils.CommonUtils;
 import com.amc.careplanner.utils.Constants;
 import com.amc.careplanner.utils.RandomUtil;
-=======
-import com.amc.careplanner.service.dto.CarerClientRelationCriteria;
-import com.amc.careplanner.service.dto.CarerClientRelationDTO;
->>>>>>> 6505401d283644f03343a1fe92958ca14b9bff30
-import com.amc.careplanner.service.dto.EmployeeHolidayCriteria;
-import com.amc.careplanner.service.dto.EmployeeHolidayDTO;
-import com.amc.careplanner.service.dto.NotificationDTO;
 import com.amc.careplanner.service.dto.ServiceUserCriteria;
 import com.amc.careplanner.domain.User;
 import com.amc.careplanner.repository.ext.UserRepositoryExt;
@@ -34,7 +26,6 @@ import org.springframework.beans.factory.annotation.Value;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
 import org.springframework.http.HttpHeaders;
-import org.springframework.http.HttpStatus;
 import org.springframework.web.servlet.support.ServletUriComponentsBuilder;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.access.prepost.PreAuthorize;

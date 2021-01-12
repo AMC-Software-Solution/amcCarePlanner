@@ -24,5 +24,5 @@ public class CloudDatabaseConfiguration extends AbstractCloudConfig {
     public DataSource dataSource() {
         log.info("Configuring JDBC datasource from a cloud provider");
         return connectionFactory().dataSource();
-    }
+    } 
 }

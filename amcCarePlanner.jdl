@@ -591,15 +591,20 @@ relationship ManyToOne  {
 
 
 
+
 entity EmployeeAvailability{
-		isAvailableForWorkWeekDays Boolean,
-		minimumHoursPerWeekWeekDays Integer,
-		maximumHoursPerWeekWeekDays Integer,
-		isAvailableForWorkWeekEnds Boolean,
-		minimumHoursPerWeekWeekEnds Integer,
-		maximumHoursPerWeekWeekEnds Integer,
-		leastPreferredShift Shift,
-	    hasExtraData Boolean
+		availableForWork Boolean,
+		availableMonday Boolean,
+		availableTuesday Boolean,
+		availableWednesday Boolean,
+		availableThursday Boolean,
+		availableFriday Boolean,
+		availableSaturday Boolean,
+		availableSunday Boolean,
+		preferredShift Shift,
+	    hasExtraData Boolean,
+	    lastUpdatedDate ZonedDateTime,
+	    clientId Long required
 }
 
 
@@ -913,7 +918,7 @@ entity Task {
 	endTime String,
 	status TaskStatus,
 	createdDate ZonedDateTime,
-lastUpdatedDate ZonedDateTime,
+    lastUpdatedDate ZonedDateTime,
 	clientId Long required,
 	hasExtraData Boolean
 }
@@ -1037,14 +1042,14 @@ entity Timesheet {
 	breakEndTime String,
 	note String,
 	createdDate ZonedDateTime,
-lastUpdatedDate ZonedDateTime,
+    lastUpdatedDate ZonedDateTime,
 	clientId Long required,
 	hasExtraData Boolean
 	
 }
 
 relationship OneToOne{
-	Timesheet {serviceOrder(title)} to ServiceOrder
+	Timesheet {task(taskName)} to Task
 }
 
  relationship ManyToOne {
@@ -1093,9 +1098,9 @@ entity SystemEventsHistory {
 	eventEntityName String,
 	eventEntityId Long,
 	isSuspecious Boolean,
-	clientId Long,
-	hasExtraData Boolean
-	
+	callerEmail String,
+	callerId Long,
+	clientId Long
 }
 
 

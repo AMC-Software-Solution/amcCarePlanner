@@ -30,4 +30,4 @@ public interface CarerClientRelationMapper extends EntityMapper<CarerClientRelat
         carerClientRelation.setId(id);
         return carerClientRelation;
     }
-}
+} 

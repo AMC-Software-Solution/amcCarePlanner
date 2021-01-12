@@ -39,7 +39,7 @@ public class CommonUtils {
 
 	public static void fireSystemEvent(SystemEventsHistoryServiceExt systemEventsHistoryService, String eventName,
 			String eventApi, String eventNote, String eventEntityName, Long eventEntityId, Long triggedById,
-			String triggedByLogin) {
+			String triggedByLogin, Long clientId) {
 		Thread t = new Thread() { // Creating an object of Anonymous class which extends Thread class and passing
 									// this object to the reference of Thread class.
 			public void run() // Anonymous class overriding run() method of Thread class
@@ -54,6 +54,9 @@ public class CommonUtils {
 				systemEventsHistoryDTO.setTriggedById(triggedById);
 				systemEventsHistoryDTO.setEventDate(ZonedDateTime.now());
 				systemEventsHistoryDTO.setTriggedByLogin(triggedByLogin);
+				systemEventsHistoryDTO.setIsSuspecious(false);
+				systemEventsHistoryDTO.setClientId(clientId);
+				systemEventsHistoryDTO.setIpAddress("");
 				systemEventsHistoryService.save(systemEventsHistoryDTO);
 				} catch (Exception e) {
 					log.error(e.getMessage());
