@@ -1,0 +1,29 @@
+{
+  "carePlannerApp": {
+    "extraData": {
+      "home": {
+        "title": "Extra Data",
+        "createLabel": "Create a new Extra Data",
+        "createOrEditLabel": "Create or edit a Extra Data",
+        "notFound": "No Extra Data found"
+      },
+      "created": "A new Extra Data is created with identifier {{ param }}",
+      "updated": "A Extra Data is updated with identifier {{ param }}",
+      "deleted": "A Extra Data is deleted with identifier {{ param }}",
+      "delete": {
+        "question": "Are you sure you want to delete Extra Data {{ id }}?"
+      },
+      "detail": {
+        "title": "Extra Data"
+      },
+      "entityName": "Entity Name",
+      "entityId": "Entity Id",
+      "extraDataKey": "Extra Data Key",
+      "extraDataValue": "Extra Data Value",
+      "extraDataValueDataType": "Extra Data Value Data Type",
+      "extraDataDescription": "Extra Data Description",
+      "extraDataDate": "Extra Data Date",
+      "hasExtraData": "Has Extra Data"
+    }
+  }
+}

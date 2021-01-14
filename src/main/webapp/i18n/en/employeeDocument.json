@@ -1,0 +1,37 @@
+{
+  "carePlannerApp": {
+    "employeeDocument": {
+      "home": {
+        "title": "Employee Documents",
+        "createLabel": "Create a new Employee Document",
+        "createOrEditLabel": "Create or edit a Employee Document",
+        "notFound": "No Employee Documents found"
+      },
+      "created": "A new Employee Document is created with identifier {{ param }}",
+      "updated": "A Employee Document is updated with identifier {{ param }}",
+      "deleted": "A Employee Document is deleted with identifier {{ param }}",
+      "delete": {
+        "question": "Are you sure you want to delete Employee Document {{ id }}?"
+      },
+      "detail": {
+        "title": "Employee Document"
+      },
+      "documentName": "Document Name",
+      "documentNumber": "Document Number",
+      "documentStatus": "Document Status",
+      "note": "Note",
+      "issuedDate": "Issued Date",
+      "expiryDate": "Expiry Date",
+      "uploadedDate": "Uploaded Date",
+      "documentFile": "Document File",
+      "documentFileUrl": "Document File Url",
+      "createdDate": "Created Date",
+      "lastUpdatedDate": "Last Updated Date",
+      "clientId": "Client Id",
+      "hasExtraData": "Has Extra Data",
+      "documentType": "Document Type",
+      "employee": "Employee",
+      "approvedBy": "Approved By"
+    }
+  }
+}

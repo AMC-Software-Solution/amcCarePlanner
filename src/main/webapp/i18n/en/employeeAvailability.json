@@ -1,0 +1,34 @@
+{
+  "carePlannerApp": {
+    "employeeAvailability": {
+      "home": {
+        "title": "Employee Availabilities",
+        "createLabel": "Create a new Employee Availability",
+        "createOrEditLabel": "Create or edit a Employee Availability",
+        "notFound": "No Employee Availabilities found"
+      },
+      "created": "A new Employee Availability is created with identifier {{ param }}",
+      "updated": "A Employee Availability is updated with identifier {{ param }}",
+      "deleted": "A Employee Availability is deleted with identifier {{ param }}",
+      "delete": {
+        "question": "Are you sure you want to delete Employee Availability {{ id }}?"
+      },
+      "detail": {
+        "title": "Employee Availability"
+      },
+      "availableForWork": "Available For Work",
+      "availableMonday": "Available Monday",
+      "availableTuesday": "Available Tuesday",
+      "availableWednesday": "Available Wednesday",
+      "availableThursday": "Available Thursday",
+      "availableFriday": "Available Friday",
+      "availableSaturday": "Available Saturday",
+      "availableSunday": "Available Sunday",
+      "preferredShift": "Preferred Shift",
+      "hasExtraData": "Has Extra Data",
+      "lastUpdatedDate": "Last Updated Date",
+      "clientId": "Client Id",
+      "employee": "Employee"
+    }
+  }
+}

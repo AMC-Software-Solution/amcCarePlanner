@@ -1,0 +1,30 @@
+<?xml version="1.0" encoding="utf-8"?>
+<databaseChangeLog
+    xmlns="http://www.liquibase.org/xml/ns/dbchangelog"
+    xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+    xsi:schemaLocation="http://www.liquibase.org/xml/ns/dbchangelog http://www.liquibase.org/xml/ns/dbchangelog/dbchangelog-3.9.xsd">
+    <!--
+        Added the constraints for entity CarerServiceUserRelation.
+    -->
+    <changeSet id="20210114112211-2" author="jhipster">
+        
+        <addForeignKeyConstraint baseColumnNames="relation_type_id"
+                                 baseTableName="carer_service_user_relation"
+                                 constraintName="fk_carer_service_user_relation_relation_type_id"
+                                 referencedColumnNames="id"
+                                 referencedTableName="relationship_type"/>
+
+        <addForeignKeyConstraint baseColumnNames="employee_id"
+                                 baseTableName="carer_service_user_relation"
+                                 constraintName="fk_carer_service_user_relation_employee_id"
+                                 referencedColumnNames="id"
+                                 referencedTableName="employee"/>
+
+        <addForeignKeyConstraint baseColumnNames="service_user_id"
+                                 baseTableName="carer_service_user_relation"
+                                 constraintName="fk_carer_service_user_relation_service_user_id"
+                                 referencedColumnNames="id"
+                                 referencedTableName="service_user"/>
+
+    </changeSet>
+</databaseChangeLog>

@@ -1,0 +1,29 @@
+{
+  "carePlannerApp": {
+    "systemSetting": {
+      "home": {
+        "title": "SystemSettings",
+        "createLabel": "Créer un nouveau System Setting",
+        "createOrEditLabel": "Créer ou éditer un System Setting",
+        "notFound": "Aucun System Setting trouvé"
+      },
+      "created": "Un nouveau System Setting a été créé avec l'identifiant {{ param }}",
+      "updated": "Le System Setting avec l'identifiant {{ param }} a été mis à jour",
+      "deleted": "Le System Setting avec l'identifiant {{ param }} a été supprimé",
+      "delete": {
+        "question": "Etes-vous certain de vouloir supprimer le System Setting {{ id }} ?"
+      },
+      "detail": {
+        "title": "System Setting"
+      },
+      "fieldName": "Field Name",
+      "fieldValue": "Field Value",
+      "defaultValue": "Default Value",
+      "settingEnabled": "Setting Enabled",
+      "createdDate": "Created Date",
+      "updatedDate": "Updated Date",
+      "clientId": "Client Id",
+      "hasExtraData": "Has Extra Data"
+    }
+  }
+}

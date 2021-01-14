@@ -1,0 +1,35 @@
+{
+  "carePlannerApp": {
+    "medicalContact": {
+      "home": {
+        "title": "Medical Contacts",
+        "createLabel": "Create a new Medical Contact",
+        "createOrEditLabel": "Create or edit a Medical Contact",
+        "notFound": "No Medical Contacts found"
+      },
+      "created": "A new Medical Contact is created with identifier {{ param }}",
+      "updated": "A Medical Contact is updated with identifier {{ param }}",
+      "deleted": "A Medical Contact is deleted with identifier {{ param }}",
+      "delete": {
+        "question": "Are you sure you want to delete Medical Contact {{ id }}?"
+      },
+      "detail": {
+        "title": "Medical Contact"
+      },
+      "doctorName": "Doctor Name",
+      "doctorSurgery": "Doctor Surgery",
+      "doctorAddress": "Doctor Address",
+      "doctorPhone": "Doctor Phone",
+      "lastVisitedDoctor": "Last Visited Doctor",
+      "districtNurseName": "District Nurse Name",
+      "districtNursePhone": "District Nurse Phone",
+      "careManagerName": "Care Manager Name",
+      "careManagerPhone": "Care Manager Phone",
+      "createdDate": "Created Date",
+      "lastUpdatedDate": "Last Updated Date",
+      "clientId": "Client Id",
+      "hasExtraData": "Has Extra Data",
+      "serviceUser": "Service User"
+    }
+  }
+}

@@ -1,0 +1,36 @@
+{
+  "carePlannerApp": {
+    "timesheet": {
+      "home": {
+        "title": "Timesheets",
+        "createLabel": "Créer un nouveau Timesheet",
+        "createOrEditLabel": "Créer ou éditer un Timesheet",
+        "notFound": "Aucun Timesheet trouvé"
+      },
+      "created": "Un nouveau Timesheet a été créé avec l'identifiant {{ param }}",
+      "updated": "Le Timesheet avec l'identifiant {{ param }} a été mis à jour",
+      "deleted": "Le Timesheet avec l'identifiant {{ param }} a été supprimé",
+      "delete": {
+        "question": "Etes-vous certain de vouloir supprimer le Timesheet {{ id }} ?"
+      },
+      "detail": {
+        "title": "Timesheet"
+      },
+      "description": "Description",
+      "timesheetDate": "Timesheet Date",
+      "startTime": "Start Time",
+      "endTime": "End Time",
+      "hoursWorked": "Hours Worked",
+      "breakStartTime": "Break Start Time",
+      "breakEndTime": "Break End Time",
+      "note": "Note",
+      "createdDate": "Created Date",
+      "lastUpdatedDate": "Last Updated Date",
+      "clientId": "Client Id",
+      "hasExtraData": "Has Extra Data",
+      "task": "Task",
+      "serviceUser": "Service User",
+      "careProvider": "Care Provider"
+    }
+  }
+}

@@ -1,0 +1,15 @@
+{
+  "carePlannerApp": {
+    "TaskStatus": {
+      "null": "",
+      "ASSSIGNED": "ASSSIGNED",
+      "INPROGRESS": "INPROGRESS",
+      "CANCELLED_BY_CLIENT": "CANCELLED_BY_CLIENT",
+      "CANCELLED_BY_EMPLOYEE": "CANCELLED_BY_EMPLOYEE",
+      "MISSED": "MISSED",
+      "COMPLETED": "COMPLETED",
+      "REJECTED": "REJECTED",
+      "AVAILABLE": "AVAILABLE"
+    }
+  }
+}

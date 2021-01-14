@@ -1,0 +1,84 @@
+{
+  "name": "Answer",
+  "fields": [
+    {
+      "fieldName": "answer",
+      "fieldType": "String"
+    },
+    {
+      "fieldName": "description",
+      "fieldType": "String"
+    },
+    {
+      "fieldName": "attribute1",
+      "fieldType": "String"
+    },
+    {
+      "fieldName": "attribute2",
+      "fieldType": "String"
+    },
+    {
+      "fieldName": "attribute3",
+      "fieldType": "String"
+    },
+    {
+      "fieldName": "attribute4",
+      "fieldType": "String"
+    },
+    {
+      "fieldName": "attribute5",
+      "fieldType": "String"
+    },
+    {
+      "fieldName": "createdDate",
+      "fieldType": "ZonedDateTime"
+    },
+    {
+      "fieldName": "lastUpdatedDate",
+      "fieldType": "ZonedDateTime"
+    },
+    {
+      "fieldName": "clientId",
+      "fieldType": "Long",
+      "fieldValidateRules": ["required"]
+    },
+    {
+      "fieldName": "hasExtraData",
+      "fieldType": "Boolean"
+    }
+  ],
+  "relationships": [
+    {
+      "relationshipType": "many-to-one",
+      "otherEntityName": "question",
+      "otherEntityRelationshipName": "answer",
+      "relationshipName": "question",
+      "otherEntityField": "question"
+    },
+    {
+      "relationshipType": "many-to-one",
+      "otherEntityName": "serviceUser",
+      "otherEntityRelationshipName": "answer",
+      "relationshipName": "serviceUser",
+      "otherEntityField": "serviceUserCode"
+    },
+    {
+      "relationshipType": "many-to-one",
+      "otherEntityName": "employee",
+      "otherEntityRelationshipName": "answer",
+      "relationshipName": "recordedBy",
+      "otherEntityField": "employeeCode"
+    }
+  ],
+  "changelogDate": "20210114111611",
+  "entityTableName": "answer",
+  "dto": "mapstruct",
+  "pagination": "pagination",
+  "service": "serviceClass",
+  "jpaMetamodelFiltering": true,
+  "fluentMethods": true,
+  "readOnly": false,
+  "embedded": false,
+  "clientRootFolder": "",
+  "applications": "*"
+}

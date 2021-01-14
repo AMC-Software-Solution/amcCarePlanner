@@ -1,0 +1,67 @@
+{
+  "name": "Client",
+  "fields": [
+    {
+      "fieldName": "clientName",
+      "fieldType": "String",
+      "fieldValidateRules": ["required"]
+    },
+    {
+      "fieldName": "clientDescription",
+      "fieldType": "String"
+    },
+    {
+      "fieldName": "clientLogo",
+      "fieldType": "byte[]",
+      "fieldTypeBlobContent": "image"
+    },
+    {
+      "fieldName": "clientLogoUrl",
+      "fieldType": "String"
+    },
+    {
+      "fieldName": "clientContactName",
+      "fieldType": "String"
+    },
+    {
+      "fieldName": "clientPhone",
+      "fieldType": "String"
+    },
+    {
+      "fieldName": "clientEmail",
+      "fieldType": "String"
+    },
+    {
+      "fieldName": "createdDate",
+      "fieldType": "ZonedDateTime"
+    },
+    {
+      "fieldName": "enabled",
+      "fieldType": "Boolean"
+    },
+    {
+      "fieldName": "reason",
+      "fieldType": "String"
+    },
+    {
+      "fieldName": "lastUpdatedDate",
+      "fieldType": "ZonedDateTime"
+    },
+    {
+      "fieldName": "hasExtraData",
+      "fieldType": "Boolean"
+    }
+  ],
+  "relationships": [],
+  "changelogDate": "20210114110311",
+  "entityTableName": "client",
+  "dto": "mapstruct",
+  "pagination": "pagination",
+  "service": "serviceClass",
+  "jpaMetamodelFiltering": true,
+  "fluentMethods": true,
+  "readOnly": false,
+  "embedded": false,
+  "clientRootFolder": "",
+  "applications": "*"
+}

@@ -1,0 +1,1168 @@
+package com.amc.careplanner.web.rest;
+
+import com.amc.careplanner.CarePlannerApp;
+import com.amc.careplanner.domain.Branch;
+import com.amc.careplanner.domain.Client;
+import com.amc.careplanner.repository.BranchRepository;
+import com.amc.careplanner.service.BranchService;
+import com.amc.careplanner.service.dto.BranchDTO;
+import com.amc.careplanner.service.mapper.BranchMapper;
+import com.amc.careplanner.service.dto.BranchCriteria;
+import com.amc.careplanner.service.BranchQueryService;
+
+import org.junit.jupiter.api.BeforeEach;
+import org.junit.jupiter.api.Test;
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.boot.test.autoconfigure.web.servlet.AutoConfigureMockMvc;
+import org.springframework.boot.test.context.SpringBootTest;
+import org.springframework.http.MediaType;
+import org.springframework.security.test.context.support.WithMockUser;
+import org.springframework.test.web.servlet.MockMvc;
+import org.springframework.transaction.annotation.Transactional;
+import org.springframework.util.Base64Utils;
+import javax.persistence.EntityManager;
+import java.time.Instant;
+import java.time.ZonedDateTime;
+import java.time.ZoneOffset;
+import java.time.ZoneId;
+import java.util.List;
+
+import static com.amc.careplanner.web.rest.TestUtil.sameInstant;
+import static org.assertj.core.api.Assertions.assertThat;
+import static org.hamcrest.Matchers.hasItem;
+import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.*;
+import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.*;
+
+/**
+ * Integration tests for the {@link BranchResource} REST controller.
+ */
+@SpringBootTest(classes = CarePlannerApp.class)
+@AutoConfigureMockMvc
+@WithMockUser
+public class BranchResourceIT {
+
+    private static final String DEFAULT_NAME = "AAAAAAAAAA";
+    private static final String UPDATED_NAME = "BBBBBBBBBB";
+
+    private static final String DEFAULT_ADDRESS = "AAAAAAAAAA";
+    private static final String UPDATED_ADDRESS = "BBBBBBBBBB";
+
+    private static final String DEFAULT_TELEPHONE = "AAAAAAAAAA";
+    private static final String UPDATED_TELEPHONE = "BBBBBBBBBB";
+
+    private static final String DEFAULT_CONTACT_NAME = "AAAAAAAAAA";
+    private static final String UPDATED_CONTACT_NAME = "BBBBBBBBBB";
+
+    private static final String DEFAULT_BRANCH_EMAIL = "AAAAAAAAAA";
+    private static final String UPDATED_BRANCH_EMAIL = "BBBBBBBBBB";
+
+    private static final byte[] DEFAULT_PHOTO = TestUtil.createByteArray(1, "0");
+    private static final byte[] UPDATED_PHOTO = TestUtil.createByteArray(1, "1");
+    private static final String DEFAULT_PHOTO_CONTENT_TYPE = "image/jpg";
+    private static final String UPDATED_PHOTO_CONTENT_TYPE = "image/png";
+
+    private static final String DEFAULT_PHOTO_URL = "AAAAAAAAAA";
+    private static final String UPDATED_PHOTO_URL = "BBBBBBBBBB";
+
+    private static final ZonedDateTime DEFAULT_CREATED_DATE = ZonedDateTime.ofInstant(Instant.ofEpochMilli(0L), ZoneOffset.UTC);
+    private static final ZonedDateTime UPDATED_CREATED_DATE = ZonedDateTime.now(ZoneId.systemDefault()).withNano(0);
+    private static final ZonedDateTime SMALLER_CREATED_DATE = ZonedDateTime.ofInstant(Instant.ofEpochMilli(-1L), ZoneOffset.UTC);
+
+    private static final ZonedDateTime DEFAULT_LAST_UPDATED_DATE = ZonedDateTime.ofInstant(Instant.ofEpochMilli(0L), ZoneOffset.UTC);
+    private static final ZonedDateTime UPDATED_LAST_UPDATED_DATE = ZonedDateTime.now(ZoneId.systemDefault()).withNano(0);
+    private static final ZonedDateTime SMALLER_LAST_UPDATED_DATE = ZonedDateTime.ofInstant(Instant.ofEpochMilli(-1L), ZoneOffset.UTC);
+
+    private static final Boolean DEFAULT_HAS_EXTRA_DATA = false;
+    private static final Boolean UPDATED_HAS_EXTRA_DATA = true;
+
+    @Autowired
+    private BranchRepository branchRepository;
+
+    @Autowired
+    private BranchMapper branchMapper;
+
+    @Autowired
+    private BranchService branchService;
+
+    @Autowired
+    private BranchQueryService branchQueryService;
+
+    @Autowired
+    private EntityManager em;
+
+    @Autowired
+    private MockMvc restBranchMockMvc;
+
+    private Branch branch;
+
+    /**
+     * Create an entity for this test.
+     *
+     * This is a static method, as tests for other entities might also need it,
+     * if they test an entity which requires the current entity.
+     */
+    public static Branch createEntity(EntityManager em) {
+        Branch branch = new Branch()
+            .name(DEFAULT_NAME)
+            .address(DEFAULT_ADDRESS)
+            .telephone(DEFAULT_TELEPHONE)
+            .contactName(DEFAULT_CONTACT_NAME)
+            .branchEmail(DEFAULT_BRANCH_EMAIL)
+            .photo(DEFAULT_PHOTO)
+            .photoContentType(DEFAULT_PHOTO_CONTENT_TYPE)
+            .photoUrl(DEFAULT_PHOTO_URL)
+            .createdDate(DEFAULT_CREATED_DATE)
+            .lastUpdatedDate(DEFAULT_LAST_UPDATED_DATE)
+            .hasExtraData(DEFAULT_HAS_EXTRA_DATA);
+        return branch;
+    }
+    /**
+     * Create an updated entity for this test.
+     *
+     * This is a static method, as tests for other entities might also need it,
+     * if they test an entity which requires the current entity.
+     */
+    public static Branch createUpdatedEntity(EntityManager em) {
+        Branch branch = new Branch()
+            .name(UPDATED_NAME)
+            .address(UPDATED_ADDRESS)
+            .telephone(UPDATED_TELEPHONE)
+            .contactName(UPDATED_CONTACT_NAME)
+            .branchEmail(UPDATED_BRANCH_EMAIL)
+            .photo(UPDATED_PHOTO)
+            .photoContentType(UPDATED_PHOTO_CONTENT_TYPE)
+            .photoUrl(UPDATED_PHOTO_URL)
+            .createdDate(UPDATED_CREATED_DATE)
+            .lastUpdatedDate(UPDATED_LAST_UPDATED_DATE)
+            .hasExtraData(UPDATED_HAS_EXTRA_DATA);
+        return branch;
+    }
+
+    @BeforeEach
+    public void initTest() {
+        branch = createEntity(em);
+    }
+
+    @Test
+    @Transactional
+    public void createBranch() throws Exception {
+        int databaseSizeBeforeCreate = branchRepository.findAll().size();
+        // Create the Branch
+        BranchDTO branchDTO = branchMapper.toDto(branch);
+        restBranchMockMvc.perform(post("/api/branches")
+            .contentType(MediaType.APPLICATION_JSON)
+            .content(TestUtil.convertObjectToJsonBytes(branchDTO)))
+            .andExpect(status().isCreated());
+
+        // Validate the Branch in the database
+        List<Branch> branchList = branchRepository.findAll();
+        assertThat(branchList).hasSize(databaseSizeBeforeCreate + 1);
+        Branch testBranch = branchList.get(branchList.size() - 1);
+        assertThat(testBranch.getName()).isEqualTo(DEFAULT_NAME);
+        assertThat(testBranch.getAddress()).isEqualTo(DEFAULT_ADDRESS);
+        assertThat(testBranch.getTelephone()).isEqualTo(DEFAULT_TELEPHONE);
+        assertThat(testBranch.getContactName()).isEqualTo(DEFAULT_CONTACT_NAME);
+        assertThat(testBranch.getBranchEmail()).isEqualTo(DEFAULT_BRANCH_EMAIL);
+        assertThat(testBranch.getPhoto()).isEqualTo(DEFAULT_PHOTO);
+        assertThat(testBranch.getPhotoContentType()).isEqualTo(DEFAULT_PHOTO_CONTENT_TYPE);
+        assertThat(testBranch.getPhotoUrl()).isEqualTo(DEFAULT_PHOTO_URL);
+        assertThat(testBranch.getCreatedDate()).isEqualTo(DEFAULT_CREATED_DATE);
+        assertThat(testBranch.getLastUpdatedDate()).isEqualTo(DEFAULT_LAST_UPDATED_DATE);
+        assertThat(testBranch.isHasExtraData()).isEqualTo(DEFAULT_HAS_EXTRA_DATA);
+    }
+
+    @Test
+    @Transactional
+    public void createBranchWithExistingId() throws Exception {
+        int databaseSizeBeforeCreate = branchRepository.findAll().size();
+
+        // Create the Branch with an existing ID
+        branch.setId(1L);
+        BranchDTO branchDTO = branchMapper.toDto(branch);
+
+        // An entity with an existing ID cannot be created, so this API call must fail
+        restBranchMockMvc.perform(post("/api/branches")
+            .contentType(MediaType.APPLICATION_JSON)
+            .content(TestUtil.convertObjectToJsonBytes(branchDTO)))
+            .andExpect(status().isBadRequest());
+
+        // Validate the Branch in the database
+        List<Branch> branchList = branchRepository.findAll();
+        assertThat(branchList).hasSize(databaseSizeBeforeCreate);
+    }
+
+
+    @Test
+    @Transactional
+    public void checkNameIsRequired() throws Exception {
+        int databaseSizeBeforeTest = branchRepository.findAll().size();
+        // set the field null
+        branch.setName(null);
+
+        // Create the Branch, which fails.
+        BranchDTO branchDTO = branchMapper.toDto(branch);
+
+
+        restBranchMockMvc.perform(post("/api/branches")
+            .contentType(MediaType.APPLICATION_JSON)
+            .content(TestUtil.convertObjectToJsonBytes(branchDTO)))
+            .andExpect(status().isBadRequest());
+
+        List<Branch> branchList = branchRepository.findAll();
+        assertThat(branchList).hasSize(databaseSizeBeforeTest);
+    }
+
+    @Test
+    @Transactional
+    public void getAllBranches() throws Exception {
+        // Initialize the database
+        branchRepository.saveAndFlush(branch);
+
+        // Get all the branchList
+        restBranchMockMvc.perform(get("/api/branches?sort=id,desc"))
+            .andExpect(status().isOk())
+            .andExpect(content().contentType(MediaType.APPLICATION_JSON_VALUE))
+            .andExpect(jsonPath("$.[*].id").value(hasItem(branch.getId().intValue())))
+            .andExpect(jsonPath("$.[*].name").value(hasItem(DEFAULT_NAME)))
+            .andExpect(jsonPath("$.[*].address").value(hasItem(DEFAULT_ADDRESS)))
+            .andExpect(jsonPath("$.[*].telephone").value(hasItem(DEFAULT_TELEPHONE)))
+            .andExpect(jsonPath("$.[*].contactName").value(hasItem(DEFAULT_CONTACT_NAME)))
+            .andExpect(jsonPath("$.[*].branchEmail").value(hasItem(DEFAULT_BRANCH_EMAIL)))
+            .andExpect(jsonPath("$.[*].photoContentType").value(hasItem(DEFAULT_PHOTO_CONTENT_TYPE)))
+            .andExpect(jsonPath("$.[*].photo").value(hasItem(Base64Utils.encodeToString(DEFAULT_PHOTO))))
+            .andExpect(jsonPath("$.[*].photoUrl").value(hasItem(DEFAULT_PHOTO_URL)))
+            .andExpect(jsonPath("$.[*].createdDate").value(hasItem(sameInstant(DEFAULT_CREATED_DATE))))
+            .andExpect(jsonPath("$.[*].lastUpdatedDate").value(hasItem(sameInstant(DEFAULT_LAST_UPDATED_DATE))))
+            .andExpect(jsonPath("$.[*].hasExtraData").value(hasItem(DEFAULT_HAS_EXTRA_DATA.booleanValue())));
+    }
+    
+    @Test
+    @Transactional
+    public void getBranch() throws Exception {
+        // Initialize the database
+        branchRepository.saveAndFlush(branch);
+
+        // Get the branch
+        restBranchMockMvc.perform(get("/api/branches/{id}", branch.getId()))
+            .andExpect(status().isOk())
+            .andExpect(content().contentType(MediaType.APPLICATION_JSON_VALUE))
+            .andExpect(jsonPath("$.id").value(branch.getId().intValue()))
+            .andExpect(jsonPath("$.name").value(DEFAULT_NAME))
+            .andExpect(jsonPath("$.address").value(DEFAULT_ADDRESS))
+            .andExpect(jsonPath("$.telephone").value(DEFAULT_TELEPHONE))
+            .andExpect(jsonPath("$.contactName").value(DEFAULT_CONTACT_NAME))
+            .andExpect(jsonPath("$.branchEmail").value(DEFAULT_BRANCH_EMAIL))
+            .andExpect(jsonPath("$.photoContentType").value(DEFAULT_PHOTO_CONTENT_TYPE))
+            .andExpect(jsonPath("$.photo").value(Base64Utils.encodeToString(DEFAULT_PHOTO)))
+            .andExpect(jsonPath("$.photoUrl").value(DEFAULT_PHOTO_URL))
+            .andExpect(jsonPath("$.createdDate").value(sameInstant(DEFAULT_CREATED_DATE)))
+            .andExpect(jsonPath("$.lastUpdatedDate").value(sameInstant(DEFAULT_LAST_UPDATED_DATE)))
+            .andExpect(jsonPath("$.hasExtraData").value(DEFAULT_HAS_EXTRA_DATA.booleanValue()));
+    }
+
+
+    @Test
+    @Transactional
+    public void getBranchesByIdFiltering() throws Exception {
+        // Initialize the database
+        branchRepository.saveAndFlush(branch);
+
+        Long id = branch.getId();
+
+        defaultBranchShouldBeFound("id.equals=" + id);
+        defaultBranchShouldNotBeFound("id.notEquals=" + id);
+
+        defaultBranchShouldBeFound("id.greaterThanOrEqual=" + id);
+        defaultBranchShouldNotBeFound("id.greaterThan=" + id);
+
+        defaultBranchShouldBeFound("id.lessThanOrEqual=" + id);
+        defaultBranchShouldNotBeFound("id.lessThan=" + id);
+    }
+
+
+    @Test
+    @Transactional
+    public void getAllBranchesByNameIsEqualToSomething() throws Exception {
+        // Initialize the database
+        branchRepository.saveAndFlush(branch);
+
+        // Get all the branchList where name equals to DEFAULT_NAME
+        defaultBranchShouldBeFound("name.equals=" + DEFAULT_NAME);
+
+        // Get all the branchList where name equals to UPDATED_NAME
+        defaultBranchShouldNotBeFound("name.equals=" + UPDATED_NAME);
+    }
+
+    @Test
+    @Transactional
+    public void getAllBranchesByNameIsNotEqualToSomething() throws Exception {
+        // Initialize the database
+        branchRepository.saveAndFlush(branch);
+
+        // Get all the branchList where name not equals to DEFAULT_NAME
+        defaultBranchShouldNotBeFound("name.notEquals=" + DEFAULT_NAME);
+
+        // Get all the branchList where name not equals to UPDATED_NAME
+        defaultBranchShouldBeFound("name.notEquals=" + UPDATED_NAME);
+    }
+
+    @Test
+    @Transactional
+    public void getAllBranchesByNameIsInShouldWork() throws Exception {
+        // Initialize the database
+        branchRepository.saveAndFlush(branch);
+
+        // Get all the branchList where name in DEFAULT_NAME or UPDATED_NAME
+        defaultBranchShouldBeFound("name.in=" + DEFAULT_NAME + "," + UPDATED_NAME);
+
+        // Get all the branchList where name equals to UPDATED_NAME
+        defaultBranchShouldNotBeFound("name.in=" + UPDATED_NAME);
+    }
+
+    @Test
+    @Transactional
+    public void getAllBranchesByNameIsNullOrNotNull() throws Exception {
+        // Initialize the database
+        branchRepository.saveAndFlush(branch);
+
+        // Get all the branchList where name is not null
+        defaultBranchShouldBeFound("name.specified=true");
+
+        // Get all the branchList where name is null
+        defaultBranchShouldNotBeFound("name.specified=false");
+    }
+                @Test
+    @Transactional
+    public void getAllBranchesByNameContainsSomething() throws Exception {
+        // Initialize the database
+        branchRepository.saveAndFlush(branch);
+
+        // Get all the branchList where name contains DEFAULT_NAME
+        defaultBranchShouldBeFound("name.contains=" + DEFAULT_NAME);
+
+        // Get all the branchList where name contains UPDATED_NAME
+        defaultBranchShouldNotBeFound("name.contains=" + UPDATED_NAME);
+    }
+
+    @Test
+    @Transactional
+    public void getAllBranchesByNameNotContainsSomething() throws Exception {
+        // Initialize the database
+        branchRepository.saveAndFlush(branch);
+
+        // Get all the branchList where name does not contain DEFAULT_NAME
+        defaultBranchShouldNotBeFound("name.doesNotContain=" + DEFAULT_NAME);
+
+        // Get all the branchList where name does not contain UPDATED_NAME
+        defaultBranchShouldBeFound("name.doesNotContain=" + UPDATED_NAME);
+    }
+
+
+    @Test
+    @Transactional
+    public void getAllBranchesByAddressIsEqualToSomething() throws Exception {
+        // Initialize the database
+        branchRepository.saveAndFlush(branch);
+
+        // Get all the branchList where address equals to DEFAULT_ADDRESS
+        defaultBranchShouldBeFound("address.equals=" + DEFAULT_ADDRESS);
+
+        // Get all the branchList where address equals to UPDATED_ADDRESS
+        defaultBranchShouldNotBeFound("address.equals=" + UPDATED_ADDRESS);
+    }
+
+    @Test
+    @Transactional
+    public void getAllBranchesByAddressIsNotEqualToSomething() throws Exception {
+        // Initialize the database
+        branchRepository.saveAndFlush(branch);
+
+        // Get all the branchList where address not equals to DEFAULT_ADDRESS
+        defaultBranchShouldNotBeFound("address.notEquals=" + DEFAULT_ADDRESS);
+
+        // Get all the branchList where address not equals to UPDATED_ADDRESS
+        defaultBranchShouldBeFound("address.notEquals=" + UPDATED_ADDRESS);
+    }
+
+    @Test
+    @Transactional
+    public void getAllBranchesByAddressIsInShouldWork() throws Exception {
+        // Initialize the database
+        branchRepository.saveAndFlush(branch);
+
+        // Get all the branchList where address in DEFAULT_ADDRESS or UPDATED_ADDRESS
+        defaultBranchShouldBeFound("address.in=" + DEFAULT_ADDRESS + "," + UPDATED_ADDRESS);
+
+        // Get all the branchList where address equals to UPDATED_ADDRESS
+        defaultBranchShouldNotBeFound("address.in=" + UPDATED_ADDRESS);
+    }
+
+    @Test
+    @Transactional
+    public void getAllBranchesByAddressIsNullOrNotNull() throws Exception {
+        // Initialize the database
+        branchRepository.saveAndFlush(branch);
+
+        // Get all the branchList where address is not null
+        defaultBranchShouldBeFound("address.specified=true");
+
+        // Get all the branchList where address is null
+        defaultBranchShouldNotBeFound("address.specified=false");
+    }
+                @Test
+    @Transactional
+    public void getAllBranchesByAddressContainsSomething() throws Exception {
+        // Initialize the database
+        branchRepository.saveAndFlush(branch);
+
+        // Get all the branchList where address contains DEFAULT_ADDRESS
+        defaultBranchShouldBeFound("address.contains=" + DEFAULT_ADDRESS);
+
+        // Get all the branchList where address contains UPDATED_ADDRESS
+        defaultBranchShouldNotBeFound("address.contains=" + UPDATED_ADDRESS);
+    }
+
+    @Test
+    @Transactional
+    public void getAllBranchesByAddressNotContainsSomething() throws Exception {
+        // Initialize the database
+        branchRepository.saveAndFlush(branch);
+
+        // Get all the branchList where address does not contain DEFAULT_ADDRESS
+        defaultBranchShouldNotBeFound("address.doesNotContain=" + DEFAULT_ADDRESS);
+
+        // Get all the branchList where address does not contain UPDATED_ADDRESS
+        defaultBranchShouldBeFound("address.doesNotContain=" + UPDATED_ADDRESS);
+    }
+
+
+    @Test
+    @Transactional
+    public void getAllBranchesByTelephoneIsEqualToSomething() throws Exception {
+        // Initialize the database
+        branchRepository.saveAndFlush(branch);
+
+        // Get all the branchList where telephone equals to DEFAULT_TELEPHONE
+        defaultBranchShouldBeFound("telephone.equals=" + DEFAULT_TELEPHONE);
+
+        // Get all the branchList where telephone equals to UPDATED_TELEPHONE
+        defaultBranchShouldNotBeFound("telephone.equals=" + UPDATED_TELEPHONE);
+    }
+
+    @Test
+    @Transactional
+    public void getAllBranchesByTelephoneIsNotEqualToSomething() throws Exception {
+        // Initialize the database
+        branchRepository.saveAndFlush(branch);
+
+        // Get all the branchList where telephone not equals to DEFAULT_TELEPHONE
+        defaultBranchShouldNotBeFound("telephone.notEquals=" + DEFAULT_TELEPHONE);
+
+        // Get all the branchList where telephone not equals to UPDATED_TELEPHONE
+        defaultBranchShouldBeFound("telephone.notEquals=" + UPDATED_TELEPHONE);
+    }
+
+    @Test
+    @Transactional
+    public void getAllBranchesByTelephoneIsInShouldWork() throws Exception {
+        // Initialize the database
+        branchRepository.saveAndFlush(branch);
+
+        // Get all the branchList where telephone in DEFAULT_TELEPHONE or UPDATED_TELEPHONE
+        defaultBranchShouldBeFound("telephone.in=" + DEFAULT_TELEPHONE + "," + UPDATED_TELEPHONE);
+
+        // Get all the branchList where telephone equals to UPDATED_TELEPHONE
+        defaultBranchShouldNotBeFound("telephone.in=" + UPDATED_TELEPHONE);
+    }
+
+    @Test
+    @Transactional
+    public void getAllBranchesByTelephoneIsNullOrNotNull() throws Exception {
+        // Initialize the database
+        branchRepository.saveAndFlush(branch);
+
+        // Get all the branchList where telephone is not null
+        defaultBranchShouldBeFound("telephone.specified=true");
+
+        // Get all the branchList where telephone is null
+        defaultBranchShouldNotBeFound("telephone.specified=false");
+    }
+                @Test
+    @Transactional
+    public void getAllBranchesByTelephoneContainsSomething() throws Exception {
+        // Initialize the database
+        branchRepository.saveAndFlush(branch);
+
+        // Get all the branchList where telephone contains DEFAULT_TELEPHONE
+        defaultBranchShouldBeFound("telephone.contains=" + DEFAULT_TELEPHONE);
+
+        // Get all the branchList where telephone contains UPDATED_TELEPHONE
+        defaultBranchShouldNotBeFound("telephone.contains=" + UPDATED_TELEPHONE);
+    }
+
+    @Test
+    @Transactional
+    public void getAllBranchesByTelephoneNotContainsSomething() throws Exception {
+        // Initialize the database
+        branchRepository.saveAndFlush(branch);
+
+        // Get all the branchList where telephone does not contain DEFAULT_TELEPHONE
+        defaultBranchShouldNotBeFound("telephone.doesNotContain=" + DEFAULT_TELEPHONE);
+
+        // Get all the branchList where telephone does not contain UPDATED_TELEPHONE
+        defaultBranchShouldBeFound("telephone.doesNotContain=" + UPDATED_TELEPHONE);
+    }
+
+
+    @Test
+    @Transactional
+    public void getAllBranchesByContactNameIsEqualToSomething() throws Exception {
+        // Initialize the database
+        branchRepository.saveAndFlush(branch);
+
+        // Get all the branchList where contactName equals to DEFAULT_CONTACT_NAME
+        defaultBranchShouldBeFound("contactName.equals=" + DEFAULT_CONTACT_NAME);
+
+        // Get all the branchList where contactName equals to UPDATED_CONTACT_NAME
+        defaultBranchShouldNotBeFound("contactName.equals=" + UPDATED_CONTACT_NAME);
+    }
+
+    @Test
+    @Transactional
+    public void getAllBranchesByContactNameIsNotEqualToSomething() throws Exception {
+        // Initialize the database
+        branchRepository.saveAndFlush(branch);
+
+        // Get all the branchList where contactName not equals to DEFAULT_CONTACT_NAME
+        defaultBranchShouldNotBeFound("contactName.notEquals=" + DEFAULT_CONTACT_NAME);
+
+        // Get all the branchList where contactName not equals to UPDATED_CONTACT_NAME
+        defaultBranchShouldBeFound("contactName.notEquals=" + UPDATED_CONTACT_NAME);
+    }
+
+    @Test
+    @Transactional
+    public void getAllBranchesByContactNameIsInShouldWork() throws Exception {
+        // Initialize the database
+        branchRepository.saveAndFlush(branch);
+
+        // Get all the branchList where contactName in DEFAULT_CONTACT_NAME or UPDATED_CONTACT_NAME
+        defaultBranchShouldBeFound("contactName.in=" + DEFAULT_CONTACT_NAME + "," + UPDATED_CONTACT_NAME);
+
+        // Get all the branchList where contactName equals to UPDATED_CONTACT_NAME
+        defaultBranchShouldNotBeFound("contactName.in=" + UPDATED_CONTACT_NAME);
+    }
+
+    @Test
+    @Transactional
+    public void getAllBranchesByContactNameIsNullOrNotNull() throws Exception {
+        // Initialize the database
+        branchRepository.saveAndFlush(branch);
+
+        // Get all the branchList where contactName is not null
+        defaultBranchShouldBeFound("contactName.specified=true");
+
+        // Get all the branchList where contactName is null
+        defaultBranchShouldNotBeFound("contactName.specified=false");
+    }
+                @Test
+    @Transactional
+    public void getAllBranchesByContactNameContainsSomething() throws Exception {
+        // Initialize the database
+        branchRepository.saveAndFlush(branch);
+
+        // Get all the branchList where contactName contains DEFAULT_CONTACT_NAME
+        defaultBranchShouldBeFound("contactName.contains=" + DEFAULT_CONTACT_NAME);
+
+        // Get all the branchList where contactName contains UPDATED_CONTACT_NAME
+        defaultBranchShouldNotBeFound("contactName.contains=" + UPDATED_CONTACT_NAME);
+    }
+
+    @Test
+    @Transactional
+    public void getAllBranchesByContactNameNotContainsSomething() throws Exception {
+        // Initialize the database
+        branchRepository.saveAndFlush(branch);
+
+        // Get all the branchList where contactName does not contain DEFAULT_CONTACT_NAME
+        defaultBranchShouldNotBeFound("contactName.doesNotContain=" + DEFAULT_CONTACT_NAME);
+
+        // Get all the branchList where contactName does not contain UPDATED_CONTACT_NAME
+        defaultBranchShouldBeFound("contactName.doesNotContain=" + UPDATED_CONTACT_NAME);
+    }
+
+
+    @Test
+    @Transactional
+    public void getAllBranchesByBranchEmailIsEqualToSomething() throws Exception {
+        // Initialize the database
+        branchRepository.saveAndFlush(branch);
+
+        // Get all the branchList where branchEmail equals to DEFAULT_BRANCH_EMAIL
+        defaultBranchShouldBeFound("branchEmail.equals=" + DEFAULT_BRANCH_EMAIL);
+
+        // Get all the branchList where branchEmail equals to UPDATED_BRANCH_EMAIL
+        defaultBranchShouldNotBeFound("branchEmail.equals=" + UPDATED_BRANCH_EMAIL);
+    }
+
+    @Test
+    @Transactional
+    public void getAllBranchesByBranchEmailIsNotEqualToSomething() throws Exception {
+        // Initialize the database
+        branchRepository.saveAndFlush(branch);
+
+        // Get all the branchList where branchEmail not equals to DEFAULT_BRANCH_EMAIL
+        defaultBranchShouldNotBeFound("branchEmail.notEquals=" + DEFAULT_BRANCH_EMAIL);
+
+        // Get all the branchList where branchEmail not equals to UPDATED_BRANCH_EMAIL
+        defaultBranchShouldBeFound("branchEmail.notEquals=" + UPDATED_BRANCH_EMAIL);
+    }
+
+    @Test
+    @Transactional
+    public void getAllBranchesByBranchEmailIsInShouldWork() throws Exception {
+        // Initialize the database
+        branchRepository.saveAndFlush(branch);
+
+        // Get all the branchList where branchEmail in DEFAULT_BRANCH_EMAIL or UPDATED_BRANCH_EMAIL
+        defaultBranchShouldBeFound("branchEmail.in=" + DEFAULT_BRANCH_EMAIL + "," + UPDATED_BRANCH_EMAIL);
+
+        // Get all the branchList where branchEmail equals to UPDATED_BRANCH_EMAIL
+        defaultBranchShouldNotBeFound("branchEmail.in=" + UPDATED_BRANCH_EMAIL);
+    }
+
+    @Test
+    @Transactional
+    public void getAllBranchesByBranchEmailIsNullOrNotNull() throws Exception {
+        // Initialize the database
+        branchRepository.saveAndFlush(branch);
+
+        // Get all the branchList where branchEmail is not null
+        defaultBranchShouldBeFound("branchEmail.specified=true");
+
+        // Get all the branchList where branchEmail is null
+        defaultBranchShouldNotBeFound("branchEmail.specified=false");
+    }
+                @Test
+    @Transactional
+    public void getAllBranchesByBranchEmailContainsSomething() throws Exception {
+        // Initialize the database
+        branchRepository.saveAndFlush(branch);
+
+        // Get all the branchList where branchEmail contains DEFAULT_BRANCH_EMAIL
+        defaultBranchShouldBeFound("branchEmail.contains=" + DEFAULT_BRANCH_EMAIL);
+
+        // Get all the branchList where branchEmail contains UPDATED_BRANCH_EMAIL
+        defaultBranchShouldNotBeFound("branchEmail.contains=" + UPDATED_BRANCH_EMAIL);
+    }
+
+    @Test
+    @Transactional
+    public void getAllBranchesByBranchEmailNotContainsSomething() throws Exception {
+        // Initialize the database
+        branchRepository.saveAndFlush(branch);
+
+        // Get all the branchList where branchEmail does not contain DEFAULT_BRANCH_EMAIL
+        defaultBranchShouldNotBeFound("branchEmail.doesNotContain=" + DEFAULT_BRANCH_EMAIL);
+
+        // Get all the branchList where branchEmail does not contain UPDATED_BRANCH_EMAIL
+        defaultBranchShouldBeFound("branchEmail.doesNotContain=" + UPDATED_BRANCH_EMAIL);
+    }
+
+
+    @Test
+    @Transactional
+    public void getAllBranchesByPhotoUrlIsEqualToSomething() throws Exception {
+        // Initialize the database
+        branchRepository.saveAndFlush(branch);
+
+        // Get all the branchList where photoUrl equals to DEFAULT_PHOTO_URL
+        defaultBranchShouldBeFound("photoUrl.equals=" + DEFAULT_PHOTO_URL);
+
+        // Get all the branchList where photoUrl equals to UPDATED_PHOTO_URL
+        defaultBranchShouldNotBeFound("photoUrl.equals=" + UPDATED_PHOTO_URL);
+    }
+
+    @Test
+    @Transactional
+    public void getAllBranchesByPhotoUrlIsNotEqualToSomething() throws Exception {
+        // Initialize the database
+        branchRepository.saveAndFlush(branch);
+
+        // Get all the branchList where photoUrl not equals to DEFAULT_PHOTO_URL
+        defaultBranchShouldNotBeFound("photoUrl.notEquals=" + DEFAULT_PHOTO_URL);
+
+        // Get all the branchList where photoUrl not equals to UPDATED_PHOTO_URL
+        defaultBranchShouldBeFound("photoUrl.notEquals=" + UPDATED_PHOTO_URL);
+    }
+
+    @Test
+    @Transactional
+    public void getAllBranchesByPhotoUrlIsInShouldWork() throws Exception {
+        // Initialize the database
+        branchRepository.saveAndFlush(branch);
+
+        // Get all the branchList where photoUrl in DEFAULT_PHOTO_URL or UPDATED_PHOTO_URL
+        defaultBranchShouldBeFound("photoUrl.in=" + DEFAULT_PHOTO_URL + "," + UPDATED_PHOTO_URL);
+
+        // Get all the branchList where photoUrl equals to UPDATED_PHOTO_URL
+        defaultBranchShouldNotBeFound("photoUrl.in=" + UPDATED_PHOTO_URL);
+    }
+
+    @Test
+    @Transactional
+    public void getAllBranchesByPhotoUrlIsNullOrNotNull() throws Exception {
+        // Initialize the database
+        branchRepository.saveAndFlush(branch);
+
+        // Get all the branchList where photoUrl is not null
+        defaultBranchShouldBeFound("photoUrl.specified=true");
+
+        // Get all the branchList where photoUrl is null
+        defaultBranchShouldNotBeFound("photoUrl.specified=false");
+    }
+                @Test
+    @Transactional
+    public void getAllBranchesByPhotoUrlContainsSomething() throws Exception {
+        // Initialize the database
+        branchRepository.saveAndFlush(branch);
+
+        // Get all the branchList where photoUrl contains DEFAULT_PHOTO_URL
+        defaultBranchShouldBeFound("photoUrl.contains=" + DEFAULT_PHOTO_URL);
+
+        // Get all the branchList where photoUrl contains UPDATED_PHOTO_URL
+        defaultBranchShouldNotBeFound("photoUrl.contains=" + UPDATED_PHOTO_URL);
+    }
+
+    @Test
+    @Transactional
+    public void getAllBranchesByPhotoUrlNotContainsSomething() throws Exception {
+        // Initialize the database
+        branchRepository.saveAndFlush(branch);
+
+        // Get all the branchList where photoUrl does not contain DEFAULT_PHOTO_URL
+        defaultBranchShouldNotBeFound("photoUrl.doesNotContain=" + DEFAULT_PHOTO_URL);
+
+        // Get all the branchList where photoUrl does not contain UPDATED_PHOTO_URL
+        defaultBranchShouldBeFound("photoUrl.doesNotContain=" + UPDATED_PHOTO_URL);
+    }
+
+
+    @Test
+    @Transactional
+    public void getAllBranchesByCreatedDateIsEqualToSomething() throws Exception {
+        // Initialize the database
+        branchRepository.saveAndFlush(branch);
+
+        // Get all the branchList where createdDate equals to DEFAULT_CREATED_DATE
+        defaultBranchShouldBeFound("createdDate.equals=" + DEFAULT_CREATED_DATE);
+
+        // Get all the branchList where createdDate equals to UPDATED_CREATED_DATE
+        defaultBranchShouldNotBeFound("createdDate.equals=" + UPDATED_CREATED_DATE);
+    }
+
+    @Test
+    @Transactional
+    public void getAllBranchesByCreatedDateIsNotEqualToSomething() throws Exception {
+        // Initialize the database
+        branchRepository.saveAndFlush(branch);
+
+        // Get all the branchList where createdDate not equals to DEFAULT_CREATED_DATE
+        defaultBranchShouldNotBeFound("createdDate.notEquals=" + DEFAULT_CREATED_DATE);
+
+        // Get all the branchList where createdDate not equals to UPDATED_CREATED_DATE
+        defaultBranchShouldBeFound("createdDate.notEquals=" + UPDATED_CREATED_DATE);
+    }
+
+    @Test
+    @Transactional
+    public void getAllBranchesByCreatedDateIsInShouldWork() throws Exception {
+        // Initialize the database
+        branchRepository.saveAndFlush(branch);
+
+        // Get all the branchList where createdDate in DEFAULT_CREATED_DATE or UPDATED_CREATED_DATE
+        defaultBranchShouldBeFound("createdDate.in=" + DEFAULT_CREATED_DATE + "," + UPDATED_CREATED_DATE);
+
+        // Get all the branchList where createdDate equals to UPDATED_CREATED_DATE
+        defaultBranchShouldNotBeFound("createdDate.in=" + UPDATED_CREATED_DATE);
+    }
+
+    @Test
+    @Transactional
+    public void getAllBranchesByCreatedDateIsNullOrNotNull() throws Exception {
+        // Initialize the database
+        branchRepository.saveAndFlush(branch);
+
+        // Get all the branchList where createdDate is not null
+        defaultBranchShouldBeFound("createdDate.specified=true");
+
+        // Get all the branchList where createdDate is null
+        defaultBranchShouldNotBeFound("createdDate.specified=false");
+    }
+
+    @Test
+    @Transactional
+    public void getAllBranchesByCreatedDateIsGreaterThanOrEqualToSomething() throws Exception {
+        // Initialize the database
+        branchRepository.saveAndFlush(branch);
+
+        // Get all the branchList where createdDate is greater than or equal to DEFAULT_CREATED_DATE
+        defaultBranchShouldBeFound("createdDate.greaterThanOrEqual=" + DEFAULT_CREATED_DATE);
+
+        // Get all the branchList where createdDate is greater than or equal to UPDATED_CREATED_DATE
+        defaultBranchShouldNotBeFound("createdDate.greaterThanOrEqual=" + UPDATED_CREATED_DATE);
+    }
+
+    @Test
+    @Transactional
+    public void getAllBranchesByCreatedDateIsLessThanOrEqualToSomething() throws Exception {
+        // Initialize the database
+        branchRepository.saveAndFlush(branch);
+
+        // Get all the branchList where createdDate is less than or equal to DEFAULT_CREATED_DATE
+        defaultBranchShouldBeFound("createdDate.lessThanOrEqual=" + DEFAULT_CREATED_DATE);
+
+        // Get all the branchList where createdDate is less than or equal to SMALLER_CREATED_DATE
+        defaultBranchShouldNotBeFound("createdDate.lessThanOrEqual=" + SMALLER_CREATED_DATE);
+    }
+
+    @Test
+    @Transactional
+    public void getAllBranchesByCreatedDateIsLessThanSomething() throws Exception {
+        // Initialize the database
+        branchRepository.saveAndFlush(branch);
+
+        // Get all the branchList where createdDate is less than DEFAULT_CREATED_DATE
+        defaultBranchShouldNotBeFound("createdDate.lessThan=" + DEFAULT_CREATED_DATE);
+
+        // Get all the branchList where createdDate is less than UPDATED_CREATED_DATE
+        defaultBranchShouldBeFound("createdDate.lessThan=" + UPDATED_CREATED_DATE);
+    }
+
+    @Test
+    @Transactional
+    public void getAllBranchesByCreatedDateIsGreaterThanSomething() throws Exception {
+        // Initialize the database
+        branchRepository.saveAndFlush(branch);
+
+        // Get all the branchList where createdDate is greater than DEFAULT_CREATED_DATE
+        defaultBranchShouldNotBeFound("createdDate.greaterThan=" + DEFAULT_CREATED_DATE);
+
+        // Get all the branchList where createdDate is greater than SMALLER_CREATED_DATE
+        defaultBranchShouldBeFound("createdDate.greaterThan=" + SMALLER_CREATED_DATE);
+    }
+
+
+    @Test
+    @Transactional
+    public void getAllBranchesByLastUpdatedDateIsEqualToSomething() throws Exception {
+        // Initialize the database
+        branchRepository.saveAndFlush(branch);
+
+        // Get all the branchList where lastUpdatedDate equals to DEFAULT_LAST_UPDATED_DATE
+        defaultBranchShouldBeFound("lastUpdatedDate.equals=" + DEFAULT_LAST_UPDATED_DATE);
+
+        // Get all the branchList where lastUpdatedDate equals to UPDATED_LAST_UPDATED_DATE
+        defaultBranchShouldNotBeFound("lastUpdatedDate.equals=" + UPDATED_LAST_UPDATED_DATE);
+    }
+
+    @Test
+    @Transactional
+    public void getAllBranchesByLastUpdatedDateIsNotEqualToSomething() throws Exception {
+        // Initialize the database
+        branchRepository.saveAndFlush(branch);
+
+        // Get all the branchList where lastUpdatedDate not equals to DEFAULT_LAST_UPDATED_DATE
+        defaultBranchShouldNotBeFound("lastUpdatedDate.notEquals=" + DEFAULT_LAST_UPDATED_DATE);
+
+        // Get all the branchList where lastUpdatedDate not equals to UPDATED_LAST_UPDATED_DATE
+        defaultBranchShouldBeFound("lastUpdatedDate.notEquals=" + UPDATED_LAST_UPDATED_DATE);
+    }
+
+    @Test
+    @Transactional
+    public void getAllBranchesByLastUpdatedDateIsInShouldWork() throws Exception {
+        // Initialize the database
+        branchRepository.saveAndFlush(branch);
+
+        // Get all the branchList where lastUpdatedDate in DEFAULT_LAST_UPDATED_DATE or UPDATED_LAST_UPDATED_DATE
+        defaultBranchShouldBeFound("lastUpdatedDate.in=" + DEFAULT_LAST_UPDATED_DATE + "," + UPDATED_LAST_UPDATED_DATE);
+
+        // Get all the branchList where lastUpdatedDate equals to UPDATED_LAST_UPDATED_DATE
+        defaultBranchShouldNotBeFound("lastUpdatedDate.in=" + UPDATED_LAST_UPDATED_DATE);
+    }
+
+    @Test
+    @Transactional
+    public void getAllBranchesByLastUpdatedDateIsNullOrNotNull() throws Exception {
+        // Initialize the database
+        branchRepository.saveAndFlush(branch);
+
+        // Get all the branchList where lastUpdatedDate is not null
+        defaultBranchShouldBeFound("lastUpdatedDate.specified=true");
+
+        // Get all the branchList where lastUpdatedDate is null
+        defaultBranchShouldNotBeFound("lastUpdatedDate.specified=false");
+    }
+
+    @Test
+    @Transactional
+    public void getAllBranchesByLastUpdatedDateIsGreaterThanOrEqualToSomething() throws Exception {
+        // Initialize the database
+        branchRepository.saveAndFlush(branch);
+
+        // Get all the branchList where lastUpdatedDate is greater than or equal to DEFAULT_LAST_UPDATED_DATE
+        defaultBranchShouldBeFound("lastUpdatedDate.greaterThanOrEqual=" + DEFAULT_LAST_UPDATED_DATE);
+
+        // Get all the branchList where lastUpdatedDate is greater than or equal to UPDATED_LAST_UPDATED_DATE
+        defaultBranchShouldNotBeFound("lastUpdatedDate.greaterThanOrEqual=" + UPDATED_LAST_UPDATED_DATE);
+    }
+
+    @Test
+    @Transactional
+    public void getAllBranchesByLastUpdatedDateIsLessThanOrEqualToSomething() throws Exception {
+        // Initialize the database
+        branchRepository.saveAndFlush(branch);
+
+        // Get all the branchList where lastUpdatedDate is less than or equal to DEFAULT_LAST_UPDATED_DATE
+        defaultBranchShouldBeFound("lastUpdatedDate.lessThanOrEqual=" + DEFAULT_LAST_UPDATED_DATE);
+
+        // Get all the branchList where lastUpdatedDate is less than or equal to SMALLER_LAST_UPDATED_DATE
+        defaultBranchShouldNotBeFound("lastUpdatedDate.lessThanOrEqual=" + SMALLER_LAST_UPDATED_DATE);
+    }
+
+    @Test
+    @Transactional
+    public void getAllBranchesByLastUpdatedDateIsLessThanSomething() throws Exception {
+        // Initialize the database
+        branchRepository.saveAndFlush(branch);
+
+        // Get all the branchList where lastUpdatedDate is less than DEFAULT_LAST_UPDATED_DATE
+        defaultBranchShouldNotBeFound("lastUpdatedDate.lessThan=" + DEFAULT_LAST_UPDATED_DATE);
+
+        // Get all the branchList where lastUpdatedDate is less than UPDATED_LAST_UPDATED_DATE
+        defaultBranchShouldBeFound("lastUpdatedDate.lessThan=" + UPDATED_LAST_UPDATED_DATE);
+    }
+
+    @Test
+    @Transactional
+    public void getAllBranchesByLastUpdatedDateIsGreaterThanSomething() throws Exception {
+        // Initialize the database
+        branchRepository.saveAndFlush(branch);
+
+        // Get all the branchList where lastUpdatedDate is greater than DEFAULT_LAST_UPDATED_DATE
+        defaultBranchShouldNotBeFound("lastUpdatedDate.greaterThan=" + DEFAULT_LAST_UPDATED_DATE);
+
+        // Get all the branchList where lastUpdatedDate is greater than SMALLER_LAST_UPDATED_DATE
+        defaultBranchShouldBeFound("lastUpdatedDate.greaterThan=" + SMALLER_LAST_UPDATED_DATE);
+    }
+
+
+    @Test
+    @Transactional
+    public void getAllBranchesByHasExtraDataIsEqualToSomething() throws Exception {
+        // Initialize the database
+        branchRepository.saveAndFlush(branch);
+
+        // Get all the branchList where hasExtraData equals to DEFAULT_HAS_EXTRA_DATA
+        defaultBranchShouldBeFound("hasExtraData.equals=" + DEFAULT_HAS_EXTRA_DATA);
+
+        // Get all the branchList where hasExtraData equals to UPDATED_HAS_EXTRA_DATA
+        defaultBranchShouldNotBeFound("hasExtraData.equals=" + UPDATED_HAS_EXTRA_DATA);
+    }
+
+    @Test
+    @Transactional
+    public void getAllBranchesByHasExtraDataIsNotEqualToSomething() throws Exception {
+        // Initialize the database
+        branchRepository.saveAndFlush(branch);
+
+        // Get all the branchList where hasExtraData not equals to DEFAULT_HAS_EXTRA_DATA
+        defaultBranchShouldNotBeFound("hasExtraData.notEquals=" + DEFAULT_HAS_EXTRA_DATA);
+
+        // Get all the branchList where hasExtraData not equals to UPDATED_HAS_EXTRA_DATA
+        defaultBranchShouldBeFound("hasExtraData.notEquals=" + UPDATED_HAS_EXTRA_DATA);
+    }
+
+    @Test
+    @Transactional
+    public void getAllBranchesByHasExtraDataIsInShouldWork() throws Exception {
+        // Initialize the database
+        branchRepository.saveAndFlush(branch);
+
+        // Get all the branchList where hasExtraData in DEFAULT_HAS_EXTRA_DATA or UPDATED_HAS_EXTRA_DATA
+        defaultBranchShouldBeFound("hasExtraData.in=" + DEFAULT_HAS_EXTRA_DATA + "," + UPDATED_HAS_EXTRA_DATA);
+
+        // Get all the branchList where hasExtraData equals to UPDATED_HAS_EXTRA_DATA
+        defaultBranchShouldNotBeFound("hasExtraData.in=" + UPDATED_HAS_EXTRA_DATA);
+    }
+
+    @Test
+    @Transactional
+    public void getAllBranchesByHasExtraDataIsNullOrNotNull() throws Exception {
+        // Initialize the database
+        branchRepository.saveAndFlush(branch);
+
+        // Get all the branchList where hasExtraData is not null
+        defaultBranchShouldBeFound("hasExtraData.specified=true");
+
+        // Get all the branchList where hasExtraData is null
+        defaultBranchShouldNotBeFound("hasExtraData.specified=false");
+    }
+
+    @Test
+    @Transactional
+    public void getAllBranchesByClientIsEqualToSomething() throws Exception {
+        // Initialize the database
+        branchRepository.saveAndFlush(branch);
+        Client client = ClientResourceIT.createEntity(em);
+        em.persist(client);
+        em.flush();
+        branch.setClient(client);
+        branchRepository.saveAndFlush(branch);
+        Long clientId = client.getId();
+
+        // Get all the branchList where client equals to clientId
+        defaultBranchShouldBeFound("clientId.equals=" + clientId);
+
+        // Get all the branchList where client equals to clientId + 1
+        defaultBranchShouldNotBeFound("clientId.equals=" + (clientId + 1));
+    }
+
+    /**
+     * Executes the search, and checks that the default entity is returned.
+     */
+    private void defaultBranchShouldBeFound(String filter) throws Exception {
+        restBranchMockMvc.perform(get("/api/branches?sort=id,desc&" + filter))
+            .andExpect(status().isOk())
+            .andExpect(content().contentType(MediaType.APPLICATION_JSON_VALUE))
+            .andExpect(jsonPath("$.[*].id").value(hasItem(branch.getId().intValue())))
+            .andExpect(jsonPath("$.[*].name").value(hasItem(DEFAULT_NAME)))
+            .andExpect(jsonPath("$.[*].address").value(hasItem(DEFAULT_ADDRESS)))
+            .andExpect(jsonPath("$.[*].telephone").value(hasItem(DEFAULT_TELEPHONE)))
+            .andExpect(jsonPath("$.[*].contactName").value(hasItem(DEFAULT_CONTACT_NAME)))
+            .andExpect(jsonPath("$.[*].branchEmail").value(hasItem(DEFAULT_BRANCH_EMAIL)))
+            .andExpect(jsonPath("$.[*].photoContentType").value(hasItem(DEFAULT_PHOTO_CONTENT_TYPE)))
+            .andExpect(jsonPath("$.[*].photo").value(hasItem(Base64Utils.encodeToString(DEFAULT_PHOTO))))
+            .andExpect(jsonPath("$.[*].photoUrl").value(hasItem(DEFAULT_PHOTO_URL)))
+            .andExpect(jsonPath("$.[*].createdDate").value(hasItem(sameInstant(DEFAULT_CREATED_DATE))))
+            .andExpect(jsonPath("$.[*].lastUpdatedDate").value(hasItem(sameInstant(DEFAULT_LAST_UPDATED_DATE))))
+            .andExpect(jsonPath("$.[*].hasExtraData").value(hasItem(DEFAULT_HAS_EXTRA_DATA.booleanValue())));
+
+        // Check, that the count call also returns 1
+        restBranchMockMvc.perform(get("/api/branches/count?sort=id,desc&" + filter))
+            .andExpect(status().isOk())
+            .andExpect(content().contentType(MediaType.APPLICATION_JSON_VALUE))
+            .andExpect(content().string("1"));
+    }
+
+    /**
+     * Executes the search, and checks that the default entity is not returned.
+     */
+    private void defaultBranchShouldNotBeFound(String filter) throws Exception {
+        restBranchMockMvc.perform(get("/api/branches?sort=id,desc&" + filter))
+            .andExpect(status().isOk())
+            .andExpect(content().contentType(MediaType.APPLICATION_JSON_VALUE))
+            .andExpect(jsonPath("$").isArray())
+            .andExpect(jsonPath("$").isEmpty());
+
+        // Check, that the count call also returns 0
+        restBranchMockMvc.perform(get("/api/branches/count?sort=id,desc&" + filter))
+            .andExpect(status().isOk())
+            .andExpect(content().contentType(MediaType.APPLICATION_JSON_VALUE))
+            .andExpect(content().string("0"));
+    }
+
+    @Test
+    @Transactional
+    public void getNonExistingBranch() throws Exception {
+        // Get the branch
+        restBranchMockMvc.perform(get("/api/branches/{id}", Long.MAX_VALUE))
+            .andExpect(status().isNotFound());
+    }
+
+    @Test
+    @Transactional
+    public void updateBranch() throws Exception {
+        // Initialize the database
+        branchRepository.saveAndFlush(branch);
+
+        int databaseSizeBeforeUpdate = branchRepository.findAll().size();
+
+        // Update the branch
+        Branch updatedBranch = branchRepository.findById(branch.getId()).get();
+        // Disconnect from session so that the updates on updatedBranch are not directly saved in db
+        em.detach(updatedBranch);
+        updatedBranch
+            .name(UPDATED_NAME)
+            .address(UPDATED_ADDRESS)
+            .telephone(UPDATED_TELEPHONE)
+            .contactName(UPDATED_CONTACT_NAME)
+            .branchEmail(UPDATED_BRANCH_EMAIL)
+            .photo(UPDATED_PHOTO)
+            .photoContentType(UPDATED_PHOTO_CONTENT_TYPE)
+            .photoUrl(UPDATED_PHOTO_URL)
+            .createdDate(UPDATED_CREATED_DATE)
+            .lastUpdatedDate(UPDATED_LAST_UPDATED_DATE)
+            .hasExtraData(UPDATED_HAS_EXTRA_DATA);
+        BranchDTO branchDTO = branchMapper.toDto(updatedBranch);
+
+        restBranchMockMvc.perform(put("/api/branches")
+            .contentType(MediaType.APPLICATION_JSON)
+            .content(TestUtil.convertObjectToJsonBytes(branchDTO)))
+            .andExpect(status().isOk());
+
+        // Validate the Branch in the database
+        List<Branch> branchList = branchRepository.findAll();
+        assertThat(branchList).hasSize(databaseSizeBeforeUpdate);
+        Branch testBranch = branchList.get(branchList.size() - 1);
+        assertThat(testBranch.getName()).isEqualTo(UPDATED_NAME);
+        assertThat(testBranch.getAddress()).isEqualTo(UPDATED_ADDRESS);
+        assertThat(testBranch.getTelephone()).isEqualTo(UPDATED_TELEPHONE);
+        assertThat(testBranch.getContactName()).isEqualTo(UPDATED_CONTACT_NAME);
+        assertThat(testBranch.getBranchEmail()).isEqualTo(UPDATED_BRANCH_EMAIL);
+        assertThat(testBranch.getPhoto()).isEqualTo(UPDATED_PHOTO);
+        assertThat(testBranch.getPhotoContentType()).isEqualTo(UPDATED_PHOTO_CONTENT_TYPE);
+        assertThat(testBranch.getPhotoUrl()).isEqualTo(UPDATED_PHOTO_URL);
+        assertThat(testBranch.getCreatedDate()).isEqualTo(UPDATED_CREATED_DATE);
+        assertThat(testBranch.getLastUpdatedDate()).isEqualTo(UPDATED_LAST_UPDATED_DATE);
+        assertThat(testBranch.isHasExtraData()).isEqualTo(UPDATED_HAS_EXTRA_DATA);
+    }
+
+    @Test
+    @Transactional
+    public void updateNonExistingBranch() throws Exception {
+        int databaseSizeBeforeUpdate = branchRepository.findAll().size();
+
+        // Create the Branch
+        BranchDTO branchDTO = branchMapper.toDto(branch);
+
+        // If the entity doesn't have an ID, it will throw BadRequestAlertException
+        restBranchMockMvc.perform(put("/api/branches")
+            .contentType(MediaType.APPLICATION_JSON)
+            .content(TestUtil.convertObjectToJsonBytes(branchDTO)))
+            .andExpect(status().isBadRequest());
+
+        // Validate the Branch in the database
+        List<Branch> branchList = branchRepository.findAll();
+        assertThat(branchList).hasSize(databaseSizeBeforeUpdate);
+    }
+
+    @Test
+    @Transactional
+    public void deleteBranch() throws Exception {
+        // Initialize the database
+        branchRepository.saveAndFlush(branch);
+
+        int databaseSizeBeforeDelete = branchRepository.findAll().size();
+
+        // Delete the branch
+        restBranchMockMvc.perform(delete("/api/branches/{id}", branch.getId())
+            .accept(MediaType.APPLICATION_JSON))
+            .andExpect(status().isNoContent());
+
+        // Validate the database contains one less item
+        List<Branch> branchList = branchRepository.findAll();
+        assertThat(branchList).hasSize(databaseSizeBeforeDelete - 1);
+    }
+}

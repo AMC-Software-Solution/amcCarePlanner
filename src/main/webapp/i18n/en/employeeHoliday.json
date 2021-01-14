@@ -1,0 +1,36 @@
+{
+  "carePlannerApp": {
+    "employeeHoliday": {
+      "home": {
+        "title": "Employee Holidays",
+        "createLabel": "Create a new Employee Holiday",
+        "createOrEditLabel": "Create or edit a Employee Holiday",
+        "notFound": "No Employee Holidays found"
+      },
+      "created": "A new Employee Holiday is created with identifier {{ param }}",
+      "updated": "A Employee Holiday is updated with identifier {{ param }}",
+      "deleted": "A Employee Holiday is deleted with identifier {{ param }}",
+      "delete": {
+        "question": "Are you sure you want to delete Employee Holiday {{ id }}?"
+      },
+      "detail": {
+        "title": "Employee Holiday"
+      },
+      "description": "Description",
+      "startDate": "Start Date",
+      "endDate": "End Date",
+      "employeeHolidayType": "Employee Holiday Type",
+      "approvedDate": "Approved Date",
+      "requestedDate": "Requested Date",
+      "holidayStatus": "Holiday Status",
+      "note": "Note",
+      "rejectionReason": "Rejection Reason",
+      "createdDate": "Created Date",
+      "lastUpdatedDate": "Last Updated Date",
+      "clientId": "Client Id",
+      "hasExtraData": "Has Extra Data",
+      "employee": "Employee",
+      "approvedBy": "Approved By"
+    }
+  }
+}

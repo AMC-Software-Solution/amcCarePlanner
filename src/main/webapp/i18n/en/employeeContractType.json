@@ -1,0 +1,9 @@
+{
+  "carePlannerApp": {
+    "EmployeeContractType": {
+      "null": "",
+      "ZERO_HOURS_CONTRACT": "ZERO_HOURS_CONTRACT",
+      "SALARIED_STAFF": "SALARIED_STAFF"
+    }
+  }
+}

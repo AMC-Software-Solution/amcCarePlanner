@@ -1,0 +1,35 @@
+{
+  "carePlannerApp": {
+    "answer": {
+      "home": {
+        "title": "Answers",
+        "createLabel": "Create a new Answer",
+        "createOrEditLabel": "Create or edit a Answer",
+        "notFound": "No Answers found"
+      },
+      "created": "A new Answer is created with identifier {{ param }}",
+      "updated": "A Answer is updated with identifier {{ param }}",
+      "deleted": "A Answer is deleted with identifier {{ param }}",
+      "delete": {
+        "question": "Are you sure you want to delete Answer {{ id }}?"
+      },
+      "detail": {
+        "title": "Answer"
+      },
+      "answer": "Answer",
+      "description": "Description",
+      "attribute1": "Attribute 1",
+      "attribute2": "Attribute 2",
+      "attribute3": "Attribute 3",
+      "attribute4": "Attribute 4",
+      "attribute5": "Attribute 5",
+      "createdDate": "Created Date",
+      "lastUpdatedDate": "Last Updated Date",
+      "clientId": "Client Id",
+      "hasExtraData": "Has Extra Data",
+      "question": "Question",
+      "serviceUser": "Service User",
+      "recordedBy": "Recorded By"
+    }
+  }
+}

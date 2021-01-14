@@ -1,0 +1,89 @@
+{
+  "name": "ServiceUserEvent",
+  "fields": [
+    {
+      "fieldName": "eventTitle",
+      "fieldType": "String",
+      "fieldValidateRules": ["required"]
+    },
+    {
+      "fieldName": "description",
+      "fieldType": "String"
+    },
+    {
+      "fieldName": "serviceUserEventStatus",
+      "fieldType": "ServiceUserEventStatus",
+      "fieldValues": "REPORTED,UNDER_INVESTIGATION,RESOLVED"
+    },
+    {
+      "fieldName": "serviceUserEventType",
+      "fieldType": "ServiceUserEventType",
+      "fieldValues": "ACCIDENT,INCIDENT,SAFEGUARDING,MEDICAL_ERROR,COMPLIMENT,COMPLAINCE,COMMENT,MISSED_VISIT"
+    },
+    {
+      "fieldName": "priority",
+      "fieldType": "ServicePriority",
+      "fieldValues": "HIGH,LOW,MEDIUM"
+    },
+    {
+      "fieldName": "note",
+      "fieldType": "String"
+    },
+    {
+      "fieldName": "dateOfEvent",
+      "fieldType": "ZonedDateTime",
+      "fieldValidateRules": ["required"]
+    },
+    {
+      "fieldName": "createdDate",
+      "fieldType": "ZonedDateTime"
+    },
+    {
+      "fieldName": "lastUpdatedDate",
+      "fieldType": "ZonedDateTime"
+    },
+    {
+      "fieldName": "clientId",
+      "fieldType": "Long",
+      "fieldValidateRules": ["required"]
+    },
+    {
+      "fieldName": "hasExtraData",
+      "fieldType": "Boolean"
+    }
+  ],
+  "relationships": [
+    {
+      "relationshipType": "many-to-one",
+      "otherEntityName": "employee",
+      "otherEntityRelationshipName": "serviceUserEvent",
+      "relationshipName": "reportedBy",
+      "otherEntityField": "employeeCode"
+    },
+    {
+      "relationshipType": "many-to-one",
+      "otherEntityName": "employee",
+      "otherEntityRelationshipName": "serviceUserEvent",
+      "relationshipName": "assignedTo",
+      "otherEntityField": "employeeCode"
+    },
+    {
+      "relationshipType": "many-to-one",
+      "otherEntityName": "serviceUser",
+      "otherEntityRelationshipName": "serviceUserEvent",
+      "relationshipName": "serviceUser",
+      "otherEntityField": "serviceUserCode"
+    }
+  ],
+  "changelogDate": "20210114113811",
+  "entityTableName": "service_user_event",
+  "dto": "mapstruct",
+  "pagination": "pagination",
+  "service": "serviceClass",
+  "jpaMetamodelFiltering": true,
+  "fluentMethods": true,
+  "readOnly": false,
+  "embedded": false,
+  "clientRootFolder": "",
+  "applications": "*"
+}

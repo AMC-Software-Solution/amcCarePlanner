@@ -1,0 +1,29 @@
+{
+  "carePlannerApp": {
+    "serviceOrder": {
+      "home": {
+        "title": "Service Orders",
+        "createLabel": "Create a new Service Order",
+        "createOrEditLabel": "Create or edit a Service Order",
+        "notFound": "No Service Orders found"
+      },
+      "created": "A new Service Order is created with identifier {{ param }}",
+      "updated": "A Service Order is updated with identifier {{ param }}",
+      "deleted": "A Service Order is deleted with identifier {{ param }}",
+      "delete": {
+        "question": "Are you sure you want to delete Service Order {{ id }}?"
+      },
+      "detail": {
+        "title": "Service Order"
+      },
+      "title": "Title",
+      "serviceDescription": "Service Description",
+      "serviceHourlyRate": "Service Hourly Rate",
+      "clientId": "Client Id",
+      "createdDate": "Created Date",
+      "lastUpdatedDate": "Last Updated Date",
+      "hasExtraData": "Has Extra Data",
+      "currency": "Currency"
+    }
+  }
+}

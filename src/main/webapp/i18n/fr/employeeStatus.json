@@ -1,0 +1,9 @@
+{
+  "carePlannerApp": {
+    "EmployeeStatus": {
+      "null": "",
+      "ACTIVE": "ACTIVE",
+      "DEACTIVE": "DEACTIVE"
+    }
+  }
+}

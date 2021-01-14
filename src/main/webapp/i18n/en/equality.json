@@ -1,0 +1,30 @@
+{
+  "carePlannerApp": {
+    "equality": {
+      "home": {
+        "title": "Equalities",
+        "createLabel": "Create a new Equality",
+        "createOrEditLabel": "Create or edit a Equality",
+        "notFound": "No Equalities found"
+      },
+      "created": "A new Equality is created with identifier {{ param }}",
+      "updated": "A Equality is updated with identifier {{ param }}",
+      "deleted": "A Equality is deleted with identifier {{ param }}",
+      "delete": {
+        "question": "Are you sure you want to delete Equality {{ id }}?"
+      },
+      "detail": {
+        "title": "Equality"
+      },
+      "gender": "Gender",
+      "maritalStatus": "Marital Status",
+      "religion": "Religion",
+      "createdDate": "Created Date",
+      "lastUpdatedDate": "Last Updated Date",
+      "clientId": "Client Id",
+      "hasExtraData": "Has Extra Data",
+      "nationality": "Nationality",
+      "serviceUser": "Service User"
+    }
+  }
+}

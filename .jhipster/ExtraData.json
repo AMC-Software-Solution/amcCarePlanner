@@ -1,0 +1,52 @@
+{
+  "name": "ExtraData",
+  "fields": [
+    {
+      "fieldName": "entityName",
+      "fieldType": "String",
+      "fieldValidateRules": ["required"]
+    },
+    {
+      "fieldName": "entityId",
+      "fieldType": "Long",
+      "fieldValidateRules": ["required"]
+    },
+    {
+      "fieldName": "extraDataKey",
+      "fieldType": "String"
+    },
+    {
+      "fieldName": "extraDataValue",
+      "fieldType": "String"
+    },
+    {
+      "fieldName": "extraDataValueDataType",
+      "fieldType": "DataType",
+      "fieldValues": "STRING,BOOLEAN,NUMBER,DATE,FILE,OBJECT,ARRAY,GEO_POINT"
+    },
+    {
+      "fieldName": "extraDataDescription",
+      "fieldType": "String"
+    },
+    {
+      "fieldName": "extraDataDate",
+      "fieldType": "ZonedDateTime"
+    },
+    {
+      "fieldName": "hasExtraData",
+      "fieldType": "Boolean"
+    }
+  ],
+  "relationships": [],
+  "changelogDate": "20210114114611",
+  "entityTableName": "extra_data",
+  "dto": "mapstruct",
+  "pagination": "pagination",
+  "service": "serviceClass",
+  "jpaMetamodelFiltering": true,
+  "fluentMethods": true,
+  "readOnly": false,
+  "embedded": false,
+  "clientRootFolder": "",
+  "applications": "*"
+}

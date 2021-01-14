@@ -1,0 +1,11 @@
+{
+  "carePlannerApp": {
+    "ClientDocumentType": {
+      "null": "",
+      "POLICY": "POLICY",
+      "PROCEDURE": "PROCEDURE",
+      "FORM": "FORM",
+      "OTHER": "OTHER"
+    }
+  }
+}

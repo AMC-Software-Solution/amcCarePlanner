@@ -1,0 +1,247 @@
+import React, { useState, useEffect } from 'react';
+import { connect } from 'react-redux';
+import { Link, RouteComponentProps } from 'react-router-dom';
+import { Button, Col, Row, Table } from 'reactstrap';
+import {
+  openFile,
+  byteSize,
+  Translate,
+  ICrudGetAllAction,
+  TextFormat,
+  getSortState,
+  IPaginationBaseState,
+  JhiPagination,
+  JhiItemCount,
+} from 'react-jhipster';
+import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
+
+import { IRootState } from 'app/shared/reducers';
+import { getEntities } from './branch.reducer';
+import { IBranch } from 'app/shared/model/branch.model';
+import { APP_DATE_FORMAT, APP_LOCAL_DATE_FORMAT } from 'app/config/constants';
+import { ITEMS_PER_PAGE } from 'app/shared/util/pagination.constants';
+import { overridePaginationStateWithQueryParams } from 'app/shared/util/entity-utils';
+
+export interface IBranchProps extends StateProps, DispatchProps, RouteComponentProps<{ url: string }> {}
+
+export const Branch = (props: IBranchProps) => {
+  const [paginationState, setPaginationState] = useState(
+    overridePaginationStateWithQueryParams(getSortState(props.location, ITEMS_PER_PAGE), props.location.search)
+  );
+
+  const getAllEntities = () => {
+    props.getEntities(paginationState.activePage - 1, paginationState.itemsPerPage, `${paginationState.sort},${paginationState.order}`);
+  };
+
+  const sortEntities = () => {
+    getAllEntities();
+    const endURL = `?page=${paginationState.activePage}&sort=${paginationState.sort},${paginationState.order}`;
+    if (props.location.search !== endURL) {
+      props.history.push(`${props.location.pathname}${endURL}`);
+    }
+  };
+
+  useEffect(() => {
+    sortEntities();
+  }, [paginationState.activePage, paginationState.order, paginationState.sort]);
+
+  useEffect(() => {
+    const params = new URLSearchParams(props.location.search);
+    const page = params.get('page');
+    const sort = params.get('sort');
+    if (page && sort) {
+      const sortSplit = sort.split(',');
+      setPaginationState({
+        ...paginationState,
+        activePage: +page,
+        sort: sortSplit[0],
+        order: sortSplit[1],
+      });
+    }
+  }, [props.location.search]);
+
+  const sort = p => () => {
+    setPaginationState({
+      ...paginationState,
+      order: paginationState.order === 'asc' ? 'desc' : 'asc',
+      sort: p,
+    });
+  };
+
+  const handlePagination = currentPage =>
+    setPaginationState({
+      ...paginationState,
+      activePage: currentPage,
+    });
+
+  const { branchList, match, loading, totalItems } = props;
+  return (
+    <div>
+      <h2 id="branch-heading">
+        <Translate contentKey="carePlannerApp.branch.home.title">Branches</Translate>
+        <Link to={`${match.url}/new`} className="btn btn-primary float-right jh-create-entity" id="jh-create-entity">
+          <FontAwesomeIcon icon="plus" />
+          &nbsp;
+          <Translate contentKey="carePlannerApp.branch.home.createLabel">Create new Branch</Translate>
+        </Link>
+      </h2>
+      <div className="table-responsive">
+        {branchList && branchList.length > 0 ? (
+          <Table responsive>
+            <thead>
+              <tr>
+                <th className="hand" onClick={sort('id')}>
+                  <Translate contentKey="global.field.id">ID</Translate> <FontAwesomeIcon icon="sort" />
+                </th>
+                <th className="hand" onClick={sort('name')}>
+                  <Translate contentKey="carePlannerApp.branch.name">Name</Translate> <FontAwesomeIcon icon="sort" />
+                </th>
+                <th className="hand" onClick={sort('address')}>
+                  <Translate contentKey="carePlannerApp.branch.address">Address</Translate> <FontAwesomeIcon icon="sort" />
+                </th>
+                <th className="hand" onClick={sort('telephone')}>
+                  <Translate contentKey="carePlannerApp.branch.telephone">Telephone</Translate> <FontAwesomeIcon icon="sort" />
+                </th>
+                <th className="hand" onClick={sort('contactName')}>
+                  <Translate contentKey="carePlannerApp.branch.contactName">Contact Name</Translate> <FontAwesomeIcon icon="sort" />
+                </th>
+                <th className="hand" onClick={sort('branchEmail')}>
+                  <Translate contentKey="carePlannerApp.branch.branchEmail">Branch Email</Translate> <FontAwesomeIcon icon="sort" />
+                </th>
+                <th className="hand" onClick={sort('photo')}>
+                  <Translate contentKey="carePlannerApp.branch.photo">Photo</Translate> <FontAwesomeIcon icon="sort" />
+                </th>
+                <th className="hand" onClick={sort('photoUrl')}>
+                  <Translate contentKey="carePlannerApp.branch.photoUrl">Photo Url</Translate> <FontAwesomeIcon icon="sort" />
+                </th>
+                <th className="hand" onClick={sort('createdDate')}>
+                  <Translate contentKey="carePlannerApp.branch.createdDate">Created Date</Translate> <FontAwesomeIcon icon="sort" />
+                </th>
+                <th className="hand" onClick={sort('lastUpdatedDate')}>
+                  <Translate contentKey="carePlannerApp.branch.lastUpdatedDate">Last Updated Date</Translate>{' '}
+                  <FontAwesomeIcon icon="sort" />
+                </th>
+                <th className="hand" onClick={sort('hasExtraData')}>
+                  <Translate contentKey="carePlannerApp.branch.hasExtraData">Has Extra Data</Translate> <FontAwesomeIcon icon="sort" />
+                </th>
+                <th>
+                  <Translate contentKey="carePlannerApp.branch.client">Client</Translate> <FontAwesomeIcon icon="sort" />
+                </th>
+                <th />
+              </tr>
+            </thead>
+            <tbody>
+              {branchList.map((branch, i) => (
+                <tr key={`entity-${i}`}>
+                  <td>
+                    <Button tag={Link} to={`${match.url}/${branch.id}`} color="link" size="sm">
+                      {branch.id}
+                    </Button>
+                  </td>
+                  <td>{branch.name}</td>
+                  <td>{branch.address}</td>
+                  <td>{branch.telephone}</td>
+                  <td>{branch.contactName}</td>
+                  <td>{branch.branchEmail}</td>
+                  <td>
+                    {branch.photo ? (
+                      <div>
+                        {branch.photoContentType ? (
+                          <a onClick={openFile(branch.photoContentType, branch.photo)}>
+                            <img src={`data:${branch.photoContentType};base64,${branch.photo}`} style={{ maxHeight: '30px' }} />
+                            &nbsp;
+                          </a>
+                        ) : null}
+                        <span>
+                          {branch.photoContentType}, {byteSize(branch.photo)}
+                        </span>
+                      </div>
+                    ) : null}
+                  </td>
+                  <td>{branch.photoUrl}</td>
+                  <td>{branch.createdDate ? <TextFormat type="date" value={branch.createdDate} format={APP_DATE_FORMAT} /> : null}</td>
+                  <td>
+                    {branch.lastUpdatedDate ? <TextFormat type="date" value={branch.lastUpdatedDate} format={APP_DATE_FORMAT} /> : null}
+                  </td>
+                  <td>{branch.hasExtraData ? 'true' : 'false'}</td>
+                  <td>{branch.clientClientName ? <Link to={`client/${branch.clientId}`}>{branch.clientClientName}</Link> : ''}</td>
+                  <td className="text-right">
+                    <div className="btn-group flex-btn-group-container">
+                      <Button tag={Link} to={`${match.url}/${branch.id}`} color="info" size="sm">
+                        <FontAwesomeIcon icon="eye" />{' '}
+                        <span className="d-none d-md-inline">
+                          <Translate contentKey="entity.action.view">View</Translate>
+                        </span>
+                      </Button>
+                      <Button
+                        tag={Link}
+                        to={`${match.url}/${branch.id}/edit?page=${paginationState.activePage}&sort=${paginationState.sort},${paginationState.order}`}
+                        color="primary"
+                        size="sm"
+                      >
+                        <FontAwesomeIcon icon="pencil-alt" />{' '}
+                        <span className="d-none d-md-inline">
+                          <Translate contentKey="entity.action.edit">Edit</Translate>
+                        </span>
+                      </Button>
+                      <Button
+                        tag={Link}
+                        to={`${match.url}/${branch.id}/delete?page=${paginationState.activePage}&sort=${paginationState.sort},${paginationState.order}`}
+                        color="danger"
+                        size="sm"
+                      >
+                        <FontAwesomeIcon icon="trash" />{' '}
+                        <span className="d-none d-md-inline">
+                          <Translate contentKey="entity.action.delete">Delete</Translate>
+                        </span>
+                      </Button>
+                    </div>
+                  </td>
+                </tr>
+              ))}
+            </tbody>
+          </Table>
+        ) : (
+          !loading && (
+            <div className="alert alert-warning">
+              <Translate contentKey="carePlannerApp.branch.home.notFound">No Branches found</Translate>
+            </div>
+          )
+        )}
+      </div>
+      {props.totalItems ? (
+        <div className={branchList && branchList.length > 0 ? '' : 'd-none'}>
+          <Row className="justify-content-center">
+            <JhiItemCount page={paginationState.activePage} total={totalItems} itemsPerPage={paginationState.itemsPerPage} i18nEnabled />
+          </Row>
+          <Row className="justify-content-center">
+            <JhiPagination
+              activePage={paginationState.activePage}
+              onSelect={handlePagination}
+              maxButtons={5}
+              itemsPerPage={paginationState.itemsPerPage}
+              totalItems={props.totalItems}
+            />
+          </Row>
+        </div>
+      ) : (
+        ''
+      )}
+    </div>
+  );
+};
+
+const mapStateToProps = ({ branch }: IRootState) => ({
+  branchList: branch.entities,
+  loading: branch.loading,
+  totalItems: branch.totalItems,
+});
+
+const mapDispatchToProps = {
+  getEntities,
+};
+
+type StateProps = ReturnType<typeof mapStateToProps>;
+type DispatchProps = typeof mapDispatchToProps;
+
+export default connect(mapStateToProps, mapDispatchToProps)(Branch);

@@ -1,0 +1,149 @@
+import axios from 'axios';
+import { ICrudGetAction, ICrudGetAllAction, ICrudPutAction, ICrudDeleteAction } from 'react-jhipster';
+
+import { cleanEntity } from 'app/shared/util/entity-utils';
+import { REQUEST, SUCCESS, FAILURE } from 'app/shared/reducers/action-type.util';
+
+import { IQuestionType, defaultValue } from 'app/shared/model/question-type.model';
+
+export const ACTION_TYPES = {
+  FETCH_QUESTIONTYPE_LIST: 'questionType/FETCH_QUESTIONTYPE_LIST',
+  FETCH_QUESTIONTYPE: 'questionType/FETCH_QUESTIONTYPE',
+  CREATE_QUESTIONTYPE: 'questionType/CREATE_QUESTIONTYPE',
+  UPDATE_QUESTIONTYPE: 'questionType/UPDATE_QUESTIONTYPE',
+  DELETE_QUESTIONTYPE: 'questionType/DELETE_QUESTIONTYPE',
+  RESET: 'questionType/RESET',
+};
+
+const initialState = {
+  loading: false,
+  errorMessage: null,
+  entities: [] as ReadonlyArray<IQuestionType>,
+  entity: defaultValue,
+  updating: false,
+  totalItems: 0,
+  updateSuccess: false,
+};
+
+export type QuestionTypeState = Readonly<typeof initialState>;
+
+// Reducer
+
+export default (state: QuestionTypeState = initialState, action): QuestionTypeState => {
+  switch (action.type) {
+    case REQUEST(ACTION_TYPES.FETCH_QUESTIONTYPE_LIST):
+    case REQUEST(ACTION_TYPES.FETCH_QUESTIONTYPE):
+      return {
+        ...state,
+        errorMessage: null,
+        updateSuccess: false,
+        loading: true,
+      };
+    case REQUEST(ACTION_TYPES.CREATE_QUESTIONTYPE):
+    case REQUEST(ACTION_TYPES.UPDATE_QUESTIONTYPE):
+    case REQUEST(ACTION_TYPES.DELETE_QUESTIONTYPE):
+      return {
+        ...state,
+        errorMessage: null,
+        updateSuccess: false,
+        updating: true,
+      };
+    case FAILURE(ACTION_TYPES.FETCH_QUESTIONTYPE_LIST):
+    case FAILURE(ACTION_TYPES.FETCH_QUESTIONTYPE):
+    case FAILURE(ACTION_TYPES.CREATE_QUESTIONTYPE):
+    case FAILURE(ACTION_TYPES.UPDATE_QUESTIONTYPE):
+    case FAILURE(ACTION_TYPES.DELETE_QUESTIONTYPE):
+      return {
+        ...state,
+        loading: false,
+        updating: false,
+        updateSuccess: false,
+        errorMessage: action.payload,
+      };
+    case SUCCESS(ACTION_TYPES.FETCH_QUESTIONTYPE_LIST):
+      return {
+        ...state,
+        loading: false,
+        entities: action.payload.data,
+        totalItems: parseInt(action.payload.headers['x-total-count'], 10),
+      };
+    case SUCCESS(ACTION_TYPES.FETCH_QUESTIONTYPE):
+      return {
+        ...state,
+        loading: false,
+        entity: action.payload.data,
+      };
+    case SUCCESS(ACTION_TYPES.CREATE_QUESTIONTYPE):
+    case SUCCESS(ACTION_TYPES.UPDATE_QUESTIONTYPE):
+      return {
+        ...state,
+        updating: false,
+        updateSuccess: true,
+        entity: action.payload.data,
+      };
+    case SUCCESS(ACTION_TYPES.DELETE_QUESTIONTYPE):
+      return {
+        ...state,
+        updating: false,
+        updateSuccess: true,
+        entity: {},
+      };
+    case ACTION_TYPES.RESET:
+      return {
+        ...initialState,
+      };
+    default:
+      return state;
+  }
+};
+
+const apiUrl = 'api/v1';
+
+// Actions
+
+export const getEntities: ICrudGetAllAction<IQuestionType> = (page, size, sort) => {
+  const requestUrl = `${apiUrl}/get-all-question-types-by-client-id${sort ? `?page=${page}&size=${size}&sort=${sort}` : ''}`;
+  return {
+    type: ACTION_TYPES.FETCH_QUESTIONTYPE_LIST,
+    payload: axios.get<IQuestionType>(`${requestUrl}${sort ? '&' : '?'}cacheBuster=${new Date().getTime()}`),
+  };
+};
+
+export const getEntity: ICrudGetAction<IQuestionType> = id => {
+  const requestUrl = `${apiUrl}/get-question-type-by-client-id/${id}`;
+  return {
+    type: ACTION_TYPES.FETCH_QUESTIONTYPE,
+    payload: axios.get<IQuestionType>(requestUrl),
+  };
+};
+
+export const createEntity: ICrudPutAction<IQuestionType> = entity => async dispatch => {
+  const result = await dispatch({
+    type: ACTION_TYPES.CREATE_QUESTIONTYPE,
+    payload: axios.post(apiUrl + '/create-question-type-by-client-id', cleanEntity(entity)),
+  });
+  dispatch(getEntities());
+  return result;
+};
+
+export const updateEntity: ICrudPutAction<IQuestionType> = entity => async dispatch => {
+  const result = await dispatch({
+    type: ACTION_TYPES.UPDATE_QUESTIONTYPE,
+    payload: axios.put(apiUrl + '/update-question-type-by-client-id', cleanEntity(entity)),
+  });
+  return result;
+};
+
+export const deleteEntity: ICrudDeleteAction<IQuestionType> = id => async dispatch => {
+  const requestUrl = `${apiUrl}/delete-question-type-by-client-id/${id}`;
+  const result = await dispatch({
+    type: ACTION_TYPES.DELETE_QUESTIONTYPE,
+    payload: axios.delete(requestUrl),
+  });
+  dispatch(getEntities());
+  return result;
+};
+
+export const reset = () => ({
+  type: ACTION_TYPES.RESET,
+});

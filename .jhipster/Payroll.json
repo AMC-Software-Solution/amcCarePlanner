@@ -1,0 +1,84 @@
+{
+  "name": "Payroll",
+  "fields": [
+    {
+      "fieldName": "paymentDate",
+      "fieldType": "ZonedDateTime",
+      "fieldValidateRules": ["required"]
+    },
+    {
+      "fieldName": "payPeriod",
+      "fieldType": "String",
+      "fieldValidateRules": ["required"]
+    },
+    {
+      "fieldName": "totalHoursWorked",
+      "fieldType": "Integer",
+      "fieldValidateRules": ["required"]
+    },
+    {
+      "fieldName": "grossPay",
+      "fieldType": "BigDecimal",
+      "fieldValidateRules": ["required"]
+    },
+    {
+      "fieldName": "netPay",
+      "fieldType": "BigDecimal",
+      "fieldValidateRules": ["required"]
+    },
+    {
+      "fieldName": "totalTax",
+      "fieldType": "BigDecimal"
+    },
+    {
+      "fieldName": "payrollStatus",
+      "fieldType": "PayrollStatus",
+      "fieldValues": "CREATED,PROCESSING,PAID",
+      "fieldValidateRules": ["required"]
+    },
+    {
+      "fieldName": "createdDate",
+      "fieldType": "ZonedDateTime"
+    },
+    {
+      "fieldName": "lastUpdatedDate",
+      "fieldType": "ZonedDateTime"
+    },
+    {
+      "fieldName": "clientId",
+      "fieldType": "Long",
+      "fieldValidateRules": ["required"]
+    },
+    {
+      "fieldName": "hasExtraData",
+      "fieldType": "Boolean"
+    }
+  ],
+  "relationships": [
+    {
+      "relationshipType": "many-to-one",
+      "otherEntityName": "employee",
+      "otherEntityRelationshipName": "payroll",
+      "relationshipName": "employee",
+      "otherEntityField": "employeeCode"
+    },
+    {
+      "relationshipType": "many-to-one",
+      "otherEntityName": "timesheet",
+      "otherEntityRelationshipName": "payroll",
+      "relationshipName": "timesheet",
+      "otherEntityField": "description"
+    }
+  ],
+  "changelogDate": "20210114112811",
+  "entityTableName": "payroll",
+  "dto": "mapstruct",
+  "pagination": "pagination",
+  "service": "serviceClass",
+  "jpaMetamodelFiltering": true,
+  "fluentMethods": true,
+  "readOnly": false,
+  "embedded": false,
+  "clientRootFolder": "",
+  "applications": "*"
+}

@@ -37,9 +37,9 @@ spring:
       indent-output: true
   datasource:
     type: com.zaxxer.hikari.HikariDataSource
-    url: jdbc:h2:file:./target/h2db/db/careplanner;DB_CLOSE_DELAY=-1
-    username: CarePlanner
-    password:
+    url: ${DB_NPOINT}
+    username: ${MYSQL_USERNAME}
+    password: ${MYSQL_PASSWORD}
     hikari:
       poolName: Hikari
       auto-commit: false
@@ -53,14 +53,26 @@ spring:
     # Remove 'faker' if you do not want the sample data to be loaded automatically
     contexts: dev
   mail:
-    host: localhost
-    port: 25
-    username:
-    password:
+    host: ${MAIL_HOST}
+    port: ${MAIL_PORT}
+    username: ${MAIL_USERNAME}
+    password: ${MAIL_PASSWORD}
+    protocol: ${MAIL_PROTOCOL}
+    tls: true
+    properties.mail.smtp:
+      auth: true
+      starttls.enable: true
+      ssl.trust: ${MAIL_SSL_TRUST}
   messages:
     cache-duration: PT1S # 1 second, see the ISO 8601 standard
   thymeleaf:
     cache: false
+
+amazonProperties:
+  endpointUrl: ${AWS_S3_ENDPOINT}
+  accessKey: ${AWS_S3_ACCESS_KEY} #
+  secretKey: ${AWS_S3_SECRET_KEY}
+  bucketName: ${AWS_S3_BUCKET_NAME} # S3 bucketName
 
 server:
   port: 8080
@@ -88,12 +100,13 @@ jhipster:
     authentication:
       jwt:
         # This token must be encoded using Base64 and be at least 256 bits long (you can type `openssl rand -base64 64` on your command line to generate a 512 bits one)
-        base64-secret: ZWYzMzdkNjk5ZDAyN2Q1Zjg4NWJkOTc4MzFiMDk1MGJkYTE3NjgxMDlmNmRjYjVjNzcyM2ViOTUxZDJlNmE4ZjgyYmMyMjJlYzNkNzBmYWZkYzk5NTZkMjJkNDljZjgyNGFhMzMzNTgxNTM4YWI1NzE4MGJkOWI0MDM5MzZiOTE=
+        base64-secret: ${BASE64_SECRET}
         # Token is valid 24 hours
         token-validity-in-seconds: 86400
         token-validity-in-seconds-for-remember-me: 2592000
   mail: # specific JHipster mail property, for standard properties see MailProperties
-    base-url: http://127.0.0.1:8080
+    from: natpropreg@gmail.com
+    base-url: http://localhost:8080
   metrics:
     logs: # Reports metrics in the logs
       enabled: false

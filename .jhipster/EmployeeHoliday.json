@@ -1,0 +1,88 @@
+{
+  "name": "EmployeeHoliday",
+  "fields": [
+    {
+      "fieldName": "description",
+      "fieldType": "String",
+      "fieldValidateRules": ["required"]
+    },
+    {
+      "fieldName": "startDate",
+      "fieldType": "ZonedDateTime"
+    },
+    {
+      "fieldName": "endDate",
+      "fieldType": "ZonedDateTime"
+    },
+    {
+      "fieldName": "employeeHolidayType",
+      "fieldType": "EmployeeHolidayType",
+      "fieldValues": "ANNUAL_HOLIDAY,PUBLIC_HOLIDAY,PARENTAL_LEAVE,SICKNESS_ABSENCE,UNPAID_HOLIDAY,OTHER"
+    },
+    {
+      "fieldName": "approvedDate",
+      "fieldType": "ZonedDateTime"
+    },
+    {
+      "fieldName": "requestedDate",
+      "fieldType": "ZonedDateTime"
+    },
+    {
+      "fieldName": "holidayStatus",
+      "fieldType": "HolidayStatus",
+      "fieldValues": "REQUESTED,APPROVED,REJECTED"
+    },
+    {
+      "fieldName": "note",
+      "fieldType": "String"
+    },
+    {
+      "fieldName": "rejectionReason",
+      "fieldType": "String"
+    },
+    {
+      "fieldName": "createdDate",
+      "fieldType": "ZonedDateTime"
+    },
+    {
+      "fieldName": "lastUpdatedDate",
+      "fieldType": "ZonedDateTime"
+    },
+    {
+      "fieldName": "clientId",
+      "fieldType": "Long",
+      "fieldValidateRules": ["required"]
+    },
+    {
+      "fieldName": "hasExtraData",
+      "fieldType": "Boolean"
+    }
+  ],
+  "relationships": [
+    {
+      "relationshipType": "many-to-one",
+      "otherEntityName": "employee",
+      "otherEntityRelationshipName": "employeeHoliday",
+      "relationshipName": "employee",
+      "otherEntityField": "employeeCode"
+    },
+    {
+      "relationshipType": "many-to-one",
+      "otherEntityName": "employee",
+      "otherEntityRelationshipName": "employeeHoliday",
+      "relationshipName": "approvedBy",
+      "otherEntityField": "employeeCode"
+    }
+  ],
+  "changelogDate": "20210114112911",
+  "entityTableName": "employee_holiday",
+  "dto": "mapstruct",
+  "pagination": "pagination",
+  "service": "serviceClass",
+  "jpaMetamodelFiltering": true,
+  "fluentMethods": true,
+  "readOnly": false,
+  "embedded": false,
+  "clientRootFolder": "",
+  "applications": "*"
+}

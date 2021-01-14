@@ -1,0 +1,176 @@
+{
+  "name": "Employee",
+  "fields": [
+    {
+      "fieldName": "title",
+      "fieldType": "Title",
+      "fieldValues": "MR,MRS,MS,MISS,OTHER",
+      "fieldValidateRules": ["required"]
+    },
+    {
+      "fieldName": "firstName",
+      "fieldType": "String",
+      "fieldValidateRules": ["required", "minlength", "maxlength"],
+      "fieldValidateRulesMinlength": "1",
+      "fieldValidateRulesMaxlength": "25"
+    },
+    {
+      "fieldName": "middleInitial",
+      "fieldType": "String",
+      "fieldValidateRules": ["maxlength"],
+      "fieldValidateRulesMaxlength": "1"
+    },
+    {
+      "fieldName": "lastName",
+      "fieldType": "String",
+      "fieldValidateRules": ["required", "minlength", "maxlength"],
+      "fieldValidateRulesMinlength": "1",
+      "fieldValidateRulesMaxlength": "25"
+    },
+    {
+      "fieldName": "preferredName",
+      "fieldType": "String",
+      "fieldValidateRules": ["maxlength"],
+      "fieldValidateRulesMaxlength": "25"
+    },
+    {
+      "fieldName": "gender",
+      "fieldType": "Gender",
+      "fieldValues": "MALE,FEMALE,OTHER",
+      "fieldValidateRules": ["required"]
+    },
+    {
+      "fieldName": "employeeCode",
+      "fieldType": "String",
+      "fieldValidateRules": ["required", "unique"]
+    },
+    {
+      "fieldName": "phone",
+      "fieldType": "String",
+      "fieldValidateRules": ["required"]
+    },
+    {
+      "fieldName": "email",
+      "fieldType": "String",
+      "fieldValidateRules": ["required"]
+    },
+    {
+      "fieldName": "nationalInsuranceNumber",
+      "fieldType": "String"
+    },
+    {
+      "fieldName": "employeeContractType",
+      "fieldType": "EmployeeContractType",
+      "fieldValues": "ZERO_HOURS_CONTRACT,SALARIED_STAFF",
+      "fieldValidateRules": ["required"]
+    },
+    {
+      "fieldName": "pinCode",
+      "fieldType": "Integer"
+    },
+    {
+      "fieldName": "transportMode",
+      "fieldType": "TravelMode",
+      "fieldValues": "CAR,BUS,TRAIN,PLANE,SHIP,WALK,OTHER",
+      "fieldValidateRules": ["required"]
+    },
+    {
+      "fieldName": "address",
+      "fieldType": "String",
+      "fieldValidateRules": ["required"]
+    },
+    {
+      "fieldName": "county",
+      "fieldType": "String"
+    },
+    {
+      "fieldName": "postCode",
+      "fieldType": "String"
+    },
+    {
+      "fieldName": "dateOfBirth",
+      "fieldType": "LocalDate",
+      "fieldValidateRules": ["required"]
+    },
+    {
+      "fieldName": "photo",
+      "fieldType": "byte[]",
+      "fieldTypeBlobContent": "image"
+    },
+    {
+      "fieldName": "photoUrl",
+      "fieldType": "String"
+    },
+    {
+      "fieldName": "status",
+      "fieldType": "EmployeeStatus",
+      "fieldValues": "ACTIVE,DEACTIVE"
+    },
+    {
+      "fieldName": "employeeBio",
+      "fieldType": "String"
+    },
+    {
+      "fieldName": "acruedHolidayHours",
+      "fieldType": "Integer"
+    },
+    {
+      "fieldName": "createdDate",
+      "fieldType": "ZonedDateTime"
+    },
+    {
+      "fieldName": "lastUpdatedDate",
+      "fieldType": "ZonedDateTime"
+    },
+    {
+      "fieldName": "clientId",
+      "fieldType": "Long",
+      "fieldValidateRules": ["required"]
+    },
+    {
+      "fieldName": "hasExtraData",
+      "fieldType": "Boolean"
+    }
+  ],
+  "relationships": [
+    {
+      "relationshipType": "many-to-one",
+      "otherEntityName": "user",
+      "otherEntityRelationshipName": "employee",
+      "relationshipName": "user",
+      "otherEntityField": "email"
+    },
+    {
+      "relationshipType": "many-to-one",
+      "otherEntityName": "employeeDesignation",
+      "otherEntityRelationshipName": "employee",
+      "relationshipName": "designation",
+      "otherEntityField": "designation"
+    },
+    {
+      "relationshipType": "many-to-one",
+      "otherEntityName": "country",
+      "otherEntityRelationshipName": "employee",
+      "relationshipName": "nationality",
+      "otherEntityField": "countryName"
+    },
+    {
+      "relationshipType": "many-to-one",
+      "otherEntityName": "branch",
+      "otherEntityRelationshipName": "employee",
+      "relationshipName": "branch",
+      "otherEntityField": "name"
+    }
+  ],
+  "changelogDate": "20210114111811",
+  "entityTableName": "employee",
+  "dto": "mapstruct",
+  "pagination": "pagination",
+  "service": "serviceClass",
+  "jpaMetamodelFiltering": true,
+  "fluentMethods": true,
+  "readOnly": false,
+  "embedded": false,
+  "clientRootFolder": "",
+  "applications": "*"
+}

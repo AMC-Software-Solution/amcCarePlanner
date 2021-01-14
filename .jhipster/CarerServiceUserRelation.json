@@ -1,0 +1,64 @@
+{
+  "name": "CarerServiceUserRelation",
+  "fields": [
+    {
+      "fieldName": "reason",
+      "fieldType": "String"
+    },
+    {
+      "fieldName": "count",
+      "fieldType": "Long"
+    },
+    {
+      "fieldName": "createdDate",
+      "fieldType": "ZonedDateTime"
+    },
+    {
+      "fieldName": "lastUpdatedDate",
+      "fieldType": "ZonedDateTime"
+    },
+    {
+      "fieldName": "clientId",
+      "fieldType": "Long",
+      "fieldValidateRules": ["required"]
+    },
+    {
+      "fieldName": "hasExtraData",
+      "fieldType": "Boolean"
+    }
+  ],
+  "relationships": [
+    {
+      "relationshipType": "many-to-one",
+      "otherEntityName": "relationshipType",
+      "otherEntityRelationshipName": "carerServiceUserRelation",
+      "relationshipName": "relationType",
+      "otherEntityField": "relationType"
+    },
+    {
+      "relationshipType": "many-to-one",
+      "otherEntityName": "employee",
+      "otherEntityRelationshipName": "carerServiceUserRelation",
+      "relationshipName": "employee",
+      "otherEntityField": "employeeCode"
+    },
+    {
+      "relationshipType": "many-to-one",
+      "otherEntityName": "serviceUser",
+      "otherEntityRelationshipName": "carerServiceUserRelation",
+      "relationshipName": "serviceUser",
+      "otherEntityField": "serviceUserCode"
+    }
+  ],
+  "changelogDate": "20210114112211",
+  "entityTableName": "carer_service_user_relation",
+  "dto": "mapstruct",
+  "pagination": "pagination",
+  "service": "serviceClass",
+  "jpaMetamodelFiltering": true,
+  "fluentMethods": true,
+  "readOnly": false,
+  "embedded": false,
+  "clientRootFolder": "",
+  "applications": "*"
+}

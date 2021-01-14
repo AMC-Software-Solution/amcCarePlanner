@@ -1,0 +1,193 @@
+{
+  "name": "ServiceUser",
+  "fields": [
+    {
+      "fieldName": "title",
+      "fieldType": "Title",
+      "fieldValues": "MR,MRS,MS,MISS,OTHER",
+      "fieldValidateRules": ["required"]
+    },
+    {
+      "fieldName": "firstName",
+      "fieldType": "String",
+      "fieldValidateRules": ["required", "minlength", "maxlength"],
+      "fieldValidateRulesMinlength": "1",
+      "fieldValidateRulesMaxlength": "25"
+    },
+    {
+      "fieldName": "middleName",
+      "fieldType": "String",
+      "fieldValidateRules": ["maxlength"],
+      "fieldValidateRulesMaxlength": "100"
+    },
+    {
+      "fieldName": "lastName",
+      "fieldType": "String",
+      "fieldValidateRules": ["required", "minlength", "maxlength"],
+      "fieldValidateRulesMinlength": "1",
+      "fieldValidateRulesMaxlength": "25"
+    },
+    {
+      "fieldName": "preferredName",
+      "fieldType": "String",
+      "fieldValidateRules": ["maxlength"],
+      "fieldValidateRulesMaxlength": "25"
+    },
+    {
+      "fieldName": "email",
+      "fieldType": "String"
+    },
+    {
+      "fieldName": "serviceUserCode",
+      "fieldType": "String",
+      "fieldValidateRules": ["required", "unique"]
+    },
+    {
+      "fieldName": "dateOfBirth",
+      "fieldType": "LocalDate",
+      "fieldValidateRules": ["required"]
+    },
+    {
+      "fieldName": "lastVisitDate",
+      "fieldType": "ZonedDateTime"
+    },
+    {
+      "fieldName": "startDate",
+      "fieldType": "ZonedDateTime",
+      "fieldValidateRules": ["required"]
+    },
+    {
+      "fieldName": "supportType",
+      "fieldType": "SupportType",
+      "fieldValues": "COMPLEX_CARE_LIVE_IN,DOMICILIARY_CARE,EXTRA_CARE,PRIVATE,REABLEMENT",
+      "fieldValidateRules": ["required"]
+    },
+    {
+      "fieldName": "serviceUserCategory",
+      "fieldType": "ServiceUserCategory",
+      "fieldValues": "HIV_AIDS,LEARNING_DISABILITIES,MENTAL_HEALTH,OLDER_PEOPLE,PHYSICAL_SENSORY_IMPAIRMENT,OTHER",
+      "fieldValidateRules": ["required"]
+    },
+    {
+      "fieldName": "vulnerability",
+      "fieldType": "Vulnerability",
+      "fieldValues": "HIV_AIDS,LEARNING_DISABILITIES,MENTAL_HEALTH,OLDER_PEOPLE,PHYSICAL_IMPAIRMENT,SENSORY_IMPAIRMENT",
+      "fieldValidateRules": ["required"]
+    },
+    {
+      "fieldName": "servicePriority",
+      "fieldType": "ServicePriority",
+      "fieldValues": "HIGH,LOW,MEDIUM",
+      "fieldValidateRules": ["required"]
+    },
+    {
+      "fieldName": "source",
+      "fieldType": "Source",
+      "fieldValues": "PRIVATE_SERVICE_USER,SOCIAL_SERVICES_REFERRAL,REABLEMENT_REFERRAL,UNKNOWN",
+      "fieldValidateRules": ["required"]
+    },
+    {
+      "fieldName": "status",
+      "fieldType": "ServiceUserStatus",
+      "fieldValues": "ACTIVE,DEACTIVE",
+      "fieldValidateRules": ["required"]
+    },
+    {
+      "fieldName": "firstLanguage",
+      "fieldType": "String",
+      "fieldValidateRules": ["maxlength"],
+      "fieldValidateRulesMaxlength": "25"
+    },
+    {
+      "fieldName": "interpreterRequired",
+      "fieldType": "Boolean"
+    },
+    {
+      "fieldName": "activatedDate",
+      "fieldType": "ZonedDateTime"
+    },
+    {
+      "fieldName": "profilePhoto",
+      "fieldType": "byte[]",
+      "fieldTypeBlobContent": "image"
+    },
+    {
+      "fieldName": "profilePhotoUrl",
+      "fieldType": "String"
+    },
+    {
+      "fieldName": "lastRecordedHeight",
+      "fieldType": "String"
+    },
+    {
+      "fieldName": "lastRecordedWeight",
+      "fieldType": "String"
+    },
+    {
+      "fieldName": "hasMedicalCondition",
+      "fieldType": "Boolean"
+    },
+    {
+      "fieldName": "medicalConditionSummary",
+      "fieldType": "String"
+    },
+    {
+      "fieldName": "createdDate",
+      "fieldType": "ZonedDateTime"
+    },
+    {
+      "fieldName": "lastUpdatedDate",
+      "fieldType": "ZonedDateTime"
+    },
+    {
+      "fieldName": "clientId",
+      "fieldType": "Long",
+      "fieldValidateRules": ["required"]
+    },
+    {
+      "fieldName": "hasExtraData",
+      "fieldType": "Boolean"
+    }
+  ],
+  "relationships": [
+    {
+      "relationshipType": "many-to-one",
+      "otherEntityName": "user",
+      "otherEntityRelationshipName": "serviceUser",
+      "relationshipName": "user",
+      "otherEntityField": "email"
+    },
+    {
+      "relationshipType": "many-to-one",
+      "otherEntityName": "branch",
+      "otherEntityRelationshipName": "serviceUser",
+      "relationshipName": "branch",
+      "otherEntityField": "name"
+    },
+    {
+      "relationshipType": "many-to-one",
+      "otherEntityName": "employee",
+      "otherEntityRelationshipName": "serviceUser",
+      "relationshipName": "registeredBy",
+      "otherEntityField": "employeeCode"
+    },
+    {
+      "relationshipType": "many-to-one",
+      "otherEntityName": "employee",
+      "otherEntityRelationshipName": "serviceUser",
+      "relationshipName": "activatedBy",
+      "otherEntityField": "employeeCode"
+    }
+  ],
+  "changelogDate": "20210114110511",
+  "entityTableName": "service_user",
+  "dto": "mapstruct",
+  "pagination": "pagination",
+  "service": "serviceClass",
+  "jpaMetamodelFiltering": true,
+  "fluentMethods": true,
+  "readOnly": false,
+  "embedded": false,
+  "clientRootFolder": "",
+  "applications": "*"
+}

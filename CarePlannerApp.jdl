@@ -1,7 +1,8 @@
 enum Title {
 	MR,
 	MRS,
-	MSS,
+	MS,
+	MISS,
 	OTHER
 }
 
@@ -78,6 +79,8 @@ enum SupportType{
 enum EmployeeHolidayType {
 	ANNUAL_HOLIDAY,
 	PUBLIC_HOLIDAY,
+    PARENTAL_LEAVE,
+    SICKNESS_ABSENCE,
 	UNPAID_HOLIDAY,
 	OTHER
 }
@@ -91,6 +94,11 @@ enum Source {
 
 
 enum ServiceUserStatus {
+	ACTIVE,
+	DEACTIVE
+}
+
+enum EmployeeStatus {
 	ACTIVE,
 	DEACTIVE
 }
@@ -136,16 +144,11 @@ enum Shift {
 	AFTERNOON_SHIFT,
 	EVENING_SHIFT,
 	NIGHTS_SHIFT,
-	NONE
+	AVAILABLE_ANY_SHIFT
 	
 }
 
 
-enum RelationType {
-	CLIENT_UNFAVOURS_EMPLOYEE,
-	EMPLOYEE_VISITED_CLIENT_BEFORE,
-	CLIENT_PREFERRED_EMPLOYEE
-}
 
  enum ServiceUserEventStatus {
  	REPORTED,
@@ -159,41 +162,81 @@ enum RelationType {
  	SAFEGUARDING,
  	MEDICAL_ERROR,
  	COMPLIMENT,
- 	COMPLAINT,
- 	COMMENT
+ 	COMPLAINCE,
+ 	COMMENT, 
+ 	MISSED_VISIT
  }
  
-enum TenantDocumentType {
+enum ClientDocumentType {
 	POLICY,
 	PROCEDURE,
 	FORM,
 	OTHER
 }
 
-entity Tenant {
-	tenantName String required, 
-	tenantDescription String,
-	tenantLogo ImageBlob,
-	tenantLogoUrl String,
-	tenantContactName String,
-	tenantPhone String,
-	tenantEmail String,
-	createdDate ZonedDateTime,
-	lastUpdatedDate ZonedDateTime
+enum EmployeeContractType {
+	ZERO_HOURS_CONTRACT,
+	SALARIED_STAFF
+}
+
+enum TravelStatus {
+	BOOKED,
+	ENROUTE,
+	ARRIVED,
+	CANCELLED
+}
+
+enum DataType {
+	STRING,
+    BOOLEAN,
+    NUMBER,
+    DATE,
+    FILE,
+    OBJECT,
+    ARRAY,
+    GEO_POINT
+}
+
+enum HolidayStatus{
+	REQUESTED,
+	APPROVED,
+	REJECTED
 }
 
 
-// Many to one relationship with tenant 
+entity Client {
+	clientName String required, 
+	clientDescription String,
+	clientLogo ImageBlob,
+	clientLogoUrl String,
+	clientContactName String,
+	clientPhone String,
+	clientEmail String,
+    createdDate ZonedDateTime,
+    enabled Boolean,
+    reason String,
+    lastUpdatedDate ZonedDateTime,
+	hasExtraData Boolean
+}
+
+
+
+// Many to one relationship with client
 entity Branch {
 	name String required,
 	address String,
 	telephone String,
-	lastUpdatedDate ZonedDateTime,
-	tenantId Long required
+	contactName String,
+	branchEmail String,
+	photo ImageBlob,
+	photoUrl String,
+    createdDate ZonedDateTime,
+    lastUpdatedDate ZonedDateTime,
+	hasExtraData Boolean
 }
 
 relationship ManyToOne {
-    Branch {tenant (tenantName) } to Tenant
+    Branch {client (clientName) } to Client
  }
 
 /* System User Section Start */
@@ -207,6 +250,7 @@ entity ServiceUser {
 	middleName String maxlength(100),
 	lastName String required minlength(1) maxlength(25),
 	preferredName String maxlength(25),
+	email String,
 	serviceUserCode String required unique,
 	dateOfBirth LocalDate required,
 	lastVisitDate ZonedDateTime,
@@ -226,16 +270,16 @@ entity ServiceUser {
 	lastRecordedWeight String,
 	hasMedicalCondition Boolean,
 	medicalConditionSummary String,
+	createdDate ZonedDateTime,
 	lastUpdatedDate ZonedDateTime,
-	tenantId Long required
+	clientId Long required,
+	hasExtraData Boolean
 }
 
  relationship ManyToOne  {
-   ServiceUser {user(login)} to User
+   ServiceUser {user(email)} to User
  
 }
-
-
 
 
 relationship ManyToOne {
@@ -261,8 +305,10 @@ entity MedicalContact {
 	districtNursePhone String,
 	careManagerName String,
 	careManagerPhone String
+	createdDate ZonedDateTime,
 	lastUpdatedDate ZonedDateTime,
-	tenantId Long required
+	clientId Long required,
+	hasExtraData Boolean
 }
 
 relationship OneToOne {
@@ -278,9 +324,10 @@ entity ServiceUserContact {
 	county String,
 	postCode String required,
 	telephone String required,
-	email String,
+	createdDate ZonedDateTime,
 	lastUpdatedDate ZonedDateTime,
-	tenantId Long required
+	clientId Long required,
+	hasExtraData Boolean
 }
 
 relationship OneToOne {
@@ -293,10 +340,12 @@ entity EmergencyContact {
 	contactRelationship String required,
 	isKeyHolder Boolean,
 	infoSharingConsentGiven Boolean,
-	preferredContactNumber Stirng required,
+	preferredContactNumber String required,
 	fullAddress String,
+	createdDate ZonedDateTime,
 	lastUpdatedDate ZonedDateTime,
-	tenantId Long required
+	clientId Long required,
+	hasExtraData Boolean
 }
 
 relationship ManyToOne {
@@ -306,8 +355,10 @@ relationship ManyToOne {
  entity ServiceUserLocation  {
 	latitude Double required,
 	longitude Double required,
-	lastUpdatedDate ZonedDateTime,
-	tenantId Long required
+    createdDate ZonedDateTime,
+    lastUpdatedDate ZonedDateTime,
+	clientId Long required,
+	hasExtraData Boolean
 }
 
 
@@ -325,8 +376,10 @@ entity PowerOfAttorney {
 	healthAndWelfareName String,
 	propertyAndFinAffairs Boolean,
 	propertyAndFinAffairsName String,
+	createdDate ZonedDateTime,
 	lastUpdatedDate ZonedDateTime,
-	tenantId Long required
+	clientId Long required,
+	hasExtraData Boolean
 }
  relationship OneToOne {
     PowerOfAttorney {serviceUser (serviceUserCode) } to ServiceUser
@@ -344,15 +397,17 @@ entity PowerOfAttorney {
 // Many to one relation  with ServiceUser
 entity Consent {
 	title String required,
-	description String,
+	description String, 
 	giveConsent Boolean,
 	arrangements String,
 	serviceUserSignature String,
 	signatureImage ImageBlob,
 	signatureImageUrl String,
 	consentDate ZonedDateTime,
-	lastUpdatedDate ZonedDateTime,
-	tenantId Long required
+    createdDate ZonedDateTime,
+    lastUpdatedDate ZonedDateTime,
+	clientId Long required,
+	hasExtraData Boolean
 }
 
  relationship ManyToOne {
@@ -367,8 +422,10 @@ entity Consent {
 entity Access {
 	keySafeNumber String required,
 	accessDetails String,
-	lastUpdatedDate ZonedDateTime,
-	tenantId Long required
+    createdDate ZonedDateTime,
+    lastUpdatedDate ZonedDateTime,
+	clientId Long required,
+	hasExtraData Boolean
 }
 
  relationship ManyToOne {
@@ -379,8 +436,10 @@ entity Equality {
 	gender Gender required,
 	maritalStatus MaritalStatus required,
 	religion Religion required,
+	createdDate ZonedDateTime,
 	lastUpdatedDate ZonedDateTime,
-	tenantId Long required
+	clientId Long required,
+	hasExtraData Boolean
 }
  
  relationship ManyToOne {
@@ -411,8 +470,10 @@ entity Question {
 	attribute4 String,
 	attribute5 String,
 	optional Boolean,
-	lastUpdatedDate ZonedDateTime,
-	tenantId Long required
+    createdDate ZonedDateTime,
+    lastUpdatedDate ZonedDateTime,
+	clientId Long required,
+	hasExtraData Boolean
 }
 
 
@@ -428,8 +489,9 @@ entity Answer {
 	attribute4 String,
 	attribute5 String,
 	createdDate ZonedDateTime,
-	lastUpdatedDate ZonedDateTime,
-	tenantId Long required
+    lastUpdatedDate ZonedDateTime,
+	clientId Long required,
+	hasExtraData Boolean
 }
 
 relationship ManyToOne {
@@ -452,6 +514,14 @@ relationship ManyToOne {
 //All missing
 
 
+// employee Role, like Cleaner, Supervisor, Carrer Manager
+entity EmployeeDesignation {
+	designation String required,
+	description String,
+	designationDate String,
+	clientId Long required,
+	hasExtraData Boolean
+}
 
 // Many to one relationship with Branch
 /* Employee has 4 different roles CARE_PROVIDER_ROLE, TEAM_LEADER_ROLE, MANAGER_ROLE, ADMIN_ROLE */
@@ -463,24 +533,37 @@ entity Employee {
 	preferredName String maxlength(25),
 	gender Gender required,
 	employeeCode String required unique,
-	socialSecurityNumber String,
+	// New Addistion
+	phone String required,
+	email String required,
+	nationalInsuranceNumber String,
+	employeeContractType EmployeeContractType required,
 	pinCode Integer,
 	transportMode TravelMode required,
 	address String required,
 	county String,
 	postCode String,
 	dateOfBirth LocalDate required,
-	startDate LocalDate required,
-	firstVisitDate LocalDate required,
-	lastVisitDate LocalDate required,
 	photo ImageBlob,
 	photoUrl String ,
-	lastUpdatedDate ZonedDateTime,
-	tenantId Long required
+	// New Addition
+	 status EmployeeStatus,
+	// New Addition
+	employeeBio String,
+	acruedHolidayHours Integer,
+	createdDate ZonedDateTime,
+    lastUpdatedDate ZonedDateTime,
+	clientId Long required,
+	hasExtraData Boolean
 }
 
  relationship ManyToOne  {
-   Employee {user(login)} to User
+   Employee {user(email)} to User
+ 
+}
+
+ relationship ManyToOne  {
+   Employee {designation(designation)} to EmployeeDesignation
  
 }
 
@@ -488,12 +571,17 @@ entity Employee {
  relationship ManyToOne {
     Employee {nationality (countryName) } to Country
  }
-
+// New Addition
+relationship ManyToOne {
+    Employee {branch (name) } to Branch
+ }
 entity EmployeeLocation  {
 	latitude Double required,
 	longitude Double required,
-	lastUpdatedDate ZonedDateTime,
-	tenantId Long required
+	createdDate ZonedDateTime,
+lastUpdatedDate ZonedDateTime,
+	clientId Long required,
+	hasExtraData Boolean
 }
 
 relationship ManyToOne  {
@@ -503,11 +591,20 @@ relationship ManyToOne  {
 
 
 
+
 entity EmployeeAvailability{
-		isAvailableForWork Boolean,
-		minimumHoursPerWeek Integer,
-		maximumHoursPerWeek Integer,
-		leastPreferredShift Shift
+		availableForWork Boolean,
+		availableMonday Boolean,
+		availableTuesday Boolean,
+		availableWednesday Boolean,
+		availableThursday Boolean,
+		availableFriday Boolean,
+		availableSaturday Boolean,
+		availableSunday Boolean,
+		preferredShift Shift,
+	    hasExtraData Boolean,
+	    lastUpdatedDate ZonedDateTime,
+	    clientId Long required
 }
 
 
@@ -515,38 +612,61 @@ relationship ManyToOne  {
    EmployeeAvailability{employee(employeeCode)} to Employee
  
 }
-
-
-entity CarerClientRelation {
-	relationType RelationType required,
-	reason String,
-	count Long,
-	lastUpdatedDate ZonedDateTime,
-	tenantId Long required
+// New Addition
+/*
+ * 	CLIENT_UNFAVOURS_EMPLOYEE,
+	EMPLOYEE_VISITED_CLIENT_BEFORE,
+	CLIENT_PREFERRED_EMPLOYEE,
+	SPEAK_COMMON_LANGUAGE
+ */
+entity RelationshipType {
+   relationType String required,
+   description String
+   clientId Long required,
+   hasExtraData Boolean
 }
 
+// Modified
+entity CarerServiceUserRelation {
+	reason String,
+	count Long,
+	createdDate ZonedDateTime,
+lastUpdatedDate ZonedDateTime,
+	clientId Long required,
+	hasExtraData Boolean
+}
+
+
 relationship ManyToOne  {
-   CarerClientRelation{employee(employeeCode)} to Employee
+   CarerServiceUserRelation{relationType(relationType)} to RelationshipType
+ 
+}
+relationship ManyToOne  {
+   CarerServiceUserRelation{employee(employeeCode)} to Employee
  
 }
  relationship ManyToOne {
-    CarerClientRelation {serviceUser (serviceUserCode) } to ServiceUser
+    CarerServiceUserRelation {serviceUser (serviceUserCode) } to ServiceUser
  }
 
 
 entity DisabilityType {
 	disability String required,
-	description String
+	description String,
+	hasExtraData Boolean
 }
 
 entity Disability{
+	isDisabled Boolean,
 	note String,
-	lastUpdatedDate ZonedDateTime,
-	tenantId Long required
+	createdDate ZonedDateTime,
+lastUpdatedDate ZonedDateTime,
+	clientId Long required,
+	hasExtraData Boolean
 }
 
 relationship ManyToOne {
-	Disability {disabilityType (disabilityType)} to DisabilityType
+	Disability {disabilityType (disability)} to DisabilityType
 }
 
 relationship ManyToOne {
@@ -556,12 +676,16 @@ relationship ManyToOne {
 
 entity EligibilityType { 
 	eligibilityType String required,
-	description String
+	description String,
+	hasExtraData Boolean
 }
 entity Eligibility {
+	isEligible Boolean,
     note String,
+    createdDate ZonedDateTime,
     lastUpdatedDate ZonedDateTime,
-	tenantId Long required
+	clientId Long required,
+	hasExtraData Boolean
 }
 
 
@@ -573,8 +697,11 @@ entity Travel {
 	timeToDestination Long,
 	actualDistanceRequired Long,
 	actualTimeRequired Long,
-	lastUpdatedDate ZonedDateTime,
-	tenantId Long required
+	travelStatus TravelStatus,
+	createdDate ZonedDateTime,
+lastUpdatedDate ZonedDateTime,
+	clientId Long required,
+	hasExtraData Boolean
 	
 }
 
@@ -584,7 +711,7 @@ relationship ManyToOne {
 
 
 relationship ManyToOne {
-	Eligibility {eligibilityType (eligibilitype)} to EligibilityType
+	Eligibility {eligibilityType (eligibilityType)} to EligibilityType
 }
 
 relationship ManyToOne {
@@ -599,8 +726,10 @@ entity Payroll {
 	netPay BigDecimal required,
 	totalTax BigDecimal,
 	payrollStatus PayrollStatus required,
-	lastUpdatedDate ZonedDateTime,
-	tenantId Long required
+	createdDate ZonedDateTime,
+lastUpdatedDate ZonedDateTime,
+	clientId Long required,
+	hasExtraData Boolean
 }
 
 
@@ -619,10 +748,13 @@ entity EmployeeHoliday {
 	employeeHolidayType EmployeeHolidayType,
 	approvedDate ZonedDateTime,
 	requestedDate ZonedDateTime,
-	approved Boolean,
+	holidayStatus HolidayStatus,
 	note String,
-	lastUpdatedDate ZonedDateTime,
-	tenantId Long required
+	rejectionReason String,
+	createdDate ZonedDateTime,
+    lastUpdatedDate ZonedDateTime,
+	clientId Long required,
+	hasExtraData Boolean
 }
 
 
@@ -636,7 +768,6 @@ relationship ManyToOne {
 
 entity ServceUserDocument{
     documentName String required,
-    documentCode String required unique,
 	documentNumber String,
     documentStatus DocumentStatus,
     note String,
@@ -645,8 +776,10 @@ entity ServceUserDocument{
     uploadedDate ZonedDateTime,
     documentFile Blob,
     documentFileUrl String,
-    lastUpdatedDate ZonedDateTime,
-	tenantId Long required
+    createdDate ZonedDateTime,
+lastUpdatedDate ZonedDateTime,
+	clientId Long required,
+	hasExtraData Boolean
 }
 
 relationship ManyToOne{
@@ -675,8 +808,10 @@ entity TerminalDevice {
    note String,
    ownerEntityId Long,
    ownerEntityName String
-   lastUpdatedDate ZonedDateTime,
-    tenantId Long required
+   createdDate ZonedDateTime,
+lastUpdatedDate ZonedDateTime,
+    clientId Long required,
+	hasExtraData Boolean
 }
 
 relationship ManyToOne  {
@@ -689,7 +824,6 @@ relationship ManyToOne  {
 
 entity EmployeeDocument{
     documentName String required,
-    documentCode String required unique,
 	documentNumber String,
     documentStatus DocumentStatus,
     note String,
@@ -698,8 +832,10 @@ entity EmployeeDocument{
     uploadedDate ZonedDateTime,
     documentFile Blob,
     documentFileUrl String,
-    lastUpdatedDate ZonedDateTime,
-	tenantId Long required
+    createdDate ZonedDateTime,
+lastUpdatedDate ZonedDateTime,
+	clientId Long required,
+	hasExtraData Boolean
 }
 
 relationship ManyToOne{
@@ -720,8 +856,10 @@ entity  Communication {
 	communicationDate ZonedDateTime required,
 	attachment ImageBlob,
 	attachmentUrl String,
-	lastUpdatedDate ZonedDateTime,
-	tenantId Long required
+	createdDate ZonedDateTime,
+lastUpdatedDate ZonedDateTime,
+	clientId Long required,
+	hasExtraData Boolean
 }
 
  relationship ManyToOne {
@@ -735,9 +873,10 @@ relationship ManyToOne  {
 
 entity DocumentType {
 	documentTypeTitle String required,
-	documentTypeCode String required unique,
 	documentTypeDescription String,
-	lastUpdatedDate ZonedDateTime
+	createdDate ZonedDateTime,
+lastUpdatedDate ZonedDateTime,
+	hasExtraData Boolean
 }
 
 
@@ -750,8 +889,10 @@ entity Notification {
 	imageUrl String,
 	senderId Long,
 	receiverId Long,
-	lastUpdatedDate ZonedDateTime,
-	tenantId Long required
+	createdDate ZonedDateTime,
+lastUpdatedDate ZonedDateTime,
+	clientId Long required,
+	hasExtraData Boolean
 }
 
 
@@ -761,8 +902,10 @@ entity Country {
 	countryFlagUrl String,
 	countryCallingCode String,
 	countryTelDigitLength Integer,
-	lastUpdatedDate ZonedDateTime,
-	tenantId Long required
+	createdDate ZonedDateTime,
+lastUpdatedDate ZonedDateTime,
+	hasExtraData Boolean
+	
 }
 
 
@@ -774,9 +917,10 @@ entity Task {
 	startTime String required,
 	endTime String,
 	status TaskStatus,
-	dateCreated ZonedDateTime,
-	lastUpdatedDate ZonedDateTime,
-	tenantId Long required
+	createdDate ZonedDateTime,
+    lastUpdatedDate ZonedDateTime,
+	clientId Long required,
+	hasExtraData Boolean
 }
 
 
@@ -810,8 +954,10 @@ entity ServiceUserEvent {
 	priority ServicePriority,
 	note String,
 	dateOfEvent ZonedDateTime required,
-	lastUpdatedDate ZonedDateTime,
-	tenantId Long required
+	createdDate ZonedDateTime,
+lastUpdatedDate ZonedDateTime,
+	clientId Long required,
+	hasExtraData Boolean
 }
 
  relationship ManyToOne {
@@ -828,14 +974,28 @@ relationship ManyToOne {
 
 
 
+entity Currency {
+	currency String required maxlength(99),
+	currencyIsoCode String maxlength(3),
+	currencySymbol String,
+	currencyLogo ImageBlob,
+	currencyLogoUrl String,
+	hasExtraData Boolean
+}
 
 entity ServiceOrder {
 	title String required,
 	serviceDescription String,
-	serviceRate Double required,
-	tenantId Long required,
-	lastUpdatedDate ZonedDateTime
+	serviceHourlyRate Double required,
+	clientId Long required,
+	createdDate ZonedDateTime,
+lastUpdatedDate ZonedDateTime,
+	hasExtraData Boolean
 }
+
+relationship ManyToOne {
+    ServiceOrder {currency (currency) } to Currency
+ }
 
 
 
@@ -855,8 +1015,10 @@ entity Invoice {
 	attribute5 String,
 	attribute6 String,
 	attribute7 String,
-	lastUpdatedDate ZonedDateTime,
-	tenantId Long required
+	createdDate ZonedDateTime,
+lastUpdatedDate ZonedDateTime,
+	clientId Long required,
+	hasExtraData Boolean
 }
 
 relationship ManyToOne{
@@ -879,13 +1041,15 @@ entity Timesheet {
 	breakStartTime String,
 	breakEndTime String,
 	note String,
-	lastUpdatedDate ZonedDateTime,
-	tenantId Long required
+	createdDate ZonedDateTime,
+    lastUpdatedDate ZonedDateTime,
+	clientId Long required,
+	hasExtraData Boolean
 	
 }
 
 relationship OneToOne{
-	Timesheet {serviceOrder(title)} to ServiceOrder
+	Timesheet {task(taskName)} to Task
 }
 
  relationship ManyToOne {
@@ -898,11 +1062,10 @@ relationship ManyToOne {
 
 
 
-entity TenantDocument {
+entity ClientDocument {
 	documentName String required,
-    documentCode String required unique,
 	documentNumber String,
-    documentType TenantDocumentType required,
+    documentType ClientDocumentType required,
     documentStatus DocumentStatus,
     note String,
     issuedDate LocalDate,
@@ -910,17 +1073,19 @@ entity TenantDocument {
     uploadedDate ZonedDateTime,
     documentFile Blob,
     documentFileUrl String,
+    createdDate ZonedDateTime,
     lastUpdatedDate ZonedDateTime,
-	tenantId Long required
+	clientId Long required,
+	hasExtraData Boolean
 }
 
 
 relationship ManyToOne  {
-   TenantDocument{uploadedBy(employeeCode)} to Employee
+   ClientDocument{uploadedBy(employeeCode)} to Employee
 }
 
 relationship ManyToOne  {
-   TenantDocument{approvedBy(employeeCode)} to Employee
+   ClientDocument{approvedBy(employeeCode)} to Employee
 }
 
 
@@ -933,13 +1098,14 @@ entity SystemEventsHistory {
 	eventEntityName String,
 	eventEntityId Long,
 	isSuspecious Boolean,
-	tenantId Long
-	
+	callerEmail String,
+	callerId Long,
+	clientId Long
 }
 
 
 relationship ManyToOne  {
-   SystemEventsHistory{triggedBy(login)} to User 
+   SystemEventsHistory{triggedBy(email)} to User 
  
 }
 
@@ -951,17 +1117,32 @@ entity SystemSetting {
    settingEnabled Boolean,
    createdDate ZonedDateTime,
    updatedDate ZonedDateTime,
-   tenantId Long
+   clientId Long,
+   hasExtraData Boolean
 }
 
+/* 
+  No table or entity should have direct relationship with ExtraData table/table, 
+  all relationships should be connected to the instance of entities via the entityName and entityId
+  */
+entity ExtraData {
+	entityName String required required,
+	entityId Long required,
+	extraDataKey String,
+	extraDataValue String,
+	extraDataValueDataType DataType,
+	extraDataDescription String,
+	extraDataDate ZonedDateTime,
+	hasExtraData Boolean
+}
  
  
  
 
-paginate Tenant,Branch,ServiceUser,MedicalContact,ServiceUserContact,EmergencyContact,ServiceUserLocation,PowerOfAttorney, Consent,Access,Equality,QuestionType,Question,Answer,Employee,EmployeeLocation,EmployeeAvailability,CarerClientRelation,DisabilityType,Disability,EligibilityType,Eligibility,Travel,Payroll,EmployeeHoliday,ServceUserDocument,TerminalDevice,EmployeeDocument,Communication,DocumentType,Notification,Country,Task,ServiceUserEvent,ServiceOrder,Invoice,Timesheet,TenantDocument,SystemEventsHistory,SystemSetting with pagination
-dto Tenant,Branch,ServiceUser,MedicalContact,ServiceUserContact,EmergencyContact,ServiceUserLocation,PowerOfAttorney, Consent,Access,Equality,QuestionType,Question,Answer,Employee,EmployeeLocation,EmployeeAvailability,CarerClientRelation,DisabilityType,Disability,EligibilityType,Eligibility,Travel,Payroll,EmployeeHoliday,ServceUserDocument,TerminalDevice,EmployeeDocument,Communication,DocumentType,Notification,Country,Task,ServiceUserEvent,ServiceOrder,Invoice,Timesheet,TenantDocument,SystemEventsHistory,SystemSetting with mapstruct
-service Tenant,Branch,ServiceUser,MedicalContact,ServiceUserContact,EmergencyContact,ServiceUserLocation,PowerOfAttorney, Consent,Access,Equality,QuestionType,Question,Answer,Employee,EmployeeLocation,EmployeeAvailability,CarerClientRelation,DisabilityType,Disability,EligibilityType,Eligibility,Travel,Payroll,EmployeeHoliday,ServceUserDocument,TerminalDevice,EmployeeDocument,Communication,DocumentType,Notification,Country,Task,ServiceUserEvent,ServiceOrder,Invoice,Timesheet,TenantDocument,SystemEventsHistory,SystemSetting with serviceClass
-//search Tenant,Branch,ServiceUser,MedicalContact,ServiceUserContact,EmergencyContact,ServiceUserLocation,PowerOfAttorney, Consent,Access,Equality,QuestionType,Question,Answer,Employee,EmployeeLocation,EmployeeAvailability,CarerClientRelation,DisabilityType,Disability,EligibilityType,Eligibility,Travel,Payroll,EmployeeHoliday,ServceUserDocument,TerminalDevice,EmployeeDocument,Communication,DocumentType,Notification,Country,Task,ServiceUserEvent,ServiceOrder,Invoice,Timesheet,TenantDocument,SystemEventsHistory,SystemSetting with elasticsearch
-filter Tenant,Branch,ServiceUser,MedicalContact,ServiceUserContact,EmergencyContact,ServiceUserLocation,PowerOfAttorney, Consent,Access,Equality,QuestionType,Question,Answer,Employee,EmployeeLocation,EmployeeAvailability,CarerClientRelation,DisabilityType,Disability,EligibilityType,Eligibility,Travel,Payroll,EmployeeHoliday,ServceUserDocument,TerminalDevice,EmployeeDocument,Communication,DocumentType,Notification,Country,Task,ServiceUserEvent,ServiceOrder,Invoice,Timesheet,TenantDocument,SystemEventsHistory,SystemSetting
+paginate Client,Branch,ServiceUser,MedicalContact,ServiceUserContact,EmergencyContact,ServiceUserLocation,PowerOfAttorney, Consent,Access,Equality,QuestionType,Question,Answer,Employee,EmployeeLocation,EmployeeAvailability,CarerServiceUserRelation,DisabilityType,Disability,EligibilityType,Eligibility,Travel,Payroll,EmployeeHoliday,ServceUserDocument,TerminalDevice,EmployeeDocument,Communication,DocumentType,Notification,Country,Task,ServiceUserEvent,ServiceOrder,Invoice,Timesheet,ClientDocument,SystemEventsHistory,SystemSetting,Currency,ExtraData,CarerServiceUserRelation,EmployeeDesignation,RelationshipType with pagination
+dto Client,Branch,ServiceUser,MedicalContact,ServiceUserContact,EmergencyContact,ServiceUserLocation,PowerOfAttorney, Consent,Access,Equality,QuestionType,Question,Answer,Employee,EmployeeLocation,EmployeeAvailability,CarerServiceUserRelation,DisabilityType,Disability,EligibilityType,Eligibility,Travel,Payroll,EmployeeHoliday,ServceUserDocument,TerminalDevice,EmployeeDocument,Communication,DocumentType,Notification,Country,Task,ServiceUserEvent,ServiceOrder,Invoice,Timesheet,ClientDocument,SystemEventsHistory,SystemSetting,Currency,ExtraData,CarerServiceUserRelation,EmployeeDesignation,RelationshipType with mapstruct
+service Client,Branch,ServiceUser,MedicalContact,ServiceUserContact,EmergencyContact,ServiceUserLocation,PowerOfAttorney, Consent,Access,Equality,QuestionType,Question,Answer,Employee,EmployeeLocation,EmployeeAvailability,CarerServiceUserRelation,DisabilityType,Disability,EligibilityType,Eligibility,Travel,Payroll,EmployeeHoliday,ServceUserDocument,TerminalDevice,EmployeeDocument,Communication,DocumentType,Notification,Country,Task,ServiceUserEvent,ServiceOrder,Invoice,Timesheet,ClientDocument,SystemEventsHistory,SystemSetting,Currency,ExtraData,CarerServiceUserRelation,EmployeeDesignation,RelationshipType with serviceClass
+//search Client,Branch,ServiceUser,MedicalContact,ServiceUserContact,EmergencyContact,ServiceUserLocation,PowerOfAttorney, Consent,Access,Equality,QuestionType,Question,Answer,Employee,EmployeeLocation,EmployeeAvailability,DisabilityType,Disability,EligibilityType,Eligibility,Travel,Payroll,EmployeeHoliday,ServceUserDocument,TerminalDevice,EmployeeDocument,Communication,DocumentType,Notification,Country,Task,ServiceUserEvent,ServiceOrder,Invoice,Timesheet,ClientDocument,SystemEventsHistory,SystemSetting,Currency,ExtraData,EmployeeDesignation,RelationshipType with elasticsearch
+filter Client,Branch,ServiceUser,MedicalContact,ServiceUserContact,EmergencyContact,ServiceUserLocation,PowerOfAttorney, Consent,Access,Equality,QuestionType,Question,Answer,Employee,EmployeeLocation,EmployeeAvailability,CarerServiceUserRelation,DisabilityType,Disability,EligibilityType,Eligibility,Travel,Payroll,EmployeeHoliday,ServceUserDocument,TerminalDevice,EmployeeDocument,Communication,DocumentType,Notification,Country,Task,ServiceUserEvent,ServiceOrder,Invoice,Timesheet,ClientDocument,SystemEventsHistory,SystemSetting,Currency,ExtraData,CarerServiceUserRelation,EmployeeDesignation,RelationshipType
 
  

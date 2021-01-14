@@ -1,0 +1,10 @@
+{
+  "carePlannerApp": {
+    "HolidayStatus": {
+      "null": "",
+      "REQUESTED": "REQUESTED",
+      "APPROVED": "APPROVED",
+      "REJECTED": "REJECTED"
+    }
+  }
+}

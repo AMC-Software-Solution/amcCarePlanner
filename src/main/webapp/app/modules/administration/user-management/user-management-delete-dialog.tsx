@@ -8,11 +8,11 @@ import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
 import { getUser, deleteUser } from './user-management.reducer';
 import { IRootState } from 'app/shared/reducers';
 
-export interface IUserManagementDeleteDialogProps extends StateProps, DispatchProps, RouteComponentProps<{ login: string }> {}
+export interface IUserManagementDeleteDialogProps extends StateProps, DispatchProps, RouteComponentProps<{ email: string }> {}
 
 export const UserManagementDeleteDialog = (props: IUserManagementDeleteDialogProps) => {
   useEffect(() => {
-    props.getUser(props.match.params.login);
+    props.getUser(props.match.params.email);
   }, []);
 
   const handleClose = event => {
@@ -21,7 +21,7 @@ export const UserManagementDeleteDialog = (props: IUserManagementDeleteDialogPro
   };
 
   const confirmDelete = event => {
-    props.deleteUser(props.user.login);
+    props.deleteUser(props.user.email);
     handleClose(event);
   };
 
@@ -33,7 +33,7 @@ export const UserManagementDeleteDialog = (props: IUserManagementDeleteDialogPro
         <Translate contentKey="entity.delete.title">Confirm delete operation</Translate>
       </ModalHeader>
       <ModalBody>
-        <Translate contentKey="userManagement.delete.question" interpolate={{ login: user.login }}>
+        <Translate contentKey="userManagement.delete.question" interpolate={{ email: user.email }}>
           Are you sure you want to delete this User?
         </Translate>
       </ModalBody>

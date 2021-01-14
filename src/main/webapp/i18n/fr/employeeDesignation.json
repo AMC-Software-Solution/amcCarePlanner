@@ -1,0 +1,26 @@
+{
+  "carePlannerApp": {
+    "employeeDesignation": {
+      "home": {
+        "title": "EmployeeDesignations",
+        "createLabel": "Créer un nouveau Employee Designation",
+        "createOrEditLabel": "Créer ou éditer un Employee Designation",
+        "notFound": "Aucun Employee Designation trouvé"
+      },
+      "created": "Un nouveau Employee Designation a été créé avec l'identifiant {{ param }}",
+      "updated": "Le Employee Designation avec l'identifiant {{ param }} a été mis à jour",
+      "deleted": "Le Employee Designation avec l'identifiant {{ param }} a été supprimé",
+      "delete": {
+        "question": "Etes-vous certain de vouloir supprimer le Employee Designation {{ id }} ?"
+      },
+      "detail": {
+        "title": "Employee Designation"
+      },
+      "designation": "Designation",
+      "description": "Description",
+      "designationDate": "Designation Date",
+      "clientId": "Client Id",
+      "hasExtraData": "Has Extra Data"
+    }
+  }
+}

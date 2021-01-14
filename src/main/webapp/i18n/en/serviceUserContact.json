@@ -1,0 +1,31 @@
+{
+  "carePlannerApp": {
+    "serviceUserContact": {
+      "home": {
+        "title": "Service User Contacts",
+        "createLabel": "Create a new Service User Contact",
+        "createOrEditLabel": "Create or edit a Service User Contact",
+        "notFound": "No Service User Contacts found"
+      },
+      "created": "A new Service User Contact is created with identifier {{ param }}",
+      "updated": "A Service User Contact is updated with identifier {{ param }}",
+      "deleted": "A Service User Contact is deleted with identifier {{ param }}",
+      "delete": {
+        "question": "Are you sure you want to delete Service User Contact {{ id }}?"
+      },
+      "detail": {
+        "title": "Service User Contact"
+      },
+      "address": "Address",
+      "cityOrTown": "City Or Town",
+      "county": "County",
+      "postCode": "Post Code",
+      "telephone": "Telephone",
+      "createdDate": "Created Date",
+      "lastUpdatedDate": "Last Updated Date",
+      "clientId": "Client Id",
+      "hasExtraData": "Has Extra Data",
+      "serviceUser": "Service User"
+    }
+  }
+}

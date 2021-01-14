@@ -1,0 +1,24 @@
+<?xml version="1.0" encoding="utf-8"?>
+<databaseChangeLog
+    xmlns="http://www.liquibase.org/xml/ns/dbchangelog"
+    xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+    xsi:schemaLocation="http://www.liquibase.org/xml/ns/dbchangelog http://www.liquibase.org/xml/ns/dbchangelog/dbchangelog-3.9.xsd">
+    <!--
+        Added the constraints for entity Payroll.
+    -->
+    <changeSet id="20210114112811-2" author="jhipster">
+        
+        <addForeignKeyConstraint baseColumnNames="employee_id"
+                                 baseTableName="payroll"
+                                 constraintName="fk_payroll_employee_id"
+                                 referencedColumnNames="id"
+                                 referencedTableName="employee"/>
+
+        <addForeignKeyConstraint baseColumnNames="timesheet_id"
+                                 baseTableName="payroll"
+                                 constraintName="fk_payroll_timesheet_id"
+                                 referencedColumnNames="id"
+                                 referencedTableName="timesheet"/>
+
+    </changeSet>
+</databaseChangeLog>

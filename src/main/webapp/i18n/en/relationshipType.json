@@ -1,0 +1,25 @@
+{
+  "carePlannerApp": {
+    "relationshipType": {
+      "home": {
+        "title": "Relationship Types",
+        "createLabel": "Create a new Relationship Type",
+        "createOrEditLabel": "Create or edit a Relationship Type",
+        "notFound": "No Relationship Types found"
+      },
+      "created": "A new Relationship Type is created with identifier {{ param }}",
+      "updated": "A Relationship Type is updated with identifier {{ param }}",
+      "deleted": "A Relationship Type is deleted with identifier {{ param }}",
+      "delete": {
+        "question": "Are you sure you want to delete Relationship Type {{ id }}?"
+      },
+      "detail": {
+        "title": "Relationship Type"
+      },
+      "relationType": "Relation Type",
+      "description": "Description",
+      "clientId": "Client Id",
+      "hasExtraData": "Has Extra Data"
+    }
+  }
+}

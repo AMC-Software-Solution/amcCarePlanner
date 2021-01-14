@@ -1,0 +1,32 @@
+{
+  "carePlannerApp": {
+    "emergencyContact": {
+      "home": {
+        "title": "EmergencyContacts",
+        "createLabel": "Créer un nouveau Emergency Contact",
+        "createOrEditLabel": "Créer ou éditer un Emergency Contact",
+        "notFound": "Aucun Emergency Contact trouvé"
+      },
+      "created": "Un nouveau Emergency Contact a été créé avec l'identifiant {{ param }}",
+      "updated": "Le Emergency Contact avec l'identifiant {{ param }} a été mis à jour",
+      "deleted": "Le Emergency Contact avec l'identifiant {{ param }} a été supprimé",
+      "delete": {
+        "question": "Etes-vous certain de vouloir supprimer le Emergency Contact {{ id }} ?"
+      },
+      "detail": {
+        "title": "Emergency Contact"
+      },
+      "name": "Name",
+      "contactRelationship": "Contact Relationship",
+      "isKeyHolder": "Is Key Holder",
+      "infoSharingConsentGiven": "Info Sharing Consent Given",
+      "preferredContactNumber": "Preferred Contact Number",
+      "fullAddress": "Full Address",
+      "createdDate": "Created Date",
+      "lastUpdatedDate": "Last Updated Date",
+      "clientId": "Client Id",
+      "hasExtraData": "Has Extra Data",
+      "serviceUser": "Service User"
+    }
+  }
+}

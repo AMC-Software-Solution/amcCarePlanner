@@ -1,0 +1,83 @@
+{
+  "name": "Consent",
+  "fields": [
+    {
+      "fieldName": "title",
+      "fieldType": "String",
+      "fieldValidateRules": ["required"]
+    },
+    {
+      "fieldName": "description",
+      "fieldType": "String"
+    },
+    {
+      "fieldName": "giveConsent",
+      "fieldType": "Boolean"
+    },
+    {
+      "fieldName": "arrangements",
+      "fieldType": "String"
+    },
+    {
+      "fieldName": "serviceUserSignature",
+      "fieldType": "String"
+    },
+    {
+      "fieldName": "signatureImage",
+      "fieldType": "byte[]",
+      "fieldTypeBlobContent": "image"
+    },
+    {
+      "fieldName": "signatureImageUrl",
+      "fieldType": "String"
+    },
+    {
+      "fieldName": "consentDate",
+      "fieldType": "ZonedDateTime"
+    },
+    {
+      "fieldName": "createdDate",
+      "fieldType": "ZonedDateTime"
+    },
+    {
+      "fieldName": "lastUpdatedDate",
+      "fieldType": "ZonedDateTime"
+    },
+    {
+      "fieldName": "clientId",
+      "fieldType": "Long",
+      "fieldValidateRules": ["required"]
+    },
+    {
+      "fieldName": "hasExtraData",
+      "fieldType": "Boolean"
+    }
+  ],
+  "relationships": [
+    {
+      "relationshipType": "many-to-one",
+      "otherEntityName": "serviceUser",
+      "otherEntityRelationshipName": "consent",
+      "relationshipName": "serviceUser",
+      "otherEntityField": "serviceUserCode"
+    },
+    {
+      "relationshipType": "many-to-one",
+      "otherEntityName": "employee",
+      "otherEntityRelationshipName": "consent",
+      "relationshipName": "witnessedBy",
+      "otherEntityField": "employeeCode"
+    }
+  ],
+  "changelogDate": "20210114111111",
+  "entityTableName": "consent",
+  "dto": "mapstruct",
+  "pagination": "pagination",
+  "service": "serviceClass",
+  "jpaMetamodelFiltering": true,
+  "fluentMethods": true,
+  "readOnly": false,
+  "embedded": false,
+  "clientRootFolder": "",
+  "applications": "*"
+}

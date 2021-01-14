@@ -1,0 +1,69 @@
+{
+  "name": "Travel",
+  "fields": [
+    {
+      "fieldName": "travelMode",
+      "fieldType": "TravelMode",
+      "fieldValues": "CAR,BUS,TRAIN,PLANE,SHIP,WALK,OTHER",
+      "fieldValidateRules": ["required"]
+    },
+    {
+      "fieldName": "distanceToDestination",
+      "fieldType": "Long"
+    },
+    {
+      "fieldName": "timeToDestination",
+      "fieldType": "Long"
+    },
+    {
+      "fieldName": "actualDistanceRequired",
+      "fieldType": "Long"
+    },
+    {
+      "fieldName": "actualTimeRequired",
+      "fieldType": "Long"
+    },
+    {
+      "fieldName": "travelStatus",
+      "fieldType": "TravelStatus",
+      "fieldValues": "BOOKED,ENROUTE,ARRIVED,CANCELLED"
+    },
+    {
+      "fieldName": "createdDate",
+      "fieldType": "ZonedDateTime"
+    },
+    {
+      "fieldName": "lastUpdatedDate",
+      "fieldType": "ZonedDateTime"
+    },
+    {
+      "fieldName": "clientId",
+      "fieldType": "Long",
+      "fieldValidateRules": ["required"]
+    },
+    {
+      "fieldName": "hasExtraData",
+      "fieldType": "Boolean"
+    }
+  ],
+  "relationships": [
+    {
+      "relationshipType": "many-to-one",
+      "otherEntityName": "task",
+      "otherEntityRelationshipName": "travel",
+      "relationshipName": "task",
+      "otherEntityField": "taskName"
+    }
+  ],
+  "changelogDate": "20210114112711",
+  "entityTableName": "travel",
+  "dto": "mapstruct",
+  "pagination": "pagination",
+  "service": "serviceClass",
+  "jpaMetamodelFiltering": true,
+  "fluentMethods": true,
+  "readOnly": false,
+  "embedded": false,
+  "clientRootFolder": "",
+  "applications": "*"
+}

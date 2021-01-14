@@ -1,0 +1,24 @@
+{
+  "carePlannerApp": {
+    "disabilityType": {
+      "home": {
+        "title": "Disability Types",
+        "createLabel": "Create a new Disability Type",
+        "createOrEditLabel": "Create or edit a Disability Type",
+        "notFound": "No Disability Types found"
+      },
+      "created": "A new Disability Type is created with identifier {{ param }}",
+      "updated": "A Disability Type is updated with identifier {{ param }}",
+      "deleted": "A Disability Type is deleted with identifier {{ param }}",
+      "delete": {
+        "question": "Are you sure you want to delete Disability Type {{ id }}?"
+      },
+      "detail": {
+        "title": "Disability Type"
+      },
+      "disability": "Disability",
+      "description": "Description",
+      "hasExtraData": "Has Extra Data"
+    }
+  }
+}

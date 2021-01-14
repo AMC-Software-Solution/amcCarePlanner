@@ -1,0 +1,29 @@
+{
+  "carePlannerApp": {
+    "eligibility": {
+      "home": {
+        "title": "Eligibilities",
+        "createLabel": "Créer un nouveau Eligibility",
+        "createOrEditLabel": "Créer ou éditer un Eligibility",
+        "notFound": "Aucun Eligibility trouvé"
+      },
+      "created": "Un nouveau Eligibility a été créé avec l'identifiant {{ param }}",
+      "updated": "Le Eligibility avec l'identifiant {{ param }} a été mis à jour",
+      "deleted": "Le Eligibility avec l'identifiant {{ param }} a été supprimé",
+      "delete": {
+        "question": "Etes-vous certain de vouloir supprimer le Eligibility {{ id }} ?"
+      },
+      "detail": {
+        "title": "Eligibility"
+      },
+      "isEligible": "Is Eligible",
+      "note": "Note",
+      "createdDate": "Created Date",
+      "lastUpdatedDate": "Last Updated Date",
+      "clientId": "Client Id",
+      "hasExtraData": "Has Extra Data",
+      "eligibilityType": "Eligibility Type",
+      "employee": "Employee"
+    }
+  }
+}

@@ -1,0 +1,30 @@
+{
+  "carePlannerApp": {
+    "carerServiceUserRelation": {
+      "home": {
+        "title": "CarerServiceUserRelations",
+        "createLabel": "Créer un nouveau Carer Service User Relation",
+        "createOrEditLabel": "Créer ou éditer un Carer Service User Relation",
+        "notFound": "Aucun Carer Service User Relation trouvé"
+      },
+      "created": "Un nouveau Carer Service User Relation a été créé avec l'identifiant {{ param }}",
+      "updated": "Le Carer Service User Relation avec l'identifiant {{ param }} a été mis à jour",
+      "deleted": "Le Carer Service User Relation avec l'identifiant {{ param }} a été supprimé",
+      "delete": {
+        "question": "Etes-vous certain de vouloir supprimer le Carer Service User Relation {{ id }} ?"
+      },
+      "detail": {
+        "title": "Carer Service User Relation"
+      },
+      "reason": "Reason",
+      "count": "Count",
+      "createdDate": "Created Date",
+      "lastUpdatedDate": "Last Updated Date",
+      "clientId": "Client Id",
+      "hasExtraData": "Has Extra Data",
+      "relationType": "Relation Type",
+      "employee": "Employee",
+      "serviceUser": "Service User"
+    }
+  }
+}

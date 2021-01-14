@@ -1,0 +1,75 @@
+{
+  "name": "EmployeeAvailability",
+  "fields": [
+    {
+      "fieldName": "availableForWork",
+      "fieldType": "Boolean"
+    },
+    {
+      "fieldName": "availableMonday",
+      "fieldType": "Boolean"
+    },
+    {
+      "fieldName": "availableTuesday",
+      "fieldType": "Boolean"
+    },
+    {
+      "fieldName": "availableWednesday",
+      "fieldType": "Boolean"
+    },
+    {
+      "fieldName": "availableThursday",
+      "fieldType": "Boolean"
+    },
+    {
+      "fieldName": "availableFriday",
+      "fieldType": "Boolean"
+    },
+    {
+      "fieldName": "availableSaturday",
+      "fieldType": "Boolean"
+    },
+    {
+      "fieldName": "availableSunday",
+      "fieldType": "Boolean"
+    },
+    {
+      "fieldName": "preferredShift",
+      "fieldType": "Shift",
+      "fieldValues": "MORNING_SHIFT,AFTERNOON_SHIFT,EVENING_SHIFT,NIGHTS_SHIFT,AVAILABLE_ANY_SHIFT"
+    },
+    {
+      "fieldName": "hasExtraData",
+      "fieldType": "Boolean"
+    },
+    {
+      "fieldName": "lastUpdatedDate",
+      "fieldType": "ZonedDateTime"
+    },
+    {
+      "fieldName": "clientId",
+      "fieldType": "Long",
+      "fieldValidateRules": ["required"]
+    }
+  ],
+  "relationships": [
+    {
+      "relationshipType": "many-to-one",
+      "otherEntityName": "employee",
+      "otherEntityRelationshipName": "employeeAvailability",
+      "relationshipName": "employee",
+      "otherEntityField": "employeeCode"
+    }
+  ],
+  "changelogDate": "20210114112011",
+  "entityTableName": "employee_availability",
+  "dto": "mapstruct",
+  "pagination": "pagination",
+  "service": "serviceClass",
+  "jpaMetamodelFiltering": true,
+  "fluentMethods": true,
+  "readOnly": false,
+  "embedded": false,
+  "clientRootFolder": "",
+  "applications": "*"
+}

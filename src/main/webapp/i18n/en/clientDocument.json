@@ -1,0 +1,37 @@
+{
+  "carePlannerApp": {
+    "clientDocument": {
+      "home": {
+        "title": "Client Documents",
+        "createLabel": "Create a new Client Document",
+        "createOrEditLabel": "Create or edit a Client Document",
+        "notFound": "No Client Documents found"
+      },
+      "created": "A new Client Document is created with identifier {{ param }}",
+      "updated": "A Client Document is updated with identifier {{ param }}",
+      "deleted": "A Client Document is deleted with identifier {{ param }}",
+      "delete": {
+        "question": "Are you sure you want to delete Client Document {{ id }}?"
+      },
+      "detail": {
+        "title": "Client Document"
+      },
+      "documentName": "Document Name",
+      "documentNumber": "Document Number",
+      "documentType": "Document Type",
+      "documentStatus": "Document Status",
+      "note": "Note",
+      "issuedDate": "Issued Date",
+      "expiryDate": "Expiry Date",
+      "uploadedDate": "Uploaded Date",
+      "documentFile": "Document File",
+      "documentFileUrl": "Document File Url",
+      "createdDate": "Created Date",
+      "lastUpdatedDate": "Last Updated Date",
+      "clientId": "Client Id",
+      "hasExtraData": "Has Extra Data",
+      "uploadedBy": "Uploaded By",
+      "approvedBy": "Approved By"
+    }
+  }
+}
