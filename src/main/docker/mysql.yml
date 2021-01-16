@@ -5,8 +5,9 @@ services:
     # volumes:
     #     - ~/volumes/jhipster/CarePlanner/mysql/:/var/lib/mysql/
     environment:
-      - MYSQL_USER=root
-      - MYSQL_ALLOW_EMPTY_PASSWORD=yes
+      - MYSQL_USER=${MYSQL_USERNAME}
+      - MYSQL_ROOT_PASSWORD=${MYSQL_PASSWORD}
+      - MYSQL_ROOT_HOST=%
       - MYSQL_DATABASE=careplanner
     ports:
       - 3306:3306
