@@ -6,8 +6,23 @@ services:
       - _JAVA_OPTIONS=-Xmx512m -Xms256m
       - SPRING_PROFILES_ACTIVE=prod,swagger
       - MANAGEMENT_METRICS_EXPORT_PROMETHEUS_ENABLED=true
-      - SPRING_DATASOURCE_URL=jdbc:mysql://careplanner-mysql:3306/careplanner?useUnicode=true&characterEncoding=utf8&useSSL=false&useLegacyDatetimeCode=false&serverTimezone=UTC&createDatabaseIfNotExist=true
+      - SPRING_DATASOURCE_URL=${DB_NPOINT}
       - JHIPSTER_SLEEP=30 # gives time for other services to boot before the application
+      - AWS_S3_ENDPOINT=${AWS_S3_ENDPOINT}
+      - AWS_S3_ACCESS_KEY=${AWS_S3_ACCESS_KEY}
+      - AWS_S3_SECRET_KEY=${AWS_S3_SECRET_KEY}
+      - AWS_S3_BUCKET_NAME=${AWS_S3_BUCKET_NAME}
+      - MYSQL_USERNAME=${MYSQL_USERNAME}
+      - MYSQL_PASSWORD=${MYSQL_PASSWORD}
+      - MAIL_HOST=${MAIL_HOST}
+      - MAIL_PORT=${MAIL_PORT}
+      - MAIL_USERNAME=${MAIL_USERNAME}
+      - MAIL_PASSWORD=${MAIL_PASSWORD}
+      - MAIL_PROTOCOL=${MAIL_PROTOCOL}
+      - MAIL_SSL_TRUST=${MAIL_SSL_TRUST}
+      - BASE64_SECRET=${BASE64_SECRET}
+      - SPRING_DATA_JEST_URI=http://localhost:9200
+      - SPRING_ELASTICSEARCH_REST_URIS=http://localhost:9200
     ports:
       - 8080:8080
   careplanner-mysql:
