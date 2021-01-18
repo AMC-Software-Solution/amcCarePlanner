@@ -7,8 +7,6 @@ import { Translate, translate, ICrudGetAction, ICrudGetAllAction, setFileData, o
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
 import { IRootState } from 'app/shared/reducers';
 
-import { IClient } from 'app/shared/model/client.model';
-import { getEntities as getClients } from 'app/entities/client/client.reducer';
 import { getEntity, updateEntity, createEntity, setBlob, reset } from './branch.reducer';
 import { IBranch } from 'app/shared/model/branch.model';
 import { convertDateTimeFromServer, convertDateTimeToServer, displayDefaultDateTime } from 'app/shared/util/date-utils';
@@ -17,10 +15,9 @@ import { mapIdList } from 'app/shared/util/entity-utils';
 export interface IBranchUpdateProps extends StateProps, DispatchProps, RouteComponentProps<{ id: string }> {}
 
 export const BranchUpdate = (props: IBranchUpdateProps) => {
-  const [clientId, setClientId] = useState('0');
   const [isNew, setIsNew] = useState(!props.match.params || !props.match.params.id);
 
-  const { branchEntity, clients, loading, updating } = props;
+  const { branchEntity, loading, updating } = props;
 
   const { photo, photoContentType } = branchEntity;
 
@@ -35,7 +32,6 @@ export const BranchUpdate = (props: IBranchUpdateProps) => {
       props.getEntity(props.match.params.id);
     }
 
-    props.getClients();
   }, []);
 
   const onBlobChange = (isAnImage, name) => event => {
@@ -200,21 +196,6 @@ export const BranchUpdate = (props: IBranchUpdateProps) => {
                   <Translate contentKey="carePlannerApp.branch.hasExtraData">Has Extra Data</Translate>
                 </Label>
               </AvGroup>
-              <AvGroup>
-                <Label for="branch-client">
-                  <Translate contentKey="carePlannerApp.branch.client">Client</Translate>
-                </Label>
-                <AvInput id="branch-client" type="select" className="form-control" name="clientId">
-                  <option value="" key="0" />
-                  {clients
-                    ? clients.map(otherEntity => (
-                        <option value={otherEntity.id} key={otherEntity.id}>
-                          {otherEntity.clientName}
-                        </option>
-                      ))
-                    : null}
-                </AvInput>
-              </AvGroup>
               <Button tag={Link} id="cancel-save" to="/branch" replace color="info">
                 <FontAwesomeIcon icon="arrow-left" />
                 &nbsp;
@@ -237,7 +218,6 @@ export const BranchUpdate = (props: IBranchUpdateProps) => {
 };
 
 const mapStateToProps = (storeState: IRootState) => ({
-  clients: storeState.client.entities,
   branchEntity: storeState.branch.entity,
   loading: storeState.branch.loading,
   updating: storeState.branch.updating,
@@ -245,7 +225,6 @@ const mapStateToProps = (storeState: IRootState) => ({
 });
 
 const mapDispatchToProps = {
-  getClients,
   getEntity,
   updateEntity,
   setBlob,

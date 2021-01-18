@@ -72,13 +72,14 @@ public class BranchResourceExt extends BranchResource {
      * @throws URISyntaxException if the Location URI syntax is incorrect.
      */
     @PostMapping("/create-branch-by-client-id")
-    @PreAuthorize("hasAuthority(\"" + AuthoritiesConstants.ADMIN + "\")")
+    @PreAuthorize("hasAuthority(\"" + AuthoritiesConstants.COMPANY_ADMIN + "\")")
     public ResponseEntity<BranchDTO> createBranch(@Valid @RequestBody BranchDTO branchDTO) throws URISyntaxException {
         log.debug("REST request to save Branch : {}", branchDTO);
         if (branchDTO.getId() != null) {
             throw new BadRequestAlertException("A new branch cannot already have an ID", ENTITY_NAME, "idexists");
         }
         branchDTO.setLastUpdatedDate(ZonedDateTime.now());
+        branchDTO.setClientId(getClientIdFromLoggedInUser());
         BranchDTO result = branchServiceExt.save(branchDTO);
         return ResponseEntity.created(new URI("/v1/api/get_branches_by_client_id/" + result.getId()))
             .headers(HeaderUtil.createEntityCreationAlert(applicationName, true, ENTITY_NAME, result.getId().toString()))
@@ -95,12 +96,14 @@ public class BranchResourceExt extends BranchResource {
      * @throws URISyntaxException if the Location URI syntax is incorrect.
      */
     @PutMapping("/update-branch-by-client-id")
-    @PreAuthorize("hasAuthority(\"" + AuthoritiesConstants.ADMIN + "\")")
+    @PreAuthorize("hasAuthority(\"" + AuthoritiesConstants.COMPANY_ADMIN + "\")")
     public ResponseEntity<BranchDTO> updateBranch(@Valid @RequestBody BranchDTO branchDTO) throws URISyntaxException {
         log.debug("REST request to update Branch : {}", branchDTO);
         if (branchDTO.getId() == null) {
             throw new BadRequestAlertException("Invalid id", ENTITY_NAME, "idnull");
         }
+        
+        branchDTO.setClientId(getClientIdFromLoggedInUser());
         BranchDTO result = branchServiceExt.save(branchDTO);
         
         return ResponseEntity.ok()
@@ -169,7 +172,7 @@ public class BranchResourceExt extends BranchResource {
      * @return the {@link ResponseEntity} with status {@code 204 (NO_CONTENT)}.
      */
     @DeleteMapping("/delete-branch-by-client-id/{id}")
-    @PreAuthorize("hasAuthority(\"" + AuthoritiesConstants.ADMIN + "\")")
+    @PreAuthorize("hasAuthority(\"" + AuthoritiesConstants.COMPANY_ADMIN + "\")")
     public ResponseEntity<Void> deleteBranch(@PathVariable Long id) {
         log.debug("REST request to delete Branch : {}", id);
         branchServiceExt.delete(id);
