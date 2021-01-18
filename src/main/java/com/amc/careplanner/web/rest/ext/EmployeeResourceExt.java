@@ -24,6 +24,7 @@ import com.amc.careplanner.service.EmailAlreadyUsedException;
 import com.amc.careplanner.service.EmployeeQueryService;
 
 import io.github.jhipster.service.filter.LongFilter;
+import io.github.jhipster.service.filter.StringFilter;
 import io.github.jhipster.web.util.HeaderUtil;
 import io.github.jhipster.web.util.PaginationUtil;
 import io.github.jhipster.web.util.ResponseUtil;
@@ -286,7 +287,28 @@ public class EmployeeResourceExt extends EmployeeResource{
 		LongFilter longFilterForClientId = new LongFilter();
 		longFilterForClientId.setEquals(getClientIdFromLoggedInUser());
 		LongFilter longFilterForId = new LongFilter();
+		employeeCriteria.setId(longFilterForId);
 		longFilterForId.setEquals(id);
+		employeeCriteria.setClientId(longFilterForClientId);
+		 List<EmployeeDTO> listOfEmployees = employeeQueryService.findByCriteria(employeeCriteria);
+		 EmployeeDTO employeeDTO =listOfEmployees.get(0);
+        if (employeeDTO != null && employeeDTO.getClientId() != null && employeeDTO.getClientId() != getClientIdFromLoggedInUser()) {
+        	  throw new BadRequestAlertException("clientId mismatch", ENTITY_NAME, "clientIdMismatch");
+        }
+        return ResponseUtil.wrapOrNotFound(Optional.of(employeeDTO));
+    }
+    
+    
+    
+    @GetMapping("/get-employee-by-client-id-by-email/{email}")
+    public ResponseEntity<EmployeeDTO> getEmployeeByEmail(@PathVariable String email) {
+        log.debug("REST request to get Employee email: {}", email);
+        EmployeeCriteria employeeCriteria = new EmployeeCriteria();
+		LongFilter longFilterForClientId = new LongFilter();
+		longFilterForClientId.setEquals(getClientIdFromLoggedInUser());
+		StringFilter stringFilterForEmail = new StringFilter();
+		stringFilterForEmail.setEquals(email);
+		employeeCriteria.setEmail(stringFilterForEmail);
 		employeeCriteria.setClientId(longFilterForClientId);
 		 List<EmployeeDTO> listOfEmployees = employeeQueryService.findByCriteria(employeeCriteria);
 		 EmployeeDTO employeeDTO =listOfEmployees.get(0);
