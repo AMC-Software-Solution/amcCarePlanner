@@ -152,12 +152,16 @@ public class BranchResourceExt extends BranchResource {
     public ResponseEntity<BranchDTO> getBranch(@PathVariable Long id) {
         log.debug("REST request to get Branch : {}", id);
         BranchCriteria branchCriteria = new BranchCriteria();
-		LongFilter longFilterForClientId = new LongFilter();
+		
+        LongFilter longFilterForClientId = new LongFilter();
 		longFilterForClientId.setEquals(getClientIdFromLoggedInUser());
+		branchCriteria.setClientId(longFilterForClientId);
+		
 		LongFilter longFilterForId = new LongFilter();
 		longFilterForId.setEquals(id);
-		branchCriteria.setClientId(longFilterForClientId);
-		 List<BranchDTO> listOfBranches = branchQueryService.findByCriteria(branchCriteria);
+		branchCriteria.setId(longFilterForId);
+		
+		List<BranchDTO> listOfBranches = branchQueryService.findByCriteria(branchCriteria);
 		 BranchDTO branchDTO =listOfBranches.get(0);
         if (branchDTO != null && branchDTO.getClientId() != null && branchDTO.getClientId() != getClientIdFromLoggedInUser()) {
         	  throw new BadRequestAlertException("clientId mismatch", ENTITY_NAME, "clientIdMismatch");
