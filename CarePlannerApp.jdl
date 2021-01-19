@@ -766,6 +766,19 @@ relationship ManyToOne {
 	EmployeeHoliday {approvedBy (employeeCode)} to Employee
 }
 
+entity DocumentFolder{
+	folderName String required,
+	folderDescription String,
+	clientId Long required,
+	createdDate ZonedDateTime,
+	updatedDate ZonedDateTime,
+	hasExtraData Boolean
+}
+
+relationship OneToMany {
+	DocumentFolder {parent (folderName)} to DocumentFolder
+}
+
 entity ServceUserDocument{
     documentName String required,
 	documentNumber String,
@@ -777,18 +790,25 @@ entity ServceUserDocument{
     documentFile Blob,
     documentFileUrl String,
     createdDate ZonedDateTime,
-lastUpdatedDate ZonedDateTime,
+	lastUpdatedDate ZonedDateTime,
 	clientId Long required,
-	hasExtraData Boolean
+	hasExtraData Boolean,
+	// new
+	documentSize Double
 }
 
 relationship ManyToOne{
- EmployeeDocument{documentType (documentTypeTitle)} to DocumentType
+ ServceUserDocument{documentType (documentTypeTitle)} to DocumentType
 }
 
 
 relationship ManyToOne  {
    ServceUserDocument{owner(serviceUserCode)} to ServiceUser
+ 
+}
+
+relationship ManyToOne  {
+   ServceUserDocument{folder (folderName)} to DocumentFolder
  
 }
 
@@ -835,7 +855,8 @@ entity EmployeeDocument{
     createdDate ZonedDateTime,
 lastUpdatedDate ZonedDateTime,
 	clientId Long required,
-	hasExtraData Boolean
+	hasExtraData Boolean,
+	documentSize Double
 }
 
 relationship ManyToOne{
@@ -844,6 +865,10 @@ relationship ManyToOne{
 
 relationship ManyToOne  {
    EmployeeDocument{employee(employeeCode)} to Employee
+}
+
+relationship ManyToOne  {
+   EmployeeDocument{folder (folderName)} to DocumentFolder
 }
 
 relationship ManyToOne  {
@@ -1076,7 +1101,8 @@ entity ClientDocument {
     createdDate ZonedDateTime,
     lastUpdatedDate ZonedDateTime,
 	clientId Long required,
-	hasExtraData Boolean
+	hasExtraData Boolean,
+	documentSize Double
 }
 
 
@@ -1086,6 +1112,10 @@ relationship ManyToOne  {
 
 relationship ManyToOne  {
    ClientDocument{approvedBy(employeeCode)} to Employee
+}
+
+relationship ManyToOne  {
+   ClientDocument{folder (folderName)} to DocumentFolder
 }
 
 
@@ -1139,10 +1169,10 @@ entity ExtraData {
  
  
 
-paginate Client,Branch,ServiceUser,MedicalContact,ServiceUserContact,EmergencyContact,ServiceUserLocation,PowerOfAttorney, Consent,Access,Equality,QuestionType,Question,Answer,Employee,EmployeeLocation,EmployeeAvailability,CarerServiceUserRelation,DisabilityType,Disability,EligibilityType,Eligibility,Travel,Payroll,EmployeeHoliday,ServceUserDocument,TerminalDevice,EmployeeDocument,Communication,DocumentType,Notification,Country,Task,ServiceUserEvent,ServiceOrder,Invoice,Timesheet,ClientDocument,SystemEventsHistory,SystemSetting,Currency,ExtraData,CarerServiceUserRelation,EmployeeDesignation,RelationshipType with pagination
-dto Client,Branch,ServiceUser,MedicalContact,ServiceUserContact,EmergencyContact,ServiceUserLocation,PowerOfAttorney, Consent,Access,Equality,QuestionType,Question,Answer,Employee,EmployeeLocation,EmployeeAvailability,CarerServiceUserRelation,DisabilityType,Disability,EligibilityType,Eligibility,Travel,Payroll,EmployeeHoliday,ServceUserDocument,TerminalDevice,EmployeeDocument,Communication,DocumentType,Notification,Country,Task,ServiceUserEvent,ServiceOrder,Invoice,Timesheet,ClientDocument,SystemEventsHistory,SystemSetting,Currency,ExtraData,CarerServiceUserRelation,EmployeeDesignation,RelationshipType with mapstruct
-service Client,Branch,ServiceUser,MedicalContact,ServiceUserContact,EmergencyContact,ServiceUserLocation,PowerOfAttorney, Consent,Access,Equality,QuestionType,Question,Answer,Employee,EmployeeLocation,EmployeeAvailability,CarerServiceUserRelation,DisabilityType,Disability,EligibilityType,Eligibility,Travel,Payroll,EmployeeHoliday,ServceUserDocument,TerminalDevice,EmployeeDocument,Communication,DocumentType,Notification,Country,Task,ServiceUserEvent,ServiceOrder,Invoice,Timesheet,ClientDocument,SystemEventsHistory,SystemSetting,Currency,ExtraData,CarerServiceUserRelation,EmployeeDesignation,RelationshipType with serviceClass
-//search Client,Branch,ServiceUser,MedicalContact,ServiceUserContact,EmergencyContact,ServiceUserLocation,PowerOfAttorney, Consent,Access,Equality,QuestionType,Question,Answer,Employee,EmployeeLocation,EmployeeAvailability,DisabilityType,Disability,EligibilityType,Eligibility,Travel,Payroll,EmployeeHoliday,ServceUserDocument,TerminalDevice,EmployeeDocument,Communication,DocumentType,Notification,Country,Task,ServiceUserEvent,ServiceOrder,Invoice,Timesheet,ClientDocument,SystemEventsHistory,SystemSetting,Currency,ExtraData,EmployeeDesignation,RelationshipType with elasticsearch
-filter Client,Branch,ServiceUser,MedicalContact,ServiceUserContact,EmergencyContact,ServiceUserLocation,PowerOfAttorney, Consent,Access,Equality,QuestionType,Question,Answer,Employee,EmployeeLocation,EmployeeAvailability,CarerServiceUserRelation,DisabilityType,Disability,EligibilityType,Eligibility,Travel,Payroll,EmployeeHoliday,ServceUserDocument,TerminalDevice,EmployeeDocument,Communication,DocumentType,Notification,Country,Task,ServiceUserEvent,ServiceOrder,Invoice,Timesheet,ClientDocument,SystemEventsHistory,SystemSetting,Currency,ExtraData,CarerServiceUserRelation,EmployeeDesignation,RelationshipType
+paginate Client,Branch,ServiceUser,MedicalContact,ServiceUserContact,EmergencyContact,ServiceUserLocation,PowerOfAttorney, Consent,Access,Equality,QuestionType,Question,Answer,Employee,EmployeeLocation,EmployeeAvailability,CarerServiceUserRelation,DisabilityType,Disability,EligibilityType,Eligibility,Travel,Payroll,EmployeeHoliday,ServceUserDocument,TerminalDevice,EmployeeDocument,Communication,DocumentType,Notification,Country,Task,ServiceUserEvent,ServiceOrder,Invoice,Timesheet,ClientDocument,SystemEventsHistory,SystemSetting,Currency,ExtraData,CarerServiceUserRelation,EmployeeDesignation,RelationshipType,DocumentFolder with pagination
+dto Client,Branch,ServiceUser,MedicalContact,ServiceUserContact,EmergencyContact,ServiceUserLocation,PowerOfAttorney, Consent,Access,Equality,QuestionType,Question,Answer,Employee,EmployeeLocation,EmployeeAvailability,CarerServiceUserRelation,DisabilityType,Disability,EligibilityType,Eligibility,Travel,Payroll,EmployeeHoliday,ServceUserDocument,TerminalDevice,EmployeeDocument,Communication,DocumentType,Notification,Country,Task,ServiceUserEvent,ServiceOrder,Invoice,Timesheet,ClientDocument,SystemEventsHistory,SystemSetting,Currency,ExtraData,CarerServiceUserRelation,EmployeeDesignation,RelationshipType,DocumentFolder with mapstruct
+service Client,Branch,ServiceUser,MedicalContact,ServiceUserContact,EmergencyContact,ServiceUserLocation,PowerOfAttorney, Consent,Access,Equality,QuestionType,Question,Answer,Employee,EmployeeLocation,EmployeeAvailability,CarerServiceUserRelation,DisabilityType,Disability,EligibilityType,Eligibility,Travel,Payroll,EmployeeHoliday,ServceUserDocument,TerminalDevice,EmployeeDocument,Communication,DocumentType,Notification,Country,Task,ServiceUserEvent,ServiceOrder,Invoice,Timesheet,ClientDocument,SystemEventsHistory,SystemSetting,Currency,ExtraData,CarerServiceUserRelation,EmployeeDesignation,RelationshipType,DocumentFolder with serviceClass
+//search Client,Branch,ServiceUser,MedicalContact,ServiceUserContact,EmergencyContact,ServiceUserLocation,PowerOfAttorney, Consent,Access,Equality,QuestionType,Question,Answer,Employee,EmployeeLocation,EmployeeAvailability,DisabilityType,Disability,EligibilityType,Eligibility,Travel,Payroll,EmployeeHoliday,ServceUserDocument,TerminalDevice,EmployeeDocument,Communication,DocumentType,Notification,Country,Task,ServiceUserEvent,ServiceOrder,Invoice,Timesheet,ClientDocument,SystemEventsHistory,SystemSetting,Currency,ExtraData,EmployeeDesignation,RelationshipType,DocumentFolder with elasticsearch
+filter Client,Branch,ServiceUser,MedicalContact,ServiceUserContact,EmergencyContact,ServiceUserLocation,PowerOfAttorney, Consent,Access,Equality,QuestionType,Question,Answer,Employee,EmployeeLocation,EmployeeAvailability,CarerServiceUserRelation,DisabilityType,Disability,EligibilityType,Eligibility,Travel,Payroll,EmployeeHoliday,ServceUserDocument,TerminalDevice,EmployeeDocument,Communication,DocumentType,Notification,Country,Task,ServiceUserEvent,ServiceOrder,Invoice,Timesheet,ClientDocument,SystemEventsHistory,SystemSetting,Currency,ExtraData,CarerServiceUserRelation,EmployeeDesignation,RelationshipType,DocumentFolder
 
  
