@@ -21,15 +21,15 @@
     },
     {
       "fieldName": "issuedDate",
-      "fieldType": "LocalDate"
+      "fieldType": "DateTime"
     },
     {
       "fieldName": "expiryDate",
-      "fieldType": "LocalDate"
+      "fieldType": "DateTime"
     },
     {
       "fieldName": "uploadedDate",
-      "fieldType": "ZonedDateTime"
+      "fieldType": "DateTime"
     },
     {
       "fieldName": "documentFile",
@@ -42,11 +42,11 @@
     },
     {
       "fieldName": "createdDate",
-      "fieldType": "ZonedDateTime"
+      "fieldType": "DateTime"
     },
     {
       "fieldName": "lastUpdatedDate",
-      "fieldType": "ZonedDateTime"
+      "fieldType": "DateTime"
     },
     {
       "fieldName": "clientId",

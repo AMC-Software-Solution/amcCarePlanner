@@ -22,7 +22,7 @@
     },
     {
       "fieldName": "priority",
-      "fieldType": "ServicePriority",
+      "fieldType": "Priority",
       "fieldValues": "HIGH,LOW,MEDIUM"
     },
     {
@@ -31,16 +31,16 @@
     },
     {
       "fieldName": "dateOfEvent",
-      "fieldType": "ZonedDateTime",
+      "fieldType": "DateTime",
       "fieldValidateRules": ["required"]
     },
     {
       "fieldName": "createdDate",
-      "fieldType": "ZonedDateTime"
+      "fieldType": "DateTime"
     },
     {
       "fieldName": "lastUpdatedDate",
-      "fieldType": "ZonedDateTime"
+      "fieldType": "DateTime"
     },
     {
       "fieldName": "clientId",

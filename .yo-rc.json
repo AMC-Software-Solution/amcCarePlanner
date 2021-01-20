@@ -39,5 +39,17 @@
     "nativeLanguage": "en",
     "languages": ["en", "fr"],
     "blueprints": []
+  },
+  "generator-jhipster-flutter-merlin": {
+    "promptValues": {
+      "baseName": "amcCarePlanner",
+      "packageName": "com.amc.careplanner",
+      "android": "kotlin",
+      "ios": "swift",
+      "stateManageType": "bloc",
+      "enableTranslation": true,
+      "nativeLanguage": "en",
+      "languages": ["fr"]
+    }
   }
 }

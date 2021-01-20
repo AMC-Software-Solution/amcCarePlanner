@@ -8,7 +8,7 @@
     },
     {
       "fieldName": "eventDate",
-      "fieldType": "ZonedDateTime"
+      "fieldType": "DateTime"
     },
     {
       "fieldName": "eventApi",

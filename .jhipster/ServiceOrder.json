@@ -12,7 +12,7 @@
     },
     {
       "fieldName": "serviceHourlyRate",
-      "fieldType": "Double",
+      "fieldType": "String",
       "fieldValidateRules": ["required"]
     },
     {
@@ -22,11 +22,11 @@
     },
     {
       "fieldName": "createdDate",
-      "fieldType": "ZonedDateTime"
+      "fieldType": "DateTime"
     },
     {
       "fieldName": "lastUpdatedDate",
-      "fieldType": "ZonedDateTime"
+      "fieldType": "DateTime"
     },
     {
       "fieldName": "hasExtraData",

@@ -1,5 +1,5 @@
 {
-  "name": "Notification",
+  "name": "Notifications",
   "fields": [
     {
       "fieldName": "title",
@@ -13,7 +13,7 @@
     },
     {
       "fieldName": "notificationDate",
-      "fieldType": "ZonedDateTime"
+      "fieldType": "DateTime"
     },
     {
       "fieldName": "image",
@@ -34,11 +34,11 @@
     },
     {
       "fieldName": "createdDate",
-      "fieldType": "ZonedDateTime"
+      "fieldType": "DateTime"
     },
     {
       "fieldName": "lastUpdatedDate",
-      "fieldType": "ZonedDateTime"
+      "fieldType": "DateTime"
     },
     {
       "fieldName": "clientId",

@@ -44,7 +44,7 @@
     },
     {
       "fieldName": "lastUpdatedDate",
-      "fieldType": "ZonedDateTime"
+      "fieldType": "DateTime"
     },
     {
       "fieldName": "clientId",

@@ -3,7 +3,7 @@
   "fields": [
     {
       "fieldName": "totalAmount",
-      "fieldType": "BigDecimal",
+      "fieldType": "String",
       "fieldValidateRules": ["required"]
     },
     {
@@ -17,17 +17,17 @@
     },
     {
       "fieldName": "generatedDate",
-      "fieldType": "ZonedDateTime",
+      "fieldType": "DateTime",
       "fieldValidateRules": ["required"]
     },
     {
       "fieldName": "dueDate",
-      "fieldType": "ZonedDateTime",
+      "fieldType": "DateTime",
       "fieldValidateRules": ["required"]
     },
     {
       "fieldName": "paymentDate",
-      "fieldType": "ZonedDateTime"
+      "fieldType": "DateTime"
     },
     {
       "fieldName": "invoiceStatus",
@@ -37,7 +37,7 @@
     },
     {
       "fieldName": "tax",
-      "fieldType": "Double"
+      "fieldType": "String"
     },
     {
       "fieldName": "attribute1",
@@ -69,11 +69,11 @@
     },
     {
       "fieldName": "createdDate",
-      "fieldType": "ZonedDateTime"
+      "fieldType": "DateTime"
     },
     {
       "fieldName": "lastUpdatedDate",
-      "fieldType": "ZonedDateTime"
+      "fieldType": "DateTime"
     },
     {
       "fieldName": "clientId",

@@ -30,7 +30,7 @@
     },
     {
       "fieldName": "extraDataDate",
-      "fieldType": "ZonedDateTime"
+      "fieldType": "DateTime"
     },
     {
       "fieldName": "hasExtraData",

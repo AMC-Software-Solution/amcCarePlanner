@@ -3,7 +3,7 @@
   "fields": [
     {
       "fieldName": "paymentDate",
-      "fieldType": "ZonedDateTime",
+      "fieldType": "DateTime",
       "fieldValidateRules": ["required"]
     },
     {
@@ -18,17 +18,17 @@
     },
     {
       "fieldName": "grossPay",
-      "fieldType": "BigDecimal",
+      "fieldType": "String",
       "fieldValidateRules": ["required"]
     },
     {
       "fieldName": "netPay",
-      "fieldType": "BigDecimal",
+      "fieldType": "String",
       "fieldValidateRules": ["required"]
     },
     {
       "fieldName": "totalTax",
-      "fieldType": "BigDecimal"
+      "fieldType": "String"
     },
     {
       "fieldName": "payrollStatus",
@@ -38,11 +38,11 @@
     },
     {
       "fieldName": "createdDate",
-      "fieldType": "ZonedDateTime"
+      "fieldType": "DateTime"
     },
     {
       "fieldName": "lastUpdatedDate",
-      "fieldType": "ZonedDateTime"
+      "fieldType": "DateTime"
     },
     {
       "fieldName": "clientId",

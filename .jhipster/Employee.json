@@ -2,8 +2,8 @@
   "name": "Employee",
   "fields": [
     {
-      "fieldName": "title",
-      "fieldType": "Title",
+      "fieldName": "tittle",
+      "fieldType": "Tittle",
       "fieldValues": "MR,MRS,MS,MISS,OTHER",
       "fieldValidateRules": ["required"]
     },
@@ -34,8 +34,8 @@
       "fieldValidateRulesMaxlength": "25"
     },
     {
-      "fieldName": "gender",
-      "fieldType": "Gender",
+      "fieldName": "gendder",
+      "fieldType": "Gendder",
       "fieldValues": "MALE,FEMALE,OTHER",
       "fieldValidateRules": ["required"]
     },
@@ -69,8 +69,8 @@
       "fieldType": "Integer"
     },
     {
-      "fieldName": "transportMode",
-      "fieldType": "TravelMode",
+      "fieldName": "employeeTransportMode",
+      "fieldType": "EmployeeTravelMode",
       "fieldValues": "CAR,BUS,TRAIN,PLANE,SHIP,WALK,OTHER",
       "fieldValidateRules": ["required"]
     },
@@ -89,7 +89,7 @@
     },
     {
       "fieldName": "dateOfBirth",
-      "fieldType": "LocalDate",
+      "fieldType": "DateTime",
       "fieldValidateRules": ["required"]
     },
     {
@@ -116,11 +116,11 @@
     },
     {
       "fieldName": "createdDate",
-      "fieldType": "ZonedDateTime"
+      "fieldType": "DateTime"
     },
     {
       "fieldName": "lastUpdatedDate",
-      "fieldType": "ZonedDateTime"
+      "fieldType": "DateTime"
     },
     {
       "fieldName": "clientId",

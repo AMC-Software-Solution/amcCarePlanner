@@ -2,8 +2,8 @@
   "name": "ServiceUser",
   "fields": [
     {
-      "fieldName": "title",
-      "fieldType": "Title",
+      "fieldName": "titlle",
+      "fieldType": "Titlle",
       "fieldValues": "MR,MRS,MS,MISS,OTHER",
       "fieldValidateRules": ["required"]
     },
@@ -44,16 +44,16 @@
     },
     {
       "fieldName": "dateOfBirth",
-      "fieldType": "LocalDate",
+      "fieldType": "DateTime",
       "fieldValidateRules": ["required"]
     },
     {
       "fieldName": "lastVisitDate",
-      "fieldType": "ZonedDateTime"
+      "fieldType": "DateTime"
     },
     {
       "fieldName": "startDate",
-      "fieldType": "ZonedDateTime",
+      "fieldType": "DateTime",
       "fieldValidateRules": ["required"]
     },
     {
@@ -104,7 +104,7 @@
     },
     {
       "fieldName": "activatedDate",
-      "fieldType": "ZonedDateTime"
+      "fieldType": "DateTime"
     },
     {
       "fieldName": "profilePhoto",
@@ -133,11 +133,11 @@
     },
     {
       "fieldName": "createdDate",
-      "fieldType": "ZonedDateTime"
+      "fieldType": "DateTime"
     },
     {
       "fieldName": "lastUpdatedDate",
-      "fieldType": "ZonedDateTime"
+      "fieldType": "DateTime"
     },
     {
       "fieldName": "clientId",
