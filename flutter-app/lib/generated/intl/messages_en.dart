@@ -19,7 +19,7 @@ typedef String MessageIfAbsent(String messageStr, List<dynamic> args);
 class MessageLookup extends MessageLookupByLibrary {
   String get localeName => 'en';
 
-  static m0(login) => "Current user : ${login}";
+  static m0(login) => "Hi! ${login}";
 
   static m1(min) => "Rules : 1 uppercase, 1 number and ${min} characters";
 
@@ -751,8 +751,8 @@ class MessageLookup extends MessageLookupByLibrary {
     "pageMainNumberPackOpen" : MessageLookupByLibrary.simpleMessage("Packs"),
     "pageMainOpenPackButton" : MessageLookupByLibrary.simpleMessage("Open pack"),
     "pageMainProfileButton" : MessageLookupByLibrary.simpleMessage("Your profile"),
-    "pageMainTitle" : MessageLookupByLibrary.simpleMessage("Main page"),
-    "pageMainWelcome" : MessageLookupByLibrary.simpleMessage("Welcome to your Jhipster flutter app"),
+    "pageMainTitle" : MessageLookupByLibrary.simpleMessage("HOME"),
+    "pageMainWelcome" : MessageLookupByLibrary.simpleMessage("Welcome to your Care Planner App"),
     "pageRegisterConfirmationPasswordValidationError" : m1,
     "pageRegisterErrorLoginExist" : MessageLookupByLibrary.simpleMessage("Login already taken"),
     "pageRegisterErrorMailExist" : MessageLookupByLibrary.simpleMessage("Email already exist"),

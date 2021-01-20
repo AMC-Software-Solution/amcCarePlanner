@@ -9,6 +9,8 @@ import 'intl/messages_all.dart';
 // **************************************************************************
 
 // ignore_for_file: non_constant_identifier_names, lines_longer_than_80_chars
+// ignore_for_file: join_return_with_assignment, prefer_final_in_for_each
+// ignore_for_file: avoid_redundant_argument_values
 
 class S {
   S();
@@ -333,30 +335,30 @@ class S {
     );
   }
 
-  /// `Main page`
+  /// `HOME`
   String get pageMainTitle {
     return Intl.message(
-      'Main page',
+      'HOME',
       name: 'pageMainTitle',
       desc: '',
       args: [],
     );
   }
 
-  /// `Current user : {login}`
+  /// `Hi! {login}`
   String pageMainCurrentUser(Object login) {
     return Intl.message(
-      'Current user : $login',
+      'Hi! $login',
       name: 'pageMainCurrentUser',
       desc: '',
       args: [login],
     );
   }
 
-  /// `Welcome to your Jhipster flutter app`
+  /// `Welcome to your Care Planner App`
   String get pageMainWelcome {
     return Intl.message(
-      'Welcome to your Jhipster flutter app',
+      'Welcome to your Care Planner App',
       name: 'pageMainWelcome',
       desc: '',
       args: [],

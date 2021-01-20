@@ -9,3 +9,6 @@ void main() {
   initializeJsonMapper();
   runApp(AmcCarePlannerApp());
 }
+
+// maslax@localhost.com
+// onetimepassword
