@@ -17,8 +17,8 @@
       "fieldValidateRules": ["required"]
     },
     {
-      "fieldName": "clientDocumentStatus",
-      "fieldType": "ClientDocumentStatus",
+      "fieldName": "documentStatus",
+      "fieldType": "DocumentStatus",
       "fieldValues": "EXPIRED,ACTIVE,ARCHIVED"
     },
     {
@@ -80,7 +80,7 @@
       "otherEntityField": "employeeCode"
     }
   ],
-  "changelogDate": "20210114114311",
+  "changelogDate": "20210121105953",
   "entityTableName": "client_document",
   "dto": "mapstruct",
   "pagination": "pagination",

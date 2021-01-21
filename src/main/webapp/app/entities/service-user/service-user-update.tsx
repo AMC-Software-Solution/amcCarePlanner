@@ -116,11 +116,11 @@ export const ServiceUserUpdate = (props: IServiceUserUpdateProps) => {
                   name="title"
                   value={(!isNew && serviceUserEntity.title) || 'MR'}
                 >
-                  <option value="MR">{translate('carePlannerApp.Title.MR')}</option>
-                  <option value="MRS">{translate('carePlannerApp.Title.MRS')}</option>
-                  <option value="MS">{translate('carePlannerApp.Title.MS')}</option>
-                  <option value="MISS">{translate('carePlannerApp.Title.MISS')}</option>
-                  <option value="OTHER">{translate('carePlannerApp.Title.OTHER')}</option>
+                  <option value="MR">{translate('carePlannerApp.ServiceUserTitle.MR')}</option>
+                  <option value="MRS">{translate('carePlannerApp.ServiceUserTitle.MRS')}</option>
+                  <option value="MS">{translate('carePlannerApp.ServiceUserTitle.MS')}</option>
+                  <option value="MISS">{translate('carePlannerApp.ServiceUserTitle.MISS')}</option>
+                  <option value="OTHER">{translate('carePlannerApp.ServiceUserTitle.OTHER')}</option>
                 </AvInput>
               </AvGroup>
               <AvGroup>

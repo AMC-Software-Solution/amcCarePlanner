@@ -15,8 +15,8 @@ class ServceUserDocument {
   @JsonProperty(name: 'documentNumber')
   final String documentNumber;
 
-  @JsonProperty(name: 'documentStatus', enumValues: DocumentStatus.values)
-  final DocumentStatus documentStatus;
+  @JsonProperty(name: 'documentStatus', enumValues: ServiceUserDocumentStatus.values)
+  final ServiceUserDocumentStatus documentStatus;
 
   @JsonProperty(name: 'note')
   final String note;
@@ -104,8 +104,8 @@ int get hashCode =>
 
 
 @jsonSerializable
-@Json(enumValues: DocumentStatus.values)
-enum DocumentStatus {
+@Json(enumValues: ServiceUserDocumentStatus.values)
+enum ServiceUserDocumentStatus {
     EXPIRED ,
     ACTIVE ,
     ARCHIVED

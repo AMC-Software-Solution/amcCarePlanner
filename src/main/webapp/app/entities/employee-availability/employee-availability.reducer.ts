@@ -97,12 +97,12 @@ export default (state: EmployeeAvailabilityState = initialState, action): Employ
   }
 };
 
-const apiUrl = 'api/v1/';
+const apiUrl = 'api/employee-availabilities';
 
 // Actions
 
 export const getEntities: ICrudGetAllAction<IEmployeeAvailability> = (page, size, sort) => {
-  const requestUrl = `${apiUrl}/get-all-employee-availabilities-by-client-id${sort ? `?page=${page}&size=${size}&sort=${sort}` : ''}`;
+  const requestUrl = `${apiUrl}${sort ? `?page=${page}&size=${size}&sort=${sort}` : ''}`;
   return {
     type: ACTION_TYPES.FETCH_EMPLOYEEAVAILABILITY_LIST,
     payload: axios.get<IEmployeeAvailability>(`${requestUrl}${sort ? '&' : '?'}cacheBuster=${new Date().getTime()}`),
@@ -110,7 +110,7 @@ export const getEntities: ICrudGetAllAction<IEmployeeAvailability> = (page, size
 };
 
 export const getEntity: ICrudGetAction<IEmployeeAvailability> = id => {
-  const requestUrl = `${apiUrl}/get-employee-availability-by-client-id/${id}`;
+  const requestUrl = `${apiUrl}/${id}`;
   return {
     type: ACTION_TYPES.FETCH_EMPLOYEEAVAILABILITY,
     payload: axios.get<IEmployeeAvailability>(requestUrl),
@@ -120,7 +120,7 @@ export const getEntity: ICrudGetAction<IEmployeeAvailability> = id => {
 export const createEntity: ICrudPutAction<IEmployeeAvailability> = entity => async dispatch => {
   const result = await dispatch({
     type: ACTION_TYPES.CREATE_EMPLOYEEAVAILABILITY,
-    payload: axios.post(apiUrl + '/create-employee-availability-by-client-id', cleanEntity(entity)),
+    payload: axios.post(apiUrl, cleanEntity(entity)),
   });
   dispatch(getEntities());
   return result;
@@ -129,13 +129,13 @@ export const createEntity: ICrudPutAction<IEmployeeAvailability> = entity => asy
 export const updateEntity: ICrudPutAction<IEmployeeAvailability> = entity => async dispatch => {
   const result = await dispatch({
     type: ACTION_TYPES.UPDATE_EMPLOYEEAVAILABILITY,
-    payload: axios.put(apiUrl + '/update-employee-availability-by-client-id', cleanEntity(entity)),
+    payload: axios.put(apiUrl, cleanEntity(entity)),
   });
   return result;
 };
 
 export const deleteEntity: ICrudDeleteAction<IEmployeeAvailability> = id => async dispatch => {
-  const requestUrl = `${apiUrl}/delete-employee-availability-by-client-id/${id}`;
+  const requestUrl = `${apiUrl}/${id}`;
   const result = await dispatch({
     type: ACTION_TYPES.DELETE_EMPLOYEEAVAILABILITY,
     payload: axios.delete(requestUrl),

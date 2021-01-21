@@ -11,7 +11,7 @@ import java.io.Serializable;
 import java.time.LocalDate;
 import java.time.ZonedDateTime;
 
-import com.amc.careplanner.domain.enumeration.DocumentStatus;
+import com.amc.careplanner.domain.enumeration.EmployeeDocumentStatus;
 
 /**
  * A EmployeeDocument.
@@ -36,7 +36,7 @@ public class EmployeeDocument implements Serializable {
 
     @Enumerated(EnumType.STRING)
     @Column(name = "document_status")
-    private DocumentStatus documentStatus;
+    private EmployeeDocumentStatus documentStatus;
 
     @Column(name = "note")
     private String note;
@@ -120,16 +120,16 @@ public class EmployeeDocument implements Serializable {
         this.documentNumber = documentNumber;
     }
 
-    public DocumentStatus getDocumentStatus() {
+    public EmployeeDocumentStatus getDocumentStatus() {
         return documentStatus;
     }
 
-    public EmployeeDocument documentStatus(DocumentStatus documentStatus) {
+    public EmployeeDocument documentStatus(EmployeeDocumentStatus documentStatus) {
         this.documentStatus = documentStatus;
         return this;
     }
 
-    public void setDocumentStatus(DocumentStatus documentStatus) {
+    public void setDocumentStatus(EmployeeDocumentStatus documentStatus) {
         this.documentStatus = documentStatus;
     }
 

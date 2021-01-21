@@ -35,7 +35,7 @@ import static org.hamcrest.Matchers.hasItem;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.*;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.*;
 
-import com.amc.careplanner.domain.enumeration.DocumentStatus;
+import com.amc.careplanner.domain.enumeration.EmployeeDocumentStatus;
 /**
  * Integration tests for the {@link EmployeeDocumentResource} REST controller.
  */
@@ -50,8 +50,8 @@ public class EmployeeDocumentResourceIT {
     private static final String DEFAULT_DOCUMENT_NUMBER = "AAAAAAAAAA";
     private static final String UPDATED_DOCUMENT_NUMBER = "BBBBBBBBBB";
 
-    private static final DocumentStatus DEFAULT_DOCUMENT_STATUS = DocumentStatus.EXPIRED;
-    private static final DocumentStatus UPDATED_DOCUMENT_STATUS = DocumentStatus.ACTIVE;
+    private static final EmployeeDocumentStatus DEFAULT_DOCUMENT_STATUS = EmployeeDocumentStatus.EXPIRED;
+    private static final EmployeeDocumentStatus UPDATED_DOCUMENT_STATUS = EmployeeDocumentStatus.ACTIVE;
 
     private static final String DEFAULT_NOTE = "AAAAAAAAAA";
     private static final String UPDATED_NOTE = "BBBBBBBBBB";

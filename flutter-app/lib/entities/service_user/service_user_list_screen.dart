@@ -71,7 +71,7 @@ class ServiceUserListScreen extends StatelessWidget {
                 size: 60.0,
                 color: Theme.of(context).primaryColor,
               ),
-                  title: Text('Titlle : ${serviceUser.titlle.toString()}'),
+                  title: Text('Title : ${serviceUser.title.toString()}'),
                   subtitle: Text('First Name : ${serviceUser.firstName.toString()}'),
               trailing: DropdownButton(
                   icon: Icon(Icons.more_vert),

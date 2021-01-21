@@ -8,7 +8,6 @@ import javax.persistence.*;
 import javax.validation.constraints.*;
 
 import java.io.Serializable;
-import java.math.BigDecimal;
 import java.time.ZonedDateTime;
 
 import com.amc.careplanner.domain.enumeration.PayrollStatus;
@@ -40,15 +39,15 @@ public class Payroll implements Serializable {
     private Integer totalHoursWorked;
 
     @NotNull
-    @Column(name = "gross_pay", precision = 21, scale = 2, nullable = false)
-    private BigDecimal grossPay;
+    @Column(name = "gross_pay", nullable = false)
+    private String grossPay;
 
     @NotNull
-    @Column(name = "net_pay", precision = 21, scale = 2, nullable = false)
-    private BigDecimal netPay;
+    @Column(name = "net_pay", nullable = false)
+    private String netPay;
 
-    @Column(name = "total_tax", precision = 21, scale = 2)
-    private BigDecimal totalTax;
+    @Column(name = "total_tax")
+    private String totalTax;
 
     @NotNull
     @Enumerated(EnumType.STRING)
@@ -124,42 +123,42 @@ public class Payroll implements Serializable {
         this.totalHoursWorked = totalHoursWorked;
     }
 
-    public BigDecimal getGrossPay() {
+    public String getGrossPay() {
         return grossPay;
     }
 
-    public Payroll grossPay(BigDecimal grossPay) {
+    public Payroll grossPay(String grossPay) {
         this.grossPay = grossPay;
         return this;
     }
 
-    public void setGrossPay(BigDecimal grossPay) {
+    public void setGrossPay(String grossPay) {
         this.grossPay = grossPay;
     }
 
-    public BigDecimal getNetPay() {
+    public String getNetPay() {
         return netPay;
     }
 
-    public Payroll netPay(BigDecimal netPay) {
+    public Payroll netPay(String netPay) {
         this.netPay = netPay;
         return this;
     }
 
-    public void setNetPay(BigDecimal netPay) {
+    public void setNetPay(String netPay) {
         this.netPay = netPay;
     }
 
-    public BigDecimal getTotalTax() {
+    public String getTotalTax() {
         return totalTax;
     }
 
-    public Payroll totalTax(BigDecimal totalTax) {
+    public Payroll totalTax(String totalTax) {
         this.totalTax = totalTax;
         return this;
     }
 
-    public void setTotalTax(BigDecimal totalTax) {
+    public void setTotalTax(String totalTax) {
         this.totalTax = totalTax;
     }
 
@@ -279,9 +278,9 @@ public class Payroll implements Serializable {
             ", paymentDate='" + getPaymentDate() + "'" +
             ", payPeriod='" + getPayPeriod() + "'" +
             ", totalHoursWorked=" + getTotalHoursWorked() +
-            ", grossPay=" + getGrossPay() +
-            ", netPay=" + getNetPay() +
-            ", totalTax=" + getTotalTax() +
+            ", grossPay='" + getGrossPay() + "'" +
+            ", netPay='" + getNetPay() + "'" +
+            ", totalTax='" + getTotalTax() + "'" +
             ", payrollStatus='" + getPayrollStatus() + "'" +
             ", createdDate='" + getCreatedDate() + "'" +
             ", lastUpdatedDate='" + getLastUpdatedDate() + "'" +

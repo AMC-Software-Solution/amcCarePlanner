@@ -12,10 +12,10 @@ public class EmployeeLocationDTO implements Serializable {
     private Long id;
 
     @NotNull
-    private Double latitude;
+    private String latitude;
 
     @NotNull
-    private Double longitude;
+    private String longitude;
 
     private ZonedDateTime createdDate;
 
@@ -39,19 +39,19 @@ public class EmployeeLocationDTO implements Serializable {
         this.id = id;
     }
 
-    public Double getLatitude() {
+    public String getLatitude() {
         return latitude;
     }
 
-    public void setLatitude(Double latitude) {
+    public void setLatitude(String latitude) {
         this.latitude = latitude;
     }
 
-    public Double getLongitude() {
+    public String getLongitude() {
         return longitude;
     }
 
-    public void setLongitude(Double longitude) {
+    public void setLongitude(String longitude) {
         this.longitude = longitude;
     }
 
@@ -125,8 +125,8 @@ public class EmployeeLocationDTO implements Serializable {
     public String toString() {
         return "EmployeeLocationDTO{" +
             "id=" + getId() +
-            ", latitude=" + getLatitude() +
-            ", longitude=" + getLongitude() +
+            ", latitude='" + getLatitude() + "'" +
+            ", longitude='" + getLongitude() + "'" +
             ", createdDate='" + getCreatedDate() + "'" +
             ", lastUpdatedDate='" + getLastUpdatedDate() + "'" +
             ", clientId=" + getClientId() +

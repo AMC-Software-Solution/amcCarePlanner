@@ -70,7 +70,7 @@
       "otherEntityField": "employeeCode"
     }
   ],
-  "changelogDate": "20210114111611",
+  "changelogDate": "20210121103253",
   "entityTableName": "answer",
   "dto": "mapstruct",
   "pagination": "pagination",

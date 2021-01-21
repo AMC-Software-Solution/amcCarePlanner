@@ -3,7 +3,7 @@ package com.amc.careplanner.service.dto;
 import java.io.Serializable;
 import java.util.Objects;
 import io.github.jhipster.service.Criteria;
-import com.amc.careplanner.domain.enumeration.DocumentStatus;
+import com.amc.careplanner.domain.enumeration.EmployeeDocumentStatus;
 import io.github.jhipster.service.filter.BooleanFilter;
 import io.github.jhipster.service.filter.DoubleFilter;
 import io.github.jhipster.service.filter.Filter;
@@ -25,20 +25,20 @@ import io.github.jhipster.service.filter.ZonedDateTimeFilter;
  */
 public class EmployeeDocumentCriteria implements Serializable, Criteria {
     /**
-     * Class for filtering DocumentStatus
+     * Class for filtering EmployeeDocumentStatus
      */
-    public static class DocumentStatusFilter extends Filter<DocumentStatus> {
+    public static class EmployeeDocumentStatusFilter extends Filter<EmployeeDocumentStatus> {
 
-        public DocumentStatusFilter() {
+        public EmployeeDocumentStatusFilter() {
         }
 
-        public DocumentStatusFilter(DocumentStatusFilter filter) {
+        public EmployeeDocumentStatusFilter(EmployeeDocumentStatusFilter filter) {
             super(filter);
         }
 
         @Override
-        public DocumentStatusFilter copy() {
-            return new DocumentStatusFilter(this);
+        public EmployeeDocumentStatusFilter copy() {
+            return new EmployeeDocumentStatusFilter(this);
         }
 
     }
@@ -51,7 +51,7 @@ public class EmployeeDocumentCriteria implements Serializable, Criteria {
 
     private StringFilter documentNumber;
 
-    private DocumentStatusFilter documentStatus;
+    private EmployeeDocumentStatusFilter documentStatus;
 
     private StringFilter note;
 
@@ -128,11 +128,11 @@ public class EmployeeDocumentCriteria implements Serializable, Criteria {
         this.documentNumber = documentNumber;
     }
 
-    public DocumentStatusFilter getDocumentStatus() {
+    public EmployeeDocumentStatusFilter getDocumentStatus() {
         return documentStatus;
     }
 
-    public void setDocumentStatus(DocumentStatusFilter documentStatus) {
+    public void setDocumentStatus(EmployeeDocumentStatusFilter documentStatus) {
         this.documentStatus = documentStatus;
     }
 

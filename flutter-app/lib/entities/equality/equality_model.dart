@@ -9,8 +9,8 @@ class Equality {
   @JsonProperty(name: 'id')
   final int id;
 
-  @JsonProperty(name: 'gender', enumValues: Gender.values)
-  final Gender gender;
+  @JsonProperty(name: 'gender', enumValues: ServiceUserGender.values)
+  final ServiceUserGender gender;
 
   @JsonProperty(name: 'maritalStatus', enumValues: MaritalStatus.values)
   final MaritalStatus maritalStatus;
@@ -79,8 +79,8 @@ int get hashCode =>
 
 
 @jsonSerializable
-@Json(enumValues: Gender.values)
-enum Gender {
+@Json(enumValues: ServiceUserGender.values)
+enum ServiceUserGender {
     MALE ,
     FEMALE ,
     OTHER

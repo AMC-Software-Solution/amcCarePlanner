@@ -5,10 +5,10 @@ import java.time.ZonedDateTime;
 import javax.validation.constraints.*;
 import java.io.Serializable;
 import javax.persistence.Lob;
-import com.amc.careplanner.domain.enumeration.Title;
-import com.amc.careplanner.domain.enumeration.Gender;
+import com.amc.careplanner.domain.enumeration.EmployeeTitle;
+import com.amc.careplanner.domain.enumeration.EmployeeGender;
 import com.amc.careplanner.domain.enumeration.EmployeeContractType;
-import com.amc.careplanner.domain.enumeration.TravelMode;
+import com.amc.careplanner.domain.enumeration.EmployeeTravelMode;
 import com.amc.careplanner.domain.enumeration.EmployeeStatus;
 
 /**
@@ -19,7 +19,7 @@ public class EmployeeDTO implements Serializable {
     private Long id;
 
     @NotNull
-    private Title title;
+    private EmployeeTitle title;
 
     @NotNull
     @Size(min = 1, max = 25)
@@ -36,7 +36,7 @@ public class EmployeeDTO implements Serializable {
     private String preferredName;
 
     @NotNull
-    private Gender gender;
+    private EmployeeGender gender;
 
     @NotNull
     private String employeeCode;
@@ -55,7 +55,7 @@ public class EmployeeDTO implements Serializable {
     private Integer pinCode;
 
     @NotNull
-    private TravelMode transportMode;
+    private EmployeeTravelMode transportMode;
 
     @NotNull
     private String address;
@@ -113,11 +113,11 @@ public class EmployeeDTO implements Serializable {
         this.id = id;
     }
 
-    public Title getTitle() {
+    public EmployeeTitle getTitle() {
         return title;
     }
 
-    public void setTitle(Title title) {
+    public void setTitle(EmployeeTitle title) {
         this.title = title;
     }
 
@@ -153,11 +153,11 @@ public class EmployeeDTO implements Serializable {
         this.preferredName = preferredName;
     }
 
-    public Gender getGender() {
+    public EmployeeGender getGender() {
         return gender;
     }
 
-    public void setGender(Gender gender) {
+    public void setGender(EmployeeGender gender) {
         this.gender = gender;
     }
 
@@ -209,11 +209,11 @@ public class EmployeeDTO implements Serializable {
         this.pinCode = pinCode;
     }
 
-    public TravelMode getTransportMode() {
+    public EmployeeTravelMode getTransportMode() {
         return transportMode;
     }
 
-    public void setTransportMode(TravelMode transportMode) {
+    public void setTransportMode(EmployeeTravelMode transportMode) {
         this.transportMode = transportMode;
     }
 

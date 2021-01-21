@@ -14,7 +14,7 @@ import com.amc.careplanner.domain.enumeration.ServiceUserEventStatus;
 
 import com.amc.careplanner.domain.enumeration.ServiceUserEventType;
 
-import com.amc.careplanner.domain.enumeration.ServicePriority;
+import com.amc.careplanner.domain.enumeration.Priority;
 
 /**
  * A ServiceUserEvent.
@@ -47,7 +47,7 @@ public class ServiceUserEvent implements Serializable {
 
     @Enumerated(EnumType.STRING)
     @Column(name = "priority")
-    private ServicePriority priority;
+    private Priority priority;
 
     @Column(name = "note")
     private String note;
@@ -142,16 +142,16 @@ public class ServiceUserEvent implements Serializable {
         this.serviceUserEventType = serviceUserEventType;
     }
 
-    public ServicePriority getPriority() {
+    public Priority getPriority() {
         return priority;
     }
 
-    public ServiceUserEvent priority(ServicePriority priority) {
+    public ServiceUserEvent priority(Priority priority) {
         this.priority = priority;
         return this;
     }
 
-    public void setPriority(ServicePriority priority) {
+    public void setPriority(Priority priority) {
         this.priority = priority;
     }
 

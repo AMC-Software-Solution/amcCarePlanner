@@ -9,7 +9,6 @@ import javax.persistence.*;
 import javax.validation.constraints.*;
 
 import java.io.Serializable;
-import java.math.BigDecimal;
 import java.time.ZonedDateTime;
 import java.util.UUID;
 
@@ -30,8 +29,8 @@ public class Invoice implements Serializable {
     private Long id;
 
     @NotNull
-    @Column(name = "total_amount", precision = 21, scale = 2, nullable = false)
-    private BigDecimal totalAmount;
+    @Column(name = "total_amount", nullable = false)
+    private String totalAmount;
 
     @Column(name = "description")
     private String description;
@@ -58,7 +57,7 @@ public class Invoice implements Serializable {
     private InvoiceStatus invoiceStatus;
 
     @Column(name = "tax")
-    private Double tax;
+    private String tax;
 
     @Column(name = "attribute_1")
     private String attribute1;
@@ -111,16 +110,16 @@ public class Invoice implements Serializable {
         this.id = id;
     }
 
-    public BigDecimal getTotalAmount() {
+    public String getTotalAmount() {
         return totalAmount;
     }
 
-    public Invoice totalAmount(BigDecimal totalAmount) {
+    public Invoice totalAmount(String totalAmount) {
         this.totalAmount = totalAmount;
         return this;
     }
 
-    public void setTotalAmount(BigDecimal totalAmount) {
+    public void setTotalAmount(String totalAmount) {
         this.totalAmount = totalAmount;
     }
 
@@ -202,16 +201,16 @@ public class Invoice implements Serializable {
         this.invoiceStatus = invoiceStatus;
     }
 
-    public Double getTax() {
+    public String getTax() {
         return tax;
     }
 
-    public Invoice tax(Double tax) {
+    public Invoice tax(String tax) {
         this.tax = tax;
         return this;
     }
 
-    public void setTax(Double tax) {
+    public void setTax(String tax) {
         this.tax = tax;
     }
 
@@ -406,14 +405,14 @@ public class Invoice implements Serializable {
     public String toString() {
         return "Invoice{" +
             "id=" + getId() +
-            ", totalAmount=" + getTotalAmount() +
+            ", totalAmount='" + getTotalAmount() + "'" +
             ", description='" + getDescription() + "'" +
             ", invoiceNumber='" + getInvoiceNumber() + "'" +
             ", generatedDate='" + getGeneratedDate() + "'" +
             ", dueDate='" + getDueDate() + "'" +
             ", paymentDate='" + getPaymentDate() + "'" +
             ", invoiceStatus='" + getInvoiceStatus() + "'" +
-            ", tax=" + getTax() +
+            ", tax='" + getTax() + "'" +
             ", attribute1='" + getAttribute1() + "'" +
             ", attribute2='" + getAttribute2() + "'" +
             ", attribute3='" + getAttribute3() + "'" +

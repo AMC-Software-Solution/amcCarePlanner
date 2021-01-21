@@ -56,8 +56,8 @@ class ClientDocumentBloc extends Bloc<ClientDocumentEvent, ClientDocumentState> 
       yield* onDocumentNumberChange(event);
     }else if (event is DocumentTypeChanged){
       yield* onDocumentTypeChange(event);
-    }else if (event is ClientDocumentStatusChanged){
-      yield* onClientDocumentStatusChange(event);
+    }else if (event is DocumentStatusChanged){
+      yield* onDocumentStatusChange(event);
     }else if (event is NoteChanged){
       yield* onNoteChange(event);
     }else if (event is IssuedDateChanged){
@@ -94,7 +94,7 @@ class ClientDocumentBloc extends Bloc<ClientDocumentEvent, ClientDocumentState> 
             this.state.documentName.value,  
             this.state.documentNumber.value,  
             this.state.documentType.value,  
-            this.state.clientDocumentStatus.value,  
+            this.state.documentStatus.value,  
             this.state.note.value,  
             this.state.issuedDate.value,  
             this.state.expiryDate.value,  
@@ -114,7 +114,7 @@ class ClientDocumentBloc extends Bloc<ClientDocumentEvent, ClientDocumentState> 
             this.state.documentName.value,  
             this.state.documentNumber.value,  
             this.state.documentType.value,  
-            this.state.clientDocumentStatus.value,  
+            this.state.documentStatus.value,  
             this.state.note.value,  
             this.state.issuedDate.value,  
             this.state.expiryDate.value,  
@@ -152,7 +152,7 @@ class ClientDocumentBloc extends Bloc<ClientDocumentEvent, ClientDocumentState> 
     final documentName = DocumentNameInput.dirty(loadedClientDocument?.documentName != null ? loadedClientDocument.documentName: '');
     final documentNumber = DocumentNumberInput.dirty(loadedClientDocument?.documentNumber != null ? loadedClientDocument.documentNumber: '');
     final documentType = DocumentTypeInput.dirty(loadedClientDocument?.documentType != null ? loadedClientDocument.documentType: null);
-    final clientDocumentStatus = ClientDocumentStatusInput.dirty(loadedClientDocument?.clientDocumentStatus != null ? loadedClientDocument.clientDocumentStatus: null);
+    final documentStatus = DocumentStatusInput.dirty(loadedClientDocument?.documentStatus != null ? loadedClientDocument.documentStatus: null);
     final note = NoteInput.dirty(loadedClientDocument?.note != null ? loadedClientDocument.note: '');
     final issuedDate = IssuedDateInput.dirty(loadedClientDocument?.issuedDate != null ? loadedClientDocument.issuedDate: null);
     final expiryDate = ExpiryDateInput.dirty(loadedClientDocument?.expiryDate != null ? loadedClientDocument.expiryDate: null);
@@ -167,7 +167,7 @@ class ClientDocumentBloc extends Bloc<ClientDocumentEvent, ClientDocumentState> 
       documentName: documentName,
       documentNumber: documentNumber,
       documentType: documentType,
-      clientDocumentStatus: clientDocumentStatus,
+      documentStatus: documentStatus,
       note: note,
       issuedDate: issuedDate,
       expiryDate: expiryDate,
@@ -222,7 +222,7 @@ class ClientDocumentBloc extends Bloc<ClientDocumentEvent, ClientDocumentState> 
         documentName,
       this.state.documentNumber,
       this.state.documentType,
-      this.state.clientDocumentStatus,
+      this.state.documentStatus,
       this.state.note,
       this.state.issuedDate,
       this.state.expiryDate,
@@ -243,7 +243,7 @@ class ClientDocumentBloc extends Bloc<ClientDocumentEvent, ClientDocumentState> 
       this.state.documentName,
         documentNumber,
       this.state.documentType,
-      this.state.clientDocumentStatus,
+      this.state.documentStatus,
       this.state.note,
       this.state.issuedDate,
       this.state.expiryDate,
@@ -264,7 +264,7 @@ class ClientDocumentBloc extends Bloc<ClientDocumentEvent, ClientDocumentState> 
       this.state.documentName,
       this.state.documentNumber,
         documentType,
-      this.state.clientDocumentStatus,
+      this.state.documentStatus,
       this.state.note,
       this.state.issuedDate,
       this.state.expiryDate,
@@ -277,15 +277,15 @@ class ClientDocumentBloc extends Bloc<ClientDocumentEvent, ClientDocumentState> 
       ]),
     );
   }
-  Stream<ClientDocumentState> onClientDocumentStatusChange(ClientDocumentStatusChanged event) async* {
-    final clientDocumentStatus = ClientDocumentStatusInput.dirty(event.clientDocumentStatus);
+  Stream<ClientDocumentState> onDocumentStatusChange(DocumentStatusChanged event) async* {
+    final documentStatus = DocumentStatusInput.dirty(event.documentStatus);
     yield this.state.copyWith(
-      clientDocumentStatus: clientDocumentStatus,
+      documentStatus: documentStatus,
       formStatus: Formz.validate([
       this.state.documentName,
       this.state.documentNumber,
       this.state.documentType,
-        clientDocumentStatus,
+        documentStatus,
       this.state.note,
       this.state.issuedDate,
       this.state.expiryDate,
@@ -306,7 +306,7 @@ class ClientDocumentBloc extends Bloc<ClientDocumentEvent, ClientDocumentState> 
       this.state.documentName,
       this.state.documentNumber,
       this.state.documentType,
-      this.state.clientDocumentStatus,
+      this.state.documentStatus,
         note,
       this.state.issuedDate,
       this.state.expiryDate,
@@ -327,7 +327,7 @@ class ClientDocumentBloc extends Bloc<ClientDocumentEvent, ClientDocumentState> 
       this.state.documentName,
       this.state.documentNumber,
       this.state.documentType,
-      this.state.clientDocumentStatus,
+      this.state.documentStatus,
       this.state.note,
         issuedDate,
       this.state.expiryDate,
@@ -348,7 +348,7 @@ class ClientDocumentBloc extends Bloc<ClientDocumentEvent, ClientDocumentState> 
       this.state.documentName,
       this.state.documentNumber,
       this.state.documentType,
-      this.state.clientDocumentStatus,
+      this.state.documentStatus,
       this.state.note,
       this.state.issuedDate,
         expiryDate,
@@ -369,7 +369,7 @@ class ClientDocumentBloc extends Bloc<ClientDocumentEvent, ClientDocumentState> 
       this.state.documentName,
       this.state.documentNumber,
       this.state.documentType,
-      this.state.clientDocumentStatus,
+      this.state.documentStatus,
       this.state.note,
       this.state.issuedDate,
       this.state.expiryDate,
@@ -390,7 +390,7 @@ class ClientDocumentBloc extends Bloc<ClientDocumentEvent, ClientDocumentState> 
       this.state.documentName,
       this.state.documentNumber,
       this.state.documentType,
-      this.state.clientDocumentStatus,
+      this.state.documentStatus,
       this.state.note,
       this.state.issuedDate,
       this.state.expiryDate,
@@ -411,7 +411,7 @@ class ClientDocumentBloc extends Bloc<ClientDocumentEvent, ClientDocumentState> 
       this.state.documentName,
       this.state.documentNumber,
       this.state.documentType,
-      this.state.clientDocumentStatus,
+      this.state.documentStatus,
       this.state.note,
       this.state.issuedDate,
       this.state.expiryDate,
@@ -432,7 +432,7 @@ class ClientDocumentBloc extends Bloc<ClientDocumentEvent, ClientDocumentState> 
       this.state.documentName,
       this.state.documentNumber,
       this.state.documentType,
-      this.state.clientDocumentStatus,
+      this.state.documentStatus,
       this.state.note,
       this.state.issuedDate,
       this.state.expiryDate,
@@ -453,7 +453,7 @@ class ClientDocumentBloc extends Bloc<ClientDocumentEvent, ClientDocumentState> 
       this.state.documentName,
       this.state.documentNumber,
       this.state.documentType,
-      this.state.clientDocumentStatus,
+      this.state.documentStatus,
       this.state.note,
       this.state.issuedDate,
       this.state.expiryDate,
@@ -474,7 +474,7 @@ class ClientDocumentBloc extends Bloc<ClientDocumentEvent, ClientDocumentState> 
       this.state.documentName,
       this.state.documentNumber,
       this.state.documentType,
-      this.state.clientDocumentStatus,
+      this.state.documentStatus,
       this.state.note,
       this.state.issuedDate,
       this.state.expiryDate,

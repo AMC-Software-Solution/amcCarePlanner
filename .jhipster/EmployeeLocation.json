@@ -38,7 +38,7 @@
       "otherEntityField": "employeeCode"
     }
   ],
-  "changelogDate": "20210114111911",
+  "changelogDate": "20210121103553",
   "entityTableName": "employee_location",
   "dto": "mapstruct",
   "pagination": "pagination",

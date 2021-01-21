@@ -43,7 +43,7 @@ S.of(context).pageEntitiesServiceUserCreateTitle;
   Widget settingsForm(BuildContext context) {
     return Form(
       child: Wrap(runSpacing: 15, children: <Widget>[
-          titlleField(),
+          titleField(),
           firstNameField(),
           middleNameField(),
           lastNameField(),
@@ -77,20 +77,20 @@ S.of(context).pageEntitiesServiceUserCreateTitle;
     );
   }
 
-      Widget titlleField() {
+      Widget titleField() {
         return BlocBuilder<ServiceUserBloc,ServiceUserState>(
-            buildWhen: (previous, current) => previous.titlle != current.titlle,
+            buildWhen: (previous, current) => previous.title != current.title,
             builder: (context, state) {
               return Padding(
                 padding: const EdgeInsets.only(left: 3.0),
                 child: Row(
                   mainAxisAlignment: MainAxisAlignment.spaceBetween,
                   children: <Widget>[
-                    Text(S.of(context).pageEntitiesServiceUserTitlleField, style: Theme.of(context).textTheme.bodyText1,),
-                    DropdownButton<Titlle>(
-                        value: state.titlle.value,
-                        onChanged: (value) { context.bloc<ServiceUserBloc>().add(TitlleChanged(titlle: value)); },
-                        items: createDropdownTitlleItems(Titlle.values)),
+                    Text(S.of(context).pageEntitiesServiceUserTitleField, style: Theme.of(context).textTheme.bodyText1,),
+                    DropdownButton<ServiceUserTitle>(
+                        value: state.title.value,
+                        onChanged: (value) { context.bloc<ServiceUserBloc>().add(TitleChanged(title: value)); },
+                        items: createDropdownServiceUserTitleItems(ServiceUserTitle.values)),
                   ],
                 ),
               );
@@ -556,16 +556,16 @@ S.of(context).pageEntitiesServiceUserCreateTitle;
               });
         }
 
-      List<DropdownMenuItem<Titlle>> createDropdownTitlleItems(List<Titlle> titlles) {
-        List<DropdownMenuItem<Titlle>> titlleDropDown = [];
+      List<DropdownMenuItem<ServiceUserTitle>> createDropdownServiceUserTitleItems(List<ServiceUserTitle> titles) {
+        List<DropdownMenuItem<ServiceUserTitle>> titleDropDown = [];
     
-        for (Titlle titlle in titlles) {
-          DropdownMenuItem<Titlle> dropdown = DropdownMenuItem<Titlle>(
-              value: titlle, child: Text(titlle.toString()));
-              titlleDropDown.add(dropdown);
+        for (ServiceUserTitle title in titles) {
+          DropdownMenuItem<ServiceUserTitle> dropdown = DropdownMenuItem<ServiceUserTitle>(
+              value: title, child: Text(title.toString()));
+              titleDropDown.add(dropdown);
         }
     
-        return titlleDropDown;
+        return titleDropDown;
       }
       List<DropdownMenuItem<SupportType>> createDropdownSupportTypeItems(List<SupportType> supportTypes) {
         List<DropdownMenuItem<SupportType>> supportTypeDropDown = [];

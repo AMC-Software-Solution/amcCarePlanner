@@ -3,7 +3,6 @@ package com.amc.careplanner.service.dto;
 import java.time.ZonedDateTime;
 import javax.validation.constraints.*;
 import java.io.Serializable;
-import java.math.BigDecimal;
 import com.amc.careplanner.domain.enumeration.PayrollStatus;
 
 /**
@@ -23,12 +22,12 @@ public class PayrollDTO implements Serializable {
     private Integer totalHoursWorked;
 
     @NotNull
-    private BigDecimal grossPay;
+    private String grossPay;
 
     @NotNull
-    private BigDecimal netPay;
+    private String netPay;
 
-    private BigDecimal totalTax;
+    private String totalTax;
 
     @NotNull
     private PayrollStatus payrollStatus;
@@ -83,27 +82,27 @@ public class PayrollDTO implements Serializable {
         this.totalHoursWorked = totalHoursWorked;
     }
 
-    public BigDecimal getGrossPay() {
+    public String getGrossPay() {
         return grossPay;
     }
 
-    public void setGrossPay(BigDecimal grossPay) {
+    public void setGrossPay(String grossPay) {
         this.grossPay = grossPay;
     }
 
-    public BigDecimal getNetPay() {
+    public String getNetPay() {
         return netPay;
     }
 
-    public void setNetPay(BigDecimal netPay) {
+    public void setNetPay(String netPay) {
         this.netPay = netPay;
     }
 
-    public BigDecimal getTotalTax() {
+    public String getTotalTax() {
         return totalTax;
     }
 
-    public void setTotalTax(BigDecimal totalTax) {
+    public void setTotalTax(String totalTax) {
         this.totalTax = totalTax;
     }
 
@@ -204,9 +203,9 @@ public class PayrollDTO implements Serializable {
             ", paymentDate='" + getPaymentDate() + "'" +
             ", payPeriod='" + getPayPeriod() + "'" +
             ", totalHoursWorked=" + getTotalHoursWorked() +
-            ", grossPay=" + getGrossPay() +
-            ", netPay=" + getNetPay() +
-            ", totalTax=" + getTotalTax() +
+            ", grossPay='" + getGrossPay() + "'" +
+            ", netPay='" + getNetPay() + "'" +
+            ", totalTax='" + getTotalTax() + "'" +
             ", payrollStatus='" + getPayrollStatus() + "'" +
             ", createdDate='" + getCreatedDate() + "'" +
             ", lastUpdatedDate='" + getLastUpdatedDate() + "'" +

@@ -65,7 +65,7 @@
       "ownerSide": true
     }
   ],
-  "changelogDate": "20210114110611",
+  "changelogDate": "20210121102253",
   "entityTableName": "medical_contact",
   "dto": "mapstruct",
   "pagination": "pagination",

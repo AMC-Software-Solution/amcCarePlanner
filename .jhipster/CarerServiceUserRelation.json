@@ -50,7 +50,7 @@
       "otherEntityField": "serviceUserCode"
     }
   ],
-  "changelogDate": "20210114112211",
+  "changelogDate": "20210121103853",
   "entityTableName": "carer_service_user_relation",
   "dto": "mapstruct",
   "pagination": "pagination",

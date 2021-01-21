@@ -92,6 +92,7 @@ public class CacheConfiguration {
             createCache(cm, com.amc.careplanner.domain.SystemEventsHistory.class.getName());
             createCache(cm, com.amc.careplanner.domain.SystemSetting.class.getName());
             createCache(cm, com.amc.careplanner.domain.ExtraData.class.getName());
+            createCache(cm, com.amc.careplanner.domain.Notifications.class.getName());
             // jhipster-needle-ehcache-add-entry
         };
     }

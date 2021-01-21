@@ -156,9 +156,9 @@ export const ServiceUserEventUpdate = (props: IServiceUserEventUpdateProps) => {
                   name="priority"
                   value={(!isNew && serviceUserEventEntity.priority) || 'HIGH'}
                 >
-                  <option value="HIGH">{translate('carePlannerApp.ServicePriority.HIGH')}</option>
-                  <option value="LOW">{translate('carePlannerApp.ServicePriority.LOW')}</option>
-                  <option value="MEDIUM">{translate('carePlannerApp.ServicePriority.MEDIUM')}</option>
+                  <option value="HIGH">{translate('carePlannerApp.Priority.HIGH')}</option>
+                  <option value="LOW">{translate('carePlannerApp.Priority.LOW')}</option>
+                  <option value="MEDIUM">{translate('carePlannerApp.Priority.MEDIUM')}</option>
                 </AvInput>
               </AvGroup>
               <AvGroup>

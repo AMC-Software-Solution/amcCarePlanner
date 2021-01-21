@@ -72,7 +72,7 @@
       "otherEntityField": "employeeCode"
     }
   ],
-  "changelogDate": "20210114113111",
+  "changelogDate": "20210121104753",
   "entityTableName": "terminal_device",
   "dto": "mapstruct",
   "pagination": "pagination",

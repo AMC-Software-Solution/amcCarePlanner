@@ -97,12 +97,12 @@ export default (state: MedicalContactState = initialState, action): MedicalConta
   }
 };
 
-const apiUrl = 'api/v1';
+const apiUrl = 'api/medical-contacts';
 
 // Actions
 
 export const getEntities: ICrudGetAllAction<IMedicalContact> = (page, size, sort) => {
-  const requestUrl = `${apiUrl}/get-all-medical-contacts-by-client-id${sort ? `?page=${page}&size=${size}&sort=${sort}` : ''}`;
+  const requestUrl = `${apiUrl}${sort ? `?page=${page}&size=${size}&sort=${sort}` : ''}`;
   return {
     type: ACTION_TYPES.FETCH_MEDICALCONTACT_LIST,
     payload: axios.get<IMedicalContact>(`${requestUrl}${sort ? '&' : '?'}cacheBuster=${new Date().getTime()}`),
@@ -110,7 +110,7 @@ export const getEntities: ICrudGetAllAction<IMedicalContact> = (page, size, sort
 };
 
 export const getEntity: ICrudGetAction<IMedicalContact> = id => {
-  const requestUrl = `${apiUrl}/get-medical-contact-by-client-id/${id}`;
+  const requestUrl = `${apiUrl}/${id}`;
   return {
     type: ACTION_TYPES.FETCH_MEDICALCONTACT,
     payload: axios.get<IMedicalContact>(requestUrl),
@@ -120,7 +120,7 @@ export const getEntity: ICrudGetAction<IMedicalContact> = id => {
 export const createEntity: ICrudPutAction<IMedicalContact> = entity => async dispatch => {
   const result = await dispatch({
     type: ACTION_TYPES.CREATE_MEDICALCONTACT,
-    payload: axios.post(apiUrl + '/create-medical-contact-by-client-id', cleanEntity(entity)),
+    payload: axios.post(apiUrl, cleanEntity(entity)),
   });
   dispatch(getEntities());
   return result;
@@ -129,13 +129,13 @@ export const createEntity: ICrudPutAction<IMedicalContact> = entity => async dis
 export const updateEntity: ICrudPutAction<IMedicalContact> = entity => async dispatch => {
   const result = await dispatch({
     type: ACTION_TYPES.UPDATE_MEDICALCONTACT,
-    payload: axios.put(apiUrl + '/update-medical-contact-by-client-id', cleanEntity(entity)),
+    payload: axios.put(apiUrl, cleanEntity(entity)),
   });
   return result;
 };
 
 export const deleteEntity: ICrudDeleteAction<IMedicalContact> = id => async dispatch => {
-  const requestUrl = `${apiUrl}/delete-medical-contact-by-client-id/${id}`;
+  const requestUrl = `${apiUrl}/${id}`;
   const result = await dispatch({
     type: ACTION_TYPES.DELETE_MEDICALCONTACT,
     payload: axios.delete(requestUrl),

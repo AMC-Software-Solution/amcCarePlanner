@@ -11,7 +11,6 @@ import io.github.jhipster.service.filter.FloatFilter;
 import io.github.jhipster.service.filter.IntegerFilter;
 import io.github.jhipster.service.filter.LongFilter;
 import io.github.jhipster.service.filter.StringFilter;
-import io.github.jhipster.service.filter.BigDecimalFilter;
 import io.github.jhipster.service.filter.UUIDFilter;
 import io.github.jhipster.service.filter.ZonedDateTimeFilter;
 
@@ -48,7 +47,7 @@ public class InvoiceCriteria implements Serializable, Criteria {
 
     private LongFilter id;
 
-    private BigDecimalFilter totalAmount;
+    private StringFilter totalAmount;
 
     private StringFilter description;
 
@@ -62,7 +61,7 @@ public class InvoiceCriteria implements Serializable, Criteria {
 
     private InvoiceStatusFilter invoiceStatus;
 
-    private DoubleFilter tax;
+    private StringFilter tax;
 
     private StringFilter attribute1;
 
@@ -131,11 +130,11 @@ public class InvoiceCriteria implements Serializable, Criteria {
         this.id = id;
     }
 
-    public BigDecimalFilter getTotalAmount() {
+    public StringFilter getTotalAmount() {
         return totalAmount;
     }
 
-    public void setTotalAmount(BigDecimalFilter totalAmount) {
+    public void setTotalAmount(StringFilter totalAmount) {
         this.totalAmount = totalAmount;
     }
 
@@ -187,11 +186,11 @@ public class InvoiceCriteria implements Serializable, Criteria {
         this.invoiceStatus = invoiceStatus;
     }
 
-    public DoubleFilter getTax() {
+    public StringFilter getTax() {
         return tax;
     }
 
-    public void setTax(DoubleFilter tax) {
+    public void setTax(StringFilter tax) {
         this.tax = tax;
     }
 

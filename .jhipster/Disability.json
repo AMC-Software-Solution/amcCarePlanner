@@ -43,7 +43,7 @@
       "otherEntityField": "employeeCode"
     }
   ],
-  "changelogDate": "20210114112411",
+  "changelogDate": "20210121104053",
   "entityTableName": "disability",
   "dto": "mapstruct",
   "pagination": "pagination",

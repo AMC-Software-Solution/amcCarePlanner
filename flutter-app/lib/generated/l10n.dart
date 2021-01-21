@@ -335,30 +335,30 @@ class S {
     );
   }
 
-  /// `HOME`
+  /// `Main page`
   String get pageMainTitle {
     return Intl.message(
-      'HOME',
+      'Main page',
       name: 'pageMainTitle',
       desc: '',
       args: [],
     );
   }
 
-  /// `Hi! {login}`
+  /// `Current user : {login}`
   String pageMainCurrentUser(Object login) {
     return Intl.message(
-      'Hi! $login',
+      'Current user : $login',
       name: 'pageMainCurrentUser',
       desc: '',
       args: [login],
     );
   }
 
-  /// `Welcome to your Care Planner App`
+  /// `Welcome to your Jhipster flutter app`
   String get pageMainWelcome {
     return Intl.message(
-      'Welcome to your Care Planner App',
+      'Welcome to your Jhipster flutter app',
       name: 'pageMainWelcome',
       desc: '',
       args: [],
@@ -1425,11 +1425,11 @@ class S {
     );
   }
 
-  /// `ClientDocumentStatus`
-  String get pageEntitiesClientDocumentClientDocumentStatusField {
+  /// `DocumentStatus`
+  String get pageEntitiesClientDocumentDocumentStatusField {
     return Intl.message(
-      'ClientDocumentStatus',
-      name: 'pageEntitiesClientDocumentClientDocumentStatusField',
+      'DocumentStatus',
+      name: 'pageEntitiesClientDocumentDocumentStatusField',
       desc: '',
       args: [],
     );
@@ -2835,11 +2835,11 @@ class S {
     );
   }
 
-  /// `Tittle`
-  String get pageEntitiesEmployeeTittleField {
+  /// `Title`
+  String get pageEntitiesEmployeeTitleField {
     return Intl.message(
-      'Tittle',
-      name: 'pageEntitiesEmployeeTittleField',
+      'Title',
+      name: 'pageEntitiesEmployeeTitleField',
       desc: '',
       args: [],
     );
@@ -2885,11 +2885,11 @@ class S {
     );
   }
 
-  /// `Gendder`
-  String get pageEntitiesEmployeeGendderField {
+  /// `Gender`
+  String get pageEntitiesEmployeeGenderField {
     return Intl.message(
-      'Gendder',
-      name: 'pageEntitiesEmployeeGendderField',
+      'Gender',
+      name: 'pageEntitiesEmployeeGenderField',
       desc: '',
       args: [],
     );
@@ -2955,11 +2955,11 @@ class S {
     );
   }
 
-  /// `EmployeeTransportMode`
-  String get pageEntitiesEmployeeEmployeeTransportModeField {
+  /// `TransportMode`
+  String get pageEntitiesEmployeeTransportModeField {
     return Intl.message(
-      'EmployeeTransportMode',
-      name: 'pageEntitiesEmployeeEmployeeTransportModeField',
+      'TransportMode',
+      name: 'pageEntitiesEmployeeTransportModeField',
       desc: '',
       args: [],
     );
@@ -3455,11 +3455,11 @@ class S {
     );
   }
 
-  /// `EmployeeDocumentStatus`
-  String get pageEntitiesEmployeeDocumentEmployeeDocumentStatusField {
+  /// `DocumentStatus`
+  String get pageEntitiesEmployeeDocumentDocumentStatusField {
     return Intl.message(
-      'EmployeeDocumentStatus',
-      name: 'pageEntitiesEmployeeDocumentEmployeeDocumentStatusField',
+      'DocumentStatus',
+      name: 'pageEntitiesEmployeeDocumentDocumentStatusField',
       desc: '',
       args: [],
     );
@@ -5785,11 +5785,11 @@ class S {
     );
   }
 
-  /// `Titlle`
-  String get pageEntitiesServiceUserTitlleField {
+  /// `Title`
+  String get pageEntitiesServiceUserTitleField {
     return Intl.message(
-      'Titlle',
-      name: 'pageEntitiesServiceUserTitlleField',
+      'Title',
+      name: 'pageEntitiesServiceUserTitleField',
       desc: '',
       args: [],
     );

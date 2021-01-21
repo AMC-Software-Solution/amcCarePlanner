@@ -10,7 +10,7 @@ import javax.validation.constraints.*;
 import java.io.Serializable;
 import java.time.ZonedDateTime;
 
-import com.amc.careplanner.domain.enumeration.Gender;
+import com.amc.careplanner.domain.enumeration.ServiceUserGender;
 
 import com.amc.careplanner.domain.enumeration.MaritalStatus;
 
@@ -33,7 +33,7 @@ public class Equality implements Serializable {
     @NotNull
     @Enumerated(EnumType.STRING)
     @Column(name = "gender", nullable = false)
-    private Gender gender;
+    private ServiceUserGender gender;
 
     @NotNull
     @Enumerated(EnumType.STRING)
@@ -75,16 +75,16 @@ public class Equality implements Serializable {
         this.id = id;
     }
 
-    public Gender getGender() {
+    public ServiceUserGender getGender() {
         return gender;
     }
 
-    public Equality gender(Gender gender) {
+    public Equality gender(ServiceUserGender gender) {
         this.gender = gender;
         return this;
     }
 
-    public void setGender(Gender gender) {
+    public void setGender(ServiceUserGender gender) {
         this.gender = gender;
     }
 

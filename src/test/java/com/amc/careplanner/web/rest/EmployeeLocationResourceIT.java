@@ -40,13 +40,11 @@ import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.
 @WithMockUser
 public class EmployeeLocationResourceIT {
 
-    private static final Double DEFAULT_LATITUDE = 1D;
-    private static final Double UPDATED_LATITUDE = 2D;
-    private static final Double SMALLER_LATITUDE = 1D - 1D;
+    private static final String DEFAULT_LATITUDE = "AAAAAAAAAA";
+    private static final String UPDATED_LATITUDE = "BBBBBBBBBB";
 
-    private static final Double DEFAULT_LONGITUDE = 1D;
-    private static final Double UPDATED_LONGITUDE = 2D;
-    private static final Double SMALLER_LONGITUDE = 1D - 1D;
+    private static final String DEFAULT_LONGITUDE = "AAAAAAAAAA";
+    private static final String UPDATED_LONGITUDE = "BBBBBBBBBB";
 
     private static final ZonedDateTime DEFAULT_CREATED_DATE = ZonedDateTime.ofInstant(Instant.ofEpochMilli(0L), ZoneOffset.UTC);
     private static final ZonedDateTime UPDATED_CREATED_DATE = ZonedDateTime.now(ZoneId.systemDefault()).withNano(0);
@@ -236,8 +234,8 @@ public class EmployeeLocationResourceIT {
             .andExpect(status().isOk())
             .andExpect(content().contentType(MediaType.APPLICATION_JSON_VALUE))
             .andExpect(jsonPath("$.[*].id").value(hasItem(employeeLocation.getId().intValue())))
-            .andExpect(jsonPath("$.[*].latitude").value(hasItem(DEFAULT_LATITUDE.doubleValue())))
-            .andExpect(jsonPath("$.[*].longitude").value(hasItem(DEFAULT_LONGITUDE.doubleValue())))
+            .andExpect(jsonPath("$.[*].latitude").value(hasItem(DEFAULT_LATITUDE)))
+            .andExpect(jsonPath("$.[*].longitude").value(hasItem(DEFAULT_LONGITUDE)))
             .andExpect(jsonPath("$.[*].createdDate").value(hasItem(sameInstant(DEFAULT_CREATED_DATE))))
             .andExpect(jsonPath("$.[*].lastUpdatedDate").value(hasItem(sameInstant(DEFAULT_LAST_UPDATED_DATE))))
             .andExpect(jsonPath("$.[*].clientId").value(hasItem(DEFAULT_CLIENT_ID.intValue())))
@@ -255,8 +253,8 @@ public class EmployeeLocationResourceIT {
             .andExpect(status().isOk())
             .andExpect(content().contentType(MediaType.APPLICATION_JSON_VALUE))
             .andExpect(jsonPath("$.id").value(employeeLocation.getId().intValue()))
-            .andExpect(jsonPath("$.latitude").value(DEFAULT_LATITUDE.doubleValue()))
-            .andExpect(jsonPath("$.longitude").value(DEFAULT_LONGITUDE.doubleValue()))
+            .andExpect(jsonPath("$.latitude").value(DEFAULT_LATITUDE))
+            .andExpect(jsonPath("$.longitude").value(DEFAULT_LONGITUDE))
             .andExpect(jsonPath("$.createdDate").value(sameInstant(DEFAULT_CREATED_DATE)))
             .andExpect(jsonPath("$.lastUpdatedDate").value(sameInstant(DEFAULT_LAST_UPDATED_DATE)))
             .andExpect(jsonPath("$.clientId").value(DEFAULT_CLIENT_ID.intValue()))
@@ -334,57 +332,30 @@ public class EmployeeLocationResourceIT {
         // Get all the employeeLocationList where latitude is null
         defaultEmployeeLocationShouldNotBeFound("latitude.specified=false");
     }
-
-    @Test
+                @Test
     @Transactional
-    public void getAllEmployeeLocationsByLatitudeIsGreaterThanOrEqualToSomething() throws Exception {
+    public void getAllEmployeeLocationsByLatitudeContainsSomething() throws Exception {
         // Initialize the database
         employeeLocationRepository.saveAndFlush(employeeLocation);
 
-        // Get all the employeeLocationList where latitude is greater than or equal to DEFAULT_LATITUDE
-        defaultEmployeeLocationShouldBeFound("latitude.greaterThanOrEqual=" + DEFAULT_LATITUDE);
+        // Get all the employeeLocationList where latitude contains DEFAULT_LATITUDE
+        defaultEmployeeLocationShouldBeFound("latitude.contains=" + DEFAULT_LATITUDE);
 
-        // Get all the employeeLocationList where latitude is greater than or equal to UPDATED_LATITUDE
-        defaultEmployeeLocationShouldNotBeFound("latitude.greaterThanOrEqual=" + UPDATED_LATITUDE);
+        // Get all the employeeLocationList where latitude contains UPDATED_LATITUDE
+        defaultEmployeeLocationShouldNotBeFound("latitude.contains=" + UPDATED_LATITUDE);
     }
 
     @Test
     @Transactional
-    public void getAllEmployeeLocationsByLatitudeIsLessThanOrEqualToSomething() throws Exception {
+    public void getAllEmployeeLocationsByLatitudeNotContainsSomething() throws Exception {
         // Initialize the database
         employeeLocationRepository.saveAndFlush(employeeLocation);
 
-        // Get all the employeeLocationList where latitude is less than or equal to DEFAULT_LATITUDE
-        defaultEmployeeLocationShouldBeFound("latitude.lessThanOrEqual=" + DEFAULT_LATITUDE);
+        // Get all the employeeLocationList where latitude does not contain DEFAULT_LATITUDE
+        defaultEmployeeLocationShouldNotBeFound("latitude.doesNotContain=" + DEFAULT_LATITUDE);
 
-        // Get all the employeeLocationList where latitude is less than or equal to SMALLER_LATITUDE
-        defaultEmployeeLocationShouldNotBeFound("latitude.lessThanOrEqual=" + SMALLER_LATITUDE);
-    }
-
-    @Test
-    @Transactional
-    public void getAllEmployeeLocationsByLatitudeIsLessThanSomething() throws Exception {
-        // Initialize the database
-        employeeLocationRepository.saveAndFlush(employeeLocation);
-
-        // Get all the employeeLocationList where latitude is less than DEFAULT_LATITUDE
-        defaultEmployeeLocationShouldNotBeFound("latitude.lessThan=" + DEFAULT_LATITUDE);
-
-        // Get all the employeeLocationList where latitude is less than UPDATED_LATITUDE
-        defaultEmployeeLocationShouldBeFound("latitude.lessThan=" + UPDATED_LATITUDE);
-    }
-
-    @Test
-    @Transactional
-    public void getAllEmployeeLocationsByLatitudeIsGreaterThanSomething() throws Exception {
-        // Initialize the database
-        employeeLocationRepository.saveAndFlush(employeeLocation);
-
-        // Get all the employeeLocationList where latitude is greater than DEFAULT_LATITUDE
-        defaultEmployeeLocationShouldNotBeFound("latitude.greaterThan=" + DEFAULT_LATITUDE);
-
-        // Get all the employeeLocationList where latitude is greater than SMALLER_LATITUDE
-        defaultEmployeeLocationShouldBeFound("latitude.greaterThan=" + SMALLER_LATITUDE);
+        // Get all the employeeLocationList where latitude does not contain UPDATED_LATITUDE
+        defaultEmployeeLocationShouldBeFound("latitude.doesNotContain=" + UPDATED_LATITUDE);
     }
 
 
@@ -439,57 +410,30 @@ public class EmployeeLocationResourceIT {
         // Get all the employeeLocationList where longitude is null
         defaultEmployeeLocationShouldNotBeFound("longitude.specified=false");
     }
-
-    @Test
+                @Test
     @Transactional
-    public void getAllEmployeeLocationsByLongitudeIsGreaterThanOrEqualToSomething() throws Exception {
+    public void getAllEmployeeLocationsByLongitudeContainsSomething() throws Exception {
         // Initialize the database
         employeeLocationRepository.saveAndFlush(employeeLocation);
 
-        // Get all the employeeLocationList where longitude is greater than or equal to DEFAULT_LONGITUDE
-        defaultEmployeeLocationShouldBeFound("longitude.greaterThanOrEqual=" + DEFAULT_LONGITUDE);
+        // Get all the employeeLocationList where longitude contains DEFAULT_LONGITUDE
+        defaultEmployeeLocationShouldBeFound("longitude.contains=" + DEFAULT_LONGITUDE);
 
-        // Get all the employeeLocationList where longitude is greater than or equal to UPDATED_LONGITUDE
-        defaultEmployeeLocationShouldNotBeFound("longitude.greaterThanOrEqual=" + UPDATED_LONGITUDE);
+        // Get all the employeeLocationList where longitude contains UPDATED_LONGITUDE
+        defaultEmployeeLocationShouldNotBeFound("longitude.contains=" + UPDATED_LONGITUDE);
     }
 
     @Test
     @Transactional
-    public void getAllEmployeeLocationsByLongitudeIsLessThanOrEqualToSomething() throws Exception {
+    public void getAllEmployeeLocationsByLongitudeNotContainsSomething() throws Exception {
         // Initialize the database
         employeeLocationRepository.saveAndFlush(employeeLocation);
 
-        // Get all the employeeLocationList where longitude is less than or equal to DEFAULT_LONGITUDE
-        defaultEmployeeLocationShouldBeFound("longitude.lessThanOrEqual=" + DEFAULT_LONGITUDE);
+        // Get all the employeeLocationList where longitude does not contain DEFAULT_LONGITUDE
+        defaultEmployeeLocationShouldNotBeFound("longitude.doesNotContain=" + DEFAULT_LONGITUDE);
 
-        // Get all the employeeLocationList where longitude is less than or equal to SMALLER_LONGITUDE
-        defaultEmployeeLocationShouldNotBeFound("longitude.lessThanOrEqual=" + SMALLER_LONGITUDE);
-    }
-
-    @Test
-    @Transactional
-    public void getAllEmployeeLocationsByLongitudeIsLessThanSomething() throws Exception {
-        // Initialize the database
-        employeeLocationRepository.saveAndFlush(employeeLocation);
-
-        // Get all the employeeLocationList where longitude is less than DEFAULT_LONGITUDE
-        defaultEmployeeLocationShouldNotBeFound("longitude.lessThan=" + DEFAULT_LONGITUDE);
-
-        // Get all the employeeLocationList where longitude is less than UPDATED_LONGITUDE
-        defaultEmployeeLocationShouldBeFound("longitude.lessThan=" + UPDATED_LONGITUDE);
-    }
-
-    @Test
-    @Transactional
-    public void getAllEmployeeLocationsByLongitudeIsGreaterThanSomething() throws Exception {
-        // Initialize the database
-        employeeLocationRepository.saveAndFlush(employeeLocation);
-
-        // Get all the employeeLocationList where longitude is greater than DEFAULT_LONGITUDE
-        defaultEmployeeLocationShouldNotBeFound("longitude.greaterThan=" + DEFAULT_LONGITUDE);
-
-        // Get all the employeeLocationList where longitude is greater than SMALLER_LONGITUDE
-        defaultEmployeeLocationShouldBeFound("longitude.greaterThan=" + SMALLER_LONGITUDE);
+        // Get all the employeeLocationList where longitude does not contain UPDATED_LONGITUDE
+        defaultEmployeeLocationShouldBeFound("longitude.doesNotContain=" + UPDATED_LONGITUDE);
     }
 
 
@@ -887,8 +831,8 @@ public class EmployeeLocationResourceIT {
             .andExpect(status().isOk())
             .andExpect(content().contentType(MediaType.APPLICATION_JSON_VALUE))
             .andExpect(jsonPath("$.[*].id").value(hasItem(employeeLocation.getId().intValue())))
-            .andExpect(jsonPath("$.[*].latitude").value(hasItem(DEFAULT_LATITUDE.doubleValue())))
-            .andExpect(jsonPath("$.[*].longitude").value(hasItem(DEFAULT_LONGITUDE.doubleValue())))
+            .andExpect(jsonPath("$.[*].latitude").value(hasItem(DEFAULT_LATITUDE)))
+            .andExpect(jsonPath("$.[*].longitude").value(hasItem(DEFAULT_LONGITUDE)))
             .andExpect(jsonPath("$.[*].createdDate").value(hasItem(sameInstant(DEFAULT_CREATED_DATE))))
             .andExpect(jsonPath("$.[*].lastUpdatedDate").value(hasItem(sameInstant(DEFAULT_LAST_UPDATED_DATE))))
             .andExpect(jsonPath("$.[*].clientId").value(hasItem(DEFAULT_CLIENT_ID.intValue())))

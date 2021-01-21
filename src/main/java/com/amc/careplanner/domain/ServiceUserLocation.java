@@ -26,11 +26,11 @@ public class ServiceUserLocation implements Serializable {
 
     @NotNull
     @Column(name = "latitude", nullable = false)
-    private Double latitude;
+    private String latitude;
 
     @NotNull
     @Column(name = "longitude", nullable = false)
-    private Double longitude;
+    private String longitude;
 
     @Column(name = "created_date")
     private ZonedDateTime createdDate;
@@ -58,29 +58,29 @@ public class ServiceUserLocation implements Serializable {
         this.id = id;
     }
 
-    public Double getLatitude() {
+    public String getLatitude() {
         return latitude;
     }
 
-    public ServiceUserLocation latitude(Double latitude) {
+    public ServiceUserLocation latitude(String latitude) {
         this.latitude = latitude;
         return this;
     }
 
-    public void setLatitude(Double latitude) {
+    public void setLatitude(String latitude) {
         this.latitude = latitude;
     }
 
-    public Double getLongitude() {
+    public String getLongitude() {
         return longitude;
     }
 
-    public ServiceUserLocation longitude(Double longitude) {
+    public ServiceUserLocation longitude(String longitude) {
         this.longitude = longitude;
         return this;
     }
 
-    public void setLongitude(Double longitude) {
+    public void setLongitude(String longitude) {
         this.longitude = longitude;
     }
 
@@ -171,8 +171,8 @@ public class ServiceUserLocation implements Serializable {
     public String toString() {
         return "ServiceUserLocation{" +
             "id=" + getId() +
-            ", latitude=" + getLatitude() +
-            ", longitude=" + getLongitude() +
+            ", latitude='" + getLatitude() + "'" +
+            ", longitude='" + getLongitude() + "'" +
             ", createdDate='" + getCreatedDate() + "'" +
             ", lastUpdatedDate='" + getLastUpdatedDate() + "'" +
             ", clientId=" + getClientId() +

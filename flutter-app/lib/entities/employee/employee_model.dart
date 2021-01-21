@@ -11,8 +11,8 @@ class Employee {
   @JsonProperty(name: 'id')
   final int id;
 
-  @JsonProperty(name: 'tittle', enumValues: Tittle.values)
-  final Tittle tittle;
+  @JsonProperty(name: 'title', enumValues: EmployeeTitle.values)
+  final EmployeeTitle title;
 
   @JsonProperty(name: 'firstName')
   final String firstName;
@@ -26,8 +26,8 @@ class Employee {
   @JsonProperty(name: 'preferredName')
   final String preferredName;
 
-  @JsonProperty(name: 'gendder', enumValues: Gendder.values)
-  final Gendder gendder;
+  @JsonProperty(name: 'gender', enumValues: EmployeeGender.values)
+  final EmployeeGender gender;
 
   @JsonProperty(name: 'employeeCode')
   final String employeeCode;
@@ -47,8 +47,8 @@ class Employee {
   @JsonProperty(name: 'pinCode')
   final int pinCode;
 
-  @JsonProperty(name: 'employeeTransportMode', enumValues: EmployeeTravelMode.values)
-  final EmployeeTravelMode employeeTransportMode;
+  @JsonProperty(name: 'transportMode', enumValues: EmployeeTravelMode.values)
+  final EmployeeTravelMode transportMode;
 
   @JsonProperty(name: 'address')
   final String address;
@@ -59,7 +59,7 @@ class Employee {
   @JsonProperty(name: 'postCode')
   final String postCode;
 
-  @JsonProperty(name: 'dateOfBirth', converterParams: {'format': 'yyyy-MM-dd\'T\'HH:mm:ss\'Z\''})
+  @JsonProperty(name: 'dateOfBirth', converterParams: {'format': 'yyyy-MM-dd'})
   final DateTime dateOfBirth;
 
   @JsonProperty(name: 'photoUrl')
@@ -100,19 +100,19 @@ class Employee {
 
  const Employee (
      this.id,
-        this.tittle,
+        this.title,
         this.firstName,
         this.middleInitial,
         this.lastName,
         this.preferredName,
-        this.gendder,
+        this.gender,
         this.employeeCode,
         this.phone,
         this.email,
         this.nationalInsuranceNumber,
         this.employeeContractType,
         this.pinCode,
-        this.employeeTransportMode,
+        this.transportMode,
         this.address,
         this.county,
         this.postCode,
@@ -135,19 +135,19 @@ class Employee {
 String toString() {
     return 'Employee{'+
     'id: $id,' +
-        'tittle: $tittle,' +
+        'title: $title,' +
         'firstName: $firstName,' +
         'middleInitial: $middleInitial,' +
         'lastName: $lastName,' +
         'preferredName: $preferredName,' +
-        'gendder: $gendder,' +
+        'gender: $gender,' +
         'employeeCode: $employeeCode,' +
         'phone: $phone,' +
         'email: $email,' +
         'nationalInsuranceNumber: $nationalInsuranceNumber,' +
         'employeeContractType: $employeeContractType,' +
         'pinCode: $pinCode,' +
-        'employeeTransportMode: $employeeTransportMode,' +
+        'transportMode: $transportMode,' +
         'address: $address,' +
         'county: $county,' +
         'postCode: $postCode,' +
@@ -181,16 +181,16 @@ int get hashCode =>
 
 
 @jsonSerializable
-@Json(enumValues: Tittle.values)
-enum Tittle {
+@Json(enumValues: EmployeeTitle.values)
+enum EmployeeTitle {
     MR ,
     MRS ,
     MS ,
     MISS ,
     OTHER
 }@jsonSerializable
-@Json(enumValues: Gendder.values)
-enum Gendder {
+@Json(enumValues: EmployeeGender.values)
+enum EmployeeGender {
     MALE ,
     FEMALE ,
     OTHER

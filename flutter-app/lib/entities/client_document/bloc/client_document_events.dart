@@ -36,13 +36,13 @@ class DocumentTypeChanged extends ClientDocumentEvent {
   @override
   List<Object> get props => [documentType];
 }
-class ClientDocumentStatusChanged extends ClientDocumentEvent {
-  final ClientDocumentStatus clientDocumentStatus;
+class DocumentStatusChanged extends ClientDocumentEvent {
+  final DocumentStatus documentStatus;
   
-  const ClientDocumentStatusChanged({@required this.clientDocumentStatus});
+  const DocumentStatusChanged({@required this.documentStatus});
   
   @override
-  List<Object> get props => [clientDocumentStatus];
+  List<Object> get props => [documentStatus];
 }
 class NoteChanged extends ClientDocumentEvent {
   final String note;

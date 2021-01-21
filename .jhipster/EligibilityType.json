@@ -16,7 +16,7 @@
     }
   ],
   "relationships": [],
-  "changelogDate": "20210114112511",
+  "changelogDate": "20210121104153",
   "entityTableName": "eligibility_type",
   "dto": "mapstruct",
   "pagination": "pagination",

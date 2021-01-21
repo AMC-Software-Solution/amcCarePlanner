@@ -43,19 +43,19 @@ S.of(context).pageEntitiesEmployeeCreateTitle;
   Widget settingsForm(BuildContext context) {
     return Form(
       child: Wrap(runSpacing: 15, children: <Widget>[
-          tittleField(),
+          titleField(),
           firstNameField(),
           middleInitialField(),
           lastNameField(),
           preferredNameField(),
-          gendderField(),
+          genderField(),
           employeeCodeField(),
           phoneField(),
           emailField(),
           nationalInsuranceNumberField(),
           employeeContractTypeField(),
           pinCodeField(),
-          employeeTransportModeField(),
+          transportModeField(),
           addressField(),
           countyField(),
           postCodeField(),
@@ -74,20 +74,20 @@ S.of(context).pageEntitiesEmployeeCreateTitle;
     );
   }
 
-      Widget tittleField() {
+      Widget titleField() {
         return BlocBuilder<EmployeeBloc,EmployeeState>(
-            buildWhen: (previous, current) => previous.tittle != current.tittle,
+            buildWhen: (previous, current) => previous.title != current.title,
             builder: (context, state) {
               return Padding(
                 padding: const EdgeInsets.only(left: 3.0),
                 child: Row(
                   mainAxisAlignment: MainAxisAlignment.spaceBetween,
                   children: <Widget>[
-                    Text(S.of(context).pageEntitiesEmployeeTittleField, style: Theme.of(context).textTheme.bodyText1,),
-                    DropdownButton<Tittle>(
-                        value: state.tittle.value,
-                        onChanged: (value) { context.bloc<EmployeeBloc>().add(TittleChanged(tittle: value)); },
-                        items: createDropdownTittleItems(Tittle.values)),
+                    Text(S.of(context).pageEntitiesEmployeeTitleField, style: Theme.of(context).textTheme.bodyText1,),
+                    DropdownButton<EmployeeTitle>(
+                        value: state.title.value,
+                        onChanged: (value) { context.bloc<EmployeeBloc>().add(TitleChanged(title: value)); },
+                        items: createDropdownEmployeeTitleItems(EmployeeTitle.values)),
                   ],
                 ),
               );
@@ -145,20 +145,20 @@ S.of(context).pageEntitiesEmployeeCreateTitle;
             }
         );
       }
-      Widget gendderField() {
+      Widget genderField() {
         return BlocBuilder<EmployeeBloc,EmployeeState>(
-            buildWhen: (previous, current) => previous.gendder != current.gendder,
+            buildWhen: (previous, current) => previous.gender != current.gender,
             builder: (context, state) {
               return Padding(
                 padding: const EdgeInsets.only(left: 3.0),
                 child: Row(
                   mainAxisAlignment: MainAxisAlignment.spaceBetween,
                   children: <Widget>[
-                    Text(S.of(context).pageEntitiesEmployeeGendderField, style: Theme.of(context).textTheme.bodyText1,),
-                    DropdownButton<Gendder>(
-                        value: state.gendder.value,
-                        onChanged: (value) { context.bloc<EmployeeBloc>().add(GendderChanged(gendder: value)); },
-                        items: createDropdownGendderItems(Gendder.values)),
+                    Text(S.of(context).pageEntitiesEmployeeGenderField, style: Theme.of(context).textTheme.bodyText1,),
+                    DropdownButton<EmployeeGender>(
+                        value: state.gender.value,
+                        onChanged: (value) { context.bloc<EmployeeBloc>().add(GenderChanged(gender: value)); },
+                        items: createDropdownEmployeeGenderItems(EmployeeGender.values)),
                   ],
                 ),
               );
@@ -248,19 +248,19 @@ S.of(context).pageEntitiesEmployeeCreateTitle;
             }
         );
       }
-      Widget employeeTransportModeField() {
+      Widget transportModeField() {
         return BlocBuilder<EmployeeBloc,EmployeeState>(
-            buildWhen: (previous, current) => previous.employeeTransportMode != current.employeeTransportMode,
+            buildWhen: (previous, current) => previous.transportMode != current.transportMode,
             builder: (context, state) {
               return Padding(
                 padding: const EdgeInsets.only(left: 3.0),
                 child: Row(
                   mainAxisAlignment: MainAxisAlignment.spaceBetween,
                   children: <Widget>[
-                    Text(S.of(context).pageEntitiesEmployeeEmployeeTransportModeField, style: Theme.of(context).textTheme.bodyText1,),
+                    Text(S.of(context).pageEntitiesEmployeeTransportModeField, style: Theme.of(context).textTheme.bodyText1,),
                     DropdownButton<EmployeeTravelMode>(
-                        value: state.employeeTransportMode.value,
-                        onChanged: (value) { context.bloc<EmployeeBloc>().add(EmployeeTransportModeChanged(employeeTransportMode: value)); },
+                        value: state.transportMode.value,
+                        onChanged: (value) { context.bloc<EmployeeBloc>().add(TransportModeChanged(transportMode: value)); },
                         items: createDropdownEmployeeTravelModeItems(EmployeeTravelMode.values)),
                   ],
                 ),
@@ -463,27 +463,27 @@ S.of(context).pageEntitiesEmployeeCreateTitle;
               });
         }
 
-      List<DropdownMenuItem<Tittle>> createDropdownTittleItems(List<Tittle> tittles) {
-        List<DropdownMenuItem<Tittle>> tittleDropDown = [];
+      List<DropdownMenuItem<EmployeeTitle>> createDropdownEmployeeTitleItems(List<EmployeeTitle> titles) {
+        List<DropdownMenuItem<EmployeeTitle>> titleDropDown = [];
     
-        for (Tittle tittle in tittles) {
-          DropdownMenuItem<Tittle> dropdown = DropdownMenuItem<Tittle>(
-              value: tittle, child: Text(tittle.toString()));
-              tittleDropDown.add(dropdown);
+        for (EmployeeTitle title in titles) {
+          DropdownMenuItem<EmployeeTitle> dropdown = DropdownMenuItem<EmployeeTitle>(
+              value: title, child: Text(title.toString()));
+              titleDropDown.add(dropdown);
         }
     
-        return tittleDropDown;
+        return titleDropDown;
       }
-      List<DropdownMenuItem<Gendder>> createDropdownGendderItems(List<Gendder> gendders) {
-        List<DropdownMenuItem<Gendder>> gendderDropDown = [];
+      List<DropdownMenuItem<EmployeeGender>> createDropdownEmployeeGenderItems(List<EmployeeGender> genders) {
+        List<DropdownMenuItem<EmployeeGender>> genderDropDown = [];
     
-        for (Gendder gendder in gendders) {
-          DropdownMenuItem<Gendder> dropdown = DropdownMenuItem<Gendder>(
-              value: gendder, child: Text(gendder.toString()));
-              gendderDropDown.add(dropdown);
+        for (EmployeeGender gender in genders) {
+          DropdownMenuItem<EmployeeGender> dropdown = DropdownMenuItem<EmployeeGender>(
+              value: gender, child: Text(gender.toString()));
+              genderDropDown.add(dropdown);
         }
     
-        return gendderDropDown;
+        return genderDropDown;
       }
       List<DropdownMenuItem<EmployeeContractType>> createDropdownEmployeeContractTypeItems(List<EmployeeContractType> employeeContractTypes) {
         List<DropdownMenuItem<EmployeeContractType>> employeeContractTypeDropDown = [];
@@ -496,16 +496,16 @@ S.of(context).pageEntitiesEmployeeCreateTitle;
     
         return employeeContractTypeDropDown;
       }
-      List<DropdownMenuItem<EmployeeTravelMode>> createDropdownEmployeeTravelModeItems(List<EmployeeTravelMode> employeeTransportModes) {
-        List<DropdownMenuItem<EmployeeTravelMode>> employeeTransportModeDropDown = [];
+      List<DropdownMenuItem<EmployeeTravelMode>> createDropdownEmployeeTravelModeItems(List<EmployeeTravelMode> transportModes) {
+        List<DropdownMenuItem<EmployeeTravelMode>> transportModeDropDown = [];
     
-        for (EmployeeTravelMode employeeTransportMode in employeeTransportModes) {
+        for (EmployeeTravelMode transportMode in transportModes) {
           DropdownMenuItem<EmployeeTravelMode> dropdown = DropdownMenuItem<EmployeeTravelMode>(
-              value: employeeTransportMode, child: Text(employeeTransportMode.toString()));
-              employeeTransportModeDropDown.add(dropdown);
+              value: transportMode, child: Text(transportMode.toString()));
+              transportModeDropDown.add(dropdown);
         }
     
-        return employeeTransportModeDropDown;
+        return transportModeDropDown;
       }
       List<DropdownMenuItem<EmployeeStatus>> createDropdownEmployeeStatusItems(List<EmployeeStatus> statuss) {
         List<DropdownMenuItem<EmployeeStatus>> statusDropDown = [];

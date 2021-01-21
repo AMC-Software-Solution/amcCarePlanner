@@ -33,7 +33,7 @@ import static org.hamcrest.Matchers.hasItem;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.*;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.*;
 
-import com.amc.careplanner.domain.enumeration.Gender;
+import com.amc.careplanner.domain.enumeration.ServiceUserGender;
 import com.amc.careplanner.domain.enumeration.MaritalStatus;
 import com.amc.careplanner.domain.enumeration.Religion;
 /**
@@ -44,8 +44,8 @@ import com.amc.careplanner.domain.enumeration.Religion;
 @WithMockUser
 public class EqualityResourceIT {
 
-    private static final Gender DEFAULT_GENDER = Gender.MALE;
-    private static final Gender UPDATED_GENDER = Gender.FEMALE;
+    private static final ServiceUserGender DEFAULT_GENDER = ServiceUserGender.MALE;
+    private static final ServiceUserGender UPDATED_GENDER = ServiceUserGender.FEMALE;
 
     private static final MaritalStatus DEFAULT_MARITAL_STATUS = MaritalStatus.MARRIED;
     private static final MaritalStatus UPDATED_MARITAL_STATUS = MaritalStatus.SINGLE;

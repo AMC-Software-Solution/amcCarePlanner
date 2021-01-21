@@ -46,7 +46,7 @@ S.of(context).pageEntitiesClientDocumentCreateTitle;
           documentNameField(),
           documentNumberField(),
           documentTypeField(),
-          clientDocumentStatusField(),
+          documentStatusField(),
           noteField(),
           issuedDateField(),
           expiryDateField(),
@@ -107,20 +107,20 @@ S.of(context).pageEntitiesClientDocumentCreateTitle;
               );
             });
       }
-      Widget clientDocumentStatusField() {
+      Widget documentStatusField() {
         return BlocBuilder<ClientDocumentBloc,ClientDocumentState>(
-            buildWhen: (previous, current) => previous.clientDocumentStatus != current.clientDocumentStatus,
+            buildWhen: (previous, current) => previous.documentStatus != current.documentStatus,
             builder: (context, state) {
               return Padding(
                 padding: const EdgeInsets.only(left: 3.0),
                 child: Row(
                   mainAxisAlignment: MainAxisAlignment.spaceBetween,
                   children: <Widget>[
-                    Text(S.of(context).pageEntitiesClientDocumentClientDocumentStatusField, style: Theme.of(context).textTheme.bodyText1,),
-                    DropdownButton<ClientDocumentStatus>(
-                        value: state.clientDocumentStatus.value,
-                        onChanged: (value) { context.bloc<ClientDocumentBloc>().add(ClientDocumentStatusChanged(clientDocumentStatus: value)); },
-                        items: createDropdownClientDocumentStatusItems(ClientDocumentStatus.values)),
+                    Text(S.of(context).pageEntitiesClientDocumentDocumentStatusField, style: Theme.of(context).textTheme.bodyText1,),
+                    DropdownButton<DocumentStatus>(
+                        value: state.documentStatus.value,
+                        onChanged: (value) { context.bloc<ClientDocumentBloc>().add(DocumentStatusChanged(documentStatus: value)); },
+                        items: createDropdownDocumentStatusItems(DocumentStatus.values)),
                   ],
                 ),
               );
@@ -306,16 +306,16 @@ S.of(context).pageEntitiesClientDocumentCreateTitle;
     
         return documentTypeDropDown;
       }
-      List<DropdownMenuItem<ClientDocumentStatus>> createDropdownClientDocumentStatusItems(List<ClientDocumentStatus> clientDocumentStatuss) {
-        List<DropdownMenuItem<ClientDocumentStatus>> clientDocumentStatusDropDown = [];
+      List<DropdownMenuItem<DocumentStatus>> createDropdownDocumentStatusItems(List<DocumentStatus> documentStatuss) {
+        List<DropdownMenuItem<DocumentStatus>> documentStatusDropDown = [];
     
-        for (ClientDocumentStatus clientDocumentStatus in clientDocumentStatuss) {
-          DropdownMenuItem<ClientDocumentStatus> dropdown = DropdownMenuItem<ClientDocumentStatus>(
-              value: clientDocumentStatus, child: Text(clientDocumentStatus.toString()));
-              clientDocumentStatusDropDown.add(dropdown);
+        for (DocumentStatus documentStatus in documentStatuss) {
+          DropdownMenuItem<DocumentStatus> dropdown = DropdownMenuItem<DocumentStatus>(
+              value: documentStatus, child: Text(documentStatus.toString()));
+              documentStatusDropDown.add(dropdown);
         }
     
-        return clientDocumentStatusDropDown;
+        return documentStatusDropDown;
       }
 
   Widget validationZone() {

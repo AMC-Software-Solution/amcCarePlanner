@@ -5,7 +5,7 @@ import java.time.ZonedDateTime;
 import javax.validation.constraints.*;
 import java.io.Serializable;
 import javax.persistence.Lob;
-import com.amc.careplanner.domain.enumeration.Title;
+import com.amc.careplanner.domain.enumeration.ServiceUserTitle;
 import com.amc.careplanner.domain.enumeration.SupportType;
 import com.amc.careplanner.domain.enumeration.ServiceUserCategory;
 import com.amc.careplanner.domain.enumeration.Vulnerability;
@@ -21,7 +21,7 @@ public class ServiceUserDTO implements Serializable {
     private Long id;
 
     @NotNull
-    private Title title;
+    private ServiceUserTitle title;
 
     @NotNull
     @Size(min = 1, max = 25)
@@ -123,11 +123,11 @@ public class ServiceUserDTO implements Serializable {
         this.id = id;
     }
 
-    public Title getTitle() {
+    public ServiceUserTitle getTitle() {
         return title;
     }
 
-    public void setTitle(Title title) {
+    public void setTitle(ServiceUserTitle title) {
         this.title = title;
     }
 

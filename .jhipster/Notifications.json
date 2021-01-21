@@ -51,8 +51,8 @@
     }
   ],
   "relationships": [],
-  "changelogDate": "20210114113511",
-  "entityTableName": "notification",
+  "changelogDate": "20210121105153",
+  "entityTableName": "notifications",
   "dto": "mapstruct",
   "pagination": "pagination",
   "service": "serviceClass",

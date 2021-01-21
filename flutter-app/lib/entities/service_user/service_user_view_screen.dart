@@ -50,7 +50,7 @@ class ServiceUserViewScreen extends StatelessWidget {
           crossAxisAlignment: CrossAxisAlignment.start,
           children: <Widget>[
             Text('Id : ' + serviceUser.id.toString(), style: Theme.of(context).textTheme.bodyText1,),
-                Text('Titlle : ' + serviceUser.titlle.toString(), style: Theme.of(context).textTheme.bodyText1,),
+                Text('Title : ' + serviceUser.title.toString(), style: Theme.of(context).textTheme.bodyText1,),
                 Text('First Name : ' + serviceUser.firstName.toString(), style: Theme.of(context).textTheme.bodyText1,),
                 Text('Middle Name : ' + serviceUser.middleName.toString(), style: Theme.of(context).textTheme.bodyText1,),
                 Text('Last Name : ' + serviceUser.lastName.toString(), style: Theme.of(context).textTheme.bodyText1,),

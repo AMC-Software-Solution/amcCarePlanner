@@ -72,14 +72,14 @@ class InvoiceGatlingTest extends Simulation {
             .headers(headers_http_authenticated)
             .body(StringBody("""{
                 "id":null
-                , "totalAmount":"0"
+                , "totalAmount":"SAMPLE_TEXT"
                 , "description":"SAMPLE_TEXT"
                 , "invoiceNumber":null
                 , "generatedDate":"2020-01-01T00:00:00.000Z"
                 , "dueDate":"2020-01-01T00:00:00.000Z"
                 , "paymentDate":"2020-01-01T00:00:00.000Z"
                 , "invoiceStatus":"CREATED"
-                , "tax":null
+                , "tax":"SAMPLE_TEXT"
                 , "attribute1":"SAMPLE_TEXT"
                 , "attribute2":"SAMPLE_TEXT"
                 , "attribute3":"SAMPLE_TEXT"

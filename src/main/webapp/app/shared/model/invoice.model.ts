@@ -3,14 +3,14 @@ import { InvoiceStatus } from 'app/shared/model/enumerations/invoice-status.mode
 
 export interface IInvoice {
   id?: number;
-  totalAmount?: number;
+  totalAmount?: string;
   description?: string;
   invoiceNumber?: string;
   generatedDate?: string;
   dueDate?: string;
   paymentDate?: string;
   invoiceStatus?: InvoiceStatus;
-  tax?: number;
+  tax?: string;
   attribute1?: string;
   attribute2?: string;
   attribute3?: string;

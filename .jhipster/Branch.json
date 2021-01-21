@@ -53,7 +53,7 @@
       "otherEntityField": "clientName"
     }
   ],
-  "changelogDate": "20210114110411",
+  "changelogDate": "20210121102053",
   "entityTableName": "branch",
   "dto": "mapstruct",
   "pagination": "pagination",

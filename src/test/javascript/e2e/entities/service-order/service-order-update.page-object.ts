@@ -107,8 +107,8 @@ export default class ServiceOrderUpdatePage {
     await this.setServiceDescriptionInput('serviceDescription');
     expect(await this.getServiceDescriptionInput()).to.match(/serviceDescription/);
     await waitUntilDisplayed(this.saveButton);
-    await this.setServiceHourlyRateInput('5');
-    expect(await this.getServiceHourlyRateInput()).to.eq('5');
+    await this.setServiceHourlyRateInput('serviceHourlyRate');
+    expect(await this.getServiceHourlyRateInput()).to.match(/serviceHourlyRate/);
     await waitUntilDisplayed(this.saveButton);
     await this.setClientIdInput('5');
     expect(await this.getClientIdInput()).to.eq('5');

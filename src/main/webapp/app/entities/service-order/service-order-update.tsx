@@ -108,12 +108,10 @@ export const ServiceOrderUpdate = (props: IServiceOrderUpdateProps) => {
                 </Label>
                 <AvField
                   id="service-order-serviceHourlyRate"
-                  type="string"
-                  className="form-control"
+                  type="text"
                   name="serviceHourlyRate"
                   validate={{
                     required: { value: true, errorMessage: translate('entity.validation.required') },
-                    number: { value: true, errorMessage: translate('entity.validation.number') },
                   }}
                 />
               </AvGroup>

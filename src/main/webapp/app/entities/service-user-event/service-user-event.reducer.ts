@@ -97,12 +97,12 @@ export default (state: ServiceUserEventState = initialState, action): ServiceUse
   }
 };
 
-const apiUrl = 'api/v1';
+const apiUrl = 'api/service-user-events';
 
 // Actions
 
 export const getEntities: ICrudGetAllAction<IServiceUserEvent> = (page, size, sort) => {
-  const requestUrl = `${apiUrl}/get-all-service-user-events-by-client-id${sort ? `?page=${page}&size=${size}&sort=${sort}` : ''}`;
+  const requestUrl = `${apiUrl}${sort ? `?page=${page}&size=${size}&sort=${sort}` : ''}`;
   return {
     type: ACTION_TYPES.FETCH_SERVICEUSEREVENT_LIST,
     payload: axios.get<IServiceUserEvent>(`${requestUrl}${sort ? '&' : '?'}cacheBuster=${new Date().getTime()}`),
@@ -110,7 +110,7 @@ export const getEntities: ICrudGetAllAction<IServiceUserEvent> = (page, size, so
 };
 
 export const getEntity: ICrudGetAction<IServiceUserEvent> = id => {
-  const requestUrl = `${apiUrl}/get-service-user-event-by-client-id/${id}`;
+  const requestUrl = `${apiUrl}/${id}`;
   return {
     type: ACTION_TYPES.FETCH_SERVICEUSEREVENT,
     payload: axios.get<IServiceUserEvent>(requestUrl),
@@ -120,7 +120,7 @@ export const getEntity: ICrudGetAction<IServiceUserEvent> = id => {
 export const createEntity: ICrudPutAction<IServiceUserEvent> = entity => async dispatch => {
   const result = await dispatch({
     type: ACTION_TYPES.CREATE_SERVICEUSEREVENT,
-    payload: axios.post(apiUrl + '/create-service-user-event-by-client-id', cleanEntity(entity)),
+    payload: axios.post(apiUrl, cleanEntity(entity)),
   });
   dispatch(getEntities());
   return result;
@@ -129,13 +129,13 @@ export const createEntity: ICrudPutAction<IServiceUserEvent> = entity => async d
 export const updateEntity: ICrudPutAction<IServiceUserEvent> = entity => async dispatch => {
   const result = await dispatch({
     type: ACTION_TYPES.UPDATE_SERVICEUSEREVENT,
-    payload: axios.put(apiUrl + '/update-service-user-event-by-client-id', cleanEntity(entity)),
+    payload: axios.put(apiUrl, cleanEntity(entity)),
   });
   return result;
 };
 
 export const deleteEntity: ICrudDeleteAction<IServiceUserEvent> = id => async dispatch => {
-  const requestUrl = `${apiUrl}/delete-service-user-event-by-client-id/${id}`;
+  const requestUrl = `${apiUrl}/${id}`;
   const result = await dispatch({
     type: ACTION_TYPES.DELETE_SERVICEUSEREVENT,
     payload: axios.delete(requestUrl),

@@ -40,13 +40,11 @@ import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.
 @WithMockUser
 public class ServiceUserLocationResourceIT {
 
-    private static final Double DEFAULT_LATITUDE = 1D;
-    private static final Double UPDATED_LATITUDE = 2D;
-    private static final Double SMALLER_LATITUDE = 1D - 1D;
+    private static final String DEFAULT_LATITUDE = "AAAAAAAAAA";
+    private static final String UPDATED_LATITUDE = "BBBBBBBBBB";
 
-    private static final Double DEFAULT_LONGITUDE = 1D;
-    private static final Double UPDATED_LONGITUDE = 2D;
-    private static final Double SMALLER_LONGITUDE = 1D - 1D;
+    private static final String DEFAULT_LONGITUDE = "AAAAAAAAAA";
+    private static final String UPDATED_LONGITUDE = "BBBBBBBBBB";
 
     private static final ZonedDateTime DEFAULT_CREATED_DATE = ZonedDateTime.ofInstant(Instant.ofEpochMilli(0L), ZoneOffset.UTC);
     private static final ZonedDateTime UPDATED_CREATED_DATE = ZonedDateTime.now(ZoneId.systemDefault()).withNano(0);
@@ -236,8 +234,8 @@ public class ServiceUserLocationResourceIT {
             .andExpect(status().isOk())
             .andExpect(content().contentType(MediaType.APPLICATION_JSON_VALUE))
             .andExpect(jsonPath("$.[*].id").value(hasItem(serviceUserLocation.getId().intValue())))
-            .andExpect(jsonPath("$.[*].latitude").value(hasItem(DEFAULT_LATITUDE.doubleValue())))
-            .andExpect(jsonPath("$.[*].longitude").value(hasItem(DEFAULT_LONGITUDE.doubleValue())))
+            .andExpect(jsonPath("$.[*].latitude").value(hasItem(DEFAULT_LATITUDE)))
+            .andExpect(jsonPath("$.[*].longitude").value(hasItem(DEFAULT_LONGITUDE)))
             .andExpect(jsonPath("$.[*].createdDate").value(hasItem(sameInstant(DEFAULT_CREATED_DATE))))
             .andExpect(jsonPath("$.[*].lastUpdatedDate").value(hasItem(sameInstant(DEFAULT_LAST_UPDATED_DATE))))
             .andExpect(jsonPath("$.[*].clientId").value(hasItem(DEFAULT_CLIENT_ID.intValue())))
@@ -255,8 +253,8 @@ public class ServiceUserLocationResourceIT {
             .andExpect(status().isOk())
             .andExpect(content().contentType(MediaType.APPLICATION_JSON_VALUE))
             .andExpect(jsonPath("$.id").value(serviceUserLocation.getId().intValue()))
-            .andExpect(jsonPath("$.latitude").value(DEFAULT_LATITUDE.doubleValue()))
-            .andExpect(jsonPath("$.longitude").value(DEFAULT_LONGITUDE.doubleValue()))
+            .andExpect(jsonPath("$.latitude").value(DEFAULT_LATITUDE))
+            .andExpect(jsonPath("$.longitude").value(DEFAULT_LONGITUDE))
             .andExpect(jsonPath("$.createdDate").value(sameInstant(DEFAULT_CREATED_DATE)))
             .andExpect(jsonPath("$.lastUpdatedDate").value(sameInstant(DEFAULT_LAST_UPDATED_DATE)))
             .andExpect(jsonPath("$.clientId").value(DEFAULT_CLIENT_ID.intValue()))
@@ -334,57 +332,30 @@ public class ServiceUserLocationResourceIT {
         // Get all the serviceUserLocationList where latitude is null
         defaultServiceUserLocationShouldNotBeFound("latitude.specified=false");
     }
-
-    @Test
+                @Test
     @Transactional
-    public void getAllServiceUserLocationsByLatitudeIsGreaterThanOrEqualToSomething() throws Exception {
+    public void getAllServiceUserLocationsByLatitudeContainsSomething() throws Exception {
         // Initialize the database
         serviceUserLocationRepository.saveAndFlush(serviceUserLocation);
 
-        // Get all the serviceUserLocationList where latitude is greater than or equal to DEFAULT_LATITUDE
-        defaultServiceUserLocationShouldBeFound("latitude.greaterThanOrEqual=" + DEFAULT_LATITUDE);
+        // Get all the serviceUserLocationList where latitude contains DEFAULT_LATITUDE
+        defaultServiceUserLocationShouldBeFound("latitude.contains=" + DEFAULT_LATITUDE);
 
-        // Get all the serviceUserLocationList where latitude is greater than or equal to UPDATED_LATITUDE
-        defaultServiceUserLocationShouldNotBeFound("latitude.greaterThanOrEqual=" + UPDATED_LATITUDE);
+        // Get all the serviceUserLocationList where latitude contains UPDATED_LATITUDE
+        defaultServiceUserLocationShouldNotBeFound("latitude.contains=" + UPDATED_LATITUDE);
     }
 
     @Test
     @Transactional
-    public void getAllServiceUserLocationsByLatitudeIsLessThanOrEqualToSomething() throws Exception {
+    public void getAllServiceUserLocationsByLatitudeNotContainsSomething() throws Exception {
         // Initialize the database
         serviceUserLocationRepository.saveAndFlush(serviceUserLocation);
 
-        // Get all the serviceUserLocationList where latitude is less than or equal to DEFAULT_LATITUDE
-        defaultServiceUserLocationShouldBeFound("latitude.lessThanOrEqual=" + DEFAULT_LATITUDE);
+        // Get all the serviceUserLocationList where latitude does not contain DEFAULT_LATITUDE
+        defaultServiceUserLocationShouldNotBeFound("latitude.doesNotContain=" + DEFAULT_LATITUDE);
 
-        // Get all the serviceUserLocationList where latitude is less than or equal to SMALLER_LATITUDE
-        defaultServiceUserLocationShouldNotBeFound("latitude.lessThanOrEqual=" + SMALLER_LATITUDE);
-    }
-
-    @Test
-    @Transactional
-    public void getAllServiceUserLocationsByLatitudeIsLessThanSomething() throws Exception {
-        // Initialize the database
-        serviceUserLocationRepository.saveAndFlush(serviceUserLocation);
-
-        // Get all the serviceUserLocationList where latitude is less than DEFAULT_LATITUDE
-        defaultServiceUserLocationShouldNotBeFound("latitude.lessThan=" + DEFAULT_LATITUDE);
-
-        // Get all the serviceUserLocationList where latitude is less than UPDATED_LATITUDE
-        defaultServiceUserLocationShouldBeFound("latitude.lessThan=" + UPDATED_LATITUDE);
-    }
-
-    @Test
-    @Transactional
-    public void getAllServiceUserLocationsByLatitudeIsGreaterThanSomething() throws Exception {
-        // Initialize the database
-        serviceUserLocationRepository.saveAndFlush(serviceUserLocation);
-
-        // Get all the serviceUserLocationList where latitude is greater than DEFAULT_LATITUDE
-        defaultServiceUserLocationShouldNotBeFound("latitude.greaterThan=" + DEFAULT_LATITUDE);
-
-        // Get all the serviceUserLocationList where latitude is greater than SMALLER_LATITUDE
-        defaultServiceUserLocationShouldBeFound("latitude.greaterThan=" + SMALLER_LATITUDE);
+        // Get all the serviceUserLocationList where latitude does not contain UPDATED_LATITUDE
+        defaultServiceUserLocationShouldBeFound("latitude.doesNotContain=" + UPDATED_LATITUDE);
     }
 
 
@@ -439,57 +410,30 @@ public class ServiceUserLocationResourceIT {
         // Get all the serviceUserLocationList where longitude is null
         defaultServiceUserLocationShouldNotBeFound("longitude.specified=false");
     }
-
-    @Test
+                @Test
     @Transactional
-    public void getAllServiceUserLocationsByLongitudeIsGreaterThanOrEqualToSomething() throws Exception {
+    public void getAllServiceUserLocationsByLongitudeContainsSomething() throws Exception {
         // Initialize the database
         serviceUserLocationRepository.saveAndFlush(serviceUserLocation);
 
-        // Get all the serviceUserLocationList where longitude is greater than or equal to DEFAULT_LONGITUDE
-        defaultServiceUserLocationShouldBeFound("longitude.greaterThanOrEqual=" + DEFAULT_LONGITUDE);
+        // Get all the serviceUserLocationList where longitude contains DEFAULT_LONGITUDE
+        defaultServiceUserLocationShouldBeFound("longitude.contains=" + DEFAULT_LONGITUDE);
 
-        // Get all the serviceUserLocationList where longitude is greater than or equal to UPDATED_LONGITUDE
-        defaultServiceUserLocationShouldNotBeFound("longitude.greaterThanOrEqual=" + UPDATED_LONGITUDE);
+        // Get all the serviceUserLocationList where longitude contains UPDATED_LONGITUDE
+        defaultServiceUserLocationShouldNotBeFound("longitude.contains=" + UPDATED_LONGITUDE);
     }
 
     @Test
     @Transactional
-    public void getAllServiceUserLocationsByLongitudeIsLessThanOrEqualToSomething() throws Exception {
+    public void getAllServiceUserLocationsByLongitudeNotContainsSomething() throws Exception {
         // Initialize the database
         serviceUserLocationRepository.saveAndFlush(serviceUserLocation);
 
-        // Get all the serviceUserLocationList where longitude is less than or equal to DEFAULT_LONGITUDE
-        defaultServiceUserLocationShouldBeFound("longitude.lessThanOrEqual=" + DEFAULT_LONGITUDE);
+        // Get all the serviceUserLocationList where longitude does not contain DEFAULT_LONGITUDE
+        defaultServiceUserLocationShouldNotBeFound("longitude.doesNotContain=" + DEFAULT_LONGITUDE);
 
-        // Get all the serviceUserLocationList where longitude is less than or equal to SMALLER_LONGITUDE
-        defaultServiceUserLocationShouldNotBeFound("longitude.lessThanOrEqual=" + SMALLER_LONGITUDE);
-    }
-
-    @Test
-    @Transactional
-    public void getAllServiceUserLocationsByLongitudeIsLessThanSomething() throws Exception {
-        // Initialize the database
-        serviceUserLocationRepository.saveAndFlush(serviceUserLocation);
-
-        // Get all the serviceUserLocationList where longitude is less than DEFAULT_LONGITUDE
-        defaultServiceUserLocationShouldNotBeFound("longitude.lessThan=" + DEFAULT_LONGITUDE);
-
-        // Get all the serviceUserLocationList where longitude is less than UPDATED_LONGITUDE
-        defaultServiceUserLocationShouldBeFound("longitude.lessThan=" + UPDATED_LONGITUDE);
-    }
-
-    @Test
-    @Transactional
-    public void getAllServiceUserLocationsByLongitudeIsGreaterThanSomething() throws Exception {
-        // Initialize the database
-        serviceUserLocationRepository.saveAndFlush(serviceUserLocation);
-
-        // Get all the serviceUserLocationList where longitude is greater than DEFAULT_LONGITUDE
-        defaultServiceUserLocationShouldNotBeFound("longitude.greaterThan=" + DEFAULT_LONGITUDE);
-
-        // Get all the serviceUserLocationList where longitude is greater than SMALLER_LONGITUDE
-        defaultServiceUserLocationShouldBeFound("longitude.greaterThan=" + SMALLER_LONGITUDE);
+        // Get all the serviceUserLocationList where longitude does not contain UPDATED_LONGITUDE
+        defaultServiceUserLocationShouldBeFound("longitude.doesNotContain=" + UPDATED_LONGITUDE);
     }
 
 
@@ -887,8 +831,8 @@ public class ServiceUserLocationResourceIT {
             .andExpect(status().isOk())
             .andExpect(content().contentType(MediaType.APPLICATION_JSON_VALUE))
             .andExpect(jsonPath("$.[*].id").value(hasItem(serviceUserLocation.getId().intValue())))
-            .andExpect(jsonPath("$.[*].latitude").value(hasItem(DEFAULT_LATITUDE.doubleValue())))
-            .andExpect(jsonPath("$.[*].longitude").value(hasItem(DEFAULT_LONGITUDE.doubleValue())))
+            .andExpect(jsonPath("$.[*].latitude").value(hasItem(DEFAULT_LATITUDE)))
+            .andExpect(jsonPath("$.[*].longitude").value(hasItem(DEFAULT_LONGITUDE)))
             .andExpect(jsonPath("$.[*].createdDate").value(hasItem(sameInstant(DEFAULT_CREATED_DATE))))
             .andExpect(jsonPath("$.[*].lastUpdatedDate").value(hasItem(sameInstant(DEFAULT_LAST_UPDATED_DATE))))
             .andExpect(jsonPath("$.[*].clientId").value(hasItem(DEFAULT_CLIENT_ID.intValue())))

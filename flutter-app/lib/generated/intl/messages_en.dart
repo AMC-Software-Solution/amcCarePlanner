@@ -19,7 +19,7 @@ typedef String MessageIfAbsent(String messageStr, List<dynamic> args);
 class MessageLookup extends MessageLookupByLibrary {
   String get localeName => 'en';
 
-  static m0(login) => "Hi! ${login}";
+  static m0(login) => "Current user : ${login}";
 
   static m1(min) => "Rules : 1 uppercase, 1 number and ${min} characters";
 
@@ -114,7 +114,6 @@ class MessageLookup extends MessageLookupByLibrary {
     "pageEntitiesClientCreatedDateField" : MessageLookupByLibrary.simpleMessage("CreatedDate"),
     "pageEntitiesClientDeleteOk" : MessageLookupByLibrary.simpleMessage("Client deleted successfuly"),
     "pageEntitiesClientDeletePopupTitle" : MessageLookupByLibrary.simpleMessage("Delete Clients"),
-    "pageEntitiesClientDocumentClientDocumentStatusField" : MessageLookupByLibrary.simpleMessage("ClientDocumentStatus"),
     "pageEntitiesClientDocumentClientIdField" : MessageLookupByLibrary.simpleMessage("ClientId"),
     "pageEntitiesClientDocumentCreateTitle" : MessageLookupByLibrary.simpleMessage("Create ClientDocuments"),
     "pageEntitiesClientDocumentCreatedDateField" : MessageLookupByLibrary.simpleMessage("CreatedDate"),
@@ -123,6 +122,7 @@ class MessageLookup extends MessageLookupByLibrary {
     "pageEntitiesClientDocumentDocumentFileUrlField" : MessageLookupByLibrary.simpleMessage("DocumentFileUrl"),
     "pageEntitiesClientDocumentDocumentNameField" : MessageLookupByLibrary.simpleMessage("DocumentName"),
     "pageEntitiesClientDocumentDocumentNumberField" : MessageLookupByLibrary.simpleMessage("DocumentNumber"),
+    "pageEntitiesClientDocumentDocumentStatusField" : MessageLookupByLibrary.simpleMessage("DocumentStatus"),
     "pageEntitiesClientDocumentDocumentTypeField" : MessageLookupByLibrary.simpleMessage("DocumentType"),
     "pageEntitiesClientDocumentExpiryDateField" : MessageLookupByLibrary.simpleMessage("ExpiryDate"),
     "pageEntitiesClientDocumentHasExtraDataField" : MessageLookupByLibrary.simpleMessage("HasExtraData"),
@@ -311,7 +311,7 @@ class MessageLookup extends MessageLookupByLibrary {
     "pageEntitiesEmployeeDocumentDocumentFileUrlField" : MessageLookupByLibrary.simpleMessage("DocumentFileUrl"),
     "pageEntitiesEmployeeDocumentDocumentNameField" : MessageLookupByLibrary.simpleMessage("DocumentName"),
     "pageEntitiesEmployeeDocumentDocumentNumberField" : MessageLookupByLibrary.simpleMessage("DocumentNumber"),
-    "pageEntitiesEmployeeDocumentEmployeeDocumentStatusField" : MessageLookupByLibrary.simpleMessage("EmployeeDocumentStatus"),
+    "pageEntitiesEmployeeDocumentDocumentStatusField" : MessageLookupByLibrary.simpleMessage("DocumentStatus"),
     "pageEntitiesEmployeeDocumentExpiryDateField" : MessageLookupByLibrary.simpleMessage("ExpiryDate"),
     "pageEntitiesEmployeeDocumentHasExtraDataField" : MessageLookupByLibrary.simpleMessage("HasExtraData"),
     "pageEntitiesEmployeeDocumentIssuedDateField" : MessageLookupByLibrary.simpleMessage("IssuedDate"),
@@ -325,9 +325,8 @@ class MessageLookup extends MessageLookupByLibrary {
     "pageEntitiesEmployeeEmployeeBioField" : MessageLookupByLibrary.simpleMessage("EmployeeBio"),
     "pageEntitiesEmployeeEmployeeCodeField" : MessageLookupByLibrary.simpleMessage("EmployeeCode"),
     "pageEntitiesEmployeeEmployeeContractTypeField" : MessageLookupByLibrary.simpleMessage("EmployeeContractType"),
-    "pageEntitiesEmployeeEmployeeTransportModeField" : MessageLookupByLibrary.simpleMessage("EmployeeTransportMode"),
     "pageEntitiesEmployeeFirstNameField" : MessageLookupByLibrary.simpleMessage("FirstName"),
-    "pageEntitiesEmployeeGendderField" : MessageLookupByLibrary.simpleMessage("Gendder"),
+    "pageEntitiesEmployeeGenderField" : MessageLookupByLibrary.simpleMessage("Gender"),
     "pageEntitiesEmployeeHasExtraDataField" : MessageLookupByLibrary.simpleMessage("HasExtraData"),
     "pageEntitiesEmployeeHolidayApprovedDateField" : MessageLookupByLibrary.simpleMessage("ApprovedDate"),
     "pageEntitiesEmployeeHolidayClientIdField" : MessageLookupByLibrary.simpleMessage("ClientId"),
@@ -371,7 +370,8 @@ class MessageLookup extends MessageLookupByLibrary {
     "pageEntitiesEmployeePostCodeField" : MessageLookupByLibrary.simpleMessage("PostCode"),
     "pageEntitiesEmployeePreferredNameField" : MessageLookupByLibrary.simpleMessage("PreferredName"),
     "pageEntitiesEmployeeStatusField" : MessageLookupByLibrary.simpleMessage("Status"),
-    "pageEntitiesEmployeeTittleField" : MessageLookupByLibrary.simpleMessage("Tittle"),
+    "pageEntitiesEmployeeTitleField" : MessageLookupByLibrary.simpleMessage("Title"),
+    "pageEntitiesEmployeeTransportModeField" : MessageLookupByLibrary.simpleMessage("TransportMode"),
     "pageEntitiesEmployeeUpdateTitle" : MessageLookupByLibrary.simpleMessage("Edit Employees"),
     "pageEntitiesEmployeeViewTitle" : MessageLookupByLibrary.simpleMessage("Employees View"),
     "pageEntitiesEqualityClientIdField" : MessageLookupByLibrary.simpleMessage("ClientId"),
@@ -634,7 +634,7 @@ class MessageLookup extends MessageLookupByLibrary {
     "pageEntitiesServiceUserStartDateField" : MessageLookupByLibrary.simpleMessage("StartDate"),
     "pageEntitiesServiceUserStatusField" : MessageLookupByLibrary.simpleMessage("Status"),
     "pageEntitiesServiceUserSupportTypeField" : MessageLookupByLibrary.simpleMessage("SupportType"),
-    "pageEntitiesServiceUserTitlleField" : MessageLookupByLibrary.simpleMessage("Titlle"),
+    "pageEntitiesServiceUserTitleField" : MessageLookupByLibrary.simpleMessage("Title"),
     "pageEntitiesServiceUserUpdateTitle" : MessageLookupByLibrary.simpleMessage("Edit ServiceUsers"),
     "pageEntitiesServiceUserViewTitle" : MessageLookupByLibrary.simpleMessage("ServiceUsers View"),
     "pageEntitiesServiceUserVulnerabilityField" : MessageLookupByLibrary.simpleMessage("Vulnerability"),
@@ -751,8 +751,8 @@ class MessageLookup extends MessageLookupByLibrary {
     "pageMainNumberPackOpen" : MessageLookupByLibrary.simpleMessage("Packs"),
     "pageMainOpenPackButton" : MessageLookupByLibrary.simpleMessage("Open pack"),
     "pageMainProfileButton" : MessageLookupByLibrary.simpleMessage("Your profile"),
-    "pageMainTitle" : MessageLookupByLibrary.simpleMessage("HOME"),
-    "pageMainWelcome" : MessageLookupByLibrary.simpleMessage("Welcome to your Care Planner App"),
+    "pageMainTitle" : MessageLookupByLibrary.simpleMessage("Main page"),
+    "pageMainWelcome" : MessageLookupByLibrary.simpleMessage("Welcome to your Jhipster flutter app"),
     "pageRegisterConfirmationPasswordValidationError" : m1,
     "pageRegisterErrorLoginExist" : MessageLookupByLibrary.simpleMessage("Login already taken"),
     "pageRegisterErrorMailExist" : MessageLookupByLibrary.simpleMessage("Email already exist"),

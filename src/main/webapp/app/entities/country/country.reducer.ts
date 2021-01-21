@@ -97,12 +97,12 @@ export default (state: CountryState = initialState, action): CountryState => {
   }
 };
 
-const apiUrl = 'api/v1';
+const apiUrl = 'api/countries';
 
 // Actions
 
 export const getEntities: ICrudGetAllAction<ICountry> = (page, size, sort) => {
-  const requestUrl = `${apiUrl}/get-all-countries-by-client-id${sort ? `?page=${page}&size=${size}&sort=${sort}` : ''}`;
+  const requestUrl = `${apiUrl}${sort ? `?page=${page}&size=${size}&sort=${sort}` : ''}`;
   return {
     type: ACTION_TYPES.FETCH_COUNTRY_LIST,
     payload: axios.get<ICountry>(`${requestUrl}${sort ? '&' : '?'}cacheBuster=${new Date().getTime()}`),
@@ -110,7 +110,7 @@ export const getEntities: ICrudGetAllAction<ICountry> = (page, size, sort) => {
 };
 
 export const getEntity: ICrudGetAction<ICountry> = id => {
-  const requestUrl = `${apiUrl}/get-country-by-client-id/${id}`;
+  const requestUrl = `${apiUrl}/${id}`;
   return {
     type: ACTION_TYPES.FETCH_COUNTRY,
     payload: axios.get<ICountry>(requestUrl),
@@ -120,7 +120,7 @@ export const getEntity: ICrudGetAction<ICountry> = id => {
 export const createEntity: ICrudPutAction<ICountry> = entity => async dispatch => {
   const result = await dispatch({
     type: ACTION_TYPES.CREATE_COUNTRY,
-    payload: axios.post(apiUrl + '/create-country-by-client-id', cleanEntity(entity)),
+    payload: axios.post(apiUrl, cleanEntity(entity)),
   });
   dispatch(getEntities());
   return result;
@@ -129,13 +129,13 @@ export const createEntity: ICrudPutAction<ICountry> = entity => async dispatch =
 export const updateEntity: ICrudPutAction<ICountry> = entity => async dispatch => {
   const result = await dispatch({
     type: ACTION_TYPES.UPDATE_COUNTRY,
-    payload: axios.put(apiUrl + '/update-country-by-client-id', cleanEntity(entity)),
+    payload: axios.put(apiUrl, cleanEntity(entity)),
   });
   return result;
 };
 
 export const deleteEntity: ICrudDeleteAction<ICountry> = id => async dispatch => {
-  const requestUrl = `${apiUrl}/delete-country-by-client-id/${id}`;
+  const requestUrl = `${apiUrl}/${id}`;
   const result = await dispatch({
     type: ACTION_TYPES.DELETE_COUNTRY,
     payload: axios.delete(requestUrl),

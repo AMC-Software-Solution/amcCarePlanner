@@ -2,12 +2,12 @@ import 'package:formz/formz.dart';
 import 'package:amcCarePlanner/entities/equality/equality_model.dart';
 
 enum GenderValidationError { invalid }
-class GenderInput extends FormzInput<Gender, GenderValidationError> {
-  const GenderInput.pure() : super.pure(Gender.MALE);
-  const GenderInput.dirty([Gender value]) : super.dirty(value);
+class GenderInput extends FormzInput<ServiceUserGender, GenderValidationError> {
+  const GenderInput.pure() : super.pure(ServiceUserGender.MALE);
+  const GenderInput.dirty([ServiceUserGender value]) : super.dirty(value);
 
   @override
-  GenderValidationError validator(Gender value) {
+  GenderValidationError validator(ServiceUserGender value) {
     return null;
   }
 }

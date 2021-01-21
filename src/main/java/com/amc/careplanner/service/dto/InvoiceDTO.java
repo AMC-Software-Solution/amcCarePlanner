@@ -3,7 +3,6 @@ package com.amc.careplanner.service.dto;
 import java.time.ZonedDateTime;
 import javax.validation.constraints.*;
 import java.io.Serializable;
-import java.math.BigDecimal;
 import java.util.UUID;
 import com.amc.careplanner.domain.enumeration.InvoiceStatus;
 
@@ -15,7 +14,7 @@ public class InvoiceDTO implements Serializable {
     private Long id;
 
     @NotNull
-    private BigDecimal totalAmount;
+    private String totalAmount;
 
     private String description;
 
@@ -33,7 +32,7 @@ public class InvoiceDTO implements Serializable {
     @NotNull
     private InvoiceStatus invoiceStatus;
 
-    private Double tax;
+    private String tax;
 
     private String attribute1;
 
@@ -75,11 +74,11 @@ public class InvoiceDTO implements Serializable {
         this.id = id;
     }
 
-    public BigDecimal getTotalAmount() {
+    public String getTotalAmount() {
         return totalAmount;
     }
 
-    public void setTotalAmount(BigDecimal totalAmount) {
+    public void setTotalAmount(String totalAmount) {
         this.totalAmount = totalAmount;
     }
 
@@ -131,11 +130,11 @@ public class InvoiceDTO implements Serializable {
         this.invoiceStatus = invoiceStatus;
     }
 
-    public Double getTax() {
+    public String getTax() {
         return tax;
     }
 
-    public void setTax(Double tax) {
+    public void setTax(String tax) {
         this.tax = tax;
     }
 
@@ -281,14 +280,14 @@ public class InvoiceDTO implements Serializable {
     public String toString() {
         return "InvoiceDTO{" +
             "id=" + getId() +
-            ", totalAmount=" + getTotalAmount() +
+            ", totalAmount='" + getTotalAmount() + "'" +
             ", description='" + getDescription() + "'" +
             ", invoiceNumber='" + getInvoiceNumber() + "'" +
             ", generatedDate='" + getGeneratedDate() + "'" +
             ", dueDate='" + getDueDate() + "'" +
             ", paymentDate='" + getPaymentDate() + "'" +
             ", invoiceStatus='" + getInvoiceStatus() + "'" +
-            ", tax=" + getTax() +
+            ", tax='" + getTax() + "'" +
             ", attribute1='" + getAttribute1() + "'" +
             ", attribute2='" + getAttribute2() + "'" +
             ", attribute3='" + getAttribute3() + "'" +

@@ -70,7 +70,7 @@
       "otherEntityField": "description"
     }
   ],
-  "changelogDate": "20210114112811",
+  "changelogDate": "20210121104453",
   "entityTableName": "payroll",
   "dto": "mapstruct",
   "pagination": "pagination",

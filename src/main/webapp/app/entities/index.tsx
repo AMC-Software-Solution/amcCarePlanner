@@ -48,6 +48,7 @@ import ClientDocument from './client-document';
 import SystemEventsHistory from './system-events-history';
 import SystemSetting from './system-setting';
 import ExtraData from './extra-data';
+import Notifications from './notifications';
 /* jhipster-needle-add-route-import - JHipster will add routes here */
 
 const Routes = ({ match }) => (
@@ -98,6 +99,7 @@ const Routes = ({ match }) => (
       <ErrorBoundaryRoute path={`${match.url}system-events-history`} component={SystemEventsHistory} />
       <ErrorBoundaryRoute path={`${match.url}system-setting`} component={SystemSetting} />
       <ErrorBoundaryRoute path={`${match.url}extra-data`} component={ExtraData} />
+      <ErrorBoundaryRoute path={`${match.url}notifications`} component={Notifications} />
       {/* jhipster-needle-add-route-path - JHipster will add routes here */}
     </Switch>
   </div>

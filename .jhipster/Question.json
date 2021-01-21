@@ -52,7 +52,7 @@
     }
   ],
   "relationships": [],
-  "changelogDate": "20210114111511",
+  "changelogDate": "20210121103153",
   "entityTableName": "question",
   "dto": "mapstruct",
   "pagination": "pagination",

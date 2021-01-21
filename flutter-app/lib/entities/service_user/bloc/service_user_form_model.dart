@@ -1,13 +1,13 @@
 import 'package:formz/formz.dart';
 import 'package:amcCarePlanner/entities/service_user/service_user_model.dart';
 
-enum TitlleValidationError { invalid }
-class TitlleInput extends FormzInput<Titlle, TitlleValidationError> {
-  const TitlleInput.pure() : super.pure(Titlle.MR);
-  const TitlleInput.dirty([Titlle value]) : super.dirty(value);
+enum TitleValidationError { invalid }
+class TitleInput extends FormzInput<ServiceUserTitle, TitleValidationError> {
+  const TitleInput.pure() : super.pure(ServiceUserTitle.MR);
+  const TitleInput.dirty([ServiceUserTitle value]) : super.dirty(value);
 
   @override
-  TitlleValidationError validator(Titlle value) {
+  TitleValidationError validator(ServiceUserTitle value) {
     return null;
   }
 }

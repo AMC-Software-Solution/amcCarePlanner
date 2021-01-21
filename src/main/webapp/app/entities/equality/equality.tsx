@@ -123,7 +123,7 @@ export const Equality = (props: IEqualityProps) => {
                     </Button>
                   </td>
                   <td>
-                    <Translate contentKey={`carePlannerApp.Gender.${equality.gender}`} />
+                    <Translate contentKey={`carePlannerApp.ServiceUserGender.${equality.gender}`} />
                   </td>
                   <td>
                     <Translate contentKey={`carePlannerApp.MaritalStatus.${equality.maritalStatus}`} />

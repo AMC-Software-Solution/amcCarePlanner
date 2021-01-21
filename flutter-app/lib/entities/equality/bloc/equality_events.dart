@@ -13,7 +13,7 @@ abstract class EqualityEvent extends Equatable {
 class InitEqualityList extends EqualityEvent {}
 
 class GenderChanged extends EqualityEvent {
-  final Gender gender;
+  final ServiceUserGender gender;
   
   const GenderChanged({@required this.gender});
   

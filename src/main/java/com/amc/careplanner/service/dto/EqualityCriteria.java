@@ -3,7 +3,7 @@ package com.amc.careplanner.service.dto;
 import java.io.Serializable;
 import java.util.Objects;
 import io.github.jhipster.service.Criteria;
-import com.amc.careplanner.domain.enumeration.Gender;
+import com.amc.careplanner.domain.enumeration.ServiceUserGender;
 import com.amc.careplanner.domain.enumeration.MaritalStatus;
 import com.amc.careplanner.domain.enumeration.Religion;
 import io.github.jhipster.service.filter.BooleanFilter;
@@ -26,20 +26,20 @@ import io.github.jhipster.service.filter.ZonedDateTimeFilter;
  */
 public class EqualityCriteria implements Serializable, Criteria {
     /**
-     * Class for filtering Gender
+     * Class for filtering ServiceUserGender
      */
-    public static class GenderFilter extends Filter<Gender> {
+    public static class ServiceUserGenderFilter extends Filter<ServiceUserGender> {
 
-        public GenderFilter() {
+        public ServiceUserGenderFilter() {
         }
 
-        public GenderFilter(GenderFilter filter) {
+        public ServiceUserGenderFilter(ServiceUserGenderFilter filter) {
             super(filter);
         }
 
         @Override
-        public GenderFilter copy() {
-            return new GenderFilter(this);
+        public ServiceUserGenderFilter copy() {
+            return new ServiceUserGenderFilter(this);
         }
 
     }
@@ -84,7 +84,7 @@ public class EqualityCriteria implements Serializable, Criteria {
 
     private LongFilter id;
 
-    private GenderFilter gender;
+    private ServiceUserGenderFilter gender;
 
     private MaritalStatusFilter maritalStatus;
 
@@ -131,11 +131,11 @@ public class EqualityCriteria implements Serializable, Criteria {
         this.id = id;
     }
 
-    public GenderFilter getGender() {
+    public ServiceUserGenderFilter getGender() {
         return gender;
     }
 
-    public void setGender(GenderFilter gender) {
+    public void setGender(ServiceUserGenderFilter gender) {
         this.gender = gender;
     }
 

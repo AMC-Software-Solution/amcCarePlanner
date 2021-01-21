@@ -92,10 +92,10 @@ public class ServiceUserLocationQueryService extends QueryService<ServiceUserLoc
                 specification = specification.and(buildRangeSpecification(criteria.getId(), ServiceUserLocation_.id));
             }
             if (criteria.getLatitude() != null) {
-                specification = specification.and(buildRangeSpecification(criteria.getLatitude(), ServiceUserLocation_.latitude));
+                specification = specification.and(buildStringSpecification(criteria.getLatitude(), ServiceUserLocation_.latitude));
             }
             if (criteria.getLongitude() != null) {
-                specification = specification.and(buildRangeSpecification(criteria.getLongitude(), ServiceUserLocation_.longitude));
+                specification = specification.and(buildStringSpecification(criteria.getLongitude(), ServiceUserLocation_.longitude));
             }
             if (criteria.getCreatedDate() != null) {
                 specification = specification.and(buildRangeSpecification(criteria.getCreatedDate(), ServiceUserLocation_.createdDate));

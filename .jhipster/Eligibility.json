@@ -43,7 +43,7 @@
       "otherEntityField": "employeeCode"
     }
   ],
-  "changelogDate": "20210114112611",
+  "changelogDate": "20210121104253",
   "entityTableName": "eligibility",
   "dto": "mapstruct",
   "pagination": "pagination",

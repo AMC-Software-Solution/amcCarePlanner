@@ -100,7 +100,6 @@ export const InvoiceUpdate = (props: IInvoiceUpdateProps) => {
                   name="totalAmount"
                   validate={{
                     required: { value: true, errorMessage: translate('entity.validation.required') },
-                    number: { value: true, errorMessage: translate('entity.validation.number') },
                   }}
                 />
               </AvGroup>
@@ -188,7 +187,7 @@ export const InvoiceUpdate = (props: IInvoiceUpdateProps) => {
                 <Label id="taxLabel" for="invoice-tax">
                   <Translate contentKey="carePlannerApp.invoice.tax">Tax</Translate>
                 </Label>
-                <AvField id="invoice-tax" type="string" className="form-control" name="tax" />
+                <AvField id="invoice-tax" type="text" name="tax" />
               </AvGroup>
               <AvGroup>
                 <Label id="attribute1Label" for="invoice-attribute1">

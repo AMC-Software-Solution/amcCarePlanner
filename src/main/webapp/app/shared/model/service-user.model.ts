@@ -1,5 +1,5 @@
 import { Moment } from 'moment';
-import { Title } from 'app/shared/model/enumerations/title.model';
+import { ServiceUserTitle } from 'app/shared/model/enumerations/service-user-title.model';
 import { SupportType } from 'app/shared/model/enumerations/support-type.model';
 import { ServiceUserCategory } from 'app/shared/model/enumerations/service-user-category.model';
 import { Vulnerability } from 'app/shared/model/enumerations/vulnerability.model';
@@ -9,7 +9,7 @@ import { ServiceUserStatus } from 'app/shared/model/enumerations/service-user-st
 
 export interface IServiceUser {
   id?: number;
-  title?: Title;
+  title?: ServiceUserTitle;
   firstName?: string;
   middleName?: string;
   lastName?: string;

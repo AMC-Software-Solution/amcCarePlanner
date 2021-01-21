@@ -3,10 +3,10 @@ package com.amc.careplanner.service.dto;
 import java.io.Serializable;
 import java.util.Objects;
 import io.github.jhipster.service.Criteria;
-import com.amc.careplanner.domain.enumeration.Title;
-import com.amc.careplanner.domain.enumeration.Gender;
+import com.amc.careplanner.domain.enumeration.EmployeeTitle;
+import com.amc.careplanner.domain.enumeration.EmployeeGender;
 import com.amc.careplanner.domain.enumeration.EmployeeContractType;
-import com.amc.careplanner.domain.enumeration.TravelMode;
+import com.amc.careplanner.domain.enumeration.EmployeeTravelMode;
 import com.amc.careplanner.domain.enumeration.EmployeeStatus;
 import io.github.jhipster.service.filter.BooleanFilter;
 import io.github.jhipster.service.filter.DoubleFilter;
@@ -29,38 +29,38 @@ import io.github.jhipster.service.filter.ZonedDateTimeFilter;
  */
 public class EmployeeCriteria implements Serializable, Criteria {
     /**
-     * Class for filtering Title
+     * Class for filtering EmployeeTitle
      */
-    public static class TitleFilter extends Filter<Title> {
+    public static class EmployeeTitleFilter extends Filter<EmployeeTitle> {
 
-        public TitleFilter() {
+        public EmployeeTitleFilter() {
         }
 
-        public TitleFilter(TitleFilter filter) {
+        public EmployeeTitleFilter(EmployeeTitleFilter filter) {
             super(filter);
         }
 
         @Override
-        public TitleFilter copy() {
-            return new TitleFilter(this);
+        public EmployeeTitleFilter copy() {
+            return new EmployeeTitleFilter(this);
         }
 
     }
     /**
-     * Class for filtering Gender
+     * Class for filtering EmployeeGender
      */
-    public static class GenderFilter extends Filter<Gender> {
+    public static class EmployeeGenderFilter extends Filter<EmployeeGender> {
 
-        public GenderFilter() {
+        public EmployeeGenderFilter() {
         }
 
-        public GenderFilter(GenderFilter filter) {
+        public EmployeeGenderFilter(EmployeeGenderFilter filter) {
             super(filter);
         }
 
         @Override
-        public GenderFilter copy() {
-            return new GenderFilter(this);
+        public EmployeeGenderFilter copy() {
+            return new EmployeeGenderFilter(this);
         }
 
     }
@@ -83,20 +83,20 @@ public class EmployeeCriteria implements Serializable, Criteria {
 
     }
     /**
-     * Class for filtering TravelMode
+     * Class for filtering EmployeeTravelMode
      */
-    public static class TravelModeFilter extends Filter<TravelMode> {
+    public static class EmployeeTravelModeFilter extends Filter<EmployeeTravelMode> {
 
-        public TravelModeFilter() {
+        public EmployeeTravelModeFilter() {
         }
 
-        public TravelModeFilter(TravelModeFilter filter) {
+        public EmployeeTravelModeFilter(EmployeeTravelModeFilter filter) {
             super(filter);
         }
 
         @Override
-        public TravelModeFilter copy() {
-            return new TravelModeFilter(this);
+        public EmployeeTravelModeFilter copy() {
+            return new EmployeeTravelModeFilter(this);
         }
 
     }
@@ -123,7 +123,7 @@ public class EmployeeCriteria implements Serializable, Criteria {
 
     private LongFilter id;
 
-    private TitleFilter title;
+    private EmployeeTitleFilter title;
 
     private StringFilter firstName;
 
@@ -133,7 +133,7 @@ public class EmployeeCriteria implements Serializable, Criteria {
 
     private StringFilter preferredName;
 
-    private GenderFilter gender;
+    private EmployeeGenderFilter gender;
 
     private StringFilter employeeCode;
 
@@ -147,7 +147,7 @@ public class EmployeeCriteria implements Serializable, Criteria {
 
     private IntegerFilter pinCode;
 
-    private TravelModeFilter transportMode;
+    private EmployeeTravelModeFilter transportMode;
 
     private StringFilter address;
 
@@ -230,11 +230,11 @@ public class EmployeeCriteria implements Serializable, Criteria {
         this.id = id;
     }
 
-    public TitleFilter getTitle() {
+    public EmployeeTitleFilter getTitle() {
         return title;
     }
 
-    public void setTitle(TitleFilter title) {
+    public void setTitle(EmployeeTitleFilter title) {
         this.title = title;
     }
 
@@ -270,11 +270,11 @@ public class EmployeeCriteria implements Serializable, Criteria {
         this.preferredName = preferredName;
     }
 
-    public GenderFilter getGender() {
+    public EmployeeGenderFilter getGender() {
         return gender;
     }
 
-    public void setGender(GenderFilter gender) {
+    public void setGender(EmployeeGenderFilter gender) {
         this.gender = gender;
     }
 
@@ -326,11 +326,11 @@ public class EmployeeCriteria implements Serializable, Criteria {
         this.pinCode = pinCode;
     }
 
-    public TravelModeFilter getTransportMode() {
+    public EmployeeTravelModeFilter getTransportMode() {
         return transportMode;
     }
 
-    public void setTransportMode(TravelModeFilter transportMode) {
+    public void setTransportMode(EmployeeTravelModeFilter transportMode) {
         this.transportMode = transportMode;
     }
 

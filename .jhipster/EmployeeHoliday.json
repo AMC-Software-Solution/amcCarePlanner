@@ -74,7 +74,7 @@
       "otherEntityField": "employeeCode"
     }
   ],
-  "changelogDate": "20210114112911",
+  "changelogDate": "20210121104553",
   "entityTableName": "employee_holiday",
   "dto": "mapstruct",
   "pagination": "pagination",

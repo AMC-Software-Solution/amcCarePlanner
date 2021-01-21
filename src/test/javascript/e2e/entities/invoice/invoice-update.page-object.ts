@@ -229,8 +229,8 @@ export default class InvoiceUpdatePage {
 
   async enterData() {
     await waitUntilDisplayed(this.saveButton);
-    await this.setTotalAmountInput('5');
-    expect(await this.getTotalAmountInput()).to.eq('5');
+    await this.setTotalAmountInput('totalAmount');
+    expect(await this.getTotalAmountInput()).to.match(/totalAmount/);
     await waitUntilDisplayed(this.saveButton);
     await this.setDescriptionInput('description');
     expect(await this.getDescriptionInput()).to.match(/description/);
@@ -249,8 +249,8 @@ export default class InvoiceUpdatePage {
     await waitUntilDisplayed(this.saveButton);
     await this.invoiceStatusSelectLastOption();
     await waitUntilDisplayed(this.saveButton);
-    await this.setTaxInput('5');
-    expect(await this.getTaxInput()).to.eq('5');
+    await this.setTaxInput('tax');
+    expect(await this.getTaxInput()).to.match(/tax/);
     await waitUntilDisplayed(this.saveButton);
     await this.setAttribute1Input('attribute1');
     expect(await this.getAttribute1Input()).to.match(/attribute1/);

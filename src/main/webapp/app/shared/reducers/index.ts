@@ -188,6 +188,10 @@ import systemSetting, {
 import extraData, {
   ExtraDataState
 } from 'app/entities/extra-data/extra-data.reducer';
+// prettier-ignore
+import notifications, {
+  NotificationsState
+} from 'app/entities/notifications/notifications.reducer';
 /* jhipster-needle-add-reducer-import - JHipster will add reducer here */
 
 export interface IRootState {
@@ -245,6 +249,7 @@ export interface IRootState {
   readonly systemEventsHistory: SystemEventsHistoryState;
   readonly systemSetting: SystemSettingState;
   readonly extraData: ExtraDataState;
+  readonly notifications: NotificationsState;
   /* jhipster-needle-add-reducer-type - JHipster will add reducer type here */
   readonly loadingBar: any;
 }
@@ -304,6 +309,7 @@ const rootReducer = combineReducers<IRootState>({
   systemEventsHistory,
   systemSetting,
   extraData,
+  notifications,
   /* jhipster-needle-add-reducer-combine - JHipster will add reducer here */
   loadingBar,
 });

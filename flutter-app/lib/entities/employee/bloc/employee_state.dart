@@ -13,19 +13,19 @@ class EmployeeState extends Equatable {
   final FormzStatus formStatus;
   final String generalNotificationKey;
 
-  final TittleInput tittle;
+  final TitleInput title;
   final FirstNameInput firstName;
   final MiddleInitialInput middleInitial;
   final LastNameInput lastName;
   final PreferredNameInput preferredName;
-  final GendderInput gendder;
+  final GenderInput gender;
   final EmployeeCodeInput employeeCode;
   final PhoneInput phone;
   final EmailInput email;
   final NationalInsuranceNumberInput nationalInsuranceNumber;
   final EmployeeContractTypeInput employeeContractType;
   final PinCodeInput pinCode;
-  final EmployeeTransportModeInput employeeTransportMode;
+  final TransportModeInput transportMode;
   final AddressInput address;
   final CountyInput county;
   final PostCodeInput postCode;
@@ -49,19 +49,19 @@ DateOfBirthInput dateOfBirth,CreatedDateInput createdDate,LastUpdatedDateInput l
     this.formStatus = FormzStatus.pure,
     this.generalNotificationKey = '',
     this.deleteStatus = EmployeeDeleteStatus.none,
-    this.tittle = const TittleInput.pure(),
+    this.title = const TitleInput.pure(),
     this.firstName = const FirstNameInput.pure(),
     this.middleInitial = const MiddleInitialInput.pure(),
     this.lastName = const LastNameInput.pure(),
     this.preferredName = const PreferredNameInput.pure(),
-    this.gendder = const GendderInput.pure(),
+    this.gender = const GenderInput.pure(),
     this.employeeCode = const EmployeeCodeInput.pure(),
     this.phone = const PhoneInput.pure(),
     this.email = const EmailInput.pure(),
     this.nationalInsuranceNumber = const NationalInsuranceNumberInput.pure(),
     this.employeeContractType = const EmployeeContractTypeInput.pure(),
     this.pinCode = const PinCodeInput.pure(),
-    this.employeeTransportMode = const EmployeeTransportModeInput.pure(),
+    this.transportMode = const TransportModeInput.pure(),
     this.address = const AddressInput.pure(),
     this.county = const CountyInput.pure(),
     this.postCode = const PostCodeInput.pure(),
@@ -84,19 +84,19 @@ this.lastUpdatedDate = lastUpdatedDate ?? LastUpdatedDateInput.pure()
     Employee loadedEmployee,
     FormzStatus formStatus,
     String generalNotificationKey,
-    TittleInput tittle,
+    TitleInput title,
     FirstNameInput firstName,
     MiddleInitialInput middleInitial,
     LastNameInput lastName,
     PreferredNameInput preferredName,
-    GendderInput gendder,
+    GenderInput gender,
     EmployeeCodeInput employeeCode,
     PhoneInput phone,
     EmailInput email,
     NationalInsuranceNumberInput nationalInsuranceNumber,
     EmployeeContractTypeInput employeeContractType,
     PinCodeInput pinCode,
-    EmployeeTransportModeInput employeeTransportMode,
+    TransportModeInput transportMode,
     AddressInput address,
     CountyInput county,
     PostCodeInput postCode,
@@ -121,19 +121,19 @@ this.lastUpdatedDate = lastUpdatedDate ?? LastUpdatedDateInput.pure()
       formStatus: formStatus ?? this.formStatus,
       generalNotificationKey: generalNotificationKey ?? this.generalNotificationKey,
       deleteStatus: deleteStatus ?? this.deleteStatus,
-      tittle: tittle ?? this.tittle,
+      title: title ?? this.title,
       firstName: firstName ?? this.firstName,
       middleInitial: middleInitial ?? this.middleInitial,
       lastName: lastName ?? this.lastName,
       preferredName: preferredName ?? this.preferredName,
-      gendder: gendder ?? this.gendder,
+      gender: gender ?? this.gender,
       employeeCode: employeeCode ?? this.employeeCode,
       phone: phone ?? this.phone,
       email: email ?? this.email,
       nationalInsuranceNumber: nationalInsuranceNumber ?? this.nationalInsuranceNumber,
       employeeContractType: employeeContractType ?? this.employeeContractType,
       pinCode: pinCode ?? this.pinCode,
-      employeeTransportMode: employeeTransportMode ?? this.employeeTransportMode,
+      transportMode: transportMode ?? this.transportMode,
       address: address ?? this.address,
       county: county ?? this.county,
       postCode: postCode ?? this.postCode,
@@ -149,7 +149,7 @@ this.lastUpdatedDate = lastUpdatedDate ?? LastUpdatedDateInput.pure()
   @override
   List<Object> get props => [employees, employeeStatusUI,
      loadedEmployee, editMode, deleteStatus, formStatus, generalNotificationKey, 
-tittle,firstName,middleInitial,lastName,preferredName,gendder,employeeCode,phone,email,nationalInsuranceNumber,employeeContractType,pinCode,employeeTransportMode,address,county,postCode,dateOfBirth,photoUrl,status,employeeBio,acruedHolidayHours,createdDate,lastUpdatedDate,clientId,hasExtraData,];
+title,firstName,middleInitial,lastName,preferredName,gender,employeeCode,phone,email,nationalInsuranceNumber,employeeContractType,pinCode,transportMode,address,county,postCode,dateOfBirth,photoUrl,status,employeeBio,acruedHolidayHours,createdDate,lastUpdatedDate,clientId,hasExtraData,];
 
   @override
   bool get stringify => true;

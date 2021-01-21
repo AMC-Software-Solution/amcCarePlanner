@@ -56,7 +56,7 @@
       "otherEntityField": "email"
     }
   ],
-  "changelogDate": "20210114114411",
+  "changelogDate": "20210121110053",
   "entityTableName": "system_events_history",
   "dto": "mapstruct",
   "pagination": "pagination",

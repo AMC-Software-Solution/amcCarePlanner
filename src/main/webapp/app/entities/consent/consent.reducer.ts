@@ -109,12 +109,12 @@ export default (state: ConsentState = initialState, action): ConsentState => {
   }
 };
 
-const apiUrl = 'api/v1';
+const apiUrl = 'api/consents';
 
 // Actions
 
 export const getEntities: ICrudGetAllAction<IConsent> = (page, size, sort) => {
-  const requestUrl = `${apiUrl}/get-all-consents-by-client-id${sort ? `?page=${page}&size=${size}&sort=${sort}` : ''}`;
+  const requestUrl = `${apiUrl}${sort ? `?page=${page}&size=${size}&sort=${sort}` : ''}`;
   return {
     type: ACTION_TYPES.FETCH_CONSENT_LIST,
     payload: axios.get<IConsent>(`${requestUrl}${sort ? '&' : '?'}cacheBuster=${new Date().getTime()}`),
@@ -122,7 +122,7 @@ export const getEntities: ICrudGetAllAction<IConsent> = (page, size, sort) => {
 };
 
 export const getEntity: ICrudGetAction<IConsent> = id => {
-  const requestUrl = `${apiUrl}/get-consent-by-client-id/${id}`;
+  const requestUrl = `${apiUrl}/${id}`;
   return {
     type: ACTION_TYPES.FETCH_CONSENT,
     payload: axios.get<IConsent>(requestUrl),
@@ -132,7 +132,7 @@ export const getEntity: ICrudGetAction<IConsent> = id => {
 export const createEntity: ICrudPutAction<IConsent> = entity => async dispatch => {
   const result = await dispatch({
     type: ACTION_TYPES.CREATE_CONSENT,
-    payload: axios.post(apiUrl + '/create-consent-by-client-id', cleanEntity(entity)),
+    payload: axios.post(apiUrl, cleanEntity(entity)),
   });
   dispatch(getEntities());
   return result;
@@ -141,13 +141,13 @@ export const createEntity: ICrudPutAction<IConsent> = entity => async dispatch =
 export const updateEntity: ICrudPutAction<IConsent> = entity => async dispatch => {
   const result = await dispatch({
     type: ACTION_TYPES.UPDATE_CONSENT,
-    payload: axios.put(apiUrl + '/update-consent-by-client-id', cleanEntity(entity)),
+    payload: axios.put(apiUrl, cleanEntity(entity)),
   });
   return result;
 };
 
 export const deleteEntity: ICrudDeleteAction<IConsent> = id => async dispatch => {
-  const requestUrl = `${apiUrl}/delete-consent-by-client-id/${id}`;
+  const requestUrl = `${apiUrl}/${id}`;
   const result = await dispatch({
     type: ACTION_TYPES.DELETE_CONSENT,
     payload: axios.delete(requestUrl),

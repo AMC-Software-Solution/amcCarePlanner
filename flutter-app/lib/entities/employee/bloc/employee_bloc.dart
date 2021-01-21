@@ -59,8 +59,8 @@ class EmployeeBloc extends Bloc<EmployeeEvent, EmployeeState> {
       yield* onDeleteEmployeeId(event);
     } else if (event is LoadEmployeeByIdForView) {
       yield* onLoadEmployeeIdForView(event);
-    }else if (event is TittleChanged){
-      yield* onTittleChange(event);
+    }else if (event is TitleChanged){
+      yield* onTitleChange(event);
     }else if (event is FirstNameChanged){
       yield* onFirstNameChange(event);
     }else if (event is MiddleInitialChanged){
@@ -69,8 +69,8 @@ class EmployeeBloc extends Bloc<EmployeeEvent, EmployeeState> {
       yield* onLastNameChange(event);
     }else if (event is PreferredNameChanged){
       yield* onPreferredNameChange(event);
-    }else if (event is GendderChanged){
-      yield* onGendderChange(event);
+    }else if (event is GenderChanged){
+      yield* onGenderChange(event);
     }else if (event is EmployeeCodeChanged){
       yield* onEmployeeCodeChange(event);
     }else if (event is PhoneChanged){
@@ -83,8 +83,8 @@ class EmployeeBloc extends Bloc<EmployeeEvent, EmployeeState> {
       yield* onEmployeeContractTypeChange(event);
     }else if (event is PinCodeChanged){
       yield* onPinCodeChange(event);
-    }else if (event is EmployeeTransportModeChanged){
-      yield* onEmployeeTransportModeChange(event);
+    }else if (event is TransportModeChanged){
+      yield* onTransportModeChange(event);
     }else if (event is AddressChanged){
       yield* onAddressChange(event);
     }else if (event is CountyChanged){
@@ -124,19 +124,19 @@ class EmployeeBloc extends Bloc<EmployeeEvent, EmployeeState> {
         Employee result;
         if(this.state.editMode) {
           Employee newEmployee = Employee(state.loadedEmployee.id,
-            this.state.tittle.value,  
+            this.state.title.value,  
             this.state.firstName.value,  
             this.state.middleInitial.value,  
             this.state.lastName.value,  
             this.state.preferredName.value,  
-            this.state.gendder.value,  
+            this.state.gender.value,  
             this.state.employeeCode.value,  
             this.state.phone.value,  
             this.state.email.value,  
             this.state.nationalInsuranceNumber.value,  
             this.state.employeeContractType.value,  
             this.state.pinCode.value,  
-            this.state.employeeTransportMode.value,  
+            this.state.transportMode.value,  
             this.state.address.value,  
             this.state.county.value,  
             this.state.postCode.value,  
@@ -158,19 +158,19 @@ class EmployeeBloc extends Bloc<EmployeeEvent, EmployeeState> {
           result = await _employeeRepository.update(newEmployee);
         } else {
           Employee newEmployee = Employee(null,
-            this.state.tittle.value,  
+            this.state.title.value,  
             this.state.firstName.value,  
             this.state.middleInitial.value,  
             this.state.lastName.value,  
             this.state.preferredName.value,  
-            this.state.gendder.value,  
+            this.state.gender.value,  
             this.state.employeeCode.value,  
             this.state.phone.value,  
             this.state.email.value,  
             this.state.nationalInsuranceNumber.value,  
             this.state.employeeContractType.value,  
             this.state.pinCode.value,  
-            this.state.employeeTransportMode.value,  
+            this.state.transportMode.value,  
             this.state.address.value,  
             this.state.county.value,  
             this.state.postCode.value,  
@@ -210,19 +210,19 @@ class EmployeeBloc extends Bloc<EmployeeEvent, EmployeeState> {
     yield this.state.copyWith(employeeStatusUI: EmployeeStatusUI.loading);
     Employee loadedEmployee = await _employeeRepository.getEmployee(event.id);
 
-    final tittle = TittleInput.dirty(loadedEmployee?.tittle != null ? loadedEmployee.tittle: null);
+    final title = TitleInput.dirty(loadedEmployee?.title != null ? loadedEmployee.title: null);
     final firstName = FirstNameInput.dirty(loadedEmployee?.firstName != null ? loadedEmployee.firstName: '');
     final middleInitial = MiddleInitialInput.dirty(loadedEmployee?.middleInitial != null ? loadedEmployee.middleInitial: '');
     final lastName = LastNameInput.dirty(loadedEmployee?.lastName != null ? loadedEmployee.lastName: '');
     final preferredName = PreferredNameInput.dirty(loadedEmployee?.preferredName != null ? loadedEmployee.preferredName: '');
-    final gendder = GendderInput.dirty(loadedEmployee?.gendder != null ? loadedEmployee.gendder: null);
+    final gender = GenderInput.dirty(loadedEmployee?.gender != null ? loadedEmployee.gender: null);
     final employeeCode = EmployeeCodeInput.dirty(loadedEmployee?.employeeCode != null ? loadedEmployee.employeeCode: '');
     final phone = PhoneInput.dirty(loadedEmployee?.phone != null ? loadedEmployee.phone: '');
     final email = EmailInput.dirty(loadedEmployee?.email != null ? loadedEmployee.email: '');
     final nationalInsuranceNumber = NationalInsuranceNumberInput.dirty(loadedEmployee?.nationalInsuranceNumber != null ? loadedEmployee.nationalInsuranceNumber: '');
     final employeeContractType = EmployeeContractTypeInput.dirty(loadedEmployee?.employeeContractType != null ? loadedEmployee.employeeContractType: null);
     final pinCode = PinCodeInput.dirty(loadedEmployee?.pinCode != null ? loadedEmployee.pinCode: 0);
-    final employeeTransportMode = EmployeeTransportModeInput.dirty(loadedEmployee?.employeeTransportMode != null ? loadedEmployee.employeeTransportMode: null);
+    final transportMode = TransportModeInput.dirty(loadedEmployee?.transportMode != null ? loadedEmployee.transportMode: null);
     final address = AddressInput.dirty(loadedEmployee?.address != null ? loadedEmployee.address: '');
     final county = CountyInput.dirty(loadedEmployee?.county != null ? loadedEmployee.county: '');
     final postCode = PostCodeInput.dirty(loadedEmployee?.postCode != null ? loadedEmployee.postCode: '');
@@ -237,19 +237,19 @@ class EmployeeBloc extends Bloc<EmployeeEvent, EmployeeState> {
     final hasExtraData = HasExtraDataInput.dirty(loadedEmployee?.hasExtraData != null ? loadedEmployee.hasExtraData: false);
 
     yield this.state.copyWith(loadedEmployee: loadedEmployee, editMode: true,
-      tittle: tittle,
+      title: title,
       firstName: firstName,
       middleInitial: middleInitial,
       lastName: lastName,
       preferredName: preferredName,
-      gendder: gendder,
+      gender: gender,
       employeeCode: employeeCode,
       phone: phone,
       email: email,
       nationalInsuranceNumber: nationalInsuranceNumber,
       employeeContractType: employeeContractType,
       pinCode: pinCode,
-      employeeTransportMode: employeeTransportMode,
+      transportMode: transportMode,
       address: address,
       county: county,
       postCode: postCode,
@@ -308,24 +308,24 @@ class EmployeeBloc extends Bloc<EmployeeEvent, EmployeeState> {
   }
 
 
-  Stream<EmployeeState> onTittleChange(TittleChanged event) async* {
-    final tittle = TittleInput.dirty(event.tittle);
+  Stream<EmployeeState> onTitleChange(TitleChanged event) async* {
+    final title = TitleInput.dirty(event.title);
     yield this.state.copyWith(
-      tittle: tittle,
+      title: title,
       formStatus: Formz.validate([
-        tittle,
+        title,
       this.state.firstName,
       this.state.middleInitial,
       this.state.lastName,
       this.state.preferredName,
-      this.state.gendder,
+      this.state.gender,
       this.state.employeeCode,
       this.state.phone,
       this.state.email,
       this.state.nationalInsuranceNumber,
       this.state.employeeContractType,
       this.state.pinCode,
-      this.state.employeeTransportMode,
+      this.state.transportMode,
       this.state.address,
       this.state.county,
       this.state.postCode,
@@ -346,19 +346,19 @@ class EmployeeBloc extends Bloc<EmployeeEvent, EmployeeState> {
     yield this.state.copyWith(
       firstName: firstName,
       formStatus: Formz.validate([
-      this.state.tittle,
+      this.state.title,
         firstName,
       this.state.middleInitial,
       this.state.lastName,
       this.state.preferredName,
-      this.state.gendder,
+      this.state.gender,
       this.state.employeeCode,
       this.state.phone,
       this.state.email,
       this.state.nationalInsuranceNumber,
       this.state.employeeContractType,
       this.state.pinCode,
-      this.state.employeeTransportMode,
+      this.state.transportMode,
       this.state.address,
       this.state.county,
       this.state.postCode,
@@ -379,19 +379,19 @@ class EmployeeBloc extends Bloc<EmployeeEvent, EmployeeState> {
     yield this.state.copyWith(
       middleInitial: middleInitial,
       formStatus: Formz.validate([
-      this.state.tittle,
+      this.state.title,
       this.state.firstName,
         middleInitial,
       this.state.lastName,
       this.state.preferredName,
-      this.state.gendder,
+      this.state.gender,
       this.state.employeeCode,
       this.state.phone,
       this.state.email,
       this.state.nationalInsuranceNumber,
       this.state.employeeContractType,
       this.state.pinCode,
-      this.state.employeeTransportMode,
+      this.state.transportMode,
       this.state.address,
       this.state.county,
       this.state.postCode,
@@ -412,19 +412,19 @@ class EmployeeBloc extends Bloc<EmployeeEvent, EmployeeState> {
     yield this.state.copyWith(
       lastName: lastName,
       formStatus: Formz.validate([
-      this.state.tittle,
+      this.state.title,
       this.state.firstName,
       this.state.middleInitial,
         lastName,
       this.state.preferredName,
-      this.state.gendder,
+      this.state.gender,
       this.state.employeeCode,
       this.state.phone,
       this.state.email,
       this.state.nationalInsuranceNumber,
       this.state.employeeContractType,
       this.state.pinCode,
-      this.state.employeeTransportMode,
+      this.state.transportMode,
       this.state.address,
       this.state.county,
       this.state.postCode,
@@ -445,19 +445,19 @@ class EmployeeBloc extends Bloc<EmployeeEvent, EmployeeState> {
     yield this.state.copyWith(
       preferredName: preferredName,
       formStatus: Formz.validate([
-      this.state.tittle,
+      this.state.title,
       this.state.firstName,
       this.state.middleInitial,
       this.state.lastName,
         preferredName,
-      this.state.gendder,
+      this.state.gender,
       this.state.employeeCode,
       this.state.phone,
       this.state.email,
       this.state.nationalInsuranceNumber,
       this.state.employeeContractType,
       this.state.pinCode,
-      this.state.employeeTransportMode,
+      this.state.transportMode,
       this.state.address,
       this.state.county,
       this.state.postCode,
@@ -473,24 +473,24 @@ class EmployeeBloc extends Bloc<EmployeeEvent, EmployeeState> {
       ]),
     );
   }
-  Stream<EmployeeState> onGendderChange(GendderChanged event) async* {
-    final gendder = GendderInput.dirty(event.gendder);
+  Stream<EmployeeState> onGenderChange(GenderChanged event) async* {
+    final gender = GenderInput.dirty(event.gender);
     yield this.state.copyWith(
-      gendder: gendder,
+      gender: gender,
       formStatus: Formz.validate([
-      this.state.tittle,
+      this.state.title,
       this.state.firstName,
       this.state.middleInitial,
       this.state.lastName,
       this.state.preferredName,
-        gendder,
+        gender,
       this.state.employeeCode,
       this.state.phone,
       this.state.email,
       this.state.nationalInsuranceNumber,
       this.state.employeeContractType,
       this.state.pinCode,
-      this.state.employeeTransportMode,
+      this.state.transportMode,
       this.state.address,
       this.state.county,
       this.state.postCode,
@@ -511,19 +511,19 @@ class EmployeeBloc extends Bloc<EmployeeEvent, EmployeeState> {
     yield this.state.copyWith(
       employeeCode: employeeCode,
       formStatus: Formz.validate([
-      this.state.tittle,
+      this.state.title,
       this.state.firstName,
       this.state.middleInitial,
       this.state.lastName,
       this.state.preferredName,
-      this.state.gendder,
+      this.state.gender,
         employeeCode,
       this.state.phone,
       this.state.email,
       this.state.nationalInsuranceNumber,
       this.state.employeeContractType,
       this.state.pinCode,
-      this.state.employeeTransportMode,
+      this.state.transportMode,
       this.state.address,
       this.state.county,
       this.state.postCode,
@@ -544,19 +544,19 @@ class EmployeeBloc extends Bloc<EmployeeEvent, EmployeeState> {
     yield this.state.copyWith(
       phone: phone,
       formStatus: Formz.validate([
-      this.state.tittle,
+      this.state.title,
       this.state.firstName,
       this.state.middleInitial,
       this.state.lastName,
       this.state.preferredName,
-      this.state.gendder,
+      this.state.gender,
       this.state.employeeCode,
         phone,
       this.state.email,
       this.state.nationalInsuranceNumber,
       this.state.employeeContractType,
       this.state.pinCode,
-      this.state.employeeTransportMode,
+      this.state.transportMode,
       this.state.address,
       this.state.county,
       this.state.postCode,
@@ -577,19 +577,19 @@ class EmployeeBloc extends Bloc<EmployeeEvent, EmployeeState> {
     yield this.state.copyWith(
       email: email,
       formStatus: Formz.validate([
-      this.state.tittle,
+      this.state.title,
       this.state.firstName,
       this.state.middleInitial,
       this.state.lastName,
       this.state.preferredName,
-      this.state.gendder,
+      this.state.gender,
       this.state.employeeCode,
       this.state.phone,
         email,
       this.state.nationalInsuranceNumber,
       this.state.employeeContractType,
       this.state.pinCode,
-      this.state.employeeTransportMode,
+      this.state.transportMode,
       this.state.address,
       this.state.county,
       this.state.postCode,
@@ -610,19 +610,19 @@ class EmployeeBloc extends Bloc<EmployeeEvent, EmployeeState> {
     yield this.state.copyWith(
       nationalInsuranceNumber: nationalInsuranceNumber,
       formStatus: Formz.validate([
-      this.state.tittle,
+      this.state.title,
       this.state.firstName,
       this.state.middleInitial,
       this.state.lastName,
       this.state.preferredName,
-      this.state.gendder,
+      this.state.gender,
       this.state.employeeCode,
       this.state.phone,
       this.state.email,
         nationalInsuranceNumber,
       this.state.employeeContractType,
       this.state.pinCode,
-      this.state.employeeTransportMode,
+      this.state.transportMode,
       this.state.address,
       this.state.county,
       this.state.postCode,
@@ -643,19 +643,19 @@ class EmployeeBloc extends Bloc<EmployeeEvent, EmployeeState> {
     yield this.state.copyWith(
       employeeContractType: employeeContractType,
       formStatus: Formz.validate([
-      this.state.tittle,
+      this.state.title,
       this.state.firstName,
       this.state.middleInitial,
       this.state.lastName,
       this.state.preferredName,
-      this.state.gendder,
+      this.state.gender,
       this.state.employeeCode,
       this.state.phone,
       this.state.email,
       this.state.nationalInsuranceNumber,
         employeeContractType,
       this.state.pinCode,
-      this.state.employeeTransportMode,
+      this.state.transportMode,
       this.state.address,
       this.state.county,
       this.state.postCode,
@@ -676,19 +676,19 @@ class EmployeeBloc extends Bloc<EmployeeEvent, EmployeeState> {
     yield this.state.copyWith(
       pinCode: pinCode,
       formStatus: Formz.validate([
-      this.state.tittle,
+      this.state.title,
       this.state.firstName,
       this.state.middleInitial,
       this.state.lastName,
       this.state.preferredName,
-      this.state.gendder,
+      this.state.gender,
       this.state.employeeCode,
       this.state.phone,
       this.state.email,
       this.state.nationalInsuranceNumber,
       this.state.employeeContractType,
         pinCode,
-      this.state.employeeTransportMode,
+      this.state.transportMode,
       this.state.address,
       this.state.county,
       this.state.postCode,
@@ -704,24 +704,24 @@ class EmployeeBloc extends Bloc<EmployeeEvent, EmployeeState> {
       ]),
     );
   }
-  Stream<EmployeeState> onEmployeeTransportModeChange(EmployeeTransportModeChanged event) async* {
-    final employeeTransportMode = EmployeeTransportModeInput.dirty(event.employeeTransportMode);
+  Stream<EmployeeState> onTransportModeChange(TransportModeChanged event) async* {
+    final transportMode = TransportModeInput.dirty(event.transportMode);
     yield this.state.copyWith(
-      employeeTransportMode: employeeTransportMode,
+      transportMode: transportMode,
       formStatus: Formz.validate([
-      this.state.tittle,
+      this.state.title,
       this.state.firstName,
       this.state.middleInitial,
       this.state.lastName,
       this.state.preferredName,
-      this.state.gendder,
+      this.state.gender,
       this.state.employeeCode,
       this.state.phone,
       this.state.email,
       this.state.nationalInsuranceNumber,
       this.state.employeeContractType,
       this.state.pinCode,
-        employeeTransportMode,
+        transportMode,
       this.state.address,
       this.state.county,
       this.state.postCode,
@@ -742,19 +742,19 @@ class EmployeeBloc extends Bloc<EmployeeEvent, EmployeeState> {
     yield this.state.copyWith(
       address: address,
       formStatus: Formz.validate([
-      this.state.tittle,
+      this.state.title,
       this.state.firstName,
       this.state.middleInitial,
       this.state.lastName,
       this.state.preferredName,
-      this.state.gendder,
+      this.state.gender,
       this.state.employeeCode,
       this.state.phone,
       this.state.email,
       this.state.nationalInsuranceNumber,
       this.state.employeeContractType,
       this.state.pinCode,
-      this.state.employeeTransportMode,
+      this.state.transportMode,
         address,
       this.state.county,
       this.state.postCode,
@@ -775,19 +775,19 @@ class EmployeeBloc extends Bloc<EmployeeEvent, EmployeeState> {
     yield this.state.copyWith(
       county: county,
       formStatus: Formz.validate([
-      this.state.tittle,
+      this.state.title,
       this.state.firstName,
       this.state.middleInitial,
       this.state.lastName,
       this.state.preferredName,
-      this.state.gendder,
+      this.state.gender,
       this.state.employeeCode,
       this.state.phone,
       this.state.email,
       this.state.nationalInsuranceNumber,
       this.state.employeeContractType,
       this.state.pinCode,
-      this.state.employeeTransportMode,
+      this.state.transportMode,
       this.state.address,
         county,
       this.state.postCode,
@@ -808,19 +808,19 @@ class EmployeeBloc extends Bloc<EmployeeEvent, EmployeeState> {
     yield this.state.copyWith(
       postCode: postCode,
       formStatus: Formz.validate([
-      this.state.tittle,
+      this.state.title,
       this.state.firstName,
       this.state.middleInitial,
       this.state.lastName,
       this.state.preferredName,
-      this.state.gendder,
+      this.state.gender,
       this.state.employeeCode,
       this.state.phone,
       this.state.email,
       this.state.nationalInsuranceNumber,
       this.state.employeeContractType,
       this.state.pinCode,
-      this.state.employeeTransportMode,
+      this.state.transportMode,
       this.state.address,
       this.state.county,
         postCode,
@@ -841,19 +841,19 @@ class EmployeeBloc extends Bloc<EmployeeEvent, EmployeeState> {
     yield this.state.copyWith(
       dateOfBirth: dateOfBirth,
       formStatus: Formz.validate([
-      this.state.tittle,
+      this.state.title,
       this.state.firstName,
       this.state.middleInitial,
       this.state.lastName,
       this.state.preferredName,
-      this.state.gendder,
+      this.state.gender,
       this.state.employeeCode,
       this.state.phone,
       this.state.email,
       this.state.nationalInsuranceNumber,
       this.state.employeeContractType,
       this.state.pinCode,
-      this.state.employeeTransportMode,
+      this.state.transportMode,
       this.state.address,
       this.state.county,
       this.state.postCode,
@@ -874,19 +874,19 @@ class EmployeeBloc extends Bloc<EmployeeEvent, EmployeeState> {
     yield this.state.copyWith(
       photoUrl: photoUrl,
       formStatus: Formz.validate([
-      this.state.tittle,
+      this.state.title,
       this.state.firstName,
       this.state.middleInitial,
       this.state.lastName,
       this.state.preferredName,
-      this.state.gendder,
+      this.state.gender,
       this.state.employeeCode,
       this.state.phone,
       this.state.email,
       this.state.nationalInsuranceNumber,
       this.state.employeeContractType,
       this.state.pinCode,
-      this.state.employeeTransportMode,
+      this.state.transportMode,
       this.state.address,
       this.state.county,
       this.state.postCode,
@@ -907,19 +907,19 @@ class EmployeeBloc extends Bloc<EmployeeEvent, EmployeeState> {
     yield this.state.copyWith(
       status: status,
       formStatus: Formz.validate([
-      this.state.tittle,
+      this.state.title,
       this.state.firstName,
       this.state.middleInitial,
       this.state.lastName,
       this.state.preferredName,
-      this.state.gendder,
+      this.state.gender,
       this.state.employeeCode,
       this.state.phone,
       this.state.email,
       this.state.nationalInsuranceNumber,
       this.state.employeeContractType,
       this.state.pinCode,
-      this.state.employeeTransportMode,
+      this.state.transportMode,
       this.state.address,
       this.state.county,
       this.state.postCode,
@@ -940,19 +940,19 @@ class EmployeeBloc extends Bloc<EmployeeEvent, EmployeeState> {
     yield this.state.copyWith(
       employeeBio: employeeBio,
       formStatus: Formz.validate([
-      this.state.tittle,
+      this.state.title,
       this.state.firstName,
       this.state.middleInitial,
       this.state.lastName,
       this.state.preferredName,
-      this.state.gendder,
+      this.state.gender,
       this.state.employeeCode,
       this.state.phone,
       this.state.email,
       this.state.nationalInsuranceNumber,
       this.state.employeeContractType,
       this.state.pinCode,
-      this.state.employeeTransportMode,
+      this.state.transportMode,
       this.state.address,
       this.state.county,
       this.state.postCode,
@@ -973,19 +973,19 @@ class EmployeeBloc extends Bloc<EmployeeEvent, EmployeeState> {
     yield this.state.copyWith(
       acruedHolidayHours: acruedHolidayHours,
       formStatus: Formz.validate([
-      this.state.tittle,
+      this.state.title,
       this.state.firstName,
       this.state.middleInitial,
       this.state.lastName,
       this.state.preferredName,
-      this.state.gendder,
+      this.state.gender,
       this.state.employeeCode,
       this.state.phone,
       this.state.email,
       this.state.nationalInsuranceNumber,
       this.state.employeeContractType,
       this.state.pinCode,
-      this.state.employeeTransportMode,
+      this.state.transportMode,
       this.state.address,
       this.state.county,
       this.state.postCode,
@@ -1006,19 +1006,19 @@ class EmployeeBloc extends Bloc<EmployeeEvent, EmployeeState> {
     yield this.state.copyWith(
       createdDate: createdDate,
       formStatus: Formz.validate([
-      this.state.tittle,
+      this.state.title,
       this.state.firstName,
       this.state.middleInitial,
       this.state.lastName,
       this.state.preferredName,
-      this.state.gendder,
+      this.state.gender,
       this.state.employeeCode,
       this.state.phone,
       this.state.email,
       this.state.nationalInsuranceNumber,
       this.state.employeeContractType,
       this.state.pinCode,
-      this.state.employeeTransportMode,
+      this.state.transportMode,
       this.state.address,
       this.state.county,
       this.state.postCode,
@@ -1039,19 +1039,19 @@ class EmployeeBloc extends Bloc<EmployeeEvent, EmployeeState> {
     yield this.state.copyWith(
       lastUpdatedDate: lastUpdatedDate,
       formStatus: Formz.validate([
-      this.state.tittle,
+      this.state.title,
       this.state.firstName,
       this.state.middleInitial,
       this.state.lastName,
       this.state.preferredName,
-      this.state.gendder,
+      this.state.gender,
       this.state.employeeCode,
       this.state.phone,
       this.state.email,
       this.state.nationalInsuranceNumber,
       this.state.employeeContractType,
       this.state.pinCode,
-      this.state.employeeTransportMode,
+      this.state.transportMode,
       this.state.address,
       this.state.county,
       this.state.postCode,
@@ -1072,19 +1072,19 @@ class EmployeeBloc extends Bloc<EmployeeEvent, EmployeeState> {
     yield this.state.copyWith(
       clientId: clientId,
       formStatus: Formz.validate([
-      this.state.tittle,
+      this.state.title,
       this.state.firstName,
       this.state.middleInitial,
       this.state.lastName,
       this.state.preferredName,
-      this.state.gendder,
+      this.state.gender,
       this.state.employeeCode,
       this.state.phone,
       this.state.email,
       this.state.nationalInsuranceNumber,
       this.state.employeeContractType,
       this.state.pinCode,
-      this.state.employeeTransportMode,
+      this.state.transportMode,
       this.state.address,
       this.state.county,
       this.state.postCode,
@@ -1105,19 +1105,19 @@ class EmployeeBloc extends Bloc<EmployeeEvent, EmployeeState> {
     yield this.state.copyWith(
       hasExtraData: hasExtraData,
       formStatus: Formz.validate([
-      this.state.tittle,
+      this.state.title,
       this.state.firstName,
       this.state.middleInitial,
       this.state.lastName,
       this.state.preferredName,
-      this.state.gendder,
+      this.state.gender,
       this.state.employeeCode,
       this.state.phone,
       this.state.email,
       this.state.nationalInsuranceNumber,
       this.state.employeeContractType,
       this.state.pinCode,
-      this.state.employeeTransportMode,
+      this.state.transportMode,
       this.state.address,
       this.state.county,
       this.state.postCode,

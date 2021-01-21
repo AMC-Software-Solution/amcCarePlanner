@@ -13,7 +13,7 @@ class ServiceUserState extends Equatable {
   final FormzStatus formStatus;
   final String generalNotificationKey;
 
-  final TitlleInput titlle;
+  final TitleInput title;
   final FirstNameInput firstName;
   final MiddleNameInput middleName;
   final LastNameInput lastName;
@@ -52,7 +52,7 @@ DateOfBirthInput dateOfBirth,LastVisitDateInput lastVisitDate,StartDateInput sta
     this.formStatus = FormzStatus.pure,
     this.generalNotificationKey = '',
     this.deleteStatus = ServiceUserDeleteStatus.none,
-    this.titlle = const TitlleInput.pure(),
+    this.title = const TitleInput.pure(),
     this.firstName = const FirstNameInput.pure(),
     this.middleName = const MiddleNameInput.pure(),
     this.lastName = const LastNameInput.pure(),
@@ -90,7 +90,7 @@ this.lastUpdatedDate = lastUpdatedDate ?? LastUpdatedDateInput.pure()
     ServiceUser loadedServiceUser,
     FormzStatus formStatus,
     String generalNotificationKey,
-    TitlleInput titlle,
+    TitleInput title,
     FirstNameInput firstName,
     MiddleNameInput middleName,
     LastNameInput lastName,
@@ -133,7 +133,7 @@ this.lastUpdatedDate = lastUpdatedDate ?? LastUpdatedDateInput.pure()
       formStatus: formStatus ?? this.formStatus,
       generalNotificationKey: generalNotificationKey ?? this.generalNotificationKey,
       deleteStatus: deleteStatus ?? this.deleteStatus,
-      titlle: titlle ?? this.titlle,
+      title: title ?? this.title,
       firstName: firstName ?? this.firstName,
       middleName: middleName ?? this.middleName,
       lastName: lastName ?? this.lastName,
@@ -161,7 +161,7 @@ this.lastUpdatedDate = lastUpdatedDate ?? LastUpdatedDateInput.pure()
   @override
   List<Object> get props => [serviceUsers, serviceUserStatusUI,
      loadedServiceUser, editMode, deleteStatus, formStatus, generalNotificationKey, 
-titlle,firstName,middleName,lastName,preferredName,email,serviceUserCode,dateOfBirth,lastVisitDate,startDate,supportType,serviceUserCategory,vulnerability,servicePriority,source,status,firstLanguage,interpreterRequired,activatedDate,profilePhotoUrl,lastRecordedHeight,lastRecordedWeight,hasMedicalCondition,medicalConditionSummary,createdDate,lastUpdatedDate,clientId,hasExtraData,];
+title,firstName,middleName,lastName,preferredName,email,serviceUserCode,dateOfBirth,lastVisitDate,startDate,supportType,serviceUserCategory,vulnerability,servicePriority,source,status,firstLanguage,interpreterRequired,activatedDate,profilePhotoUrl,lastRecordedHeight,lastRecordedWeight,hasMedicalCondition,medicalConditionSummary,createdDate,lastUpdatedDate,clientId,hasExtraData,];
 
   @override
   bool get stringify => true;

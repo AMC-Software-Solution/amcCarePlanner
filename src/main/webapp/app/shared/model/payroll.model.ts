@@ -6,9 +6,9 @@ export interface IPayroll {
   paymentDate?: string;
   payPeriod?: string;
   totalHoursWorked?: number;
-  grossPay?: number;
-  netPay?: number;
-  totalTax?: number;
+  grossPay?: string;
+  netPay?: string;
+  totalTax?: string;
   payrollStatus?: PayrollStatus;
   createdDate?: string;
   lastUpdatedDate?: string;

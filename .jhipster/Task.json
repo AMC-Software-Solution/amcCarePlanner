@@ -84,7 +84,7 @@
       "otherEntityField": "employeeCode"
     }
   ],
-  "changelogDate": "20210114113711",
+  "changelogDate": "20210121105353",
   "entityTableName": "task",
   "dto": "mapstruct",
   "pagination": "pagination",

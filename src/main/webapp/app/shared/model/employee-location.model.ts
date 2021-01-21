@@ -2,8 +2,8 @@ import { Moment } from 'moment';
 
 export interface IEmployeeLocation {
   id?: number;
-  latitude?: number;
-  longitude?: number;
+  latitude?: string;
+  longitude?: string;
   createdDate?: string;
   lastUpdatedDate?: string;
   clientId?: number;

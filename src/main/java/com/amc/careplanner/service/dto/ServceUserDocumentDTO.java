@@ -5,7 +5,7 @@ import java.time.ZonedDateTime;
 import javax.validation.constraints.*;
 import java.io.Serializable;
 import javax.persistence.Lob;
-import com.amc.careplanner.domain.enumeration.DocumentStatus;
+import com.amc.careplanner.domain.enumeration.ServiceUserDocumentStatus;
 
 /**
  * A DTO for the {@link com.amc.careplanner.domain.ServceUserDocument} entity.
@@ -19,7 +19,7 @@ public class ServceUserDocumentDTO implements Serializable {
 
     private String documentNumber;
 
-    private DocumentStatus documentStatus;
+    private ServiceUserDocumentStatus documentStatus;
 
     private String note;
 
@@ -77,11 +77,11 @@ public class ServceUserDocumentDTO implements Serializable {
         this.documentNumber = documentNumber;
     }
 
-    public DocumentStatus getDocumentStatus() {
+    public ServiceUserDocumentStatus getDocumentStatus() {
         return documentStatus;
     }
 
-    public void setDocumentStatus(DocumentStatus documentStatus) {
+    public void setDocumentStatus(ServiceUserDocumentStatus documentStatus) {
         this.documentStatus = documentStatus;
     }
 

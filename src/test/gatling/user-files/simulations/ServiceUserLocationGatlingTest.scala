@@ -72,8 +72,8 @@ class ServiceUserLocationGatlingTest extends Simulation {
             .headers(headers_http_authenticated)
             .body(StringBody("""{
                 "id":null
-                , "latitude":null
-                , "longitude":null
+                , "latitude":"SAMPLE_TEXT"
+                , "longitude":"SAMPLE_TEXT"
                 , "createdDate":"2020-01-01T00:00:00.000Z"
                 , "lastUpdatedDate":"2020-01-01T00:00:00.000Z"
                 , "clientId":null

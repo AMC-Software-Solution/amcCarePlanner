@@ -92,7 +92,7 @@ public class InvoiceQueryService extends QueryService<Invoice> {
                 specification = specification.and(buildRangeSpecification(criteria.getId(), Invoice_.id));
             }
             if (criteria.getTotalAmount() != null) {
-                specification = specification.and(buildRangeSpecification(criteria.getTotalAmount(), Invoice_.totalAmount));
+                specification = specification.and(buildStringSpecification(criteria.getTotalAmount(), Invoice_.totalAmount));
             }
             if (criteria.getDescription() != null) {
                 specification = specification.and(buildStringSpecification(criteria.getDescription(), Invoice_.description));
@@ -113,7 +113,7 @@ public class InvoiceQueryService extends QueryService<Invoice> {
                 specification = specification.and(buildSpecification(criteria.getInvoiceStatus(), Invoice_.invoiceStatus));
             }
             if (criteria.getTax() != null) {
-                specification = specification.and(buildRangeSpecification(criteria.getTax(), Invoice_.tax));
+                specification = specification.and(buildStringSpecification(criteria.getTax(), Invoice_.tax));
             }
             if (criteria.getAttribute1() != null) {
                 specification = specification.and(buildStringSpecification(criteria.getAttribute1(), Invoice_.attribute1));

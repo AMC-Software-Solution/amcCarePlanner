@@ -1,4 +1,3 @@
-
 import 'package:flutter/widgets.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:amcCarePlanner/shared/models/entity_arguments.dart';
@@ -23,27 +22,31 @@ class EmployeeRoutes {
   static final map = <String, WidgetBuilder>{
     list: (context) {
       return BlocProvider<EmployeeBloc>(
-          create: (context) => EmployeeBloc(employeeRepository: EmployeeRepository())
-            ..add(InitEmployeeList()),
+          create: (context) =>
+              EmployeeBloc(employeeRepository: EmployeeRepository())
+                ..add(InitEmployeeList()),
           child: EmployeeListScreen());
     },
     create: (context) {
       return BlocProvider<EmployeeBloc>(
-          create: (context) => EmployeeBloc(employeeRepository: EmployeeRepository()),
+          create: (context) =>
+              EmployeeBloc(employeeRepository: EmployeeRepository()),
           child: EmployeeUpdateScreen());
     },
     edit: (context) {
       EntityArguments arguments = ModalRoute.of(context).settings.arguments;
       return BlocProvider<EmployeeBloc>(
-          create: (context) => EmployeeBloc(employeeRepository: EmployeeRepository())
-            ..add(LoadEmployeeByIdForEdit(id: arguments.id)),
+          create: (context) =>
+              EmployeeBloc(employeeRepository: EmployeeRepository())
+                ..add(LoadEmployeeByIdForEdit(id: arguments.id)),
           child: EmployeeUpdateScreen());
     },
     view: (context) {
       EntityArguments arguments = ModalRoute.of(context).settings.arguments;
       return BlocProvider<EmployeeBloc>(
-          create: (context) => EmployeeBloc(employeeRepository: EmployeeRepository())
-            ..add(LoadEmployeeByIdForView(id: arguments.id)),
+          create: (context) =>
+              EmployeeBloc(employeeRepository: EmployeeRepository())
+                ..add(LoadEmployeeByIdForView(id: arguments.id)),
           child: EmployeeViewScreen());
     },
   };

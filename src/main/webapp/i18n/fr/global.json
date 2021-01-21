@@ -51,6 +51,7 @@
         "systemEventsHistory": "System Events History",
         "systemSetting": "System Setting",
         "extraData": "Extra Data",
+        "notifications": "Notifications",
         "jhipster-needle-menu-add-entry": "JHipster will add additional entities here (do not translate!)"
       },
       "account": {

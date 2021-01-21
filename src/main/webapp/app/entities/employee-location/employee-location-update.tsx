@@ -89,12 +89,10 @@ export const EmployeeLocationUpdate = (props: IEmployeeLocationUpdateProps) => {
                 </Label>
                 <AvField
                   id="employee-location-latitude"
-                  type="string"
-                  className="form-control"
+                  type="text"
                   name="latitude"
                   validate={{
                     required: { value: true, errorMessage: translate('entity.validation.required') },
-                    number: { value: true, errorMessage: translate('entity.validation.number') },
                   }}
                 />
               </AvGroup>
@@ -104,12 +102,10 @@ export const EmployeeLocationUpdate = (props: IEmployeeLocationUpdateProps) => {
                 </Label>
                 <AvField
                   id="employee-location-longitude"
-                  type="string"
-                  className="form-control"
+                  type="text"
                   name="longitude"
                   validate={{
                     required: { value: true, errorMessage: translate('entity.validation.required') },
-                    number: { value: true, errorMessage: translate('entity.validation.number') },
                   }}
                 />
               </AvGroup>

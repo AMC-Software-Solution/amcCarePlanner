@@ -2,8 +2,8 @@
   "name": "ServiceUser",
   "fields": [
     {
-      "fieldName": "titlle",
-      "fieldType": "Titlle",
+      "fieldName": "title",
+      "fieldType": "ServiceUserTitle",
       "fieldValues": "MR,MRS,MS,MISS,OTHER",
       "fieldValidateRules": ["required"]
     },
@@ -179,7 +179,7 @@
       "otherEntityField": "employeeCode"
     }
   ],
-  "changelogDate": "20210114110511",
+  "changelogDate": "20210121102153",
   "entityTableName": "service_user",
   "dto": "mapstruct",
   "pagination": "pagination",

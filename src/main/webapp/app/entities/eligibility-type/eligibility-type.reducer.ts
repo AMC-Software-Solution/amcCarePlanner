@@ -97,12 +97,12 @@ export default (state: EligibilityTypeState = initialState, action): Eligibility
   }
 };
 
-const apiUrl = 'api/v1';
+const apiUrl = 'api/eligibility-types';
 
 // Actions
 
 export const getEntities: ICrudGetAllAction<IEligibilityType> = (page, size, sort) => {
-  const requestUrl = `${apiUrl}/get-all--eligibility-types-by-client-id${sort ? `?page=${page}&size=${size}&sort=${sort}` : ''}`;
+  const requestUrl = `${apiUrl}${sort ? `?page=${page}&size=${size}&sort=${sort}` : ''}`;
   return {
     type: ACTION_TYPES.FETCH_ELIGIBILITYTYPE_LIST,
     payload: axios.get<IEligibilityType>(`${requestUrl}${sort ? '&' : '?'}cacheBuster=${new Date().getTime()}`),
@@ -110,7 +110,7 @@ export const getEntities: ICrudGetAllAction<IEligibilityType> = (page, size, sor
 };
 
 export const getEntity: ICrudGetAction<IEligibilityType> = id => {
-  const requestUrl = `${apiUrl}/get-eligibility-type-by-client-id/${id}`;
+  const requestUrl = `${apiUrl}/${id}`;
   return {
     type: ACTION_TYPES.FETCH_ELIGIBILITYTYPE,
     payload: axios.get<IEligibilityType>(requestUrl),
@@ -120,7 +120,7 @@ export const getEntity: ICrudGetAction<IEligibilityType> = id => {
 export const createEntity: ICrudPutAction<IEligibilityType> = entity => async dispatch => {
   const result = await dispatch({
     type: ACTION_TYPES.CREATE_ELIGIBILITYTYPE,
-    payload: axios.post(apiUrl + '/create-eligibility-type-by-client-id', cleanEntity(entity)),
+    payload: axios.post(apiUrl, cleanEntity(entity)),
   });
   dispatch(getEntities());
   return result;
@@ -129,13 +129,13 @@ export const createEntity: ICrudPutAction<IEligibilityType> = entity => async di
 export const updateEntity: ICrudPutAction<IEligibilityType> = entity => async dispatch => {
   const result = await dispatch({
     type: ACTION_TYPES.UPDATE_ELIGIBILITYTYPE,
-    payload: axios.put(apiUrl + '/update-eligibility-type-by-client-id', cleanEntity(entity)),
+    payload: axios.put(apiUrl, cleanEntity(entity)),
   });
   return result;
 };
 
 export const deleteEntity: ICrudDeleteAction<IEligibilityType> = id => async dispatch => {
-  const requestUrl = `${apiUrl}/delete-eligibility-type-by-client-id/${id}`;
+  const requestUrl = `${apiUrl}/${id}`;
   const result = await dispatch({
     type: ACTION_TYPES.DELETE_ELIGIBILITYTYPE,
     payload: axios.delete(requestUrl),

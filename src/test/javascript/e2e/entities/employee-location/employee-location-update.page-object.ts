@@ -92,11 +92,11 @@ export default class EmployeeLocationUpdatePage {
 
   async enterData() {
     await waitUntilDisplayed(this.saveButton);
-    await this.setLatitudeInput('5');
-    expect(await this.getLatitudeInput()).to.eq('5');
+    await this.setLatitudeInput('latitude');
+    expect(await this.getLatitudeInput()).to.match(/latitude/);
     await waitUntilDisplayed(this.saveButton);
-    await this.setLongitudeInput('5');
-    expect(await this.getLongitudeInput()).to.eq('5');
+    await this.setLongitudeInput('longitude');
+    expect(await this.getLongitudeInput()).to.match(/longitude/);
     await waitUntilDisplayed(this.saveButton);
     await this.setCreatedDateInput('01/01/2001' + protractor.Key.TAB + '02:30AM');
     expect(await this.getCreatedDateInput()).to.contain('2001-01-01T02:30');

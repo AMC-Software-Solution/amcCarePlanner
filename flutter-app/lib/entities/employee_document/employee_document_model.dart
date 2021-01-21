@@ -16,8 +16,8 @@ class EmployeeDocument {
   @JsonProperty(name: 'documentNumber')
   final String documentNumber;
 
-  @JsonProperty(name: 'employeeDocumentStatus', enumValues: EmployeeDocumentStatus.values)
-  final EmployeeDocumentStatus employeeDocumentStatus;
+  @JsonProperty(name: 'documentStatus', enumValues: EmployeeDocumentStatus.values)
+  final EmployeeDocumentStatus documentStatus;
 
   @JsonProperty(name: 'note')
   final String note;
@@ -59,7 +59,7 @@ class EmployeeDocument {
      this.id,
         this.documentName,
         this.documentNumber,
-        this.employeeDocumentStatus,
+        this.documentStatus,
         this.note,
         this.issuedDate,
         this.expiryDate,
@@ -80,7 +80,7 @@ String toString() {
     'id: $id,' +
         'documentName: $documentName,' +
         'documentNumber: $documentNumber,' +
-        'employeeDocumentStatus: $employeeDocumentStatus,' +
+        'documentStatus: $documentStatus,' +
         'note: $note,' +
         'issuedDate: $issuedDate,' +
         'expiryDate: $expiryDate,' +

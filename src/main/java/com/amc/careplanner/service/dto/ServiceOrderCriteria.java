@@ -31,7 +31,7 @@ public class ServiceOrderCriteria implements Serializable, Criteria {
 
     private StringFilter serviceDescription;
 
-    private DoubleFilter serviceHourlyRate;
+    private StringFilter serviceHourlyRate;
 
     private LongFilter clientId;
 
@@ -87,11 +87,11 @@ public class ServiceOrderCriteria implements Serializable, Criteria {
         this.serviceDescription = serviceDescription;
     }
 
-    public DoubleFilter getServiceHourlyRate() {
+    public StringFilter getServiceHourlyRate() {
         return serviceHourlyRate;
     }
 
-    public void setServiceHourlyRate(DoubleFilter serviceHourlyRate) {
+    public void setServiceHourlyRate(StringFilter serviceHourlyRate) {
         this.serviceHourlyRate = serviceHourlyRate;
     }
 

@@ -1,7 +1,7 @@
 import { Moment } from 'moment';
 import { ServiceUserEventStatus } from 'app/shared/model/enumerations/service-user-event-status.model';
 import { ServiceUserEventType } from 'app/shared/model/enumerations/service-user-event-type.model';
-import { ServicePriority } from 'app/shared/model/enumerations/service-priority.model';
+import { Priority } from 'app/shared/model/enumerations/priority.model';
 
 export interface IServiceUserEvent {
   id?: number;
@@ -9,7 +9,7 @@ export interface IServiceUserEvent {
   description?: string;
   serviceUserEventStatus?: ServiceUserEventStatus;
   serviceUserEventType?: ServiceUserEventType;
-  priority?: ServicePriority;
+  priority?: Priority;
   note?: string;
   dateOfEvent?: string;
   createdDate?: string;

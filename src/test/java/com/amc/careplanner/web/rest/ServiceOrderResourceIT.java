@@ -46,9 +46,8 @@ public class ServiceOrderResourceIT {
     private static final String DEFAULT_SERVICE_DESCRIPTION = "AAAAAAAAAA";
     private static final String UPDATED_SERVICE_DESCRIPTION = "BBBBBBBBBB";
 
-    private static final Double DEFAULT_SERVICE_HOURLY_RATE = 1D;
-    private static final Double UPDATED_SERVICE_HOURLY_RATE = 2D;
-    private static final Double SMALLER_SERVICE_HOURLY_RATE = 1D - 1D;
+    private static final String DEFAULT_SERVICE_HOURLY_RATE = "AAAAAAAAAA";
+    private static final String UPDATED_SERVICE_HOURLY_RATE = "BBBBBBBBBB";
 
     private static final Long DEFAULT_CLIENT_ID = 1L;
     private static final Long UPDATED_CLIENT_ID = 2L;
@@ -243,7 +242,7 @@ public class ServiceOrderResourceIT {
             .andExpect(jsonPath("$.[*].id").value(hasItem(serviceOrder.getId().intValue())))
             .andExpect(jsonPath("$.[*].title").value(hasItem(DEFAULT_TITLE)))
             .andExpect(jsonPath("$.[*].serviceDescription").value(hasItem(DEFAULT_SERVICE_DESCRIPTION)))
-            .andExpect(jsonPath("$.[*].serviceHourlyRate").value(hasItem(DEFAULT_SERVICE_HOURLY_RATE.doubleValue())))
+            .andExpect(jsonPath("$.[*].serviceHourlyRate").value(hasItem(DEFAULT_SERVICE_HOURLY_RATE)))
             .andExpect(jsonPath("$.[*].clientId").value(hasItem(DEFAULT_CLIENT_ID.intValue())))
             .andExpect(jsonPath("$.[*].createdDate").value(hasItem(sameInstant(DEFAULT_CREATED_DATE))))
             .andExpect(jsonPath("$.[*].lastUpdatedDate").value(hasItem(sameInstant(DEFAULT_LAST_UPDATED_DATE))))
@@ -263,7 +262,7 @@ public class ServiceOrderResourceIT {
             .andExpect(jsonPath("$.id").value(serviceOrder.getId().intValue()))
             .andExpect(jsonPath("$.title").value(DEFAULT_TITLE))
             .andExpect(jsonPath("$.serviceDescription").value(DEFAULT_SERVICE_DESCRIPTION))
-            .andExpect(jsonPath("$.serviceHourlyRate").value(DEFAULT_SERVICE_HOURLY_RATE.doubleValue()))
+            .andExpect(jsonPath("$.serviceHourlyRate").value(DEFAULT_SERVICE_HOURLY_RATE))
             .andExpect(jsonPath("$.clientId").value(DEFAULT_CLIENT_ID.intValue()))
             .andExpect(jsonPath("$.createdDate").value(sameInstant(DEFAULT_CREATED_DATE)))
             .andExpect(jsonPath("$.lastUpdatedDate").value(sameInstant(DEFAULT_LAST_UPDATED_DATE)))
@@ -497,57 +496,30 @@ public class ServiceOrderResourceIT {
         // Get all the serviceOrderList where serviceHourlyRate is null
         defaultServiceOrderShouldNotBeFound("serviceHourlyRate.specified=false");
     }
-
-    @Test
+                @Test
     @Transactional
-    public void getAllServiceOrdersByServiceHourlyRateIsGreaterThanOrEqualToSomething() throws Exception {
+    public void getAllServiceOrdersByServiceHourlyRateContainsSomething() throws Exception {
         // Initialize the database
         serviceOrderRepository.saveAndFlush(serviceOrder);
 
-        // Get all the serviceOrderList where serviceHourlyRate is greater than or equal to DEFAULT_SERVICE_HOURLY_RATE
-        defaultServiceOrderShouldBeFound("serviceHourlyRate.greaterThanOrEqual=" + DEFAULT_SERVICE_HOURLY_RATE);
+        // Get all the serviceOrderList where serviceHourlyRate contains DEFAULT_SERVICE_HOURLY_RATE
+        defaultServiceOrderShouldBeFound("serviceHourlyRate.contains=" + DEFAULT_SERVICE_HOURLY_RATE);
 
-        // Get all the serviceOrderList where serviceHourlyRate is greater than or equal to UPDATED_SERVICE_HOURLY_RATE
-        defaultServiceOrderShouldNotBeFound("serviceHourlyRate.greaterThanOrEqual=" + UPDATED_SERVICE_HOURLY_RATE);
+        // Get all the serviceOrderList where serviceHourlyRate contains UPDATED_SERVICE_HOURLY_RATE
+        defaultServiceOrderShouldNotBeFound("serviceHourlyRate.contains=" + UPDATED_SERVICE_HOURLY_RATE);
     }
 
     @Test
     @Transactional
-    public void getAllServiceOrdersByServiceHourlyRateIsLessThanOrEqualToSomething() throws Exception {
+    public void getAllServiceOrdersByServiceHourlyRateNotContainsSomething() throws Exception {
         // Initialize the database
         serviceOrderRepository.saveAndFlush(serviceOrder);
 
-        // Get all the serviceOrderList where serviceHourlyRate is less than or equal to DEFAULT_SERVICE_HOURLY_RATE
-        defaultServiceOrderShouldBeFound("serviceHourlyRate.lessThanOrEqual=" + DEFAULT_SERVICE_HOURLY_RATE);
+        // Get all the serviceOrderList where serviceHourlyRate does not contain DEFAULT_SERVICE_HOURLY_RATE
+        defaultServiceOrderShouldNotBeFound("serviceHourlyRate.doesNotContain=" + DEFAULT_SERVICE_HOURLY_RATE);
 
-        // Get all the serviceOrderList where serviceHourlyRate is less than or equal to SMALLER_SERVICE_HOURLY_RATE
-        defaultServiceOrderShouldNotBeFound("serviceHourlyRate.lessThanOrEqual=" + SMALLER_SERVICE_HOURLY_RATE);
-    }
-
-    @Test
-    @Transactional
-    public void getAllServiceOrdersByServiceHourlyRateIsLessThanSomething() throws Exception {
-        // Initialize the database
-        serviceOrderRepository.saveAndFlush(serviceOrder);
-
-        // Get all the serviceOrderList where serviceHourlyRate is less than DEFAULT_SERVICE_HOURLY_RATE
-        defaultServiceOrderShouldNotBeFound("serviceHourlyRate.lessThan=" + DEFAULT_SERVICE_HOURLY_RATE);
-
-        // Get all the serviceOrderList where serviceHourlyRate is less than UPDATED_SERVICE_HOURLY_RATE
-        defaultServiceOrderShouldBeFound("serviceHourlyRate.lessThan=" + UPDATED_SERVICE_HOURLY_RATE);
-    }
-
-    @Test
-    @Transactional
-    public void getAllServiceOrdersByServiceHourlyRateIsGreaterThanSomething() throws Exception {
-        // Initialize the database
-        serviceOrderRepository.saveAndFlush(serviceOrder);
-
-        // Get all the serviceOrderList where serviceHourlyRate is greater than DEFAULT_SERVICE_HOURLY_RATE
-        defaultServiceOrderShouldNotBeFound("serviceHourlyRate.greaterThan=" + DEFAULT_SERVICE_HOURLY_RATE);
-
-        // Get all the serviceOrderList where serviceHourlyRate is greater than SMALLER_SERVICE_HOURLY_RATE
-        defaultServiceOrderShouldBeFound("serviceHourlyRate.greaterThan=" + SMALLER_SERVICE_HOURLY_RATE);
+        // Get all the serviceOrderList where serviceHourlyRate does not contain UPDATED_SERVICE_HOURLY_RATE
+        defaultServiceOrderShouldBeFound("serviceHourlyRate.doesNotContain=" + UPDATED_SERVICE_HOURLY_RATE);
     }
 
 
@@ -947,7 +919,7 @@ public class ServiceOrderResourceIT {
             .andExpect(jsonPath("$.[*].id").value(hasItem(serviceOrder.getId().intValue())))
             .andExpect(jsonPath("$.[*].title").value(hasItem(DEFAULT_TITLE)))
             .andExpect(jsonPath("$.[*].serviceDescription").value(hasItem(DEFAULT_SERVICE_DESCRIPTION)))
-            .andExpect(jsonPath("$.[*].serviceHourlyRate").value(hasItem(DEFAULT_SERVICE_HOURLY_RATE.doubleValue())))
+            .andExpect(jsonPath("$.[*].serviceHourlyRate").value(hasItem(DEFAULT_SERVICE_HOURLY_RATE)))
             .andExpect(jsonPath("$.[*].clientId").value(hasItem(DEFAULT_CLIENT_ID.intValue())))
             .andExpect(jsonPath("$.[*].createdDate").value(hasItem(sameInstant(DEFAULT_CREATED_DATE))))
             .andExpect(jsonPath("$.[*].lastUpdatedDate").value(hasItem(sameInstant(DEFAULT_LAST_UPDATED_DATE))))

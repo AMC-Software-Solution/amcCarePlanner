@@ -165,7 +165,7 @@ export const EmployeeDocument = (props: IEmployeeDocumentProps) => {
                   <td>{employeeDocument.documentName}</td>
                   <td>{employeeDocument.documentNumber}</td>
                   <td>
-                    <Translate contentKey={`carePlannerApp.DocumentStatus.${employeeDocument.documentStatus}`} />
+                    <Translate contentKey={`carePlannerApp.EmployeeDocumentStatus.${employeeDocument.documentStatus}`} />
                   </td>
                   <td>{employeeDocument.note}</td>
                   <td>

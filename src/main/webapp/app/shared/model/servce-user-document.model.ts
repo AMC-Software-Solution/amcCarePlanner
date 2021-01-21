@@ -1,11 +1,11 @@
 import { Moment } from 'moment';
-import { DocumentStatus } from 'app/shared/model/enumerations/document-status.model';
+import { ServiceUserDocumentStatus } from 'app/shared/model/enumerations/service-user-document-status.model';
 
 export interface IServceUserDocument {
   id?: number;
   documentName?: string;
   documentNumber?: string;
-  documentStatus?: DocumentStatus;
+  documentStatus?: ServiceUserDocumentStatus;
   note?: string;
   issuedDate?: string;
   expiryDate?: string;

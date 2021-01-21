@@ -4,7 +4,7 @@ export interface IServiceOrder {
   id?: number;
   title?: string;
   serviceDescription?: string;
-  serviceHourlyRate?: number;
+  serviceHourlyRate?: string;
   clientId?: number;
   createdDate?: string;
   lastUpdatedDate?: string;

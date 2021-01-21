@@ -98,9 +98,9 @@ export const EqualityUpdate = (props: IEqualityUpdateProps) => {
                   name="gender"
                   value={(!isNew && equalityEntity.gender) || 'MALE'}
                 >
-                  <option value="MALE">{translate('carePlannerApp.Gender.MALE')}</option>
-                  <option value="FEMALE">{translate('carePlannerApp.Gender.FEMALE')}</option>
-                  <option value="OTHER">{translate('carePlannerApp.Gender.OTHER')}</option>
+                  <option value="MALE">{translate('carePlannerApp.ServiceUserGender.MALE')}</option>
+                  <option value="FEMALE">{translate('carePlannerApp.ServiceUserGender.FEMALE')}</option>
+                  <option value="OTHER">{translate('carePlannerApp.ServiceUserGender.OTHER')}</option>
                 </AvInput>
               </AvGroup>
               <AvGroup>

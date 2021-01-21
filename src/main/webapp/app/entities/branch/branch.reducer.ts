@@ -109,12 +109,12 @@ export default (state: BranchState = initialState, action): BranchState => {
   }
 };
 
-const apiUrl = 'api/v1';
+const apiUrl = 'api/branches';
 
 // Actions
 
 export const getEntities: ICrudGetAllAction<IBranch> = (page, size, sort) => {
-  const requestUrl = `${apiUrl}/get-all-branches-by-client-id${sort ? `?page=${page}&size=${size}&sort=${sort}` : ''}`;
+  const requestUrl = `${apiUrl}${sort ? `?page=${page}&size=${size}&sort=${sort}` : ''}`;
   return {
     type: ACTION_TYPES.FETCH_BRANCH_LIST,
     payload: axios.get<IBranch>(`${requestUrl}${sort ? '&' : '?'}cacheBuster=${new Date().getTime()}`),
@@ -122,7 +122,7 @@ export const getEntities: ICrudGetAllAction<IBranch> = (page, size, sort) => {
 };
 
 export const getEntity: ICrudGetAction<IBranch> = id => {
-  const requestUrl = `${apiUrl}/get-branch-by-client-id/${id}`;
+  const requestUrl = `${apiUrl}/${id}`;
   return {
     type: ACTION_TYPES.FETCH_BRANCH,
     payload: axios.get<IBranch>(requestUrl),
@@ -132,7 +132,7 @@ export const getEntity: ICrudGetAction<IBranch> = id => {
 export const createEntity: ICrudPutAction<IBranch> = entity => async dispatch => {
   const result = await dispatch({
     type: ACTION_TYPES.CREATE_BRANCH,
-    payload: axios.post(apiUrl + '/create-branch-by-client-id', cleanEntity(entity)),
+    payload: axios.post(apiUrl, cleanEntity(entity)),
   });
   dispatch(getEntities());
   return result;
@@ -141,13 +141,13 @@ export const createEntity: ICrudPutAction<IBranch> = entity => async dispatch =>
 export const updateEntity: ICrudPutAction<IBranch> = entity => async dispatch => {
   const result = await dispatch({
     type: ACTION_TYPES.UPDATE_BRANCH,
-    payload: axios.put(apiUrl + '/update-branch-by-client-id', cleanEntity(entity)),
+    payload: axios.put(apiUrl, cleanEntity(entity)),
   });
   return result;
 };
 
 export const deleteEntity: ICrudDeleteAction<IBranch> = id => async dispatch => {
-  const requestUrl = `${apiUrl}/delete-branch-by-client-id/${id}`;
+  const requestUrl = `${apiUrl}/${id}`;
   const result = await dispatch({
     type: ACTION_TYPES.DELETE_BRANCH,
     payload: axios.delete(requestUrl),

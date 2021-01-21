@@ -97,12 +97,12 @@ export default (state: ServiceUserLocationState = initialState, action): Service
   }
 };
 
-const apiUrl = 'api/v1';
+const apiUrl = 'api/service-user-locations';
 
 // Actions
 
 export const getEntities: ICrudGetAllAction<IServiceUserLocation> = (page, size, sort) => {
-  const requestUrl = `${apiUrl}/get-all-service-user-locations-by-client-id${sort ? `?page=${page}&size=${size}&sort=${sort}` : ''}`;
+  const requestUrl = `${apiUrl}${sort ? `?page=${page}&size=${size}&sort=${sort}` : ''}`;
   return {
     type: ACTION_TYPES.FETCH_SERVICEUSERLOCATION_LIST,
     payload: axios.get<IServiceUserLocation>(`${requestUrl}${sort ? '&' : '?'}cacheBuster=${new Date().getTime()}`),
@@ -110,7 +110,7 @@ export const getEntities: ICrudGetAllAction<IServiceUserLocation> = (page, size,
 };
 
 export const getEntity: ICrudGetAction<IServiceUserLocation> = id => {
-  const requestUrl = `${apiUrl}/get-service-user-location-by-client-id/${id}`;
+  const requestUrl = `${apiUrl}/${id}`;
   return {
     type: ACTION_TYPES.FETCH_SERVICEUSERLOCATION,
     payload: axios.get<IServiceUserLocation>(requestUrl),
@@ -120,7 +120,7 @@ export const getEntity: ICrudGetAction<IServiceUserLocation> = id => {
 export const createEntity: ICrudPutAction<IServiceUserLocation> = entity => async dispatch => {
   const result = await dispatch({
     type: ACTION_TYPES.CREATE_SERVICEUSERLOCATION,
-    payload: axios.post(apiUrl + '/create-service-user-location-by-client-id', cleanEntity(entity)),
+    payload: axios.post(apiUrl, cleanEntity(entity)),
   });
   dispatch(getEntities());
   return result;
@@ -129,13 +129,13 @@ export const createEntity: ICrudPutAction<IServiceUserLocation> = entity => asyn
 export const updateEntity: ICrudPutAction<IServiceUserLocation> = entity => async dispatch => {
   const result = await dispatch({
     type: ACTION_TYPES.UPDATE_SERVICEUSERLOCATION,
-    payload: axios.put(apiUrl + '/update-service-user-location-by-client-id', cleanEntity(entity)),
+    payload: axios.put(apiUrl, cleanEntity(entity)),
   });
   return result;
 };
 
 export const deleteEntity: ICrudDeleteAction<IServiceUserLocation> = id => async dispatch => {
-  const requestUrl = `${apiUrl}/delete-service-user-location-by-client-id/${id}`;
+  const requestUrl = `${apiUrl}/${id}`;
   const result = await dispatch({
     type: ACTION_TYPES.DELETE_SERVICEUSERLOCATION,
     payload: axios.delete(requestUrl),

@@ -1,7 +1,6 @@
 import 'package:dart_json_mapper/dart_json_mapper.dart';
 
 import '../employee/employee_model.dart';
-import '../employee/employee_model.dart';
 import '../service_user/service_user_model.dart';
 
 @jsonSerializable

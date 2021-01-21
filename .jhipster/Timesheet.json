@@ -79,7 +79,7 @@
       "otherEntityField": "employeeCode"
     }
   ],
-  "changelogDate": "20210114114211",
+  "changelogDate": "20210121105853",
   "entityTableName": "timesheet",
   "dto": "mapstruct",
   "pagination": "pagination",

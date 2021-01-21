@@ -11,7 +11,7 @@ import org.mapstruct.*;
  */
 @Mapper(componentModel = "spring", uses = {EmployeeMapper.class, ServiceUserMapper.class})
 public interface ServiceUserEventMapper extends EntityMapper<ServiceUserEventDTO, ServiceUserEvent> {
- 
+
     @Mapping(source = "reportedBy.id", target = "reportedById")
     @Mapping(source = "reportedBy.employeeCode", target = "reportedByEmployeeCode")
     @Mapping(source = "assignedTo.id", target = "assignedToId")

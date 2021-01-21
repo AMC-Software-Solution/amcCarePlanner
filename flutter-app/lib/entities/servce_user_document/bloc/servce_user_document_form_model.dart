@@ -24,12 +24,12 @@ class DocumentNumberInput extends FormzInput<String, DocumentNumberValidationErr
 }
 
 enum DocumentStatusValidationError { invalid }
-class DocumentStatusInput extends FormzInput<DocumentStatus, DocumentStatusValidationError> {
-  const DocumentStatusInput.pure() : super.pure(DocumentStatus.EXPIRED);
-  const DocumentStatusInput.dirty([DocumentStatus value]) : super.dirty(value);
+class DocumentStatusInput extends FormzInput<ServiceUserDocumentStatus, DocumentStatusValidationError> {
+  const DocumentStatusInput.pure() : super.pure(ServiceUserDocumentStatus.EXPIRED);
+  const DocumentStatusInput.dirty([ServiceUserDocumentStatus value]) : super.dirty(value);
 
   @override
-  DocumentStatusValidationError validator(DocumentStatus value) {
+  DocumentStatusValidationError validator(ServiceUserDocumentStatus value) {
     return null;
   }
 }

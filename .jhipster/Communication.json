@@ -59,7 +59,7 @@
       "otherEntityField": "employeeCode"
     }
   ],
-  "changelogDate": "20210114113311",
+  "changelogDate": "20210121104953",
   "entityTableName": "communication",
   "dto": "mapstruct",
   "pagination": "pagination",

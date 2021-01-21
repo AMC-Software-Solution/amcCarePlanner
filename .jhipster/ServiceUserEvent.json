@@ -75,7 +75,7 @@
       "otherEntityField": "serviceUserCode"
     }
   ],
-  "changelogDate": "20210114113811",
+  "changelogDate": "20210121105453",
   "entityTableName": "service_user_event",
   "dto": "mapstruct",
   "pagination": "pagination",

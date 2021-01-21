@@ -74,7 +74,7 @@ class ServiceOrderGatlingTest extends Simulation {
                 "id":null
                 , "title":"SAMPLE_TEXT"
                 , "serviceDescription":"SAMPLE_TEXT"
-                , "serviceHourlyRate":null
+                , "serviceHourlyRate":"SAMPLE_TEXT"
                 , "clientId":null
                 , "createdDate":"2020-01-01T00:00:00.000Z"
                 , "lastUpdatedDate":"2020-01-01T00:00:00.000Z"

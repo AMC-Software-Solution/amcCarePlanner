@@ -21,7 +21,6 @@ import org.springframework.security.test.context.support.WithMockUser;
 import org.springframework.test.web.servlet.MockMvc;
 import org.springframework.transaction.annotation.Transactional;
 import javax.persistence.EntityManager;
-import java.math.BigDecimal;
 import java.time.Instant;
 import java.time.ZonedDateTime;
 import java.time.ZoneOffset;
@@ -44,9 +43,8 @@ import com.amc.careplanner.domain.enumeration.InvoiceStatus;
 @WithMockUser
 public class InvoiceResourceIT {
 
-    private static final BigDecimal DEFAULT_TOTAL_AMOUNT = new BigDecimal(1);
-    private static final BigDecimal UPDATED_TOTAL_AMOUNT = new BigDecimal(2);
-    private static final BigDecimal SMALLER_TOTAL_AMOUNT = new BigDecimal(1 - 1);
+    private static final String DEFAULT_TOTAL_AMOUNT = "AAAAAAAAAA";
+    private static final String UPDATED_TOTAL_AMOUNT = "BBBBBBBBBB";
 
     private static final String DEFAULT_DESCRIPTION = "AAAAAAAAAA";
     private static final String UPDATED_DESCRIPTION = "BBBBBBBBBB";
@@ -69,9 +67,8 @@ public class InvoiceResourceIT {
     private static final InvoiceStatus DEFAULT_INVOICE_STATUS = InvoiceStatus.CREATED;
     private static final InvoiceStatus UPDATED_INVOICE_STATUS = InvoiceStatus.PAID;
 
-    private static final Double DEFAULT_TAX = 1D;
-    private static final Double UPDATED_TAX = 2D;
-    private static final Double SMALLER_TAX = 1D - 1D;
+    private static final String DEFAULT_TAX = "AAAAAAAAAA";
+    private static final String UPDATED_TAX = "BBBBBBBBBB";
 
     private static final String DEFAULT_ATTRIBUTE_1 = "AAAAAAAAAA";
     private static final String UPDATED_ATTRIBUTE_1 = "BBBBBBBBBB";
@@ -381,14 +378,14 @@ public class InvoiceResourceIT {
             .andExpect(status().isOk())
             .andExpect(content().contentType(MediaType.APPLICATION_JSON_VALUE))
             .andExpect(jsonPath("$.[*].id").value(hasItem(invoice.getId().intValue())))
-            .andExpect(jsonPath("$.[*].totalAmount").value(hasItem(DEFAULT_TOTAL_AMOUNT.intValue())))
+            .andExpect(jsonPath("$.[*].totalAmount").value(hasItem(DEFAULT_TOTAL_AMOUNT)))
             .andExpect(jsonPath("$.[*].description").value(hasItem(DEFAULT_DESCRIPTION)))
             .andExpect(jsonPath("$.[*].invoiceNumber").value(hasItem(DEFAULT_INVOICE_NUMBER.toString())))
             .andExpect(jsonPath("$.[*].generatedDate").value(hasItem(sameInstant(DEFAULT_GENERATED_DATE))))
             .andExpect(jsonPath("$.[*].dueDate").value(hasItem(sameInstant(DEFAULT_DUE_DATE))))
             .andExpect(jsonPath("$.[*].paymentDate").value(hasItem(sameInstant(DEFAULT_PAYMENT_DATE))))
             .andExpect(jsonPath("$.[*].invoiceStatus").value(hasItem(DEFAULT_INVOICE_STATUS.toString())))
-            .andExpect(jsonPath("$.[*].tax").value(hasItem(DEFAULT_TAX.doubleValue())))
+            .andExpect(jsonPath("$.[*].tax").value(hasItem(DEFAULT_TAX)))
             .andExpect(jsonPath("$.[*].attribute1").value(hasItem(DEFAULT_ATTRIBUTE_1)))
             .andExpect(jsonPath("$.[*].attribute2").value(hasItem(DEFAULT_ATTRIBUTE_2)))
             .andExpect(jsonPath("$.[*].attribute3").value(hasItem(DEFAULT_ATTRIBUTE_3)))
@@ -413,14 +410,14 @@ public class InvoiceResourceIT {
             .andExpect(status().isOk())
             .andExpect(content().contentType(MediaType.APPLICATION_JSON_VALUE))
             .andExpect(jsonPath("$.id").value(invoice.getId().intValue()))
-            .andExpect(jsonPath("$.totalAmount").value(DEFAULT_TOTAL_AMOUNT.intValue()))
+            .andExpect(jsonPath("$.totalAmount").value(DEFAULT_TOTAL_AMOUNT))
             .andExpect(jsonPath("$.description").value(DEFAULT_DESCRIPTION))
             .andExpect(jsonPath("$.invoiceNumber").value(DEFAULT_INVOICE_NUMBER.toString()))
             .andExpect(jsonPath("$.generatedDate").value(sameInstant(DEFAULT_GENERATED_DATE)))
             .andExpect(jsonPath("$.dueDate").value(sameInstant(DEFAULT_DUE_DATE)))
             .andExpect(jsonPath("$.paymentDate").value(sameInstant(DEFAULT_PAYMENT_DATE)))
             .andExpect(jsonPath("$.invoiceStatus").value(DEFAULT_INVOICE_STATUS.toString()))
-            .andExpect(jsonPath("$.tax").value(DEFAULT_TAX.doubleValue()))
+            .andExpect(jsonPath("$.tax").value(DEFAULT_TAX))
             .andExpect(jsonPath("$.attribute1").value(DEFAULT_ATTRIBUTE_1))
             .andExpect(jsonPath("$.attribute2").value(DEFAULT_ATTRIBUTE_2))
             .andExpect(jsonPath("$.attribute3").value(DEFAULT_ATTRIBUTE_3))
@@ -505,57 +502,30 @@ public class InvoiceResourceIT {
         // Get all the invoiceList where totalAmount is null
         defaultInvoiceShouldNotBeFound("totalAmount.specified=false");
     }
-
-    @Test
+                @Test
     @Transactional
-    public void getAllInvoicesByTotalAmountIsGreaterThanOrEqualToSomething() throws Exception {
+    public void getAllInvoicesByTotalAmountContainsSomething() throws Exception {
         // Initialize the database
         invoiceRepository.saveAndFlush(invoice);
 
-        // Get all the invoiceList where totalAmount is greater than or equal to DEFAULT_TOTAL_AMOUNT
-        defaultInvoiceShouldBeFound("totalAmount.greaterThanOrEqual=" + DEFAULT_TOTAL_AMOUNT);
+        // Get all the invoiceList where totalAmount contains DEFAULT_TOTAL_AMOUNT
+        defaultInvoiceShouldBeFound("totalAmount.contains=" + DEFAULT_TOTAL_AMOUNT);
 
-        // Get all the invoiceList where totalAmount is greater than or equal to UPDATED_TOTAL_AMOUNT
-        defaultInvoiceShouldNotBeFound("totalAmount.greaterThanOrEqual=" + UPDATED_TOTAL_AMOUNT);
+        // Get all the invoiceList where totalAmount contains UPDATED_TOTAL_AMOUNT
+        defaultInvoiceShouldNotBeFound("totalAmount.contains=" + UPDATED_TOTAL_AMOUNT);
     }
 
     @Test
     @Transactional
-    public void getAllInvoicesByTotalAmountIsLessThanOrEqualToSomething() throws Exception {
+    public void getAllInvoicesByTotalAmountNotContainsSomething() throws Exception {
         // Initialize the database
         invoiceRepository.saveAndFlush(invoice);
 
-        // Get all the invoiceList where totalAmount is less than or equal to DEFAULT_TOTAL_AMOUNT
-        defaultInvoiceShouldBeFound("totalAmount.lessThanOrEqual=" + DEFAULT_TOTAL_AMOUNT);
+        // Get all the invoiceList where totalAmount does not contain DEFAULT_TOTAL_AMOUNT
+        defaultInvoiceShouldNotBeFound("totalAmount.doesNotContain=" + DEFAULT_TOTAL_AMOUNT);
 
-        // Get all the invoiceList where totalAmount is less than or equal to SMALLER_TOTAL_AMOUNT
-        defaultInvoiceShouldNotBeFound("totalAmount.lessThanOrEqual=" + SMALLER_TOTAL_AMOUNT);
-    }
-
-    @Test
-    @Transactional
-    public void getAllInvoicesByTotalAmountIsLessThanSomething() throws Exception {
-        // Initialize the database
-        invoiceRepository.saveAndFlush(invoice);
-
-        // Get all the invoiceList where totalAmount is less than DEFAULT_TOTAL_AMOUNT
-        defaultInvoiceShouldNotBeFound("totalAmount.lessThan=" + DEFAULT_TOTAL_AMOUNT);
-
-        // Get all the invoiceList where totalAmount is less than UPDATED_TOTAL_AMOUNT
-        defaultInvoiceShouldBeFound("totalAmount.lessThan=" + UPDATED_TOTAL_AMOUNT);
-    }
-
-    @Test
-    @Transactional
-    public void getAllInvoicesByTotalAmountIsGreaterThanSomething() throws Exception {
-        // Initialize the database
-        invoiceRepository.saveAndFlush(invoice);
-
-        // Get all the invoiceList where totalAmount is greater than DEFAULT_TOTAL_AMOUNT
-        defaultInvoiceShouldNotBeFound("totalAmount.greaterThan=" + DEFAULT_TOTAL_AMOUNT);
-
-        // Get all the invoiceList where totalAmount is greater than SMALLER_TOTAL_AMOUNT
-        defaultInvoiceShouldBeFound("totalAmount.greaterThan=" + SMALLER_TOTAL_AMOUNT);
+        // Get all the invoiceList where totalAmount does not contain UPDATED_TOTAL_AMOUNT
+        defaultInvoiceShouldBeFound("totalAmount.doesNotContain=" + UPDATED_TOTAL_AMOUNT);
     }
 
 
@@ -1107,57 +1077,30 @@ public class InvoiceResourceIT {
         // Get all the invoiceList where tax is null
         defaultInvoiceShouldNotBeFound("tax.specified=false");
     }
-
-    @Test
+                @Test
     @Transactional
-    public void getAllInvoicesByTaxIsGreaterThanOrEqualToSomething() throws Exception {
+    public void getAllInvoicesByTaxContainsSomething() throws Exception {
         // Initialize the database
         invoiceRepository.saveAndFlush(invoice);
 
-        // Get all the invoiceList where tax is greater than or equal to DEFAULT_TAX
-        defaultInvoiceShouldBeFound("tax.greaterThanOrEqual=" + DEFAULT_TAX);
+        // Get all the invoiceList where tax contains DEFAULT_TAX
+        defaultInvoiceShouldBeFound("tax.contains=" + DEFAULT_TAX);
 
-        // Get all the invoiceList where tax is greater than or equal to UPDATED_TAX
-        defaultInvoiceShouldNotBeFound("tax.greaterThanOrEqual=" + UPDATED_TAX);
+        // Get all the invoiceList where tax contains UPDATED_TAX
+        defaultInvoiceShouldNotBeFound("tax.contains=" + UPDATED_TAX);
     }
 
     @Test
     @Transactional
-    public void getAllInvoicesByTaxIsLessThanOrEqualToSomething() throws Exception {
+    public void getAllInvoicesByTaxNotContainsSomething() throws Exception {
         // Initialize the database
         invoiceRepository.saveAndFlush(invoice);
 
-        // Get all the invoiceList where tax is less than or equal to DEFAULT_TAX
-        defaultInvoiceShouldBeFound("tax.lessThanOrEqual=" + DEFAULT_TAX);
+        // Get all the invoiceList where tax does not contain DEFAULT_TAX
+        defaultInvoiceShouldNotBeFound("tax.doesNotContain=" + DEFAULT_TAX);
 
-        // Get all the invoiceList where tax is less than or equal to SMALLER_TAX
-        defaultInvoiceShouldNotBeFound("tax.lessThanOrEqual=" + SMALLER_TAX);
-    }
-
-    @Test
-    @Transactional
-    public void getAllInvoicesByTaxIsLessThanSomething() throws Exception {
-        // Initialize the database
-        invoiceRepository.saveAndFlush(invoice);
-
-        // Get all the invoiceList where tax is less than DEFAULT_TAX
-        defaultInvoiceShouldNotBeFound("tax.lessThan=" + DEFAULT_TAX);
-
-        // Get all the invoiceList where tax is less than UPDATED_TAX
-        defaultInvoiceShouldBeFound("tax.lessThan=" + UPDATED_TAX);
-    }
-
-    @Test
-    @Transactional
-    public void getAllInvoicesByTaxIsGreaterThanSomething() throws Exception {
-        // Initialize the database
-        invoiceRepository.saveAndFlush(invoice);
-
-        // Get all the invoiceList where tax is greater than DEFAULT_TAX
-        defaultInvoiceShouldNotBeFound("tax.greaterThan=" + DEFAULT_TAX);
-
-        // Get all the invoiceList where tax is greater than SMALLER_TAX
-        defaultInvoiceShouldBeFound("tax.greaterThan=" + SMALLER_TAX);
+        // Get all the invoiceList where tax does not contain UPDATED_TAX
+        defaultInvoiceShouldBeFound("tax.doesNotContain=" + UPDATED_TAX);
     }
 
 
@@ -2121,14 +2064,14 @@ public class InvoiceResourceIT {
             .andExpect(status().isOk())
             .andExpect(content().contentType(MediaType.APPLICATION_JSON_VALUE))
             .andExpect(jsonPath("$.[*].id").value(hasItem(invoice.getId().intValue())))
-            .andExpect(jsonPath("$.[*].totalAmount").value(hasItem(DEFAULT_TOTAL_AMOUNT.intValue())))
+            .andExpect(jsonPath("$.[*].totalAmount").value(hasItem(DEFAULT_TOTAL_AMOUNT)))
             .andExpect(jsonPath("$.[*].description").value(hasItem(DEFAULT_DESCRIPTION)))
             .andExpect(jsonPath("$.[*].invoiceNumber").value(hasItem(DEFAULT_INVOICE_NUMBER.toString())))
             .andExpect(jsonPath("$.[*].generatedDate").value(hasItem(sameInstant(DEFAULT_GENERATED_DATE))))
             .andExpect(jsonPath("$.[*].dueDate").value(hasItem(sameInstant(DEFAULT_DUE_DATE))))
             .andExpect(jsonPath("$.[*].paymentDate").value(hasItem(sameInstant(DEFAULT_PAYMENT_DATE))))
             .andExpect(jsonPath("$.[*].invoiceStatus").value(hasItem(DEFAULT_INVOICE_STATUS.toString())))
-            .andExpect(jsonPath("$.[*].tax").value(hasItem(DEFAULT_TAX.doubleValue())))
+            .andExpect(jsonPath("$.[*].tax").value(hasItem(DEFAULT_TAX)))
             .andExpect(jsonPath("$.[*].attribute1").value(hasItem(DEFAULT_ATTRIBUTE_1)))
             .andExpect(jsonPath("$.[*].attribute2").value(hasItem(DEFAULT_ATTRIBUTE_2)))
             .andExpect(jsonPath("$.[*].attribute3").value(hasItem(DEFAULT_ATTRIBUTE_3)))

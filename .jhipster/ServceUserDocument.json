@@ -12,7 +12,7 @@
     },
     {
       "fieldName": "documentStatus",
-      "fieldType": "DocumentStatus",
+      "fieldType": "ServiceUserDocumentStatus",
       "fieldValues": "EXPIRED,ACTIVE,ARCHIVED"
     },
     {
@@ -74,7 +74,7 @@
       "otherEntityField": "employeeCode"
     }
   ],
-  "changelogDate": "20210114113011",
+  "changelogDate": "20210121104653",
   "entityTableName": "servce_user_document",
   "dto": "mapstruct",
   "pagination": "pagination",

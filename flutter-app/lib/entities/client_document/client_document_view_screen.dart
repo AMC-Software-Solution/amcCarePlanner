@@ -53,7 +53,7 @@ class ClientDocumentViewScreen extends StatelessWidget {
                 Text('Document Name : ' + clientDocument.documentName.toString(), style: Theme.of(context).textTheme.bodyText1,),
                 Text('Document Number : ' + clientDocument.documentNumber.toString(), style: Theme.of(context).textTheme.bodyText1,),
                 Text('Document Type : ' + clientDocument.documentType.toString(), style: Theme.of(context).textTheme.bodyText1,),
-                Text('Client Document Status : ' + clientDocument.clientDocumentStatus.toString(), style: Theme.of(context).textTheme.bodyText1,),
+                Text('Document Status : ' + clientDocument.documentStatus.toString(), style: Theme.of(context).textTheme.bodyText1,),
                 Text('Note : ' + clientDocument.note.toString(), style: Theme.of(context).textTheme.bodyText1,),
               Text('Issued Date : ' + (clientDocument?.issuedDate != null ? DateFormat.yMMMMd(S.of(context).locale).format(clientDocument.issuedDate) : ''), style: Theme.of(context).textTheme.bodyText1,),
               Text('Expiry Date : ' + (clientDocument?.expiryDate != null ? DateFormat.yMMMMd(S.of(context).locale).format(clientDocument.expiryDate) : ''), style: Theme.of(context).textTheme.bodyText1,),

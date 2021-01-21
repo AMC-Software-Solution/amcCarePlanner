@@ -37,10 +37,10 @@ import static org.hamcrest.Matchers.hasItem;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.*;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.*;
 
-import com.amc.careplanner.domain.enumeration.Title;
-import com.amc.careplanner.domain.enumeration.Gender;
+import com.amc.careplanner.domain.enumeration.EmployeeTitle;
+import com.amc.careplanner.domain.enumeration.EmployeeGender;
 import com.amc.careplanner.domain.enumeration.EmployeeContractType;
-import com.amc.careplanner.domain.enumeration.TravelMode;
+import com.amc.careplanner.domain.enumeration.EmployeeTravelMode;
 import com.amc.careplanner.domain.enumeration.EmployeeStatus;
 /**
  * Integration tests for the {@link EmployeeResource} REST controller.
@@ -50,8 +50,8 @@ import com.amc.careplanner.domain.enumeration.EmployeeStatus;
 @WithMockUser
 public class EmployeeResourceIT {
 
-    private static final Title DEFAULT_TITLE = Title.MR;
-    private static final Title UPDATED_TITLE = Title.MRS;
+    private static final EmployeeTitle DEFAULT_TITLE = EmployeeTitle.MR;
+    private static final EmployeeTitle UPDATED_TITLE = EmployeeTitle.MRS;
 
     private static final String DEFAULT_FIRST_NAME = "AAAAAAAAAA";
     private static final String UPDATED_FIRST_NAME = "BBBBBBBBBB";
@@ -65,8 +65,8 @@ public class EmployeeResourceIT {
     private static final String DEFAULT_PREFERRED_NAME = "AAAAAAAAAA";
     private static final String UPDATED_PREFERRED_NAME = "BBBBBBBBBB";
 
-    private static final Gender DEFAULT_GENDER = Gender.MALE;
-    private static final Gender UPDATED_GENDER = Gender.FEMALE;
+    private static final EmployeeGender DEFAULT_GENDER = EmployeeGender.MALE;
+    private static final EmployeeGender UPDATED_GENDER = EmployeeGender.FEMALE;
 
     private static final String DEFAULT_EMPLOYEE_CODE = "AAAAAAAAAA";
     private static final String UPDATED_EMPLOYEE_CODE = "BBBBBBBBBB";
@@ -87,8 +87,8 @@ public class EmployeeResourceIT {
     private static final Integer UPDATED_PIN_CODE = 2;
     private static final Integer SMALLER_PIN_CODE = 1 - 1;
 
-    private static final TravelMode DEFAULT_TRANSPORT_MODE = TravelMode.CAR;
-    private static final TravelMode UPDATED_TRANSPORT_MODE = TravelMode.BUS;
+    private static final EmployeeTravelMode DEFAULT_TRANSPORT_MODE = EmployeeTravelMode.CAR;
+    private static final EmployeeTravelMode UPDATED_TRANSPORT_MODE = EmployeeTravelMode.BUS;
 
     private static final String DEFAULT_ADDRESS = "AAAAAAAAAA";
     private static final String UPDATED_ADDRESS = "BBBBBBBBBB";

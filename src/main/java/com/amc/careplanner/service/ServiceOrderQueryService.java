@@ -98,7 +98,7 @@ public class ServiceOrderQueryService extends QueryService<ServiceOrder> {
                 specification = specification.and(buildStringSpecification(criteria.getServiceDescription(), ServiceOrder_.serviceDescription));
             }
             if (criteria.getServiceHourlyRate() != null) {
-                specification = specification.and(buildRangeSpecification(criteria.getServiceHourlyRate(), ServiceOrder_.serviceHourlyRate));
+                specification = specification.and(buildStringSpecification(criteria.getServiceHourlyRate(), ServiceOrder_.serviceHourlyRate));
             }
             if (criteria.getClientId() != null) {
                 specification = specification.and(buildRangeSpecification(criteria.getClientId(), ServiceOrder_.clientId));

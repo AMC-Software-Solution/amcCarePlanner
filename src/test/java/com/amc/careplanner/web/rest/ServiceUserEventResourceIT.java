@@ -35,7 +35,7 @@ import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.
 
 import com.amc.careplanner.domain.enumeration.ServiceUserEventStatus;
 import com.amc.careplanner.domain.enumeration.ServiceUserEventType;
-import com.amc.careplanner.domain.enumeration.ServicePriority;
+import com.amc.careplanner.domain.enumeration.Priority;
 /**
  * Integration tests for the {@link ServiceUserEventResource} REST controller.
  */
@@ -56,8 +56,8 @@ public class ServiceUserEventResourceIT {
     private static final ServiceUserEventType DEFAULT_SERVICE_USER_EVENT_TYPE = ServiceUserEventType.ACCIDENT;
     private static final ServiceUserEventType UPDATED_SERVICE_USER_EVENT_TYPE = ServiceUserEventType.INCIDENT;
 
-    private static final ServicePriority DEFAULT_PRIORITY = ServicePriority.HIGH;
-    private static final ServicePriority UPDATED_PRIORITY = ServicePriority.LOW;
+    private static final Priority DEFAULT_PRIORITY = Priority.HIGH;
+    private static final Priority UPDATED_PRIORITY = Priority.LOW;
 
     private static final String DEFAULT_NOTE = "AAAAAAAAAA";
     private static final String UPDATED_NOTE = "BBBBBBBBBB";

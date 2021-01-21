@@ -129,9 +129,9 @@ export const EmployeeDocumentUpdate = (props: IEmployeeDocumentUpdateProps) => {
                   name="documentStatus"
                   value={(!isNew && employeeDocumentEntity.documentStatus) || 'EXPIRED'}
                 >
-                  <option value="EXPIRED">{translate('carePlannerApp.DocumentStatus.EXPIRED')}</option>
-                  <option value="ACTIVE">{translate('carePlannerApp.DocumentStatus.ACTIVE')}</option>
-                  <option value="ARCHIVED">{translate('carePlannerApp.DocumentStatus.ARCHIVED')}</option>
+                  <option value="EXPIRED">{translate('carePlannerApp.EmployeeDocumentStatus.EXPIRED')}</option>
+                  <option value="ACTIVE">{translate('carePlannerApp.EmployeeDocumentStatus.ACTIVE')}</option>
+                  <option value="ARCHIVED">{translate('carePlannerApp.EmployeeDocumentStatus.ARCHIVED')}</option>
                 </AvInput>
               </AvGroup>
               <AvGroup>

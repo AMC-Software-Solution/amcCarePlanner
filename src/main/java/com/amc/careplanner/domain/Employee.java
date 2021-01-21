@@ -11,13 +11,13 @@ import java.io.Serializable;
 import java.time.LocalDate;
 import java.time.ZonedDateTime;
 
-import com.amc.careplanner.domain.enumeration.Title;
+import com.amc.careplanner.domain.enumeration.EmployeeTitle;
 
-import com.amc.careplanner.domain.enumeration.Gender;
+import com.amc.careplanner.domain.enumeration.EmployeeGender;
 
 import com.amc.careplanner.domain.enumeration.EmployeeContractType;
 
-import com.amc.careplanner.domain.enumeration.TravelMode;
+import com.amc.careplanner.domain.enumeration.EmployeeTravelMode;
 
 import com.amc.careplanner.domain.enumeration.EmployeeStatus;
 
@@ -38,7 +38,7 @@ public class Employee implements Serializable {
     @NotNull
     @Enumerated(EnumType.STRING)
     @Column(name = "title", nullable = false)
-    private Title title;
+    private EmployeeTitle title;
 
     @NotNull
     @Size(min = 1, max = 25)
@@ -61,7 +61,7 @@ public class Employee implements Serializable {
     @NotNull
     @Enumerated(EnumType.STRING)
     @Column(name = "gender", nullable = false)
-    private Gender gender;
+    private EmployeeGender gender;
 
     @NotNull
     @Column(name = "employee_code", nullable = false, unique = true)
@@ -89,7 +89,7 @@ public class Employee implements Serializable {
     @NotNull
     @Enumerated(EnumType.STRING)
     @Column(name = "transport_mode", nullable = false)
-    private TravelMode transportMode;
+    private EmployeeTravelMode transportMode;
 
     @NotNull
     @Column(name = "address", nullable = false)
@@ -163,16 +163,16 @@ public class Employee implements Serializable {
         this.id = id;
     }
 
-    public Title getTitle() {
+    public EmployeeTitle getTitle() {
         return title;
     }
 
-    public Employee title(Title title) {
+    public Employee title(EmployeeTitle title) {
         this.title = title;
         return this;
     }
 
-    public void setTitle(Title title) {
+    public void setTitle(EmployeeTitle title) {
         this.title = title;
     }
 
@@ -228,16 +228,16 @@ public class Employee implements Serializable {
         this.preferredName = preferredName;
     }
 
-    public Gender getGender() {
+    public EmployeeGender getGender() {
         return gender;
     }
 
-    public Employee gender(Gender gender) {
+    public Employee gender(EmployeeGender gender) {
         this.gender = gender;
         return this;
     }
 
-    public void setGender(Gender gender) {
+    public void setGender(EmployeeGender gender) {
         this.gender = gender;
     }
 
@@ -319,16 +319,16 @@ public class Employee implements Serializable {
         this.pinCode = pinCode;
     }
 
-    public TravelMode getTransportMode() {
+    public EmployeeTravelMode getTransportMode() {
         return transportMode;
     }
 
-    public Employee transportMode(TravelMode transportMode) {
+    public Employee transportMode(EmployeeTravelMode transportMode) {
         this.transportMode = transportMode;
         return this;
     }
 
-    public void setTransportMode(TravelMode transportMode) {
+    public void setTransportMode(EmployeeTravelMode transportMode) {
         this.transportMode = transportMode;
     }
 

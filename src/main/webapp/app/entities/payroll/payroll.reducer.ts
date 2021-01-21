@@ -97,12 +97,12 @@ export default (state: PayrollState = initialState, action): PayrollState => {
   }
 };
 
-const apiUrl = 'api/v1';
+const apiUrl = 'api/payrolls';
 
 // Actions
 
 export const getEntities: ICrudGetAllAction<IPayroll> = (page, size, sort) => {
-  const requestUrl = `${apiUrl}/get-all-payrolls-by-client-id${sort ? `?page=${page}&size=${size}&sort=${sort}` : ''}`;
+  const requestUrl = `${apiUrl}${sort ? `?page=${page}&size=${size}&sort=${sort}` : ''}`;
   return {
     type: ACTION_TYPES.FETCH_PAYROLL_LIST,
     payload: axios.get<IPayroll>(`${requestUrl}${sort ? '&' : '?'}cacheBuster=${new Date().getTime()}`),
@@ -110,7 +110,7 @@ export const getEntities: ICrudGetAllAction<IPayroll> = (page, size, sort) => {
 };
 
 export const getEntity: ICrudGetAction<IPayroll> = id => {
-  const requestUrl = `${apiUrl}/get-payroll-by-client-id/${id}`;
+  const requestUrl = `${apiUrl}/${id}`;
   return {
     type: ACTION_TYPES.FETCH_PAYROLL,
     payload: axios.get<IPayroll>(requestUrl),
@@ -120,7 +120,7 @@ export const getEntity: ICrudGetAction<IPayroll> = id => {
 export const createEntity: ICrudPutAction<IPayroll> = entity => async dispatch => {
   const result = await dispatch({
     type: ACTION_TYPES.CREATE_PAYROLL,
-    payload: axios.post(apiUrl + '/create-payroll-by-client-id', cleanEntity(entity)),
+    payload: axios.post(apiUrl, cleanEntity(entity)),
   });
   dispatch(getEntities());
   return result;
@@ -129,13 +129,13 @@ export const createEntity: ICrudPutAction<IPayroll> = entity => async dispatch =
 export const updateEntity: ICrudPutAction<IPayroll> = entity => async dispatch => {
   const result = await dispatch({
     type: ACTION_TYPES.UPDATE_PAYROLL,
-    payload: axios.put(apiUrl + '/update-payroll-by-client-id', cleanEntity(entity)),
+    payload: axios.put(apiUrl, cleanEntity(entity)),
   });
   return result;
 };
 
 export const deleteEntity: ICrudDeleteAction<IPayroll> = id => async dispatch => {
-  const requestUrl = `${apiUrl}/delete-payroll-by-client-id/${id}`;
+  const requestUrl = `${apiUrl}/${id}`;
   const result = await dispatch({
     type: ACTION_TYPES.DELETE_PAYROLL,
     payload: axios.delete(requestUrl),

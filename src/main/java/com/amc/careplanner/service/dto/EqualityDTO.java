@@ -3,7 +3,7 @@ package com.amc.careplanner.service.dto;
 import java.time.ZonedDateTime;
 import javax.validation.constraints.*;
 import java.io.Serializable;
-import com.amc.careplanner.domain.enumeration.Gender;
+import com.amc.careplanner.domain.enumeration.ServiceUserGender;
 import com.amc.careplanner.domain.enumeration.MaritalStatus;
 import com.amc.careplanner.domain.enumeration.Religion;
 
@@ -15,7 +15,7 @@ public class EqualityDTO implements Serializable {
     private Long id;
 
     @NotNull
-    private Gender gender;
+    private ServiceUserGender gender;
 
     @NotNull
     private MaritalStatus maritalStatus;
@@ -49,11 +49,11 @@ public class EqualityDTO implements Serializable {
         this.id = id;
     }
 
-    public Gender getGender() {
+    public ServiceUserGender getGender() {
         return gender;
     }
 
-    public void setGender(Gender gender) {
+    public void setGender(ServiceUserGender gender) {
         this.gender = gender;
     }
 

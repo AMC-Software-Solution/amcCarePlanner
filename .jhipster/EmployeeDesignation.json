@@ -25,7 +25,7 @@
     }
   ],
   "relationships": [],
-  "changelogDate": "20210114111711",
+  "changelogDate": "20210121103353",
   "entityTableName": "employee_designation",
   "dto": "mapstruct",
   "pagination": "pagination",

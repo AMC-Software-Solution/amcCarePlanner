@@ -97,12 +97,12 @@ export default (state: DocumentTypeState = initialState, action): DocumentTypeSt
   }
 };
 
-const apiUrl = 'api/v1';
+const apiUrl = 'api/document-types';
 
 // Actions
 
 export const getEntities: ICrudGetAllAction<IDocumentType> = (page, size, sort) => {
-  const requestUrl = `${apiUrl}/get-all-document-types-by-client-id${sort ? `?page=${page}&size=${size}&sort=${sort}` : ''}`;
+  const requestUrl = `${apiUrl}${sort ? `?page=${page}&size=${size}&sort=${sort}` : ''}`;
   return {
     type: ACTION_TYPES.FETCH_DOCUMENTTYPE_LIST,
     payload: axios.get<IDocumentType>(`${requestUrl}${sort ? '&' : '?'}cacheBuster=${new Date().getTime()}`),
@@ -110,7 +110,7 @@ export const getEntities: ICrudGetAllAction<IDocumentType> = (page, size, sort) 
 };
 
 export const getEntity: ICrudGetAction<IDocumentType> = id => {
-  const requestUrl = `${apiUrl}/get-document-type-by-client-id/${id}`;
+  const requestUrl = `${apiUrl}/${id}`;
   return {
     type: ACTION_TYPES.FETCH_DOCUMENTTYPE,
     payload: axios.get<IDocumentType>(requestUrl),
@@ -120,7 +120,7 @@ export const getEntity: ICrudGetAction<IDocumentType> = id => {
 export const createEntity: ICrudPutAction<IDocumentType> = entity => async dispatch => {
   const result = await dispatch({
     type: ACTION_TYPES.CREATE_DOCUMENTTYPE,
-    payload: axios.post(apiUrl + '/create-document-type-by-client-id', cleanEntity(entity)),
+    payload: axios.post(apiUrl, cleanEntity(entity)),
   });
   dispatch(getEntities());
   return result;
@@ -129,13 +129,13 @@ export const createEntity: ICrudPutAction<IDocumentType> = entity => async dispa
 export const updateEntity: ICrudPutAction<IDocumentType> = entity => async dispatch => {
   const result = await dispatch({
     type: ACTION_TYPES.UPDATE_DOCUMENTTYPE,
-    payload: axios.put(apiUrl + '/update-document-type-by-client-id', cleanEntity(entity)),
+    payload: axios.put(apiUrl, cleanEntity(entity)),
   });
   return result;
 };
 
 export const deleteEntity: ICrudDeleteAction<IDocumentType> = id => async dispatch => {
-  const requestUrl = `${apiUrl}/delete-document-type-by-client-id/${id}`;
+  const requestUrl = `${apiUrl}/${id}`;
   const result = await dispatch({
     type: ACTION_TYPES.DELETE_DOCUMENTTYPE,
     payload: axios.delete(requestUrl),

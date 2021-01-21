@@ -21,7 +21,6 @@ import org.springframework.security.test.context.support.WithMockUser;
 import org.springframework.test.web.servlet.MockMvc;
 import org.springframework.transaction.annotation.Transactional;
 import javax.persistence.EntityManager;
-import java.math.BigDecimal;
 import java.time.Instant;
 import java.time.ZonedDateTime;
 import java.time.ZoneOffset;
@@ -54,17 +53,14 @@ public class PayrollResourceIT {
     private static final Integer UPDATED_TOTAL_HOURS_WORKED = 2;
     private static final Integer SMALLER_TOTAL_HOURS_WORKED = 1 - 1;
 
-    private static final BigDecimal DEFAULT_GROSS_PAY = new BigDecimal(1);
-    private static final BigDecimal UPDATED_GROSS_PAY = new BigDecimal(2);
-    private static final BigDecimal SMALLER_GROSS_PAY = new BigDecimal(1 - 1);
+    private static final String DEFAULT_GROSS_PAY = "AAAAAAAAAA";
+    private static final String UPDATED_GROSS_PAY = "BBBBBBBBBB";
 
-    private static final BigDecimal DEFAULT_NET_PAY = new BigDecimal(1);
-    private static final BigDecimal UPDATED_NET_PAY = new BigDecimal(2);
-    private static final BigDecimal SMALLER_NET_PAY = new BigDecimal(1 - 1);
+    private static final String DEFAULT_NET_PAY = "AAAAAAAAAA";
+    private static final String UPDATED_NET_PAY = "BBBBBBBBBB";
 
-    private static final BigDecimal DEFAULT_TOTAL_TAX = new BigDecimal(1);
-    private static final BigDecimal UPDATED_TOTAL_TAX = new BigDecimal(2);
-    private static final BigDecimal SMALLER_TOTAL_TAX = new BigDecimal(1 - 1);
+    private static final String DEFAULT_TOTAL_TAX = "AAAAAAAAAA";
+    private static final String UPDATED_TOTAL_TAX = "BBBBBBBBBB";
 
     private static final PayrollStatus DEFAULT_PAYROLL_STATUS = PayrollStatus.CREATED;
     private static final PayrollStatus UPDATED_PAYROLL_STATUS = PayrollStatus.PROCESSING;
@@ -355,9 +351,9 @@ public class PayrollResourceIT {
             .andExpect(jsonPath("$.[*].paymentDate").value(hasItem(sameInstant(DEFAULT_PAYMENT_DATE))))
             .andExpect(jsonPath("$.[*].payPeriod").value(hasItem(DEFAULT_PAY_PERIOD)))
             .andExpect(jsonPath("$.[*].totalHoursWorked").value(hasItem(DEFAULT_TOTAL_HOURS_WORKED)))
-            .andExpect(jsonPath("$.[*].grossPay").value(hasItem(DEFAULT_GROSS_PAY.intValue())))
-            .andExpect(jsonPath("$.[*].netPay").value(hasItem(DEFAULT_NET_PAY.intValue())))
-            .andExpect(jsonPath("$.[*].totalTax").value(hasItem(DEFAULT_TOTAL_TAX.intValue())))
+            .andExpect(jsonPath("$.[*].grossPay").value(hasItem(DEFAULT_GROSS_PAY)))
+            .andExpect(jsonPath("$.[*].netPay").value(hasItem(DEFAULT_NET_PAY)))
+            .andExpect(jsonPath("$.[*].totalTax").value(hasItem(DEFAULT_TOTAL_TAX)))
             .andExpect(jsonPath("$.[*].payrollStatus").value(hasItem(DEFAULT_PAYROLL_STATUS.toString())))
             .andExpect(jsonPath("$.[*].createdDate").value(hasItem(sameInstant(DEFAULT_CREATED_DATE))))
             .andExpect(jsonPath("$.[*].lastUpdatedDate").value(hasItem(sameInstant(DEFAULT_LAST_UPDATED_DATE))))
@@ -379,9 +375,9 @@ public class PayrollResourceIT {
             .andExpect(jsonPath("$.paymentDate").value(sameInstant(DEFAULT_PAYMENT_DATE)))
             .andExpect(jsonPath("$.payPeriod").value(DEFAULT_PAY_PERIOD))
             .andExpect(jsonPath("$.totalHoursWorked").value(DEFAULT_TOTAL_HOURS_WORKED))
-            .andExpect(jsonPath("$.grossPay").value(DEFAULT_GROSS_PAY.intValue()))
-            .andExpect(jsonPath("$.netPay").value(DEFAULT_NET_PAY.intValue()))
-            .andExpect(jsonPath("$.totalTax").value(DEFAULT_TOTAL_TAX.intValue()))
+            .andExpect(jsonPath("$.grossPay").value(DEFAULT_GROSS_PAY))
+            .andExpect(jsonPath("$.netPay").value(DEFAULT_NET_PAY))
+            .andExpect(jsonPath("$.totalTax").value(DEFAULT_TOTAL_TAX))
             .andExpect(jsonPath("$.payrollStatus").value(DEFAULT_PAYROLL_STATUS.toString()))
             .andExpect(jsonPath("$.createdDate").value(sameInstant(DEFAULT_CREATED_DATE)))
             .andExpect(jsonPath("$.lastUpdatedDate").value(sameInstant(DEFAULT_LAST_UPDATED_DATE)))
@@ -748,57 +744,30 @@ public class PayrollResourceIT {
         // Get all the payrollList where grossPay is null
         defaultPayrollShouldNotBeFound("grossPay.specified=false");
     }
-
-    @Test
+                @Test
     @Transactional
-    public void getAllPayrollsByGrossPayIsGreaterThanOrEqualToSomething() throws Exception {
+    public void getAllPayrollsByGrossPayContainsSomething() throws Exception {
         // Initialize the database
         payrollRepository.saveAndFlush(payroll);
 
-        // Get all the payrollList where grossPay is greater than or equal to DEFAULT_GROSS_PAY
-        defaultPayrollShouldBeFound("grossPay.greaterThanOrEqual=" + DEFAULT_GROSS_PAY);
+        // Get all the payrollList where grossPay contains DEFAULT_GROSS_PAY
+        defaultPayrollShouldBeFound("grossPay.contains=" + DEFAULT_GROSS_PAY);
 
-        // Get all the payrollList where grossPay is greater than or equal to UPDATED_GROSS_PAY
-        defaultPayrollShouldNotBeFound("grossPay.greaterThanOrEqual=" + UPDATED_GROSS_PAY);
+        // Get all the payrollList where grossPay contains UPDATED_GROSS_PAY
+        defaultPayrollShouldNotBeFound("grossPay.contains=" + UPDATED_GROSS_PAY);
     }
 
     @Test
     @Transactional
-    public void getAllPayrollsByGrossPayIsLessThanOrEqualToSomething() throws Exception {
+    public void getAllPayrollsByGrossPayNotContainsSomething() throws Exception {
         // Initialize the database
         payrollRepository.saveAndFlush(payroll);
 
-        // Get all the payrollList where grossPay is less than or equal to DEFAULT_GROSS_PAY
-        defaultPayrollShouldBeFound("grossPay.lessThanOrEqual=" + DEFAULT_GROSS_PAY);
+        // Get all the payrollList where grossPay does not contain DEFAULT_GROSS_PAY
+        defaultPayrollShouldNotBeFound("grossPay.doesNotContain=" + DEFAULT_GROSS_PAY);
 
-        // Get all the payrollList where grossPay is less than or equal to SMALLER_GROSS_PAY
-        defaultPayrollShouldNotBeFound("grossPay.lessThanOrEqual=" + SMALLER_GROSS_PAY);
-    }
-
-    @Test
-    @Transactional
-    public void getAllPayrollsByGrossPayIsLessThanSomething() throws Exception {
-        // Initialize the database
-        payrollRepository.saveAndFlush(payroll);
-
-        // Get all the payrollList where grossPay is less than DEFAULT_GROSS_PAY
-        defaultPayrollShouldNotBeFound("grossPay.lessThan=" + DEFAULT_GROSS_PAY);
-
-        // Get all the payrollList where grossPay is less than UPDATED_GROSS_PAY
-        defaultPayrollShouldBeFound("grossPay.lessThan=" + UPDATED_GROSS_PAY);
-    }
-
-    @Test
-    @Transactional
-    public void getAllPayrollsByGrossPayIsGreaterThanSomething() throws Exception {
-        // Initialize the database
-        payrollRepository.saveAndFlush(payroll);
-
-        // Get all the payrollList where grossPay is greater than DEFAULT_GROSS_PAY
-        defaultPayrollShouldNotBeFound("grossPay.greaterThan=" + DEFAULT_GROSS_PAY);
-
-        // Get all the payrollList where grossPay is greater than SMALLER_GROSS_PAY
-        defaultPayrollShouldBeFound("grossPay.greaterThan=" + SMALLER_GROSS_PAY);
+        // Get all the payrollList where grossPay does not contain UPDATED_GROSS_PAY
+        defaultPayrollShouldBeFound("grossPay.doesNotContain=" + UPDATED_GROSS_PAY);
     }
 
 
@@ -853,57 +822,30 @@ public class PayrollResourceIT {
         // Get all the payrollList where netPay is null
         defaultPayrollShouldNotBeFound("netPay.specified=false");
     }
-
-    @Test
+                @Test
     @Transactional
-    public void getAllPayrollsByNetPayIsGreaterThanOrEqualToSomething() throws Exception {
+    public void getAllPayrollsByNetPayContainsSomething() throws Exception {
         // Initialize the database
         payrollRepository.saveAndFlush(payroll);
 
-        // Get all the payrollList where netPay is greater than or equal to DEFAULT_NET_PAY
-        defaultPayrollShouldBeFound("netPay.greaterThanOrEqual=" + DEFAULT_NET_PAY);
+        // Get all the payrollList where netPay contains DEFAULT_NET_PAY
+        defaultPayrollShouldBeFound("netPay.contains=" + DEFAULT_NET_PAY);
 
-        // Get all the payrollList where netPay is greater than or equal to UPDATED_NET_PAY
-        defaultPayrollShouldNotBeFound("netPay.greaterThanOrEqual=" + UPDATED_NET_PAY);
+        // Get all the payrollList where netPay contains UPDATED_NET_PAY
+        defaultPayrollShouldNotBeFound("netPay.contains=" + UPDATED_NET_PAY);
     }
 
     @Test
     @Transactional
-    public void getAllPayrollsByNetPayIsLessThanOrEqualToSomething() throws Exception {
+    public void getAllPayrollsByNetPayNotContainsSomething() throws Exception {
         // Initialize the database
         payrollRepository.saveAndFlush(payroll);
 
-        // Get all the payrollList where netPay is less than or equal to DEFAULT_NET_PAY
-        defaultPayrollShouldBeFound("netPay.lessThanOrEqual=" + DEFAULT_NET_PAY);
+        // Get all the payrollList where netPay does not contain DEFAULT_NET_PAY
+        defaultPayrollShouldNotBeFound("netPay.doesNotContain=" + DEFAULT_NET_PAY);
 
-        // Get all the payrollList where netPay is less than or equal to SMALLER_NET_PAY
-        defaultPayrollShouldNotBeFound("netPay.lessThanOrEqual=" + SMALLER_NET_PAY);
-    }
-
-    @Test
-    @Transactional
-    public void getAllPayrollsByNetPayIsLessThanSomething() throws Exception {
-        // Initialize the database
-        payrollRepository.saveAndFlush(payroll);
-
-        // Get all the payrollList where netPay is less than DEFAULT_NET_PAY
-        defaultPayrollShouldNotBeFound("netPay.lessThan=" + DEFAULT_NET_PAY);
-
-        // Get all the payrollList where netPay is less than UPDATED_NET_PAY
-        defaultPayrollShouldBeFound("netPay.lessThan=" + UPDATED_NET_PAY);
-    }
-
-    @Test
-    @Transactional
-    public void getAllPayrollsByNetPayIsGreaterThanSomething() throws Exception {
-        // Initialize the database
-        payrollRepository.saveAndFlush(payroll);
-
-        // Get all the payrollList where netPay is greater than DEFAULT_NET_PAY
-        defaultPayrollShouldNotBeFound("netPay.greaterThan=" + DEFAULT_NET_PAY);
-
-        // Get all the payrollList where netPay is greater than SMALLER_NET_PAY
-        defaultPayrollShouldBeFound("netPay.greaterThan=" + SMALLER_NET_PAY);
+        // Get all the payrollList where netPay does not contain UPDATED_NET_PAY
+        defaultPayrollShouldBeFound("netPay.doesNotContain=" + UPDATED_NET_PAY);
     }
 
 
@@ -958,57 +900,30 @@ public class PayrollResourceIT {
         // Get all the payrollList where totalTax is null
         defaultPayrollShouldNotBeFound("totalTax.specified=false");
     }
-
-    @Test
+                @Test
     @Transactional
-    public void getAllPayrollsByTotalTaxIsGreaterThanOrEqualToSomething() throws Exception {
+    public void getAllPayrollsByTotalTaxContainsSomething() throws Exception {
         // Initialize the database
         payrollRepository.saveAndFlush(payroll);
 
-        // Get all the payrollList where totalTax is greater than or equal to DEFAULT_TOTAL_TAX
-        defaultPayrollShouldBeFound("totalTax.greaterThanOrEqual=" + DEFAULT_TOTAL_TAX);
+        // Get all the payrollList where totalTax contains DEFAULT_TOTAL_TAX
+        defaultPayrollShouldBeFound("totalTax.contains=" + DEFAULT_TOTAL_TAX);
 
-        // Get all the payrollList where totalTax is greater than or equal to UPDATED_TOTAL_TAX
-        defaultPayrollShouldNotBeFound("totalTax.greaterThanOrEqual=" + UPDATED_TOTAL_TAX);
+        // Get all the payrollList where totalTax contains UPDATED_TOTAL_TAX
+        defaultPayrollShouldNotBeFound("totalTax.contains=" + UPDATED_TOTAL_TAX);
     }
 
     @Test
     @Transactional
-    public void getAllPayrollsByTotalTaxIsLessThanOrEqualToSomething() throws Exception {
+    public void getAllPayrollsByTotalTaxNotContainsSomething() throws Exception {
         // Initialize the database
         payrollRepository.saveAndFlush(payroll);
 
-        // Get all the payrollList where totalTax is less than or equal to DEFAULT_TOTAL_TAX
-        defaultPayrollShouldBeFound("totalTax.lessThanOrEqual=" + DEFAULT_TOTAL_TAX);
+        // Get all the payrollList where totalTax does not contain DEFAULT_TOTAL_TAX
+        defaultPayrollShouldNotBeFound("totalTax.doesNotContain=" + DEFAULT_TOTAL_TAX);
 
-        // Get all the payrollList where totalTax is less than or equal to SMALLER_TOTAL_TAX
-        defaultPayrollShouldNotBeFound("totalTax.lessThanOrEqual=" + SMALLER_TOTAL_TAX);
-    }
-
-    @Test
-    @Transactional
-    public void getAllPayrollsByTotalTaxIsLessThanSomething() throws Exception {
-        // Initialize the database
-        payrollRepository.saveAndFlush(payroll);
-
-        // Get all the payrollList where totalTax is less than DEFAULT_TOTAL_TAX
-        defaultPayrollShouldNotBeFound("totalTax.lessThan=" + DEFAULT_TOTAL_TAX);
-
-        // Get all the payrollList where totalTax is less than UPDATED_TOTAL_TAX
-        defaultPayrollShouldBeFound("totalTax.lessThan=" + UPDATED_TOTAL_TAX);
-    }
-
-    @Test
-    @Transactional
-    public void getAllPayrollsByTotalTaxIsGreaterThanSomething() throws Exception {
-        // Initialize the database
-        payrollRepository.saveAndFlush(payroll);
-
-        // Get all the payrollList where totalTax is greater than DEFAULT_TOTAL_TAX
-        defaultPayrollShouldNotBeFound("totalTax.greaterThan=" + DEFAULT_TOTAL_TAX);
-
-        // Get all the payrollList where totalTax is greater than SMALLER_TOTAL_TAX
-        defaultPayrollShouldBeFound("totalTax.greaterThan=" + SMALLER_TOTAL_TAX);
+        // Get all the payrollList where totalTax does not contain UPDATED_TOTAL_TAX
+        defaultPayrollShouldBeFound("totalTax.doesNotContain=" + UPDATED_TOTAL_TAX);
     }
 
 
@@ -1481,9 +1396,9 @@ public class PayrollResourceIT {
             .andExpect(jsonPath("$.[*].paymentDate").value(hasItem(sameInstant(DEFAULT_PAYMENT_DATE))))
             .andExpect(jsonPath("$.[*].payPeriod").value(hasItem(DEFAULT_PAY_PERIOD)))
             .andExpect(jsonPath("$.[*].totalHoursWorked").value(hasItem(DEFAULT_TOTAL_HOURS_WORKED)))
-            .andExpect(jsonPath("$.[*].grossPay").value(hasItem(DEFAULT_GROSS_PAY.intValue())))
-            .andExpect(jsonPath("$.[*].netPay").value(hasItem(DEFAULT_NET_PAY.intValue())))
-            .andExpect(jsonPath("$.[*].totalTax").value(hasItem(DEFAULT_TOTAL_TAX.intValue())))
+            .andExpect(jsonPath("$.[*].grossPay").value(hasItem(DEFAULT_GROSS_PAY)))
+            .andExpect(jsonPath("$.[*].netPay").value(hasItem(DEFAULT_NET_PAY)))
+            .andExpect(jsonPath("$.[*].totalTax").value(hasItem(DEFAULT_TOTAL_TAX)))
             .andExpect(jsonPath("$.[*].payrollStatus").value(hasItem(DEFAULT_PAYROLL_STATUS.toString())))
             .andExpect(jsonPath("$.[*].createdDate").value(hasItem(sameInstant(DEFAULT_CREATED_DATE))))
             .andExpect(jsonPath("$.[*].lastUpdatedDate").value(hasItem(sameInstant(DEFAULT_LAST_UPDATED_DATE))))

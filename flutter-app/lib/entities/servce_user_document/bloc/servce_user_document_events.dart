@@ -29,7 +29,7 @@ class DocumentNumberChanged extends ServceUserDocumentEvent {
   List<Object> get props => [documentNumber];
 }
 class DocumentStatusChanged extends ServceUserDocumentEvent {
-  final DocumentStatus documentStatus;
+  final ServiceUserDocumentStatus documentStatus;
   
   const DocumentStatusChanged({@required this.documentStatus});
   

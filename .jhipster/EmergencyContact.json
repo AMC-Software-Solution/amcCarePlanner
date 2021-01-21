@@ -55,7 +55,7 @@
       "otherEntityField": "serviceUserCode"
     }
   ],
-  "changelogDate": "20210114110811",
+  "changelogDate": "20210121102453",
   "entityTableName": "emergency_contact",
   "dto": "mapstruct",
   "pagination": "pagination",

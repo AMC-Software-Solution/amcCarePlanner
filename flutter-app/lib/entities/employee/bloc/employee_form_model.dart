@@ -1,13 +1,13 @@
 import 'package:formz/formz.dart';
 import 'package:amcCarePlanner/entities/employee/employee_model.dart';
 
-enum TittleValidationError { invalid }
-class TittleInput extends FormzInput<Tittle, TittleValidationError> {
-  const TittleInput.pure() : super.pure(Tittle.MR);
-  const TittleInput.dirty([Tittle value]) : super.dirty(value);
+enum TitleValidationError { invalid }
+class TitleInput extends FormzInput<EmployeeTitle, TitleValidationError> {
+  const TitleInput.pure() : super.pure(EmployeeTitle.MR);
+  const TitleInput.dirty([EmployeeTitle value]) : super.dirty(value);
 
   @override
-  TittleValidationError validator(Tittle value) {
+  TitleValidationError validator(EmployeeTitle value) {
     return null;
   }
 }
@@ -56,13 +56,13 @@ class PreferredNameInput extends FormzInput<String, PreferredNameValidationError
   }
 }
 
-enum GendderValidationError { invalid }
-class GendderInput extends FormzInput<Gendder, GendderValidationError> {
-  const GendderInput.pure() : super.pure(Gendder.MALE);
-  const GendderInput.dirty([Gendder value]) : super.dirty(value);
+enum GenderValidationError { invalid }
+class GenderInput extends FormzInput<EmployeeGender, GenderValidationError> {
+  const GenderInput.pure() : super.pure(EmployeeGender.MALE);
+  const GenderInput.dirty([EmployeeGender value]) : super.dirty(value);
 
   @override
-  GendderValidationError validator(Gendder value) {
+  GenderValidationError validator(EmployeeGender value) {
     return null;
   }
 }
@@ -133,13 +133,13 @@ class PinCodeInput extends FormzInput<int, PinCodeValidationError> {
   }
 }
 
-enum EmployeeTransportModeValidationError { invalid }
-class EmployeeTransportModeInput extends FormzInput<EmployeeTravelMode, EmployeeTransportModeValidationError> {
-  const EmployeeTransportModeInput.pure() : super.pure(EmployeeTravelMode.CAR);
-  const EmployeeTransportModeInput.dirty([EmployeeTravelMode value]) : super.dirty(value);
+enum TransportModeValidationError { invalid }
+class TransportModeInput extends FormzInput<EmployeeTravelMode, TransportModeValidationError> {
+  const TransportModeInput.pure() : super.pure(EmployeeTravelMode.CAR);
+  const TransportModeInput.dirty([EmployeeTravelMode value]) : super.dirty(value);
 
   @override
-  EmployeeTransportModeValidationError validator(EmployeeTravelMode value) {
+  TransportModeValidationError validator(EmployeeTravelMode value) {
     return null;
   }
 }

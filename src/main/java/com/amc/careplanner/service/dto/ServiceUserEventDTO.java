@@ -5,7 +5,7 @@ import javax.validation.constraints.*;
 import java.io.Serializable;
 import com.amc.careplanner.domain.enumeration.ServiceUserEventStatus;
 import com.amc.careplanner.domain.enumeration.ServiceUserEventType;
-import com.amc.careplanner.domain.enumeration.ServicePriority;
+import com.amc.careplanner.domain.enumeration.Priority;
 
 /**
  * A DTO for the {@link com.amc.careplanner.domain.ServiceUserEvent} entity.
@@ -23,7 +23,7 @@ public class ServiceUserEventDTO implements Serializable {
 
     private ServiceUserEventType serviceUserEventType;
 
-    private ServicePriority priority;
+    private Priority priority;
 
     private String note;
 
@@ -92,11 +92,11 @@ public class ServiceUserEventDTO implements Serializable {
         this.serviceUserEventType = serviceUserEventType;
     }
 
-    public ServicePriority getPriority() {
+    public Priority getPriority() {
         return priority;
     }
 
-    public void setPriority(ServicePriority priority) {
+    public void setPriority(Priority priority) {
         this.priority = priority;
     }
 

@@ -36,7 +36,7 @@ import static org.hamcrest.Matchers.hasItem;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.*;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.*;
 
-import com.amc.careplanner.domain.enumeration.Title;
+import com.amc.careplanner.domain.enumeration.ServiceUserTitle;
 import com.amc.careplanner.domain.enumeration.SupportType;
 import com.amc.careplanner.domain.enumeration.ServiceUserCategory;
 import com.amc.careplanner.domain.enumeration.Vulnerability;
@@ -51,8 +51,8 @@ import com.amc.careplanner.domain.enumeration.ServiceUserStatus;
 @WithMockUser
 public class ServiceUserResourceIT {
 
-    private static final Title DEFAULT_TITLE = Title.MR;
-    private static final Title UPDATED_TITLE = Title.MRS;
+    private static final ServiceUserTitle DEFAULT_TITLE = ServiceUserTitle.MR;
+    private static final ServiceUserTitle UPDATED_TITLE = ServiceUserTitle.MRS;
 
     private static final String DEFAULT_FIRST_NAME = "AAAAAAAAAA";
     private static final String UPDATED_FIRST_NAME = "BBBBBBBBBB";

@@ -97,7 +97,7 @@ export default (state: QuestionState = initialState, action): QuestionState => {
   }
 };
 
-const apiUrl = 'api/v1';
+const apiUrl = 'api/questions';
 
 // Actions
 
@@ -120,7 +120,7 @@ export const getEntity: ICrudGetAction<IQuestion> = id => {
 export const createEntity: ICrudPutAction<IQuestion> = entity => async dispatch => {
   const result = await dispatch({
     type: ACTION_TYPES.CREATE_QUESTION,
-    payload: axios.post(apiUrl + '/create-question-by-client-id', cleanEntity(entity)),
+    payload: axios.post(apiUrl, cleanEntity(entity)),
   });
   dispatch(getEntities());
   return result;

@@ -71,7 +71,7 @@ class EmployeeListScreen extends StatelessWidget {
                 size: 60.0,
                 color: Theme.of(context).primaryColor,
               ),
-                  title: Text('Tittle : ${employee.tittle.toString()}'),
+                  title: Text('Title : ${employee.title.toString()}'),
                   subtitle: Text('First Name : ${employee.firstName.toString()}'),
               trailing: DropdownButton(
                   icon: Icon(Icons.more_vert),

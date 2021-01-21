@@ -153,7 +153,7 @@ export const ServiceUserEvent = (props: IServiceUserEventProps) => {
                     <Translate contentKey={`carePlannerApp.ServiceUserEventType.${serviceUserEvent.serviceUserEventType}`} />
                   </td>
                   <td>
-                    <Translate contentKey={`carePlannerApp.ServicePriority.${serviceUserEvent.priority}`} />
+                    <Translate contentKey={`carePlannerApp.Priority.${serviceUserEvent.priority}`} />
                   </td>
                   <td>{serviceUserEvent.note}</td>
                   <td>

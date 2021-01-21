@@ -97,10 +97,10 @@ S.of(context).pageEntitiesServceUserDocumentCreateTitle;
                   mainAxisAlignment: MainAxisAlignment.spaceBetween,
                   children: <Widget>[
                     Text(S.of(context).pageEntitiesServceUserDocumentDocumentStatusField, style: Theme.of(context).textTheme.bodyText1,),
-                    DropdownButton<DocumentStatus>(
+                    DropdownButton<ServiceUserDocumentStatus>(
                         value: state.documentStatus.value,
                         onChanged: (value) { context.bloc<ServceUserDocumentBloc>().add(DocumentStatusChanged(documentStatus: value)); },
-                        items: createDropdownDocumentStatusItems(DocumentStatus.values)),
+                        items: createDropdownServiceUserDocumentStatusItems(ServiceUserDocumentStatus.values)),
                   ],
                 ),
               );
@@ -275,11 +275,11 @@ S.of(context).pageEntitiesServceUserDocumentCreateTitle;
               });
         }
 
-      List<DropdownMenuItem<DocumentStatus>> createDropdownDocumentStatusItems(List<DocumentStatus> documentStatuss) {
-        List<DropdownMenuItem<DocumentStatus>> documentStatusDropDown = [];
+      List<DropdownMenuItem<ServiceUserDocumentStatus>> createDropdownServiceUserDocumentStatusItems(List<ServiceUserDocumentStatus> documentStatuss) {
+        List<DropdownMenuItem<ServiceUserDocumentStatus>> documentStatusDropDown = [];
     
-        for (DocumentStatus documentStatus in documentStatuss) {
-          DropdownMenuItem<DocumentStatus> dropdown = DropdownMenuItem<DocumentStatus>(
+        for (ServiceUserDocumentStatus documentStatus in documentStatuss) {
+          DropdownMenuItem<ServiceUserDocumentStatus> dropdown = DropdownMenuItem<ServiceUserDocumentStatus>(
               value: documentStatus, child: Text(documentStatus.toString()));
               documentStatusDropDown.add(dropdown);
         }

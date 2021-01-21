@@ -52,7 +52,7 @@ class EmployeeDocumentViewScreen extends StatelessWidget {
             Text('Id : ' + employeeDocument.id.toString(), style: Theme.of(context).textTheme.bodyText1,),
                 Text('Document Name : ' + employeeDocument.documentName.toString(), style: Theme.of(context).textTheme.bodyText1,),
                 Text('Document Number : ' + employeeDocument.documentNumber.toString(), style: Theme.of(context).textTheme.bodyText1,),
-                Text('Employee Document Status : ' + employeeDocument.employeeDocumentStatus.toString(), style: Theme.of(context).textTheme.bodyText1,),
+                Text('Document Status : ' + employeeDocument.documentStatus.toString(), style: Theme.of(context).textTheme.bodyText1,),
                 Text('Note : ' + employeeDocument.note.toString(), style: Theme.of(context).textTheme.bodyText1,),
               Text('Issued Date : ' + (employeeDocument?.issuedDate != null ? DateFormat.yMMMMd(S.of(context).locale).format(employeeDocument.issuedDate) : ''), style: Theme.of(context).textTheme.bodyText1,),
               Text('Expiry Date : ' + (employeeDocument?.expiryDate != null ? DateFormat.yMMMMd(S.of(context).locale).format(employeeDocument.expiryDate) : ''), style: Theme.of(context).textTheme.bodyText1,),

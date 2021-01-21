@@ -97,12 +97,12 @@ export default (state: EmergencyContactState = initialState, action): EmergencyC
   }
 };
 
-const apiUrl = 'api/v1';
+const apiUrl = 'api/emergency-contacts';
 
 // Actions
 
 export const getEntities: ICrudGetAllAction<IEmergencyContact> = (page, size, sort) => {
-  const requestUrl = `${apiUrl}/get-all-emergency-contacts-by-client-id${sort ? `?page=${page}&size=${size}&sort=${sort}` : ''}`;
+  const requestUrl = `${apiUrl}${sort ? `?page=${page}&size=${size}&sort=${sort}` : ''}`;
   return {
     type: ACTION_TYPES.FETCH_EMERGENCYCONTACT_LIST,
     payload: axios.get<IEmergencyContact>(`${requestUrl}${sort ? '&' : '?'}cacheBuster=${new Date().getTime()}`),
@@ -110,7 +110,7 @@ export const getEntities: ICrudGetAllAction<IEmergencyContact> = (page, size, so
 };
 
 export const getEntity: ICrudGetAction<IEmergencyContact> = id => {
-  const requestUrl = `${apiUrl}/get-emergency-contact-by-client-id/${id}`;
+  const requestUrl = `${apiUrl}/${id}`;
   return {
     type: ACTION_TYPES.FETCH_EMERGENCYCONTACT,
     payload: axios.get<IEmergencyContact>(requestUrl),
@@ -120,7 +120,7 @@ export const getEntity: ICrudGetAction<IEmergencyContact> = id => {
 export const createEntity: ICrudPutAction<IEmergencyContact> = entity => async dispatch => {
   const result = await dispatch({
     type: ACTION_TYPES.CREATE_EMERGENCYCONTACT,
-    payload: axios.post(apiUrl + '/create-emergency-contact-by-client-id', cleanEntity(entity)),
+    payload: axios.post(apiUrl, cleanEntity(entity)),
   });
   dispatch(getEntities());
   return result;
@@ -129,13 +129,13 @@ export const createEntity: ICrudPutAction<IEmergencyContact> = entity => async d
 export const updateEntity: ICrudPutAction<IEmergencyContact> = entity => async dispatch => {
   const result = await dispatch({
     type: ACTION_TYPES.UPDATE_EMERGENCYCONTACT,
-    payload: axios.put(apiUrl + '/update-emergency-contact-by-client-id', cleanEntity(entity)),
+    payload: axios.put(apiUrl, cleanEntity(entity)),
   });
   return result;
 };
 
 export const deleteEntity: ICrudDeleteAction<IEmergencyContact> = id => async dispatch => {
-  const requestUrl = `${apiUrl}/delete-emergency-contact-by-client-id/${id}`;
+  const requestUrl = `${apiUrl}/${id}`;
   const result = await dispatch({
     type: ACTION_TYPES.DELETE_EMERGENCYCONTACT,
     payload: axios.delete(requestUrl),

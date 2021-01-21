@@ -109,12 +109,12 @@ export default (state: ClientState = initialState, action): ClientState => {
   }
 };
 
-const apiUrl = 'api/v1';
+const apiUrl = 'api/clients';
 
 // Actions
 
 export const getEntities: ICrudGetAllAction<IClient> = (page, size, sort) => {
-  const requestUrl = `${apiUrl}/get-all-clients-by-client-id${sort ? `?page=${page}&size=${size}&sort=${sort}` : ''}`;
+  const requestUrl = `${apiUrl}${sort ? `?page=${page}&size=${size}&sort=${sort}` : ''}`;
   return {
     type: ACTION_TYPES.FETCH_CLIENT_LIST,
     payload: axios.get<IClient>(`${requestUrl}${sort ? '&' : '?'}cacheBuster=${new Date().getTime()}`),
@@ -122,7 +122,7 @@ export const getEntities: ICrudGetAllAction<IClient> = (page, size, sort) => {
 };
 
 export const getEntity: ICrudGetAction<IClient> = id => {
-  const requestUrl = `${apiUrl}/get-client-by-client-id/${id}`;
+  const requestUrl = `${apiUrl}/${id}`;
   return {
     type: ACTION_TYPES.FETCH_CLIENT,
     payload: axios.get<IClient>(requestUrl),
@@ -132,7 +132,7 @@ export const getEntity: ICrudGetAction<IClient> = id => {
 export const createEntity: ICrudPutAction<IClient> = entity => async dispatch => {
   const result = await dispatch({
     type: ACTION_TYPES.CREATE_CLIENT,
-    payload: axios.post(apiUrl + '/create-client-by-client-id', cleanEntity(entity)),
+    payload: axios.post(apiUrl, cleanEntity(entity)),
   });
   dispatch(getEntities());
   return result;
@@ -141,13 +141,13 @@ export const createEntity: ICrudPutAction<IClient> = entity => async dispatch =>
 export const updateEntity: ICrudPutAction<IClient> = entity => async dispatch => {
   const result = await dispatch({
     type: ACTION_TYPES.UPDATE_CLIENT,
-    payload: axios.put(apiUrl + '/update-client-by-client-id', cleanEntity(entity)),
+    payload: axios.put(apiUrl, cleanEntity(entity)),
   });
   return result;
 };
 
 export const deleteEntity: ICrudDeleteAction<IClient> = id => async dispatch => {
-  const requestUrl = `${apiUrl}/delete-client-by-client-id/${id}`;
+  const requestUrl = `${apiUrl}/${id}`;
   const result = await dispatch({
     type: ACTION_TYPES.DELETE_CLIENT,
     payload: axios.delete(requestUrl),

@@ -1,11 +1,11 @@
 id;communication_type;note;communication_date;attachment;attachment_content_type;attachment_url;created_date;last_updated_date;client_id;has_extra_data
-1;MAIL;deposit Platinum;2021-01-14T02:05:55;../fake-data/blob/hipster.png;image/png;input Compatible;2021-01-13T20:29:46;2021-01-13T11:34:03;33664;false
-2;MAIL;Auto Loan Account structure;2021-01-13T12:58:19;../fake-data/blob/hipster.png;image/png;discrete Sharable;2021-01-14T03:24:14;2021-01-13T22:16:36;22300;false
-3;IN_PERSON;magenta Handcrafted;2021-01-13T20:57:35;../fake-data/blob/hipster.png;image/png;XML IB;2021-01-14T00:07:37;2021-01-14T09:45:10;90525;true
-4;MAIL;quantifying redundant;2021-01-14T03:01:03;../fake-data/blob/hipster.png;image/png;Massachusetts Response withdrawal;2021-01-13T18:03:25;2021-01-14T09:38:49;73326;false
-5;MAIL;Group Cambridgeshire sky blue;2021-01-13T15:22:46;../fake-data/blob/hipster.png;image/png;Cotton Senior;2021-01-13T17:25:03;2021-01-13T19:45:54;65553;false
-6;EMAIL;microchip Electronics;2021-01-13T17:48:52;../fake-data/blob/hipster.png;image/png;Fantastic Steel Chicken calculate fuchsia;2021-01-13T22:15:22;2021-01-14T05:43:55;12244;true
-7;SMS;Branding;2021-01-14T02:28:21;../fake-data/blob/hipster.png;image/png;Kids digital pixel;2021-01-13T15:48:10;2021-01-14T09:43:37;83335;false
-8;IN_PERSON;Identity European Unit of Account 17(E.U.A.-17) Senior;2021-01-14T09:34:47;../fake-data/blob/hipster.png;image/png;bus Kroon COM;2021-01-13T15:08:29;2021-01-13T17:35:26;7081;true
-9;OTHER;Group wireless facilitate;2021-01-13T15:29:35;../fake-data/blob/hipster.png;image/png;Guyana SMTP navigating;2021-01-14T02:07:43;2021-01-13T12:53:02;32875;false
-10;EMAIL;indexing;2021-01-14T08:04:31;../fake-data/blob/hipster.png;image/png;salmon;2021-01-13T21:59:34;2021-01-14T06:48:30;82375;false
+1;MAIL;deposit Platinum;2021-01-21T01:22:37;../fake-data/blob/hipster.png;image/png;input Compatible;2021-01-20T19:46:28;2021-01-20T10:50:45;33664;false
+2;MAIL;Auto Loan Account structure;2021-01-20T12:15:01;../fake-data/blob/hipster.png;image/png;discrete Sharable;2021-01-21T02:40:56;2021-01-20T21:33:18;22300;false
+3;IN_PERSON;magenta Handcrafted;2021-01-20T20:14:17;../fake-data/blob/hipster.png;image/png;XML IB;2021-01-20T23:24:19;2021-01-21T09:01:52;90525;true
+4;MAIL;quantifying redundant;2021-01-21T02:17:45;../fake-data/blob/hipster.png;image/png;Massachusetts Response withdrawal;2021-01-20T17:20:07;2021-01-21T08:55:31;73326;false
+5;MAIL;Group Cambridgeshire sky blue;2021-01-20T14:39:28;../fake-data/blob/hipster.png;image/png;Cotton Senior;2021-01-20T16:41:45;2021-01-20T19:02:36;65553;false
+6;EMAIL;microchip Electronics;2021-01-20T17:05:34;../fake-data/blob/hipster.png;image/png;Fantastic Steel Chicken calculate fuchsia;2021-01-20T21:32:04;2021-01-21T05:00:37;12244;true
+7;SMS;Branding;2021-01-21T01:45:03;../fake-data/blob/hipster.png;image/png;Kids digital pixel;2021-01-20T15:04:52;2021-01-21T09:00:19;83335;false
+8;IN_PERSON;Identity European Unit of Account 17(E.U.A.-17) Senior;2021-01-21T08:51:29;../fake-data/blob/hipster.png;image/png;bus Kroon COM;2021-01-20T14:25:11;2021-01-20T16:52:08;7081;true
+9;OTHER;Group wireless facilitate;2021-01-20T14:46:17;../fake-data/blob/hipster.png;image/png;Guyana SMTP navigating;2021-01-21T01:24:25;2021-01-20T12:09:44;32875;false
+10;EMAIL;indexing;2021-01-21T07:21:13;../fake-data/blob/hipster.png;image/png;salmon;2021-01-20T21:16:16;2021-01-21T06:05:12;82375;false

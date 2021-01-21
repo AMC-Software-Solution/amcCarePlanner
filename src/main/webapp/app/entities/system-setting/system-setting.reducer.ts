@@ -97,12 +97,12 @@ export default (state: SystemSettingState = initialState, action): SystemSetting
   }
 };
 
-const apiUrl = 'api/v1';
+const apiUrl = 'api/system-settings';
 
 // Actions
 
 export const getEntities: ICrudGetAllAction<ISystemSetting> = (page, size, sort) => {
-  const requestUrl = `${apiUrl}/get-all-system-settings-by-client-id${sort ? `?page=${page}&size=${size}&sort=${sort}` : ''}`;
+  const requestUrl = `${apiUrl}${sort ? `?page=${page}&size=${size}&sort=${sort}` : ''}`;
   return {
     type: ACTION_TYPES.FETCH_SYSTEMSETTING_LIST,
     payload: axios.get<ISystemSetting>(`${requestUrl}${sort ? '&' : '?'}cacheBuster=${new Date().getTime()}`),
@@ -110,7 +110,7 @@ export const getEntities: ICrudGetAllAction<ISystemSetting> = (page, size, sort)
 };
 
 export const getEntity: ICrudGetAction<ISystemSetting> = id => {
-  const requestUrl = `${apiUrl}/get-system-setting-by-client-id/${id}`;
+  const requestUrl = `${apiUrl}/${id}`;
   return {
     type: ACTION_TYPES.FETCH_SYSTEMSETTING,
     payload: axios.get<ISystemSetting>(requestUrl),
@@ -120,7 +120,7 @@ export const getEntity: ICrudGetAction<ISystemSetting> = id => {
 export const createEntity: ICrudPutAction<ISystemSetting> = entity => async dispatch => {
   const result = await dispatch({
     type: ACTION_TYPES.CREATE_SYSTEMSETTING,
-    payload: axios.post(apiUrl + '/create-system-setting-by-client-id', cleanEntity(entity)),
+    payload: axios.post(apiUrl, cleanEntity(entity)),
   });
   dispatch(getEntities());
   return result;
@@ -129,13 +129,13 @@ export const createEntity: ICrudPutAction<ISystemSetting> = entity => async disp
 export const updateEntity: ICrudPutAction<ISystemSetting> = entity => async dispatch => {
   const result = await dispatch({
     type: ACTION_TYPES.UPDATE_SYSTEMSETTING,
-    payload: axios.put(apiUrl + '/update-system-setting-by-client-id', cleanEntity(entity)),
+    payload: axios.put(apiUrl, cleanEntity(entity)),
   });
   return result;
 };
 
 export const deleteEntity: ICrudDeleteAction<ISystemSetting> = id => async dispatch => {
-  const requestUrl = `${apiUrl}/delete-system-setting-by-client-id/${id}`;
+  const requestUrl = `${apiUrl}/${id}`;
   const result = await dispatch({
     type: ACTION_TYPES.DELETE_SYSTEMSETTING,
     payload: axios.delete(requestUrl),

@@ -97,12 +97,12 @@ export default (state: TaskState = initialState, action): TaskState => {
   }
 };
 
-const apiUrl = 'api/v1';
+const apiUrl = 'api/tasks';
 
 // Actions
 
 export const getEntities: ICrudGetAllAction<ITask> = (page, size, sort) => {
-  const requestUrl = `${apiUrl}/get-all-tasks-by-client-id${sort ? `?page=${page}&size=${size}&sort=${sort}` : ''}`;
+  const requestUrl = `${apiUrl}${sort ? `?page=${page}&size=${size}&sort=${sort}` : ''}`;
   return {
     type: ACTION_TYPES.FETCH_TASK_LIST,
     payload: axios.get<ITask>(`${requestUrl}${sort ? '&' : '?'}cacheBuster=${new Date().getTime()}`),
@@ -110,7 +110,7 @@ export const getEntities: ICrudGetAllAction<ITask> = (page, size, sort) => {
 };
 
 export const getEntity: ICrudGetAction<ITask> = id => {
-  const requestUrl = `${apiUrl}/get-task-by-client-id/${id}`;
+  const requestUrl = `${apiUrl}/${id}`;
   return {
     type: ACTION_TYPES.FETCH_TASK,
     payload: axios.get<ITask>(requestUrl),
@@ -120,7 +120,7 @@ export const getEntity: ICrudGetAction<ITask> = id => {
 export const createEntity: ICrudPutAction<ITask> = entity => async dispatch => {
   const result = await dispatch({
     type: ACTION_TYPES.CREATE_TASK,
-    payload: axios.post(apiUrl + '/create-task-by-client-id', cleanEntity(entity)),
+    payload: axios.post(apiUrl, cleanEntity(entity)),
   });
   dispatch(getEntities());
   return result;
@@ -129,13 +129,13 @@ export const createEntity: ICrudPutAction<ITask> = entity => async dispatch => {
 export const updateEntity: ICrudPutAction<ITask> = entity => async dispatch => {
   const result = await dispatch({
     type: ACTION_TYPES.UPDATE_TASK,
-    payload: axios.put(apiUrl + '/update-task-by-client-id', cleanEntity(entity)),
+    payload: axios.put(apiUrl, cleanEntity(entity)),
   });
   return result;
 };
 
 export const deleteEntity: ICrudDeleteAction<ITask> = id => async dispatch => {
-  const requestUrl = `${apiUrl}/delete-task-by-client-id/${id}`;
+  const requestUrl = `${apiUrl}/${id}`;
   const result = await dispatch({
     type: ACTION_TYPES.DELETE_TASK,
     payload: axios.delete(requestUrl),

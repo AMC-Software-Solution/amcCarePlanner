@@ -1,25 +1,25 @@
 import { Moment } from 'moment';
-import { Title } from 'app/shared/model/enumerations/title.model';
-import { Gender } from 'app/shared/model/enumerations/gender.model';
+import { EmployeeTitle } from 'app/shared/model/enumerations/employee-title.model';
+import { EmployeeGender } from 'app/shared/model/enumerations/employee-gender.model';
 import { EmployeeContractType } from 'app/shared/model/enumerations/employee-contract-type.model';
-import { TravelMode } from 'app/shared/model/enumerations/travel-mode.model';
+import { EmployeeTravelMode } from 'app/shared/model/enumerations/employee-travel-mode.model';
 import { EmployeeStatus } from 'app/shared/model/enumerations/employee-status.model';
 
 export interface IEmployee {
   id?: number;
-  title?: Title;
+  title?: EmployeeTitle;
   firstName?: string;
   middleInitial?: string;
   lastName?: string;
   preferredName?: string;
-  gender?: Gender;
+  gender?: EmployeeGender;
   employeeCode?: string;
   phone?: string;
   email?: string;
   nationalInsuranceNumber?: string;
   employeeContractType?: EmployeeContractType;
   pinCode?: number;
-  transportMode?: TravelMode;
+  transportMode?: EmployeeTravelMode;
   address?: string;
   county?: string;
   postCode?: string;

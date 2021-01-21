@@ -34,13 +34,13 @@ class DocumentTypeInput extends FormzInput<ClientDocumentType, DocumentTypeValid
   }
 }
 
-enum ClientDocumentStatusValidationError { invalid }
-class ClientDocumentStatusInput extends FormzInput<ClientDocumentStatus, ClientDocumentStatusValidationError> {
-  const ClientDocumentStatusInput.pure() : super.pure(ClientDocumentStatus.EXPIRED);
-  const ClientDocumentStatusInput.dirty([ClientDocumentStatus value]) : super.dirty(value);
+enum DocumentStatusValidationError { invalid }
+class DocumentStatusInput extends FormzInput<DocumentStatus, DocumentStatusValidationError> {
+  const DocumentStatusInput.pure() : super.pure(DocumentStatus.EXPIRED);
+  const DocumentStatusInput.dirty([DocumentStatus value]) : super.dirty(value);
 
   @override
-  ClientDocumentStatusValidationError validator(ClientDocumentStatus value) {
+  DocumentStatusValidationError validator(DocumentStatus value) {
     return null;
   }
 }

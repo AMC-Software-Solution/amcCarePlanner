@@ -66,10 +66,10 @@ S.of(context).pageEntitiesEqualityCreateTitle;
                   mainAxisAlignment: MainAxisAlignment.spaceBetween,
                   children: <Widget>[
                     Text(S.of(context).pageEntitiesEqualityGenderField, style: Theme.of(context).textTheme.bodyText1,),
-                    DropdownButton<Gender>(
+                    DropdownButton<ServiceUserGender>(
                         value: state.gender.value,
                         onChanged: (value) { context.bloc<EqualityBloc>().add(GenderChanged(gender: value)); },
-                        items: createDropdownGenderItems(Gender.values)),
+                        items: createDropdownServiceUserGenderItems(ServiceUserGender.values)),
                   ],
                 ),
               );
@@ -190,11 +190,11 @@ S.of(context).pageEntitiesEqualityCreateTitle;
               });
         }
 
-      List<DropdownMenuItem<Gender>> createDropdownGenderItems(List<Gender> genders) {
-        List<DropdownMenuItem<Gender>> genderDropDown = [];
+      List<DropdownMenuItem<ServiceUserGender>> createDropdownServiceUserGenderItems(List<ServiceUserGender> genders) {
+        List<DropdownMenuItem<ServiceUserGender>> genderDropDown = [];
     
-        for (Gender gender in genders) {
-          DropdownMenuItem<Gender> dropdown = DropdownMenuItem<Gender>(
+        for (ServiceUserGender gender in genders) {
+          DropdownMenuItem<ServiceUserGender> dropdown = DropdownMenuItem<ServiceUserGender>(
               value: gender, child: Text(gender.toString()));
               genderDropDown.add(dropdown);
         }

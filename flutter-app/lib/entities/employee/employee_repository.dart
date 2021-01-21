@@ -4,16 +4,18 @@ import 'package:dart_json_mapper/dart_json_mapper.dart';
 
 class EmployeeRepository {
     EmployeeRepository();
-  
-  static final String uriEndpoint = '/employees';
+
+  static final String uriEndpoint = '/v1';
 
   Future<List<Employee>> getAllEmployees() async {
-    final allEmployeesRequest = await HttpUtils.getRequest(uriEndpoint);
-    return JsonMapper.deserialize<List<Employee>>(allEmployeesRequest.body);
+    final allEmployeesRequest = await HttpUtils.getRequest(uriEndpoint + '/get-all-employees-by-client-id');
+    String data = allEmployeesRequest.body;
+    print(data);
+    return JsonMapper.deserialize<List<Employee>>(data);
   }
 
   Future<Employee> getEmployee(int id) async {
-    final employeeRequest = await HttpUtils.getRequest('$uriEndpoint/$id');
+    final employeeRequest = await HttpUtils.getRequest('$uriEndpoint/get-employee-by-client-id/$id');
     return JsonMapper.deserialize<Employee>(employeeRequest.body);
   }
 

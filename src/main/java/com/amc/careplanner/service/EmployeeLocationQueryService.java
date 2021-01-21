@@ -92,10 +92,10 @@ public class EmployeeLocationQueryService extends QueryService<EmployeeLocation>
                 specification = specification.and(buildRangeSpecification(criteria.getId(), EmployeeLocation_.id));
             }
             if (criteria.getLatitude() != null) {
-                specification = specification.and(buildRangeSpecification(criteria.getLatitude(), EmployeeLocation_.latitude));
+                specification = specification.and(buildStringSpecification(criteria.getLatitude(), EmployeeLocation_.latitude));
             }
             if (criteria.getLongitude() != null) {
-                specification = specification.and(buildRangeSpecification(criteria.getLongitude(), EmployeeLocation_.longitude));
+                specification = specification.and(buildStringSpecification(criteria.getLongitude(), EmployeeLocation_.longitude));
             }
             if (criteria.getCreatedDate() != null) {
                 specification = specification.and(buildRangeSpecification(criteria.getCreatedDate(), EmployeeLocation_.createdDate));

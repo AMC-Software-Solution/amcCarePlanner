@@ -57,7 +57,7 @@
       "ownerSide": true
     }
   ],
-  "changelogDate": "20210114111011",
+  "changelogDate": "20210121102653",
   "entityTableName": "power_of_attorney",
   "dto": "mapstruct",
   "pagination": "pagination",

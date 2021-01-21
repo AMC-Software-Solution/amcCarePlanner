@@ -27,9 +27,9 @@ public class EmployeeLocationCriteria implements Serializable, Criteria {
 
     private LongFilter id;
 
-    private DoubleFilter latitude;
+    private StringFilter latitude;
 
-    private DoubleFilter longitude;
+    private StringFilter longitude;
 
     private ZonedDateTimeFilter createdDate;
 
@@ -68,19 +68,19 @@ public class EmployeeLocationCriteria implements Serializable, Criteria {
         this.id = id;
     }
 
-    public DoubleFilter getLatitude() {
+    public StringFilter getLatitude() {
         return latitude;
     }
 
-    public void setLatitude(DoubleFilter latitude) {
+    public void setLatitude(StringFilter latitude) {
         this.latitude = latitude;
     }
 
-    public DoubleFilter getLongitude() {
+    public StringFilter getLongitude() {
         return longitude;
     }
 
-    public void setLongitude(DoubleFilter longitude) {
+    public void setLongitude(StringFilter longitude) {
         this.longitude = longitude;
     }
 

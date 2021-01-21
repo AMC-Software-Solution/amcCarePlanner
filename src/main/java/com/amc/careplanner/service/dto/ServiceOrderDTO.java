@@ -17,7 +17,7 @@ public class ServiceOrderDTO implements Serializable {
     private String serviceDescription;
 
     @NotNull
-    private Double serviceHourlyRate;
+    private String serviceHourlyRate;
 
     @NotNull
     private Long clientId;
@@ -57,11 +57,11 @@ public class ServiceOrderDTO implements Serializable {
         this.serviceDescription = serviceDescription;
     }
 
-    public Double getServiceHourlyRate() {
+    public String getServiceHourlyRate() {
         return serviceHourlyRate;
     }
 
-    public void setServiceHourlyRate(Double serviceHourlyRate) {
+    public void setServiceHourlyRate(String serviceHourlyRate) {
         this.serviceHourlyRate = serviceHourlyRate;
     }
 
@@ -137,7 +137,7 @@ public class ServiceOrderDTO implements Serializable {
             "id=" + getId() +
             ", title='" + getTitle() + "'" +
             ", serviceDescription='" + getServiceDescription() + "'" +
-            ", serviceHourlyRate=" + getServiceHourlyRate() +
+            ", serviceHourlyRate='" + getServiceHourlyRate() + "'" +
             ", clientId=" + getClientId() +
             ", createdDate='" + getCreatedDate() + "'" +
             ", lastUpdatedDate='" + getLastUpdatedDate() + "'" +

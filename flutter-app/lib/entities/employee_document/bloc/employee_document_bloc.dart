@@ -54,8 +54,8 @@ class EmployeeDocumentBloc extends Bloc<EmployeeDocumentEvent, EmployeeDocumentS
       yield* onDocumentNameChange(event);
     }else if (event is DocumentNumberChanged){
       yield* onDocumentNumberChange(event);
-    }else if (event is EmployeeDocumentStatusChanged){
-      yield* onEmployeeDocumentStatusChange(event);
+    }else if (event is DocumentStatusChanged){
+      yield* onDocumentStatusChange(event);
     }else if (event is NoteChanged){
       yield* onNoteChange(event);
     }else if (event is IssuedDateChanged){
@@ -91,7 +91,7 @@ class EmployeeDocumentBloc extends Bloc<EmployeeDocumentEvent, EmployeeDocumentS
           EmployeeDocument newEmployeeDocument = EmployeeDocument(state.loadedEmployeeDocument.id,
             this.state.documentName.value,  
             this.state.documentNumber.value,  
-            this.state.employeeDocumentStatus.value,  
+            this.state.documentStatus.value,  
             this.state.note.value,  
             this.state.issuedDate.value,  
             this.state.expiryDate.value,  
@@ -111,7 +111,7 @@ class EmployeeDocumentBloc extends Bloc<EmployeeDocumentEvent, EmployeeDocumentS
           EmployeeDocument newEmployeeDocument = EmployeeDocument(null,
             this.state.documentName.value,  
             this.state.documentNumber.value,  
-            this.state.employeeDocumentStatus.value,  
+            this.state.documentStatus.value,  
             this.state.note.value,  
             this.state.issuedDate.value,  
             this.state.expiryDate.value,  
@@ -149,7 +149,7 @@ class EmployeeDocumentBloc extends Bloc<EmployeeDocumentEvent, EmployeeDocumentS
 
     final documentName = DocumentNameInput.dirty(loadedEmployeeDocument?.documentName != null ? loadedEmployeeDocument.documentName: '');
     final documentNumber = DocumentNumberInput.dirty(loadedEmployeeDocument?.documentNumber != null ? loadedEmployeeDocument.documentNumber: '');
-    final employeeDocumentStatus = EmployeeDocumentStatusInput.dirty(loadedEmployeeDocument?.employeeDocumentStatus != null ? loadedEmployeeDocument.employeeDocumentStatus: null);
+    final documentStatus = DocumentStatusInput.dirty(loadedEmployeeDocument?.documentStatus != null ? loadedEmployeeDocument.documentStatus: null);
     final note = NoteInput.dirty(loadedEmployeeDocument?.note != null ? loadedEmployeeDocument.note: '');
     final issuedDate = IssuedDateInput.dirty(loadedEmployeeDocument?.issuedDate != null ? loadedEmployeeDocument.issuedDate: null);
     final expiryDate = ExpiryDateInput.dirty(loadedEmployeeDocument?.expiryDate != null ? loadedEmployeeDocument.expiryDate: null);
@@ -163,7 +163,7 @@ class EmployeeDocumentBloc extends Bloc<EmployeeDocumentEvent, EmployeeDocumentS
     yield this.state.copyWith(loadedEmployeeDocument: loadedEmployeeDocument, editMode: true,
       documentName: documentName,
       documentNumber: documentNumber,
-      employeeDocumentStatus: employeeDocumentStatus,
+      documentStatus: documentStatus,
       note: note,
       issuedDate: issuedDate,
       expiryDate: expiryDate,
@@ -217,7 +217,7 @@ class EmployeeDocumentBloc extends Bloc<EmployeeDocumentEvent, EmployeeDocumentS
       formStatus: Formz.validate([
         documentName,
       this.state.documentNumber,
-      this.state.employeeDocumentStatus,
+      this.state.documentStatus,
       this.state.note,
       this.state.issuedDate,
       this.state.expiryDate,
@@ -237,7 +237,7 @@ class EmployeeDocumentBloc extends Bloc<EmployeeDocumentEvent, EmployeeDocumentS
       formStatus: Formz.validate([
       this.state.documentName,
         documentNumber,
-      this.state.employeeDocumentStatus,
+      this.state.documentStatus,
       this.state.note,
       this.state.issuedDate,
       this.state.expiryDate,
@@ -250,14 +250,14 @@ class EmployeeDocumentBloc extends Bloc<EmployeeDocumentEvent, EmployeeDocumentS
       ]),
     );
   }
-  Stream<EmployeeDocumentState> onEmployeeDocumentStatusChange(EmployeeDocumentStatusChanged event) async* {
-    final employeeDocumentStatus = EmployeeDocumentStatusInput.dirty(event.employeeDocumentStatus);
+  Stream<EmployeeDocumentState> onDocumentStatusChange(DocumentStatusChanged event) async* {
+    final documentStatus = DocumentStatusInput.dirty(event.documentStatus);
     yield this.state.copyWith(
-      employeeDocumentStatus: employeeDocumentStatus,
+      documentStatus: documentStatus,
       formStatus: Formz.validate([
       this.state.documentName,
       this.state.documentNumber,
-        employeeDocumentStatus,
+        documentStatus,
       this.state.note,
       this.state.issuedDate,
       this.state.expiryDate,
@@ -277,7 +277,7 @@ class EmployeeDocumentBloc extends Bloc<EmployeeDocumentEvent, EmployeeDocumentS
       formStatus: Formz.validate([
       this.state.documentName,
       this.state.documentNumber,
-      this.state.employeeDocumentStatus,
+      this.state.documentStatus,
         note,
       this.state.issuedDate,
       this.state.expiryDate,
@@ -297,7 +297,7 @@ class EmployeeDocumentBloc extends Bloc<EmployeeDocumentEvent, EmployeeDocumentS
       formStatus: Formz.validate([
       this.state.documentName,
       this.state.documentNumber,
-      this.state.employeeDocumentStatus,
+      this.state.documentStatus,
       this.state.note,
         issuedDate,
       this.state.expiryDate,
@@ -317,7 +317,7 @@ class EmployeeDocumentBloc extends Bloc<EmployeeDocumentEvent, EmployeeDocumentS
       formStatus: Formz.validate([
       this.state.documentName,
       this.state.documentNumber,
-      this.state.employeeDocumentStatus,
+      this.state.documentStatus,
       this.state.note,
       this.state.issuedDate,
         expiryDate,
@@ -337,7 +337,7 @@ class EmployeeDocumentBloc extends Bloc<EmployeeDocumentEvent, EmployeeDocumentS
       formStatus: Formz.validate([
       this.state.documentName,
       this.state.documentNumber,
-      this.state.employeeDocumentStatus,
+      this.state.documentStatus,
       this.state.note,
       this.state.issuedDate,
       this.state.expiryDate,
@@ -357,7 +357,7 @@ class EmployeeDocumentBloc extends Bloc<EmployeeDocumentEvent, EmployeeDocumentS
       formStatus: Formz.validate([
       this.state.documentName,
       this.state.documentNumber,
-      this.state.employeeDocumentStatus,
+      this.state.documentStatus,
       this.state.note,
       this.state.issuedDate,
       this.state.expiryDate,
@@ -377,7 +377,7 @@ class EmployeeDocumentBloc extends Bloc<EmployeeDocumentEvent, EmployeeDocumentS
       formStatus: Formz.validate([
       this.state.documentName,
       this.state.documentNumber,
-      this.state.employeeDocumentStatus,
+      this.state.documentStatus,
       this.state.note,
       this.state.issuedDate,
       this.state.expiryDate,
@@ -397,7 +397,7 @@ class EmployeeDocumentBloc extends Bloc<EmployeeDocumentEvent, EmployeeDocumentS
       formStatus: Formz.validate([
       this.state.documentName,
       this.state.documentNumber,
-      this.state.employeeDocumentStatus,
+      this.state.documentStatus,
       this.state.note,
       this.state.issuedDate,
       this.state.expiryDate,
@@ -417,7 +417,7 @@ class EmployeeDocumentBloc extends Bloc<EmployeeDocumentEvent, EmployeeDocumentS
       formStatus: Formz.validate([
       this.state.documentName,
       this.state.documentNumber,
-      this.state.employeeDocumentStatus,
+      this.state.documentStatus,
       this.state.note,
       this.state.issuedDate,
       this.state.expiryDate,
@@ -437,7 +437,7 @@ class EmployeeDocumentBloc extends Bloc<EmployeeDocumentEvent, EmployeeDocumentS
       formStatus: Formz.validate([
       this.state.documentName,
       this.state.documentNumber,
-      this.state.employeeDocumentStatus,
+      this.state.documentStatus,
       this.state.note,
       this.state.issuedDate,
       this.state.expiryDate,

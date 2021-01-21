@@ -109,12 +109,12 @@ export default (state: CurrencyState = initialState, action): CurrencyState => {
   }
 };
 
-const apiUrl = 'api/v1';
+const apiUrl = 'api/currencies';
 
 // Actions
 
 export const getEntities: ICrudGetAllAction<ICurrency> = (page, size, sort) => {
-  const requestUrl = `${apiUrl}/get-all-currencies-by-client-id${sort ? `?page=${page}&size=${size}&sort=${sort}` : ''}`;
+  const requestUrl = `${apiUrl}${sort ? `?page=${page}&size=${size}&sort=${sort}` : ''}`;
   return {
     type: ACTION_TYPES.FETCH_CURRENCY_LIST,
     payload: axios.get<ICurrency>(`${requestUrl}${sort ? '&' : '?'}cacheBuster=${new Date().getTime()}`),
@@ -122,7 +122,7 @@ export const getEntities: ICrudGetAllAction<ICurrency> = (page, size, sort) => {
 };
 
 export const getEntity: ICrudGetAction<ICurrency> = id => {
-  const requestUrl = `${apiUrl}/get-currency-by-client-id/${id}`;
+  const requestUrl = `${apiUrl}/${id}`;
   return {
     type: ACTION_TYPES.FETCH_CURRENCY,
     payload: axios.get<ICurrency>(requestUrl),
@@ -132,7 +132,7 @@ export const getEntity: ICrudGetAction<ICurrency> = id => {
 export const createEntity: ICrudPutAction<ICurrency> = entity => async dispatch => {
   const result = await dispatch({
     type: ACTION_TYPES.CREATE_CURRENCY,
-    payload: axios.post(apiUrl + '/create-currency-by-client-id', cleanEntity(entity)),
+    payload: axios.post(apiUrl, cleanEntity(entity)),
   });
   dispatch(getEntities());
   return result;
@@ -141,13 +141,13 @@ export const createEntity: ICrudPutAction<ICurrency> = entity => async dispatch 
 export const updateEntity: ICrudPutAction<ICurrency> = entity => async dispatch => {
   const result = await dispatch({
     type: ACTION_TYPES.UPDATE_CURRENCY,
-    payload: axios.put(apiUrl + '/update-currency-by-client-id', cleanEntity(entity)),
+    payload: axios.put(apiUrl, cleanEntity(entity)),
   });
   return result;
 };
 
 export const deleteEntity: ICrudDeleteAction<ICurrency> = id => async dispatch => {
-  const requestUrl = `${apiUrl}/delete-currency-by-client-id/${id}`;
+  const requestUrl = `${apiUrl}/${id}`;
   const result = await dispatch({
     type: ACTION_TYPES.DELETE_CURRENCY,
     payload: axios.delete(requestUrl),

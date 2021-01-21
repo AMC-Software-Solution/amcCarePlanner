@@ -28,13 +28,13 @@ class DocumentNumberChanged extends EmployeeDocumentEvent {
   @override
   List<Object> get props => [documentNumber];
 }
-class EmployeeDocumentStatusChanged extends EmployeeDocumentEvent {
-  final EmployeeDocumentStatus employeeDocumentStatus;
+class DocumentStatusChanged extends EmployeeDocumentEvent {
+  final EmployeeDocumentStatus documentStatus;
   
-  const EmployeeDocumentStatusChanged({@required this.employeeDocumentStatus});
+  const DocumentStatusChanged({@required this.documentStatus});
   
   @override
-  List<Object> get props => [employeeDocumentStatus];
+  List<Object> get props => [documentStatus];
 }
 class NoteChanged extends EmployeeDocumentEvent {
   final String note;

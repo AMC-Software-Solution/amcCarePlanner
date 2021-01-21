@@ -12,13 +12,13 @@ abstract class ServiceUserEvent extends Equatable {
 
 class InitServiceUserList extends ServiceUserEvent {}
 
-class TitlleChanged extends ServiceUserEvent {
-  final Titlle titlle;
+class TitleChanged extends ServiceUserEvent {
+  final ServiceUserTitle title;
   
-  const TitlleChanged({@required this.titlle});
+  const TitleChanged({@required this.title});
   
   @override
-  List<Object> get props => [titlle];
+  List<Object> get props => [title];
 }
 class FirstNameChanged extends ServiceUserEvent {
   final String firstName;

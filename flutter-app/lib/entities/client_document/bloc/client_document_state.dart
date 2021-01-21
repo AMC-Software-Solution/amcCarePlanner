@@ -16,7 +16,7 @@ class ClientDocumentState extends Equatable {
   final DocumentNameInput documentName;
   final DocumentNumberInput documentNumber;
   final DocumentTypeInput documentType;
-  final ClientDocumentStatusInput clientDocumentStatus;
+  final DocumentStatusInput documentStatus;
   final NoteInput note;
   final IssuedDateInput issuedDate;
   final ExpiryDateInput expiryDate;
@@ -40,7 +40,7 @@ IssuedDateInput issuedDate,ExpiryDateInput expiryDate,UploadedDateInput uploaded
     this.documentName = const DocumentNameInput.pure(),
     this.documentNumber = const DocumentNumberInput.pure(),
     this.documentType = const DocumentTypeInput.pure(),
-    this.clientDocumentStatus = const ClientDocumentStatusInput.pure(),
+    this.documentStatus = const DocumentStatusInput.pure(),
     this.note = const NoteInput.pure(),
     this.documentFileUrl = const DocumentFileUrlInput.pure(),
     this.clientId = const ClientIdInput.pure(),
@@ -63,7 +63,7 @@ this.lastUpdatedDate = lastUpdatedDate ?? LastUpdatedDateInput.pure()
     DocumentNameInput documentName,
     DocumentNumberInput documentNumber,
     DocumentTypeInput documentType,
-    ClientDocumentStatusInput clientDocumentStatus,
+    DocumentStatusInput documentStatus,
     NoteInput note,
     IssuedDateInput issuedDate,
     ExpiryDateInput expiryDate,
@@ -90,7 +90,7 @@ this.lastUpdatedDate = lastUpdatedDate ?? LastUpdatedDateInput.pure()
       documentName: documentName ?? this.documentName,
       documentNumber: documentNumber ?? this.documentNumber,
       documentType: documentType ?? this.documentType,
-      clientDocumentStatus: clientDocumentStatus ?? this.clientDocumentStatus,
+      documentStatus: documentStatus ?? this.documentStatus,
       note: note ?? this.note,
       documentFileUrl: documentFileUrl ?? this.documentFileUrl,
       clientId: clientId ?? this.clientId,
@@ -101,7 +101,7 @@ this.lastUpdatedDate = lastUpdatedDate ?? LastUpdatedDateInput.pure()
   @override
   List<Object> get props => [clientDocuments, clientDocumentStatusUI,
      loadedClientDocument, editMode, deleteStatus, formStatus, generalNotificationKey, 
-documentName,documentNumber,documentType,clientDocumentStatus,note,issuedDate,expiryDate,uploadedDate,documentFileUrl,createdDate,lastUpdatedDate,clientId,hasExtraData,];
+documentName,documentNumber,documentType,documentStatus,note,issuedDate,expiryDate,uploadedDate,documentFileUrl,createdDate,lastUpdatedDate,clientId,hasExtraData,];
 
   @override
   bool get stringify => true;

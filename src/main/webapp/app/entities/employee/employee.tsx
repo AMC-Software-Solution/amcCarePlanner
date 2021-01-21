@@ -199,14 +199,14 @@ export const Employee = (props: IEmployeeProps) => {
                     </Button>
                   </td>
                   <td>
-                    <Translate contentKey={`carePlannerApp.Title.${employee.title}`} />
+                    <Translate contentKey={`carePlannerApp.EmployeeTitle.${employee.title}`} />
                   </td>
                   <td>{employee.firstName}</td>
                   <td>{employee.middleInitial}</td>
                   <td>{employee.lastName}</td>
                   <td>{employee.preferredName}</td>
                   <td>
-                    <Translate contentKey={`carePlannerApp.Gender.${employee.gender}`} />
+                    <Translate contentKey={`carePlannerApp.EmployeeGender.${employee.gender}`} />
                   </td>
                   <td>{employee.employeeCode}</td>
                   <td>{employee.phone}</td>
@@ -217,7 +217,7 @@ export const Employee = (props: IEmployeeProps) => {
                   </td>
                   <td>{employee.pinCode}</td>
                   <td>
-                    <Translate contentKey={`carePlannerApp.TravelMode.${employee.transportMode}`} />
+                    <Translate contentKey={`carePlannerApp.EmployeeTravelMode.${employee.transportMode}`} />
                   </td>
                   <td>{employee.address}</td>
                   <td>{employee.county}</td>

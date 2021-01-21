@@ -18,8 +18,8 @@ class ClientDocument {
   @JsonProperty(name: 'documentType', enumValues: ClientDocumentType.values)
   final ClientDocumentType documentType;
 
-  @JsonProperty(name: 'clientDocumentStatus', enumValues: ClientDocumentStatus.values)
-  final ClientDocumentStatus clientDocumentStatus;
+  @JsonProperty(name: 'documentStatus', enumValues: DocumentStatus.values)
+  final DocumentStatus documentStatus;
 
   @JsonProperty(name: 'note')
   final String note;
@@ -59,7 +59,7 @@ class ClientDocument {
         this.documentName,
         this.documentNumber,
         this.documentType,
-        this.clientDocumentStatus,
+        this.documentStatus,
         this.note,
         this.issuedDate,
         this.expiryDate,
@@ -80,7 +80,7 @@ String toString() {
         'documentName: $documentName,' +
         'documentNumber: $documentNumber,' +
         'documentType: $documentType,' +
-        'clientDocumentStatus: $clientDocumentStatus,' +
+        'documentStatus: $documentStatus,' +
         'note: $note,' +
         'issuedDate: $issuedDate,' +
         'expiryDate: $expiryDate,' +
@@ -116,8 +116,8 @@ enum ClientDocumentType {
     FORM ,
     OTHER 
 }@jsonSerializable
-@Json(enumValues: ClientDocumentStatus.values)
-enum ClientDocumentStatus {
+@Json(enumValues: DocumentStatus.values)
+enum DocumentStatus {
     EXPIRED ,
     ACTIVE ,
     ARCHIVED 

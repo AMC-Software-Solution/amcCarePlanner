@@ -218,7 +218,7 @@ export const ServiceUser = (props: IServiceUserProps) => {
                     </Button>
                   </td>
                   <td>
-                    <Translate contentKey={`carePlannerApp.Title.${serviceUser.title}`} />
+                    <Translate contentKey={`carePlannerApp.ServiceUserTitle.${serviceUser.title}`} />
                   </td>
                   <td>{serviceUser.firstName}</td>
                   <td>{serviceUser.middleName}</td>

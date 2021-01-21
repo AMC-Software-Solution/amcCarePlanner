@@ -164,7 +164,7 @@ export const ServceUserDocument = (props: IServceUserDocumentProps) => {
                   <td>{servceUserDocument.documentName}</td>
                   <td>{servceUserDocument.documentNumber}</td>
                   <td>
-                    <Translate contentKey={`carePlannerApp.DocumentStatus.${servceUserDocument.documentStatus}`} />
+                    <Translate contentKey={`carePlannerApp.ServiceUserDocumentStatus.${servceUserDocument.documentStatus}`} />
                   </td>
                   <td>{servceUserDocument.note}</td>
                   <td>

@@ -69,7 +69,7 @@
       "otherEntityField": "employeeCode"
     }
   ],
-  "changelogDate": "20210114111111",
+  "changelogDate": "20210121102753",
   "entityTableName": "consent",
   "dto": "mapstruct",
   "pagination": "pagination",

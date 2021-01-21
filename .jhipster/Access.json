@@ -37,7 +37,7 @@
       "otherEntityField": "serviceUserCode"
     }
   ],
-  "changelogDate": "20210114111211",
+  "changelogDate": "20210121102853",
   "entityTableName": "access",
   "dto": "mapstruct",
   "pagination": "pagination",

@@ -12,13 +12,13 @@ abstract class EmployeeEvent extends Equatable {
 
 class InitEmployeeList extends EmployeeEvent {}
 
-class TittleChanged extends EmployeeEvent {
-  final Tittle tittle;
+class TitleChanged extends EmployeeEvent {
+  final EmployeeTitle title;
   
-  const TittleChanged({@required this.tittle});
+  const TitleChanged({@required this.title});
   
   @override
-  List<Object> get props => [tittle];
+  List<Object> get props => [title];
 }
 class FirstNameChanged extends EmployeeEvent {
   final String firstName;
@@ -52,13 +52,13 @@ class PreferredNameChanged extends EmployeeEvent {
   @override
   List<Object> get props => [preferredName];
 }
-class GendderChanged extends EmployeeEvent {
-  final Gendder gendder;
+class GenderChanged extends EmployeeEvent {
+  final EmployeeGender gender;
   
-  const GendderChanged({@required this.gendder});
+  const GenderChanged({@required this.gender});
   
   @override
-  List<Object> get props => [gendder];
+  List<Object> get props => [gender];
 }
 class EmployeeCodeChanged extends EmployeeEvent {
   final String employeeCode;
@@ -108,13 +108,13 @@ class PinCodeChanged extends EmployeeEvent {
   @override
   List<Object> get props => [pinCode];
 }
-class EmployeeTransportModeChanged extends EmployeeEvent {
-  final EmployeeTravelMode employeeTransportMode;
+class TransportModeChanged extends EmployeeEvent {
+  final EmployeeTravelMode transportMode;
   
-  const EmployeeTransportModeChanged({@required this.employeeTransportMode});
+  const TransportModeChanged({@required this.transportMode});
   
   @override
-  List<Object> get props => [employeeTransportMode];
+  List<Object> get props => [transportMode];
 }
 class AddressChanged extends EmployeeEvent {
   final String address;

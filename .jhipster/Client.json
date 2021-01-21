@@ -53,7 +53,7 @@
     }
   ],
   "relationships": [],
-  "changelogDate": "20210114110311",
+  "changelogDate": "20210121101953",
   "entityTableName": "client",
   "dto": "mapstruct",
   "pagination": "pagination",

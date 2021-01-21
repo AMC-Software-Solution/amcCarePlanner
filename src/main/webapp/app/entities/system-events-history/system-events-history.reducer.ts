@@ -97,12 +97,12 @@ export default (state: SystemEventsHistoryState = initialState, action): SystemE
   }
 };
 
-const apiUrl = 'api/v1';
+const apiUrl = 'api/system-events-histories';
 
 // Actions
 
 export const getEntities: ICrudGetAllAction<ISystemEventsHistory> = (page, size, sort) => {
-  const requestUrl = `${apiUrl}/get-all-system-events-histories-by-client-id${sort ? `?page=${page}&size=${size}&sort=${sort}` : ''}`;
+  const requestUrl = `${apiUrl}${sort ? `?page=${page}&size=${size}&sort=${sort}` : ''}`;
   return {
     type: ACTION_TYPES.FETCH_SYSTEMEVENTSHISTORY_LIST,
     payload: axios.get<ISystemEventsHistory>(`${requestUrl}${sort ? '&' : '?'}cacheBuster=${new Date().getTime()}`),
@@ -110,7 +110,7 @@ export const getEntities: ICrudGetAllAction<ISystemEventsHistory> = (page, size,
 };
 
 export const getEntity: ICrudGetAction<ISystemEventsHistory> = id => {
-  const requestUrl = `${apiUrl}/get-system-events-history-by-client-id/${id}`;
+  const requestUrl = `${apiUrl}/${id}`;
   return {
     type: ACTION_TYPES.FETCH_SYSTEMEVENTSHISTORY,
     payload: axios.get<ISystemEventsHistory>(requestUrl),
@@ -120,7 +120,7 @@ export const getEntity: ICrudGetAction<ISystemEventsHistory> = id => {
 export const createEntity: ICrudPutAction<ISystemEventsHistory> = entity => async dispatch => {
   const result = await dispatch({
     type: ACTION_TYPES.CREATE_SYSTEMEVENTSHISTORY,
-    payload: axios.post(apiUrl + '/create-system-events-history-by-client-id', cleanEntity(entity)),
+    payload: axios.post(apiUrl, cleanEntity(entity)),
   });
   dispatch(getEntities());
   return result;
@@ -129,13 +129,13 @@ export const createEntity: ICrudPutAction<ISystemEventsHistory> = entity => asyn
 export const updateEntity: ICrudPutAction<ISystemEventsHistory> = entity => async dispatch => {
   const result = await dispatch({
     type: ACTION_TYPES.UPDATE_SYSTEMEVENTSHISTORY,
-    payload: axios.put(apiUrl + '/update-system-events-history-by-client-id', cleanEntity(entity)),
+    payload: axios.put(apiUrl, cleanEntity(entity)),
   });
   return result;
 };
 
 export const deleteEntity: ICrudDeleteAction<ISystemEventsHistory> = id => async dispatch => {
-  const requestUrl = `${apiUrl}/delete-system-events-history-by-client-id/${id}`;
+  const requestUrl = `${apiUrl}/${id}`;
   const result = await dispatch({
     type: ACTION_TYPES.DELETE_SYSTEMEVENTSHISTORY,
     payload: axios.delete(requestUrl),

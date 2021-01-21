@@ -2,8 +2,8 @@
   "name": "Employee",
   "fields": [
     {
-      "fieldName": "tittle",
-      "fieldType": "Tittle",
+      "fieldName": "title",
+      "fieldType": "EmployeeTitle",
       "fieldValues": "MR,MRS,MS,MISS,OTHER",
       "fieldValidateRules": ["required"]
     },
@@ -34,8 +34,8 @@
       "fieldValidateRulesMaxlength": "25"
     },
     {
-      "fieldName": "gendder",
-      "fieldType": "Gendder",
+      "fieldName": "gender",
+      "fieldType": "EmployeeGender",
       "fieldValues": "MALE,FEMALE,OTHER",
       "fieldValidateRules": ["required"]
     },
@@ -69,7 +69,7 @@
       "fieldType": "Integer"
     },
     {
-      "fieldName": "employeeTransportMode",
+      "fieldName": "transportMode",
       "fieldType": "EmployeeTravelMode",
       "fieldValues": "CAR,BUS,TRAIN,PLANE,SHIP,WALK,OTHER",
       "fieldValidateRules": ["required"]
@@ -162,7 +162,7 @@
       "otherEntityField": "name"
     }
   ],
-  "changelogDate": "20210114111811",
+  "changelogDate": "20210121103453",
   "entityTableName": "employee",
   "dto": "mapstruct",
   "pagination": "pagination",

@@ -11,7 +11,6 @@ import io.github.jhipster.service.filter.FloatFilter;
 import io.github.jhipster.service.filter.IntegerFilter;
 import io.github.jhipster.service.filter.LongFilter;
 import io.github.jhipster.service.filter.StringFilter;
-import io.github.jhipster.service.filter.BigDecimalFilter;
 import io.github.jhipster.service.filter.ZonedDateTimeFilter;
 
 /**
@@ -53,11 +52,11 @@ public class PayrollCriteria implements Serializable, Criteria {
 
     private IntegerFilter totalHoursWorked;
 
-    private BigDecimalFilter grossPay;
+    private StringFilter grossPay;
 
-    private BigDecimalFilter netPay;
+    private StringFilter netPay;
 
-    private BigDecimalFilter totalTax;
+    private StringFilter totalTax;
 
     private PayrollStatusFilter payrollStatus;
 
@@ -130,27 +129,27 @@ public class PayrollCriteria implements Serializable, Criteria {
         this.totalHoursWorked = totalHoursWorked;
     }
 
-    public BigDecimalFilter getGrossPay() {
+    public StringFilter getGrossPay() {
         return grossPay;
     }
 
-    public void setGrossPay(BigDecimalFilter grossPay) {
+    public void setGrossPay(StringFilter grossPay) {
         this.grossPay = grossPay;
     }
 
-    public BigDecimalFilter getNetPay() {
+    public StringFilter getNetPay() {
         return netPay;
     }
 
-    public void setNetPay(BigDecimalFilter netPay) {
+    public void setNetPay(StringFilter netPay) {
         this.netPay = netPay;
     }
 
-    public BigDecimalFilter getTotalTax() {
+    public StringFilter getTotalTax() {
         return totalTax;
     }
 
-    public void setTotalTax(BigDecimalFilter totalTax) {
+    public void setTotalTax(StringFilter totalTax) {
         this.totalTax = totalTax;
     }
 

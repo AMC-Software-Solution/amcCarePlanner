@@ -55,7 +55,7 @@
       "otherEntityField": "taskName"
     }
   ],
-  "changelogDate": "20210114112711",
+  "changelogDate": "20210121104353",
   "entityTableName": "travel",
   "dto": "mapstruct",
   "pagination": "pagination",

@@ -101,13 +101,13 @@ public class PayrollQueryService extends QueryService<Payroll> {
                 specification = specification.and(buildRangeSpecification(criteria.getTotalHoursWorked(), Payroll_.totalHoursWorked));
             }
             if (criteria.getGrossPay() != null) {
-                specification = specification.and(buildRangeSpecification(criteria.getGrossPay(), Payroll_.grossPay));
+                specification = specification.and(buildStringSpecification(criteria.getGrossPay(), Payroll_.grossPay));
             }
             if (criteria.getNetPay() != null) {
-                specification = specification.and(buildRangeSpecification(criteria.getNetPay(), Payroll_.netPay));
+                specification = specification.and(buildStringSpecification(criteria.getNetPay(), Payroll_.netPay));
             }
             if (criteria.getTotalTax() != null) {
-                specification = specification.and(buildRangeSpecification(criteria.getTotalTax(), Payroll_.totalTax));
+                specification = specification.and(buildStringSpecification(criteria.getTotalTax(), Payroll_.totalTax));
             }
             if (criteria.getPayrollStatus() != null) {
                 specification = specification.and(buildSpecification(criteria.getPayrollStatus(), Payroll_.payrollStatus));

@@ -128,9 +128,9 @@ export const ServceUserDocumentUpdate = (props: IServceUserDocumentUpdateProps) 
                   name="documentStatus"
                   value={(!isNew && servceUserDocumentEntity.documentStatus) || 'EXPIRED'}
                 >
-                  <option value="EXPIRED">{translate('carePlannerApp.DocumentStatus.EXPIRED')}</option>
-                  <option value="ACTIVE">{translate('carePlannerApp.DocumentStatus.ACTIVE')}</option>
-                  <option value="ARCHIVED">{translate('carePlannerApp.DocumentStatus.ARCHIVED')}</option>
+                  <option value="EXPIRED">{translate('carePlannerApp.ServiceUserDocumentStatus.EXPIRED')}</option>
+                  <option value="ACTIVE">{translate('carePlannerApp.ServiceUserDocumentStatus.ACTIVE')}</option>
+                  <option value="ARCHIVED">{translate('carePlannerApp.ServiceUserDocumentStatus.ARCHIVED')}</option>
                 </AvInput>
               </AvGroup>
               <AvGroup>

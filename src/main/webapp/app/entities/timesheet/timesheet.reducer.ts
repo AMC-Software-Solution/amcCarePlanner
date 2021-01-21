@@ -97,12 +97,12 @@ export default (state: TimesheetState = initialState, action): TimesheetState =>
   }
 };
 
-const apiUrl = 'api/v1';
+const apiUrl = 'api/timesheets';
 
 // Actions
 
 export const getEntities: ICrudGetAllAction<ITimesheet> = (page, size, sort) => {
-  const requestUrl = `${apiUrl}/get-all-timesheets-by-client-id${sort ? `?page=${page}&size=${size}&sort=${sort}` : ''}`;
+  const requestUrl = `${apiUrl}${sort ? `?page=${page}&size=${size}&sort=${sort}` : ''}`;
   return {
     type: ACTION_TYPES.FETCH_TIMESHEET_LIST,
     payload: axios.get<ITimesheet>(`${requestUrl}${sort ? '&' : '?'}cacheBuster=${new Date().getTime()}`),
@@ -110,7 +110,7 @@ export const getEntities: ICrudGetAllAction<ITimesheet> = (page, size, sort) => 
 };
 
 export const getEntity: ICrudGetAction<ITimesheet> = id => {
-  const requestUrl = `${apiUrl}/get-timesheet-by-client-id/${id}`;
+  const requestUrl = `${apiUrl}/${id}`;
   return {
     type: ACTION_TYPES.FETCH_TIMESHEET,
     payload: axios.get<ITimesheet>(requestUrl),
@@ -120,7 +120,7 @@ export const getEntity: ICrudGetAction<ITimesheet> = id => {
 export const createEntity: ICrudPutAction<ITimesheet> = entity => async dispatch => {
   const result = await dispatch({
     type: ACTION_TYPES.CREATE_TIMESHEET,
-    payload: axios.post(apiUrl + '/create-timesheet-by-client-id', cleanEntity(entity)),
+    payload: axios.post(apiUrl, cleanEntity(entity)),
   });
   dispatch(getEntities());
   return result;
@@ -129,13 +129,13 @@ export const createEntity: ICrudPutAction<ITimesheet> = entity => async dispatch
 export const updateEntity: ICrudPutAction<ITimesheet> = entity => async dispatch => {
   const result = await dispatch({
     type: ACTION_TYPES.UPDATE_TIMESHEET,
-    payload: axios.put(apiUrl + '/update-timesheet-by-client-id', cleanEntity(entity)),
+    payload: axios.put(apiUrl, cleanEntity(entity)),
   });
   return result;
 };
 
 export const deleteEntity: ICrudDeleteAction<ITimesheet> = id => async dispatch => {
-  const requestUrl = `${apiUrl}/delete-timesheet-by-client-id/${id}`;
+  const requestUrl = `${apiUrl}/${id}`;
   const result = await dispatch({
     type: ACTION_TYPES.DELETE_TIMESHEET,
     payload: axios.delete(requestUrl),

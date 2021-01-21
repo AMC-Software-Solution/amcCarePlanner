@@ -142,7 +142,6 @@ export const PayrollUpdate = (props: IPayrollUpdateProps) => {
                   name="grossPay"
                   validate={{
                     required: { value: true, errorMessage: translate('entity.validation.required') },
-                    number: { value: true, errorMessage: translate('entity.validation.number') },
                   }}
                 />
               </AvGroup>
@@ -156,7 +155,6 @@ export const PayrollUpdate = (props: IPayrollUpdateProps) => {
                   name="netPay"
                   validate={{
                     required: { value: true, errorMessage: translate('entity.validation.required') },
-                    number: { value: true, errorMessage: translate('entity.validation.number') },
                   }}
                 />
               </AvGroup>

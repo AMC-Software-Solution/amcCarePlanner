@@ -42,7 +42,7 @@
       "otherEntityField": "currency"
     }
   ],
-  "changelogDate": "20210114114011",
+  "changelogDate": "20210121105653",
   "entityTableName": "service_order",
   "dto": "mapstruct",
   "pagination": "pagination",

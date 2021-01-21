@@ -97,12 +97,12 @@ export default (state: ServiceOrderState = initialState, action): ServiceOrderSt
   }
 };
 
-const apiUrl = 'api/v1';
+const apiUrl = 'api/service-orders';
 
 // Actions
 
 export const getEntities: ICrudGetAllAction<IServiceOrder> = (page, size, sort) => {
-  const requestUrl = `${apiUrl}/get-all-service-orders-by-client-id${sort ? `?page=${page}&size=${size}&sort=${sort}` : ''}`;
+  const requestUrl = `${apiUrl}${sort ? `?page=${page}&size=${size}&sort=${sort}` : ''}`;
   return {
     type: ACTION_TYPES.FETCH_SERVICEORDER_LIST,
     payload: axios.get<IServiceOrder>(`${requestUrl}${sort ? '&' : '?'}cacheBuster=${new Date().getTime()}`),
@@ -110,7 +110,7 @@ export const getEntities: ICrudGetAllAction<IServiceOrder> = (page, size, sort) 
 };
 
 export const getEntity: ICrudGetAction<IServiceOrder> = id => {
-  const requestUrl = `${apiUrl}/get-service-order-by-client-id/${id}`;
+  const requestUrl = `${apiUrl}/${id}`;
   return {
     type: ACTION_TYPES.FETCH_SERVICEORDER,
     payload: axios.get<IServiceOrder>(requestUrl),
@@ -120,7 +120,7 @@ export const getEntity: ICrudGetAction<IServiceOrder> = id => {
 export const createEntity: ICrudPutAction<IServiceOrder> = entity => async dispatch => {
   const result = await dispatch({
     type: ACTION_TYPES.CREATE_SERVICEORDER,
-    payload: axios.post(apiUrl + '/create-service-order-by-client-id', cleanEntity(entity)),
+    payload: axios.post(apiUrl, cleanEntity(entity)),
   });
   dispatch(getEntities());
   return result;
@@ -129,13 +129,13 @@ export const createEntity: ICrudPutAction<IServiceOrder> = entity => async dispa
 export const updateEntity: ICrudPutAction<IServiceOrder> = entity => async dispatch => {
   const result = await dispatch({
     type: ACTION_TYPES.UPDATE_SERVICEORDER,
-    payload: axios.put(apiUrl + '/update-service-order-by-client-id', cleanEntity(entity)),
+    payload: axios.put(apiUrl, cleanEntity(entity)),
   });
   return result;
 };
 
 export const deleteEntity: ICrudDeleteAction<IServiceOrder> = id => async dispatch => {
-  const requestUrl = `${apiUrl}/delete-service-order-by-client-id/${id}`;
+  const requestUrl = `${apiUrl}/${id}`;
   const result = await dispatch({
     type: ACTION_TYPES.DELETE_SERVICEORDER,
     payload: axios.delete(requestUrl),

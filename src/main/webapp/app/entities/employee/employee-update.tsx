@@ -116,11 +116,11 @@ export const EmployeeUpdate = (props: IEmployeeUpdateProps) => {
                   name="title"
                   value={(!isNew && employeeEntity.title) || 'MR'}
                 >
-                  <option value="MR">{translate('carePlannerApp.Title.MR')}</option>
-                  <option value="MRS">{translate('carePlannerApp.Title.MRS')}</option>
-                  <option value="MS">{translate('carePlannerApp.Title.MS')}</option>
-                  <option value="MISS">{translate('carePlannerApp.Title.MISS')}</option>
-                  <option value="OTHER">{translate('carePlannerApp.Title.OTHER')}</option>
+                  <option value="MR">{translate('carePlannerApp.EmployeeTitle.MR')}</option>
+                  <option value="MRS">{translate('carePlannerApp.EmployeeTitle.MRS')}</option>
+                  <option value="MS">{translate('carePlannerApp.EmployeeTitle.MS')}</option>
+                  <option value="MISS">{translate('carePlannerApp.EmployeeTitle.MISS')}</option>
+                  <option value="OTHER">{translate('carePlannerApp.EmployeeTitle.OTHER')}</option>
                 </AvInput>
               </AvGroup>
               <AvGroup>
@@ -190,9 +190,9 @@ export const EmployeeUpdate = (props: IEmployeeUpdateProps) => {
                   name="gender"
                   value={(!isNew && employeeEntity.gender) || 'MALE'}
                 >
-                  <option value="MALE">{translate('carePlannerApp.Gender.MALE')}</option>
-                  <option value="FEMALE">{translate('carePlannerApp.Gender.FEMALE')}</option>
-                  <option value="OTHER">{translate('carePlannerApp.Gender.OTHER')}</option>
+                  <option value="MALE">{translate('carePlannerApp.EmployeeGender.MALE')}</option>
+                  <option value="FEMALE">{translate('carePlannerApp.EmployeeGender.FEMALE')}</option>
+                  <option value="OTHER">{translate('carePlannerApp.EmployeeGender.OTHER')}</option>
                 </AvInput>
               </AvGroup>
               <AvGroup>
@@ -272,13 +272,13 @@ export const EmployeeUpdate = (props: IEmployeeUpdateProps) => {
                   name="transportMode"
                   value={(!isNew && employeeEntity.transportMode) || 'CAR'}
                 >
-                  <option value="CAR">{translate('carePlannerApp.TravelMode.CAR')}</option>
-                  <option value="BUS">{translate('carePlannerApp.TravelMode.BUS')}</option>
-                  <option value="TRAIN">{translate('carePlannerApp.TravelMode.TRAIN')}</option>
-                  <option value="PLANE">{translate('carePlannerApp.TravelMode.PLANE')}</option>
-                  <option value="SHIP">{translate('carePlannerApp.TravelMode.SHIP')}</option>
-                  <option value="WALK">{translate('carePlannerApp.TravelMode.WALK')}</option>
-                  <option value="OTHER">{translate('carePlannerApp.TravelMode.OTHER')}</option>
+                  <option value="CAR">{translate('carePlannerApp.EmployeeTravelMode.CAR')}</option>
+                  <option value="BUS">{translate('carePlannerApp.EmployeeTravelMode.BUS')}</option>
+                  <option value="TRAIN">{translate('carePlannerApp.EmployeeTravelMode.TRAIN')}</option>
+                  <option value="PLANE">{translate('carePlannerApp.EmployeeTravelMode.PLANE')}</option>
+                  <option value="SHIP">{translate('carePlannerApp.EmployeeTravelMode.SHIP')}</option>
+                  <option value="WALK">{translate('carePlannerApp.EmployeeTravelMode.WALK')}</option>
+                  <option value="OTHER">{translate('carePlannerApp.EmployeeTravelMode.OTHER')}</option>
                 </AvInput>
               </AvGroup>
               <AvGroup>

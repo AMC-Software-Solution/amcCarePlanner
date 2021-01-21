@@ -91,12 +91,10 @@ export const ServiceUserLocationUpdate = (props: IServiceUserLocationUpdateProps
                 </Label>
                 <AvField
                   id="service-user-location-latitude"
-                  type="string"
-                  className="form-control"
+                  type="text"
                   name="latitude"
                   validate={{
                     required: { value: true, errorMessage: translate('entity.validation.required') },
-                    number: { value: true, errorMessage: translate('entity.validation.number') },
                   }}
                 />
               </AvGroup>
@@ -106,12 +104,10 @@ export const ServiceUserLocationUpdate = (props: IServiceUserLocationUpdateProps
                 </Label>
                 <AvField
                   id="service-user-location-longitude"
-                  type="string"
-                  className="form-control"
+                  type="text"
                   name="longitude"
                   validate={{
                     required: { value: true, errorMessage: translate('entity.validation.required') },
-                    number: { value: true, errorMessage: translate('entity.validation.number') },
                   }}
                 />
               </AvGroup>

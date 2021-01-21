@@ -5,7 +5,7 @@ import java.util.Objects;
 import io.github.jhipster.service.Criteria;
 import com.amc.careplanner.domain.enumeration.ServiceUserEventStatus;
 import com.amc.careplanner.domain.enumeration.ServiceUserEventType;
-import com.amc.careplanner.domain.enumeration.ServicePriority;
+import com.amc.careplanner.domain.enumeration.Priority;
 import io.github.jhipster.service.filter.BooleanFilter;
 import io.github.jhipster.service.filter.DoubleFilter;
 import io.github.jhipster.service.filter.Filter;
@@ -62,20 +62,20 @@ public class ServiceUserEventCriteria implements Serializable, Criteria {
 
     }
     /**
-     * Class for filtering ServicePriority
+     * Class for filtering Priority
      */
-    public static class ServicePriorityFilter extends Filter<ServicePriority> {
+    public static class PriorityFilter extends Filter<Priority> {
 
-        public ServicePriorityFilter() {
+        public PriorityFilter() {
         }
 
-        public ServicePriorityFilter(ServicePriorityFilter filter) {
+        public PriorityFilter(PriorityFilter filter) {
             super(filter);
         }
 
         @Override
-        public ServicePriorityFilter copy() {
-            return new ServicePriorityFilter(this);
+        public PriorityFilter copy() {
+            return new PriorityFilter(this);
         }
 
     }
@@ -92,7 +92,7 @@ public class ServiceUserEventCriteria implements Serializable, Criteria {
 
     private ServiceUserEventTypeFilter serviceUserEventType;
 
-    private ServicePriorityFilter priority;
+    private PriorityFilter priority;
 
     private StringFilter note;
 
@@ -178,11 +178,11 @@ public class ServiceUserEventCriteria implements Serializable, Criteria {
         this.serviceUserEventType = serviceUserEventType;
     }
 
-    public ServicePriorityFilter getPriority() {
+    public PriorityFilter getPriority() {
         return priority;
     }
 
-    public void setPriority(ServicePriorityFilter priority) {
+    public void setPriority(PriorityFilter priority) {
         this.priority = priority;
     }
 

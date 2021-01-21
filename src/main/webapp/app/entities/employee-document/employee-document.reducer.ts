@@ -109,12 +109,12 @@ export default (state: EmployeeDocumentState = initialState, action): EmployeeDo
   }
 };
 
-const apiUrl = 'api/v1';
+const apiUrl = 'api/employee-documents';
 
 // Actions
 
 export const getEntities: ICrudGetAllAction<IEmployeeDocument> = (page, size, sort) => {
-  const requestUrl = `${apiUrl}/get-all-employee-documents-by-client-id${sort ? `?page=${page}&size=${size}&sort=${sort}` : ''}`;
+  const requestUrl = `${apiUrl}${sort ? `?page=${page}&size=${size}&sort=${sort}` : ''}`;
   return {
     type: ACTION_TYPES.FETCH_EMPLOYEEDOCUMENT_LIST,
     payload: axios.get<IEmployeeDocument>(`${requestUrl}${sort ? '&' : '?'}cacheBuster=${new Date().getTime()}`),
@@ -122,7 +122,7 @@ export const getEntities: ICrudGetAllAction<IEmployeeDocument> = (page, size, so
 };
 
 export const getEntity: ICrudGetAction<IEmployeeDocument> = id => {
-  const requestUrl = `${apiUrl}/get-employee-document-by-client-id/${id}`;
+  const requestUrl = `${apiUrl}/${id}`;
   return {
     type: ACTION_TYPES.FETCH_EMPLOYEEDOCUMENT,
     payload: axios.get<IEmployeeDocument>(requestUrl),
@@ -132,7 +132,7 @@ export const getEntity: ICrudGetAction<IEmployeeDocument> = id => {
 export const createEntity: ICrudPutAction<IEmployeeDocument> = entity => async dispatch => {
   const result = await dispatch({
     type: ACTION_TYPES.CREATE_EMPLOYEEDOCUMENT,
-    payload: axios.post(apiUrl + '/create-employee-document-by-client-id', cleanEntity(entity)),
+    payload: axios.post(apiUrl, cleanEntity(entity)),
   });
   dispatch(getEntities());
   return result;
@@ -141,13 +141,13 @@ export const createEntity: ICrudPutAction<IEmployeeDocument> = entity => async d
 export const updateEntity: ICrudPutAction<IEmployeeDocument> = entity => async dispatch => {
   const result = await dispatch({
     type: ACTION_TYPES.UPDATE_EMPLOYEEDOCUMENT,
-    payload: axios.put(apiUrl + '/update-employee-document-by-client-id', cleanEntity(entity)),
+    payload: axios.put(apiUrl, cleanEntity(entity)),
   });
   return result;
 };
 
 export const deleteEntity: ICrudDeleteAction<IEmployeeDocument> = id => async dispatch => {
-  const requestUrl = `${apiUrl}/delete-employee-document-by-client-id/${id}`;
+  const requestUrl = `${apiUrl}/${id}`;
   const result = await dispatch({
     type: ACTION_TYPES.DELETE_EMPLOYEEDOCUMENT,
     payload: axios.delete(requestUrl),

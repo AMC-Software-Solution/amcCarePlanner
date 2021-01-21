@@ -15,7 +15,7 @@ class EmployeeDocumentState extends Equatable {
 
   final DocumentNameInput documentName;
   final DocumentNumberInput documentNumber;
-  final EmployeeDocumentStatusInput employeeDocumentStatus;
+  final DocumentStatusInput documentStatus;
   final NoteInput note;
   final IssuedDateInput issuedDate;
   final ExpiryDateInput expiryDate;
@@ -38,7 +38,7 @@ IssuedDateInput issuedDate,ExpiryDateInput expiryDate,UploadedDateInput uploaded
     this.deleteStatus = EmployeeDocumentDeleteStatus.none,
     this.documentName = const DocumentNameInput.pure(),
     this.documentNumber = const DocumentNumberInput.pure(),
-    this.employeeDocumentStatus = const EmployeeDocumentStatusInput.pure(),
+    this.documentStatus = const DocumentStatusInput.pure(),
     this.note = const NoteInput.pure(),
     this.documentFileUrl = const DocumentFileUrlInput.pure(),
     this.clientId = const ClientIdInput.pure(),
@@ -60,7 +60,7 @@ this.lastUpdatedDate = lastUpdatedDate ?? LastUpdatedDateInput.pure()
     String generalNotificationKey,
     DocumentNameInput documentName,
     DocumentNumberInput documentNumber,
-    EmployeeDocumentStatusInput employeeDocumentStatus,
+    DocumentStatusInput documentStatus,
     NoteInput note,
     IssuedDateInput issuedDate,
     ExpiryDateInput expiryDate,
@@ -86,7 +86,7 @@ this.lastUpdatedDate = lastUpdatedDate ?? LastUpdatedDateInput.pure()
       deleteStatus: deleteStatus ?? this.deleteStatus,
       documentName: documentName ?? this.documentName,
       documentNumber: documentNumber ?? this.documentNumber,
-      employeeDocumentStatus: employeeDocumentStatus ?? this.employeeDocumentStatus,
+      documentStatus: documentStatus ?? this.documentStatus,
       note: note ?? this.note,
       documentFileUrl: documentFileUrl ?? this.documentFileUrl,
       clientId: clientId ?? this.clientId,
@@ -97,7 +97,7 @@ this.lastUpdatedDate = lastUpdatedDate ?? LastUpdatedDateInput.pure()
   @override
   List<Object> get props => [employeeDocuments, employeeDocumentStatusUI,
      loadedEmployeeDocument, editMode, deleteStatus, formStatus, generalNotificationKey, 
-documentName,documentNumber,employeeDocumentStatus,note,issuedDate,expiryDate,uploadedDate,documentFileUrl,createdDate,lastUpdatedDate,clientId,hasExtraData,];
+documentName,documentNumber,documentStatus,note,issuedDate,expiryDate,uploadedDate,documentFileUrl,createdDate,lastUpdatedDate,clientId,hasExtraData,];
 
   @override
   bool get stringify => true;

@@ -58,8 +58,8 @@ class ServiceUserBloc extends Bloc<ServiceUserEvent, ServiceUserState> {
       yield* onDeleteServiceUserId(event);
     } else if (event is LoadServiceUserByIdForView) {
       yield* onLoadServiceUserIdForView(event);
-    }else if (event is TitlleChanged){
-      yield* onTitlleChange(event);
+    }else if (event is TitleChanged){
+      yield* onTitleChange(event);
     }else if (event is FirstNameChanged){
       yield* onFirstNameChange(event);
     }else if (event is MiddleNameChanged){
@@ -129,7 +129,7 @@ class ServiceUserBloc extends Bloc<ServiceUserEvent, ServiceUserState> {
         ServiceUser result;
         if(this.state.editMode) {
           ServiceUser newServiceUser = ServiceUser(state.loadedServiceUser.id,
-            this.state.titlle.value,  
+            this.state.title.value,  
             this.state.firstName.value,  
             this.state.middleName.value,  
             this.state.lastName.value,  
@@ -166,7 +166,7 @@ class ServiceUserBloc extends Bloc<ServiceUserEvent, ServiceUserState> {
           result = await _serviceUserRepository.update(newServiceUser);
         } else {
           ServiceUser newServiceUser = ServiceUser(null,
-            this.state.titlle.value,  
+            this.state.title.value,  
             this.state.firstName.value,  
             this.state.middleName.value,  
             this.state.lastName.value,  
@@ -221,7 +221,7 @@ class ServiceUserBloc extends Bloc<ServiceUserEvent, ServiceUserState> {
     yield this.state.copyWith(serviceUserStatusUI: ServiceUserStatusUI.loading);
     ServiceUser loadedServiceUser = await _serviceUserRepository.getServiceUser(event.id);
 
-    final titlle = TitlleInput.dirty(loadedServiceUser?.titlle != null ? loadedServiceUser.titlle: null);
+    final title = TitleInput.dirty(loadedServiceUser?.title != null ? loadedServiceUser.title: null);
     final firstName = FirstNameInput.dirty(loadedServiceUser?.firstName != null ? loadedServiceUser.firstName: '');
     final middleName = MiddleNameInput.dirty(loadedServiceUser?.middleName != null ? loadedServiceUser.middleName: '');
     final lastName = LastNameInput.dirty(loadedServiceUser?.lastName != null ? loadedServiceUser.lastName: '');
@@ -251,7 +251,7 @@ class ServiceUserBloc extends Bloc<ServiceUserEvent, ServiceUserState> {
     final hasExtraData = HasExtraDataInput.dirty(loadedServiceUser?.hasExtraData != null ? loadedServiceUser.hasExtraData: false);
 
     yield this.state.copyWith(loadedServiceUser: loadedServiceUser, editMode: true,
-      titlle: titlle,
+      title: title,
       firstName: firstName,
       middleName: middleName,
       lastName: lastName,
@@ -324,12 +324,12 @@ class ServiceUserBloc extends Bloc<ServiceUserEvent, ServiceUserState> {
   }
 
 
-  Stream<ServiceUserState> onTitlleChange(TitlleChanged event) async* {
-    final titlle = TitlleInput.dirty(event.titlle);
+  Stream<ServiceUserState> onTitleChange(TitleChanged event) async* {
+    final title = TitleInput.dirty(event.title);
     yield this.state.copyWith(
-      titlle: titlle,
+      title: title,
       formStatus: Formz.validate([
-        titlle,
+        title,
       this.state.firstName,
       this.state.middleName,
       this.state.lastName,
@@ -365,7 +365,7 @@ class ServiceUserBloc extends Bloc<ServiceUserEvent, ServiceUserState> {
     yield this.state.copyWith(
       firstName: firstName,
       formStatus: Formz.validate([
-      this.state.titlle,
+      this.state.title,
         firstName,
       this.state.middleName,
       this.state.lastName,
@@ -401,7 +401,7 @@ class ServiceUserBloc extends Bloc<ServiceUserEvent, ServiceUserState> {
     yield this.state.copyWith(
       middleName: middleName,
       formStatus: Formz.validate([
-      this.state.titlle,
+      this.state.title,
       this.state.firstName,
         middleName,
       this.state.lastName,
@@ -437,7 +437,7 @@ class ServiceUserBloc extends Bloc<ServiceUserEvent, ServiceUserState> {
     yield this.state.copyWith(
       lastName: lastName,
       formStatus: Formz.validate([
-      this.state.titlle,
+      this.state.title,
       this.state.firstName,
       this.state.middleName,
         lastName,
@@ -473,7 +473,7 @@ class ServiceUserBloc extends Bloc<ServiceUserEvent, ServiceUserState> {
     yield this.state.copyWith(
       preferredName: preferredName,
       formStatus: Formz.validate([
-      this.state.titlle,
+      this.state.title,
       this.state.firstName,
       this.state.middleName,
       this.state.lastName,
@@ -509,7 +509,7 @@ class ServiceUserBloc extends Bloc<ServiceUserEvent, ServiceUserState> {
     yield this.state.copyWith(
       email: email,
       formStatus: Formz.validate([
-      this.state.titlle,
+      this.state.title,
       this.state.firstName,
       this.state.middleName,
       this.state.lastName,
@@ -545,7 +545,7 @@ class ServiceUserBloc extends Bloc<ServiceUserEvent, ServiceUserState> {
     yield this.state.copyWith(
       serviceUserCode: serviceUserCode,
       formStatus: Formz.validate([
-      this.state.titlle,
+      this.state.title,
       this.state.firstName,
       this.state.middleName,
       this.state.lastName,
@@ -581,7 +581,7 @@ class ServiceUserBloc extends Bloc<ServiceUserEvent, ServiceUserState> {
     yield this.state.copyWith(
       dateOfBirth: dateOfBirth,
       formStatus: Formz.validate([
-      this.state.titlle,
+      this.state.title,
       this.state.firstName,
       this.state.middleName,
       this.state.lastName,
@@ -617,7 +617,7 @@ class ServiceUserBloc extends Bloc<ServiceUserEvent, ServiceUserState> {
     yield this.state.copyWith(
       lastVisitDate: lastVisitDate,
       formStatus: Formz.validate([
-      this.state.titlle,
+      this.state.title,
       this.state.firstName,
       this.state.middleName,
       this.state.lastName,
@@ -653,7 +653,7 @@ class ServiceUserBloc extends Bloc<ServiceUserEvent, ServiceUserState> {
     yield this.state.copyWith(
       startDate: startDate,
       formStatus: Formz.validate([
-      this.state.titlle,
+      this.state.title,
       this.state.firstName,
       this.state.middleName,
       this.state.lastName,
@@ -689,7 +689,7 @@ class ServiceUserBloc extends Bloc<ServiceUserEvent, ServiceUserState> {
     yield this.state.copyWith(
       supportType: supportType,
       formStatus: Formz.validate([
-      this.state.titlle,
+      this.state.title,
       this.state.firstName,
       this.state.middleName,
       this.state.lastName,
@@ -725,7 +725,7 @@ class ServiceUserBloc extends Bloc<ServiceUserEvent, ServiceUserState> {
     yield this.state.copyWith(
       serviceUserCategory: serviceUserCategory,
       formStatus: Formz.validate([
-      this.state.titlle,
+      this.state.title,
       this.state.firstName,
       this.state.middleName,
       this.state.lastName,
@@ -761,7 +761,7 @@ class ServiceUserBloc extends Bloc<ServiceUserEvent, ServiceUserState> {
     yield this.state.copyWith(
       vulnerability: vulnerability,
       formStatus: Formz.validate([
-      this.state.titlle,
+      this.state.title,
       this.state.firstName,
       this.state.middleName,
       this.state.lastName,
@@ -797,7 +797,7 @@ class ServiceUserBloc extends Bloc<ServiceUserEvent, ServiceUserState> {
     yield this.state.copyWith(
       servicePriority: servicePriority,
       formStatus: Formz.validate([
-      this.state.titlle,
+      this.state.title,
       this.state.firstName,
       this.state.middleName,
       this.state.lastName,
@@ -833,7 +833,7 @@ class ServiceUserBloc extends Bloc<ServiceUserEvent, ServiceUserState> {
     yield this.state.copyWith(
       source: source,
       formStatus: Formz.validate([
-      this.state.titlle,
+      this.state.title,
       this.state.firstName,
       this.state.middleName,
       this.state.lastName,
@@ -869,7 +869,7 @@ class ServiceUserBloc extends Bloc<ServiceUserEvent, ServiceUserState> {
     yield this.state.copyWith(
       status: status,
       formStatus: Formz.validate([
-      this.state.titlle,
+      this.state.title,
       this.state.firstName,
       this.state.middleName,
       this.state.lastName,
@@ -905,7 +905,7 @@ class ServiceUserBloc extends Bloc<ServiceUserEvent, ServiceUserState> {
     yield this.state.copyWith(
       firstLanguage: firstLanguage,
       formStatus: Formz.validate([
-      this.state.titlle,
+      this.state.title,
       this.state.firstName,
       this.state.middleName,
       this.state.lastName,
@@ -941,7 +941,7 @@ class ServiceUserBloc extends Bloc<ServiceUserEvent, ServiceUserState> {
     yield this.state.copyWith(
       interpreterRequired: interpreterRequired,
       formStatus: Formz.validate([
-      this.state.titlle,
+      this.state.title,
       this.state.firstName,
       this.state.middleName,
       this.state.lastName,
@@ -977,7 +977,7 @@ class ServiceUserBloc extends Bloc<ServiceUserEvent, ServiceUserState> {
     yield this.state.copyWith(
       activatedDate: activatedDate,
       formStatus: Formz.validate([
-      this.state.titlle,
+      this.state.title,
       this.state.firstName,
       this.state.middleName,
       this.state.lastName,
@@ -1013,7 +1013,7 @@ class ServiceUserBloc extends Bloc<ServiceUserEvent, ServiceUserState> {
     yield this.state.copyWith(
       profilePhotoUrl: profilePhotoUrl,
       formStatus: Formz.validate([
-      this.state.titlle,
+      this.state.title,
       this.state.firstName,
       this.state.middleName,
       this.state.lastName,
@@ -1049,7 +1049,7 @@ class ServiceUserBloc extends Bloc<ServiceUserEvent, ServiceUserState> {
     yield this.state.copyWith(
       lastRecordedHeight: lastRecordedHeight,
       formStatus: Formz.validate([
-      this.state.titlle,
+      this.state.title,
       this.state.firstName,
       this.state.middleName,
       this.state.lastName,
@@ -1085,7 +1085,7 @@ class ServiceUserBloc extends Bloc<ServiceUserEvent, ServiceUserState> {
     yield this.state.copyWith(
       lastRecordedWeight: lastRecordedWeight,
       formStatus: Formz.validate([
-      this.state.titlle,
+      this.state.title,
       this.state.firstName,
       this.state.middleName,
       this.state.lastName,
@@ -1121,7 +1121,7 @@ class ServiceUserBloc extends Bloc<ServiceUserEvent, ServiceUserState> {
     yield this.state.copyWith(
       hasMedicalCondition: hasMedicalCondition,
       formStatus: Formz.validate([
-      this.state.titlle,
+      this.state.title,
       this.state.firstName,
       this.state.middleName,
       this.state.lastName,
@@ -1157,7 +1157,7 @@ class ServiceUserBloc extends Bloc<ServiceUserEvent, ServiceUserState> {
     yield this.state.copyWith(
       medicalConditionSummary: medicalConditionSummary,
       formStatus: Formz.validate([
-      this.state.titlle,
+      this.state.title,
       this.state.firstName,
       this.state.middleName,
       this.state.lastName,
@@ -1193,7 +1193,7 @@ class ServiceUserBloc extends Bloc<ServiceUserEvent, ServiceUserState> {
     yield this.state.copyWith(
       createdDate: createdDate,
       formStatus: Formz.validate([
-      this.state.titlle,
+      this.state.title,
       this.state.firstName,
       this.state.middleName,
       this.state.lastName,
@@ -1229,7 +1229,7 @@ class ServiceUserBloc extends Bloc<ServiceUserEvent, ServiceUserState> {
     yield this.state.copyWith(
       lastUpdatedDate: lastUpdatedDate,
       formStatus: Formz.validate([
-      this.state.titlle,
+      this.state.title,
       this.state.firstName,
       this.state.middleName,
       this.state.lastName,
@@ -1265,7 +1265,7 @@ class ServiceUserBloc extends Bloc<ServiceUserEvent, ServiceUserState> {
     yield this.state.copyWith(
       clientId: clientId,
       formStatus: Formz.validate([
-      this.state.titlle,
+      this.state.title,
       this.state.firstName,
       this.state.middleName,
       this.state.lastName,
@@ -1301,7 +1301,7 @@ class ServiceUserBloc extends Bloc<ServiceUserEvent, ServiceUserState> {
     yield this.state.copyWith(
       hasExtraData: hasExtraData,
       formStatus: Formz.validate([
-      this.state.titlle,
+      this.state.title,
       this.state.firstName,
       this.state.middleName,
       this.state.lastName,

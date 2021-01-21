@@ -33,7 +33,7 @@ public class ServiceOrder implements Serializable {
 
     @NotNull
     @Column(name = "service_hourly_rate", nullable = false)
-    private Double serviceHourlyRate;
+    private String serviceHourlyRate;
 
     @NotNull
     @Column(name = "client_id", nullable = false)
@@ -87,16 +87,16 @@ public class ServiceOrder implements Serializable {
         this.serviceDescription = serviceDescription;
     }
 
-    public Double getServiceHourlyRate() {
+    public String getServiceHourlyRate() {
         return serviceHourlyRate;
     }
 
-    public ServiceOrder serviceHourlyRate(Double serviceHourlyRate) {
+    public ServiceOrder serviceHourlyRate(String serviceHourlyRate) {
         this.serviceHourlyRate = serviceHourlyRate;
         return this;
     }
 
-    public void setServiceHourlyRate(Double serviceHourlyRate) {
+    public void setServiceHourlyRate(String serviceHourlyRate) {
         this.serviceHourlyRate = serviceHourlyRate;
     }
 
@@ -189,7 +189,7 @@ public class ServiceOrder implements Serializable {
             "id=" + getId() +
             ", title='" + getTitle() + "'" +
             ", serviceDescription='" + getServiceDescription() + "'" +
-            ", serviceHourlyRate=" + getServiceHourlyRate() +
+            ", serviceHourlyRate='" + getServiceHourlyRate() + "'" +
             ", clientId=" + getClientId() +
             ", createdDate='" + getCreatedDate() + "'" +
             ", lastUpdatedDate='" + getLastUpdatedDate() + "'" +

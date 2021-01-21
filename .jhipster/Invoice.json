@@ -101,7 +101,7 @@
       "otherEntityField": "serviceUserCode"
     }
   ],
-  "changelogDate": "20210114114111",
+  "changelogDate": "20210121105753",
   "entityTableName": "invoice",
   "dto": "mapstruct",
   "pagination": "pagination",

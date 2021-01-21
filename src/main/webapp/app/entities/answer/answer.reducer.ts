@@ -97,12 +97,12 @@ export default (state: AnswerState = initialState, action): AnswerState => {
   }
 };
 
-const apiUrl = 'api/v1';
+const apiUrl = 'api/answers';
 
 // Actions
 
 export const getEntities: ICrudGetAllAction<IAnswer> = (page, size, sort) => {
-  const requestUrl = `${apiUrl}/get-all-answers-by-client-id${sort ? `?page=${page}&size=${size}&sort=${sort}` : ''}`;
+  const requestUrl = `${apiUrl}${sort ? `?page=${page}&size=${size}&sort=${sort}` : ''}`;
   return {
     type: ACTION_TYPES.FETCH_ANSWER_LIST,
     payload: axios.get<IAnswer>(`${requestUrl}${sort ? '&' : '?'}cacheBuster=${new Date().getTime()}`),
@@ -110,7 +110,7 @@ export const getEntities: ICrudGetAllAction<IAnswer> = (page, size, sort) => {
 };
 
 export const getEntity: ICrudGetAction<IAnswer> = id => {
-  const requestUrl = `${apiUrl}/get-answer-by-client-id/${id}`;
+  const requestUrl = `${apiUrl}/${id}`;
   return {
     type: ACTION_TYPES.FETCH_ANSWER,
     payload: axios.get<IAnswer>(requestUrl),
@@ -120,7 +120,7 @@ export const getEntity: ICrudGetAction<IAnswer> = id => {
 export const createEntity: ICrudPutAction<IAnswer> = entity => async dispatch => {
   const result = await dispatch({
     type: ACTION_TYPES.CREATE_ANSWER,
-    payload: axios.post(apiUrl + '/create-answer-by-client-id', cleanEntity(entity)),
+    payload: axios.post(apiUrl, cleanEntity(entity)),
   });
   dispatch(getEntities());
   return result;
@@ -129,13 +129,13 @@ export const createEntity: ICrudPutAction<IAnswer> = entity => async dispatch =>
 export const updateEntity: ICrudPutAction<IAnswer> = entity => async dispatch => {
   const result = await dispatch({
     type: ACTION_TYPES.UPDATE_ANSWER,
-    payload: axios.put(apiUrl + '/update-answer-by-client-id', cleanEntity(entity)),
+    payload: axios.put(apiUrl, cleanEntity(entity)),
   });
   return result;
 };
 
 export const deleteEntity: ICrudDeleteAction<IAnswer> = id => async dispatch => {
-  const requestUrl = `${apiUrl}/delete-answer-by-client-id/${id}`;
+  const requestUrl = `${apiUrl}/${id}`;
   const result = await dispatch({
     type: ACTION_TYPES.DELETE_ANSWER,
     payload: axios.delete(requestUrl),

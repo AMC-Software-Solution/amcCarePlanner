@@ -11,8 +11,8 @@ class ServiceUser {
   @JsonProperty(name: 'id')
   final int id;
 
-  @JsonProperty(name: 'titlle', enumValues: Titlle.values)
-  final Titlle titlle;
+  @JsonProperty(name: 'title', enumValues: ServiceUserTitle.values)
+  final ServiceUserTitle title;
 
   @JsonProperty(name: 'firstName')
   final String firstName;
@@ -109,7 +109,7 @@ class ServiceUser {
         
  const ServiceUser (
      this.id,
-        this.titlle,
+        this.title,
         this.firstName,
         this.middleName,
         this.lastName,
@@ -147,7 +147,7 @@ class ServiceUser {
 String toString() {
     return 'ServiceUser{'+
     'id: $id,' +
-        'titlle: $titlle,' +
+        'title: $title,' +
         'firstName: $firstName,' +
         'middleName: $middleName,' +
         'lastName: $lastName,' +
@@ -196,8 +196,8 @@ int get hashCode =>
 
 
 @jsonSerializable
-@Json(enumValues: Titlle.values)
-enum Titlle {
+@Json(enumValues: ServiceUserTitle.values)
+enum ServiceUserTitle {
     MR ,
     MRS ,
     MS ,

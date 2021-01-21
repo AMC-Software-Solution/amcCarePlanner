@@ -53,7 +53,7 @@
       "ownerSide": true
     }
   ],
-  "changelogDate": "20210114110711",
+  "changelogDate": "20210121102353",
   "entityTableName": "service_user_contact",
   "dto": "mapstruct",
   "pagination": "pagination",

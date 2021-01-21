@@ -45,7 +45,7 @@ S.of(context).pageEntitiesEmployeeDocumentCreateTitle;
       child: Wrap(runSpacing: 15, children: <Widget>[
           documentNameField(),
           documentNumberField(),
-          employeeDocumentStatusField(),
+          documentStatusField(),
           noteField(),
           issuedDateField(),
           expiryDateField(),
@@ -87,19 +87,19 @@ S.of(context).pageEntitiesEmployeeDocumentCreateTitle;
             }
         );
       }
-      Widget employeeDocumentStatusField() {
+      Widget documentStatusField() {
         return BlocBuilder<EmployeeDocumentBloc,EmployeeDocumentState>(
-            buildWhen: (previous, current) => previous.employeeDocumentStatus != current.employeeDocumentStatus,
+            buildWhen: (previous, current) => previous.documentStatus != current.documentStatus,
             builder: (context, state) {
               return Padding(
                 padding: const EdgeInsets.only(left: 3.0),
                 child: Row(
                   mainAxisAlignment: MainAxisAlignment.spaceBetween,
                   children: <Widget>[
-                    Text(S.of(context).pageEntitiesEmployeeDocumentEmployeeDocumentStatusField, style: Theme.of(context).textTheme.bodyText1,),
+                    Text(S.of(context).pageEntitiesEmployeeDocumentDocumentStatusField, style: Theme.of(context).textTheme.bodyText1,),
                     DropdownButton<EmployeeDocumentStatus>(
-                        value: state.employeeDocumentStatus.value,
-                        onChanged: (value) { context.bloc<EmployeeDocumentBloc>().add(EmployeeDocumentStatusChanged(employeeDocumentStatus: value)); },
+                        value: state.documentStatus.value,
+                        onChanged: (value) { context.bloc<EmployeeDocumentBloc>().add(DocumentStatusChanged(documentStatus: value)); },
                         items: createDropdownEmployeeDocumentStatusItems(EmployeeDocumentStatus.values)),
                   ],
                 ),
@@ -275,16 +275,16 @@ S.of(context).pageEntitiesEmployeeDocumentCreateTitle;
               });
         }
 
-      List<DropdownMenuItem<EmployeeDocumentStatus>> createDropdownEmployeeDocumentStatusItems(List<EmployeeDocumentStatus> employeeDocumentStatuss) {
-        List<DropdownMenuItem<EmployeeDocumentStatus>> employeeDocumentStatusDropDown = [];
+      List<DropdownMenuItem<EmployeeDocumentStatus>> createDropdownEmployeeDocumentStatusItems(List<EmployeeDocumentStatus> documentStatuss) {
+        List<DropdownMenuItem<EmployeeDocumentStatus>> documentStatusDropDown = [];
     
-        for (EmployeeDocumentStatus employeeDocumentStatus in employeeDocumentStatuss) {
+        for (EmployeeDocumentStatus documentStatus in documentStatuss) {
           DropdownMenuItem<EmployeeDocumentStatus> dropdown = DropdownMenuItem<EmployeeDocumentStatus>(
-              value: employeeDocumentStatus, child: Text(employeeDocumentStatus.toString()));
-              employeeDocumentStatusDropDown.add(dropdown);
+              value: documentStatus, child: Text(documentStatus.toString()));
+              documentStatusDropDown.add(dropdown);
         }
     
-        return employeeDocumentStatusDropDown;
+        return documentStatusDropDown;
       }
 
   Widget validationZone() {

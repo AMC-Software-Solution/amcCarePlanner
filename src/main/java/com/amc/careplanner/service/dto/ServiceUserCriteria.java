@@ -3,7 +3,7 @@ package com.amc.careplanner.service.dto;
 import java.io.Serializable;
 import java.util.Objects;
 import io.github.jhipster.service.Criteria;
-import com.amc.careplanner.domain.enumeration.Title;
+import com.amc.careplanner.domain.enumeration.ServiceUserTitle;
 import com.amc.careplanner.domain.enumeration.SupportType;
 import com.amc.careplanner.domain.enumeration.ServiceUserCategory;
 import com.amc.careplanner.domain.enumeration.Vulnerability;
@@ -31,20 +31,20 @@ import io.github.jhipster.service.filter.ZonedDateTimeFilter;
  */
 public class ServiceUserCriteria implements Serializable, Criteria {
     /**
-     * Class for filtering Title
+     * Class for filtering ServiceUserTitle
      */
-    public static class TitleFilter extends Filter<Title> {
+    public static class ServiceUserTitleFilter extends Filter<ServiceUserTitle> {
 
-        public TitleFilter() {
+        public ServiceUserTitleFilter() {
         }
 
-        public TitleFilter(TitleFilter filter) {
+        public ServiceUserTitleFilter(ServiceUserTitleFilter filter) {
             super(filter);
         }
 
         @Override
-        public TitleFilter copy() {
-            return new TitleFilter(this);
+        public ServiceUserTitleFilter copy() {
+            return new ServiceUserTitleFilter(this);
         }
 
     }
@@ -161,7 +161,7 @@ public class ServiceUserCriteria implements Serializable, Criteria {
 
     private LongFilter id;
 
-    private TitleFilter title;
+    private ServiceUserTitleFilter title;
 
     private StringFilter firstName;
 
@@ -277,11 +277,11 @@ public class ServiceUserCriteria implements Serializable, Criteria {
         this.id = id;
     }
 
-    public TitleFilter getTitle() {
+    public ServiceUserTitleFilter getTitle() {
         return title;
     }
 
-    public void setTitle(TitleFilter title) {
+    public void setTitle(ServiceUserTitleFilter title) {
         this.title = title;
     }
 

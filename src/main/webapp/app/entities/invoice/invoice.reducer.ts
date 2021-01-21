@@ -97,12 +97,12 @@ export default (state: InvoiceState = initialState, action): InvoiceState => {
   }
 };
 
-const apiUrl = 'api/v1';
+const apiUrl = 'api/invoices';
 
 // Actions
 
 export const getEntities: ICrudGetAllAction<IInvoice> = (page, size, sort) => {
-  const requestUrl = `${apiUrl}/get-all-invoices-by-client-id${sort ? `?page=${page}&size=${size}&sort=${sort}` : ''}`;
+  const requestUrl = `${apiUrl}${sort ? `?page=${page}&size=${size}&sort=${sort}` : ''}`;
   return {
     type: ACTION_TYPES.FETCH_INVOICE_LIST,
     payload: axios.get<IInvoice>(`${requestUrl}${sort ? '&' : '?'}cacheBuster=${new Date().getTime()}`),
@@ -110,7 +110,7 @@ export const getEntities: ICrudGetAllAction<IInvoice> = (page, size, sort) => {
 };
 
 export const getEntity: ICrudGetAction<IInvoice> = id => {
-  const requestUrl = `${apiUrl}/get-invoice-by-client-id/${id}`;
+  const requestUrl = `${apiUrl}/${id}`;
   return {
     type: ACTION_TYPES.FETCH_INVOICE,
     payload: axios.get<IInvoice>(requestUrl),
@@ -120,7 +120,7 @@ export const getEntity: ICrudGetAction<IInvoice> = id => {
 export const createEntity: ICrudPutAction<IInvoice> = entity => async dispatch => {
   const result = await dispatch({
     type: ACTION_TYPES.CREATE_INVOICE,
-    payload: axios.post(apiUrl + '/create-invoice-by-client-id', cleanEntity(entity)),
+    payload: axios.post(apiUrl, cleanEntity(entity)),
   });
   dispatch(getEntities());
   return result;
@@ -129,13 +129,13 @@ export const createEntity: ICrudPutAction<IInvoice> = entity => async dispatch =
 export const updateEntity: ICrudPutAction<IInvoice> = entity => async dispatch => {
   const result = await dispatch({
     type: ACTION_TYPES.UPDATE_INVOICE,
-    payload: axios.put(apiUrl + '/update-invoice-by-client-id', cleanEntity(entity)),
+    payload: axios.put(apiUrl, cleanEntity(entity)),
   });
   return result;
 };
 
 export const deleteEntity: ICrudDeleteAction<IInvoice> = id => async dispatch => {
-  const requestUrl = `${apiUrl}/delete-invoice-by-client-id/${id}`;
+  const requestUrl = `${apiUrl}/${id}`;
   const result = await dispatch({
     type: ACTION_TYPES.DELETE_INVOICE,
     payload: axios.delete(requestUrl),
