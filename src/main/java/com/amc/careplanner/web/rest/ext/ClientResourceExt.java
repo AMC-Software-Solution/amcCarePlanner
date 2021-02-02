@@ -8,6 +8,7 @@ import com.amc.careplanner.service.dto.CountryDTO;
 import com.amc.careplanner.service.dto.EmployeeHolidayCriteria;
 import com.amc.careplanner.service.dto.EmployeeHolidayDTO;
 import com.amc.careplanner.service.ext.ClientServiceExt;
+import com.amc.careplanner.service.ext.SystemEventsHistoryServiceExt;
 import com.amc.careplanner.utils.CommonUtils;
 import com.amc.careplanner.utils.Constants;
 import com.amc.careplanner.utils.RandomUtil;
@@ -63,13 +64,17 @@ public class ClientResourceExt extends ClientResource{
     private final UserRepositoryExt userRepositoryExt;
     
     private final S3Service s3Service;
+    
+	private final SystemEventsHistoryServiceExt systemEventsHistoryServiceExt;
 
-    public ClientResourceExt(ClientServiceExt clientServiceExt, ClientQueryService clientQueryService, UserRepositoryExt userRepositoryExt,S3Service s3Service) {
+
+    public ClientResourceExt(ClientServiceExt clientServiceExt, ClientQueryService clientQueryService, UserRepositoryExt userRepositoryExt,S3Service s3Service, SystemEventsHistoryServiceExt systemEventsHistoryServiceExt) {
     	super(clientServiceExt,clientQueryService);
         this.clientServiceExt = clientServiceExt;
         this.clientQueryService = clientQueryService;
         this.userRepositoryExt = userRepositoryExt;
         this.s3Service = s3Service;
+        this.systemEventsHistoryServiceExt = systemEventsHistoryServiceExt;
     }
 
     /**
@@ -104,6 +109,11 @@ public class ClientResourceExt extends ClientResource{
   			 result3 = clientServiceExt.save(result2);
   		}
         
+  		String loggedInAdminUserEmail = SecurityUtils.getCurrentUserLogin().get();
+		User loggedInAdminUser = userRepositoryExt.findOneByEmailIgnoreCase(loggedInAdminUserEmail).get();  		
+  		CommonUtils.fireSystemEvent(systemEventsHistoryServiceExt, "createClient", "/api/v1/create-client-by-client-id",
+        		result.getClientName() + " has just been created", "Client", result.getId(), loggedInAdminUser.getId(),
+        		loggedInAdminUser.getEmail(), result.getId());
         return ResponseEntity.created(new URI("/api/clients/" + result.getId()))
             .headers(HeaderUtil.createEntityCreationAlert(applicationName, true, ENTITY_NAME, result.getId().toString()))
             .body(result3);
@@ -142,6 +152,11 @@ public class ClientResourceExt extends ClientResource{
   			 result3 = clientServiceExt.save(result2);
   		}
         
+  		String loggedInAdminUserEmail = SecurityUtils.getCurrentUserLogin().get();
+		User loggedInAdminUser = userRepositoryExt.findOneByEmailIgnoreCase(loggedInAdminUserEmail).get();  		
+  		CommonUtils.fireSystemEvent(systemEventsHistoryServiceExt, "updatedClient", "/api/v1/update-client-by-client-id",
+        		result.getClientName() + " has just been updated", "Client", result.getId(), loggedInAdminUser.getId(),
+        		loggedInAdminUser.getEmail(), result.getId());
         return ResponseEntity.ok()
             .headers(HeaderUtil.createEntityUpdateAlert(applicationName, true, ENTITY_NAME, clientDTO.getId().toString()))
             .body(result3);

@@ -7,6 +7,8 @@ import com.amc.careplanner.service.dto.DisabilityDTO;
 import com.amc.careplanner.service.dto.TaskCriteria;
 import com.amc.careplanner.service.dto.TaskDTO;
 import com.amc.careplanner.service.ext.DisabilityServiceExt;
+import com.amc.careplanner.service.ext.SystemEventsHistoryServiceExt;
+import com.amc.careplanner.utils.CommonUtils;
 import com.amc.careplanner.service.dto.DisabilityCriteria;
 import com.amc.careplanner.domain.User;
 import com.amc.careplanner.repository.ext.UserRepositoryExt;
@@ -56,12 +58,16 @@ public class DisabilityResourceExt extends DisabilityResource{
     private final DisabilityQueryService disabilityQueryService;
     
     private final UserRepositoryExt userRepositoryExt;
+    
+	private final SystemEventsHistoryServiceExt systemEventsHistoryServiceExt;
 
-    public DisabilityResourceExt(DisabilityServiceExt disabilityServiceExt, DisabilityQueryService disabilityQueryService, UserRepositoryExt userRepositoryExt) {
+
+    public DisabilityResourceExt(DisabilityServiceExt disabilityServiceExt, DisabilityQueryService disabilityQueryService, UserRepositoryExt userRepositoryExt, SystemEventsHistoryServiceExt systemEventsHistoryServiceExt) {
     	super(disabilityServiceExt,disabilityQueryService);
         this.disabilityServiceExt = disabilityServiceExt;
         this.disabilityQueryService = disabilityQueryService;
         this.userRepositoryExt = userRepositoryExt;
+        this.systemEventsHistoryServiceExt = systemEventsHistoryServiceExt;
     }
 
     /**
@@ -81,6 +87,12 @@ public class DisabilityResourceExt extends DisabilityResource{
         disabilityDTO.setLastUpdatedDate(ZonedDateTime.now());
         disabilityDTO.setClientId(getClientIdFromLoggedInUser());
         DisabilityDTO result = disabilityServiceExt.save(disabilityDTO);
+        
+        String loggedInAdminUserEmail = SecurityUtils.getCurrentUserLogin().get();
+		User loggedInAdminUser = userRepositoryExt.findOneByEmailIgnoreCase(loggedInAdminUserEmail).get();  		
+  		CommonUtils.fireSystemEvent(systemEventsHistoryServiceExt, "createDisability", "/api/v1/create-disability-by-client-id",
+        		result.getNote() + " has just been created", "Disability", result.getId(), loggedInAdminUser.getId(),
+        		loggedInAdminUser.getEmail(), result.getId());
         return ResponseEntity.created(new URI("/api/disabilities/" + result.getId()))
             .headers(HeaderUtil.createEntityCreationAlert(applicationName, true, ENTITY_NAME, result.getId().toString()))
             .body(result);
@@ -107,6 +119,11 @@ public class DisabilityResourceExt extends DisabilityResource{
         }
         disabilityDTO.setLastUpdatedDate(ZonedDateTime.now());
         DisabilityDTO result = disabilityServiceExt.save(disabilityDTO);
+        String loggedInAdminUserEmail = SecurityUtils.getCurrentUserLogin().get();
+		User loggedInAdminUser = userRepositoryExt.findOneByEmailIgnoreCase(loggedInAdminUserEmail).get();  		
+  		CommonUtils.fireSystemEvent(systemEventsHistoryServiceExt, "updateDisability", "/api/v1/update-disability-by-client-id",
+        		result.getNote() + " has just been updated", "Disability", result.getId(), loggedInAdminUser.getId(),
+        		loggedInAdminUser.getEmail(), result.getId());
         return ResponseEntity.ok()
             .headers(HeaderUtil.createEntityUpdateAlert(applicationName, true, ENTITY_NAME, disabilityDTO.getId().toString()))
             .body(result);

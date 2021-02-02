@@ -5,6 +5,7 @@ import com.amc.careplanner.web.rest.AccessResource;
 import com.amc.careplanner.web.rest.errors.BadRequestAlertException;
 import com.amc.careplanner.service.dto.AccessDTO;
 import com.amc.careplanner.service.ext.AccessServiceExt;
+import com.amc.careplanner.service.ext.SystemEventsHistoryServiceExt;
 import com.amc.careplanner.service.dto.AccessCriteria;
 import com.amc.careplanner.domain.User;
 import com.amc.careplanner.repository.ext.UserRepositoryExt;
@@ -51,12 +52,16 @@ public class AccessResourceExt extends AccessResource {
     private final AccessQueryService accessQueryService;
     
     private final UserRepositoryExt userRepositoryExt;
+    
+	private final SystemEventsHistoryServiceExt systemEventsHistoryServiceExt;
 
-    public AccessResourceExt(AccessServiceExt accessServiceExt, AccessQueryService accessQueryService, UserRepositoryExt userRepositoryExt) {
+
+    public AccessResourceExt(AccessServiceExt accessServiceExt, AccessQueryService accessQueryService, UserRepositoryExt userRepositoryExt, SystemEventsHistoryServiceExt systemEventsHistoryServiceExt) {
         super(accessServiceExt,accessQueryService);
         this.accessServiceExt = accessServiceExt;
         this.accessQueryService = accessQueryService;
         this.userRepositoryExt = userRepositoryExt;
+        this.systemEventsHistoryServiceExt = systemEventsHistoryServiceExt;
     }
     
     @PostMapping("/create_access_by_client_id")

@@ -5,6 +5,7 @@ import com.amc.careplanner.web.rest.CurrencyResource;
 import com.amc.careplanner.web.rest.errors.BadRequestAlertException;
 import com.amc.careplanner.service.dto.CurrencyDTO;
 import com.amc.careplanner.service.ext.CurrencyServiceExt;
+import com.amc.careplanner.service.ext.SystemEventsHistoryServiceExt;
 import com.amc.careplanner.utils.CommonUtils;
 import com.amc.careplanner.utils.Constants;
 import com.amc.careplanner.utils.RandomUtil;
@@ -59,13 +60,17 @@ public class CurrencyResourceExt extends CurrencyResource{
     private final UserRepositoryExt userRepositoryExt;
     
     private final S3Service s3Service;
+    
+	private final SystemEventsHistoryServiceExt systemEventsHistoryServiceExt;
 
-    public CurrencyResourceExt(CurrencyServiceExt currencyServiceExt, CurrencyQueryService currencyQueryService, UserRepositoryExt userRepositoryExt, S3Service s3Service) {
+
+    public CurrencyResourceExt(CurrencyServiceExt currencyServiceExt, CurrencyQueryService currencyQueryService, UserRepositoryExt userRepositoryExt, S3Service s3Service, SystemEventsHistoryServiceExt systemEventsHistoryServiceExt) {
     	super(currencyServiceExt,currencyQueryService);
         this.currencyServiceExt = currencyServiceExt;
         this.currencyQueryService = currencyQueryService;
         this.userRepositoryExt = userRepositoryExt;
         this.s3Service = s3Service;
+        this.systemEventsHistoryServiceExt = systemEventsHistoryServiceExt;
     }
 
     /**
@@ -96,6 +101,11 @@ public class CurrencyResourceExt extends CurrencyResource{
   			result2.setCurrencyLogoContentType(null);
   			 result3 = currencyServiceExt.save(result2);
   		}	 
+  		String loggedInAdminUserEmail = SecurityUtils.getCurrentUserLogin().get();
+		User loggedInAdminUser = userRepositoryExt.findOneByEmailIgnoreCase(loggedInAdminUserEmail).get();  		
+  		CommonUtils.fireSystemEvent(systemEventsHistoryServiceExt, "createCurrency", "/api/v1/create-currency-by-client-id",
+        		result.getCurrency() + " has just been created", "Currency", result.getId(), loggedInAdminUser.getId(),
+        		loggedInAdminUser.getEmail(), result.getId());
      	return ResponseEntity.created(new URI("/api/currencies/" + result.getId()))
   		            .headers(HeaderUtil.createEntityCreationAlert(applicationName, true, ENTITY_NAME, result.getId().toString()))
   		            .body(result3);
@@ -131,6 +141,11 @@ public class CurrencyResourceExt extends CurrencyResource{
   			result2.setCurrencyLogoContentType(null);
   			 result3 = currencyServiceExt.save(result2);
   		}
+  		String loggedInAdminUserEmail = SecurityUtils.getCurrentUserLogin().get();
+		User loggedInAdminUser = userRepositoryExt.findOneByEmailIgnoreCase(loggedInAdminUserEmail).get();  		
+  		CommonUtils.fireSystemEvent(systemEventsHistoryServiceExt, "updateCurrency", "/api/v1/update-currency-by-client-id",
+        		result.getCurrency() + " has just been updated", "Currency", result.getId(), loggedInAdminUser.getId(),
+        		loggedInAdminUser.getEmail(), result.getId());
         return ResponseEntity.ok()
             .headers(HeaderUtil.createEntityUpdateAlert(applicationName, true, ENTITY_NAME, currencyDTO.getId().toString()))
             .body(result3);

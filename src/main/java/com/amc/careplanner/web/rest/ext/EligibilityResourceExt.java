@@ -7,6 +7,8 @@ import com.amc.careplanner.service.dto.EligibilityDTO;
 import com.amc.careplanner.service.dto.TaskCriteria;
 import com.amc.careplanner.service.dto.TaskDTO;
 import com.amc.careplanner.service.ext.EligibilityServiceExt;
+import com.amc.careplanner.service.ext.SystemEventsHistoryServiceExt;
+import com.amc.careplanner.utils.CommonUtils;
 import com.amc.careplanner.service.dto.EligibilityCriteria;
 import com.amc.careplanner.domain.User;
 import com.amc.careplanner.repository.ext.UserRepositoryExt;
@@ -56,12 +58,16 @@ public class EligibilityResourceExt extends EligibilityResource{
     private final EligibilityQueryService eligibilityQueryService;
     
     private final UserRepositoryExt userRepositoryExt;
+    
+	private final SystemEventsHistoryServiceExt systemEventsHistoryServiceExt;
 
-    public EligibilityResourceExt(EligibilityServiceExt eligibilityServiceExt, EligibilityQueryService eligibilityQueryService, UserRepositoryExt userRepositoryExt) {
+
+    public EligibilityResourceExt(EligibilityServiceExt eligibilityServiceExt, EligibilityQueryService eligibilityQueryService, UserRepositoryExt userRepositoryExt, SystemEventsHistoryServiceExt systemEventsHistoryServiceExt) {
     	super(eligibilityServiceExt,eligibilityQueryService);
         this.eligibilityServiceExt = eligibilityServiceExt;
         this.eligibilityQueryService = eligibilityQueryService;
         this.userRepositoryExt = userRepositoryExt;
+        this.systemEventsHistoryServiceExt = systemEventsHistoryServiceExt;
     }
 
     /**
@@ -81,6 +87,11 @@ public class EligibilityResourceExt extends EligibilityResource{
         eligibilityDTO.setLastUpdatedDate(ZonedDateTime.now());
         eligibilityDTO.setClientId(getClientIdFromLoggedInUser());
         EligibilityDTO result = eligibilityServiceExt.save(eligibilityDTO);
+        String loggedInAdminUserEmail = SecurityUtils.getCurrentUserLogin().get();
+		User loggedInAdminUser = userRepositoryExt.findOneByEmailIgnoreCase(loggedInAdminUserEmail).get();  		
+  		CommonUtils.fireSystemEvent(systemEventsHistoryServiceExt, "createEligibility", "/api/v1/create-eligibility-by-client-id",
+        		result.getNote() + " has just been created", "Eligibility", result.getId(), loggedInAdminUser.getId(),
+        		loggedInAdminUser.getEmail(), result.getId());
         return ResponseEntity.created(new URI("/api/eligibilities/" + result.getId()))
             .headers(HeaderUtil.createEntityCreationAlert(applicationName, true, ENTITY_NAME, result.getId().toString()))
             .body(result);
@@ -107,6 +118,11 @@ public class EligibilityResourceExt extends EligibilityResource{
         }
         eligibilityDTO.setLastUpdatedDate(ZonedDateTime.now());
         EligibilityDTO result = eligibilityServiceExt.save(eligibilityDTO);
+        String loggedInAdminUserEmail = SecurityUtils.getCurrentUserLogin().get();
+		User loggedInAdminUser = userRepositoryExt.findOneByEmailIgnoreCase(loggedInAdminUserEmail).get();  		
+  		CommonUtils.fireSystemEvent(systemEventsHistoryServiceExt, "updateEligibility", "/api/v1/update-eligibility-by-client-id",
+        		result.getNote() + " has just been updated", "Eligibility", result.getId(), loggedInAdminUser.getId(),
+        		loggedInAdminUser.getEmail(), result.getId());
         return ResponseEntity.ok()
             .headers(HeaderUtil.createEntityUpdateAlert(applicationName, true, ENTITY_NAME, eligibilityDTO.getId().toString()))
             .body(result);

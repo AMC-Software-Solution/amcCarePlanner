@@ -7,6 +7,8 @@ import com.amc.careplanner.service.dto.EmergencyContactDTO;
 import com.amc.careplanner.service.dto.EmployeeHolidayCriteria;
 import com.amc.careplanner.service.dto.EmployeeHolidayDTO;
 import com.amc.careplanner.service.ext.EmergencyContactServiceExt;
+import com.amc.careplanner.service.ext.SystemEventsHistoryServiceExt;
+import com.amc.careplanner.utils.CommonUtils;
 import com.amc.careplanner.service.dto.EmergencyContactCriteria;
 import com.amc.careplanner.domain.User;
 import com.amc.careplanner.repository.ext.UserRepositoryExt;
@@ -56,12 +58,16 @@ public class EmergencyContactResourceExt extends EmergencyContactResource{
     private final EmergencyContactQueryService emergencyContactQueryService;
 
     private final UserRepositoryExt userRepositoryExt;
+    
+	private final SystemEventsHistoryServiceExt systemEventsHistoryServiceExt;
 
-    public EmergencyContactResourceExt(EmergencyContactServiceExt emergencyContactServiceExt, EmergencyContactQueryService emergencyContactQueryService, UserRepositoryExt userRepositoryExt) {
+
+    public EmergencyContactResourceExt(EmergencyContactServiceExt emergencyContactServiceExt, EmergencyContactQueryService emergencyContactQueryService, UserRepositoryExt userRepositoryExt, SystemEventsHistoryServiceExt systemEventsHistoryServiceExt) {
     	super(emergencyContactServiceExt,emergencyContactQueryService);
         this.emergencyContactServiceExt = emergencyContactServiceExt;
         this.emergencyContactQueryService = emergencyContactQueryService;
         this.userRepositoryExt = userRepositoryExt;
+        this.systemEventsHistoryServiceExt = systemEventsHistoryServiceExt;
     }
 
     /**
@@ -81,6 +87,11 @@ public class EmergencyContactResourceExt extends EmergencyContactResource{
         emergencyContactDTO.setLastUpdatedDate(ZonedDateTime.now());
         emergencyContactDTO.setClientId(getClientIdFromLoggedInUser());
         EmergencyContactDTO result = emergencyContactServiceExt.save(emergencyContactDTO);
+        String loggedInAdminUserEmail = SecurityUtils.getCurrentUserLogin().get();
+		User loggedInAdminUser = userRepositoryExt.findOneByEmailIgnoreCase(loggedInAdminUserEmail).get();  		
+  		CommonUtils.fireSystemEvent(systemEventsHistoryServiceExt, "createEmergencyContact", "/api/v1/create-emergencyContact-by-client-id",
+        		result.getName() + " has just been created", "EmergencyContact", result.getId(), loggedInAdminUser.getId(),
+        		loggedInAdminUser.getEmail(), result.getId());
         return ResponseEntity.created(new URI("/api/emergency-contacts/" + result.getId()))
             .headers(HeaderUtil.createEntityCreationAlert(applicationName, true, ENTITY_NAME, result.getId().toString()))
             .body(result);
@@ -106,6 +117,11 @@ public class EmergencyContactResourceExt extends EmergencyContactResource{
       }
         emergencyContactDTO.setLastUpdatedDate(ZonedDateTime.now());
         EmergencyContactDTO result = emergencyContactServiceExt.save(emergencyContactDTO);
+        String loggedInAdminUserEmail = SecurityUtils.getCurrentUserLogin().get();
+		User loggedInAdminUser = userRepositoryExt.findOneByEmailIgnoreCase(loggedInAdminUserEmail).get();  		
+  		CommonUtils.fireSystemEvent(systemEventsHistoryServiceExt, "updateEmergencyContact", "/api/v1/update-emergencyContact-by-client-id",
+        		result.getName() + " has just been updated", "EmergencyContact", result.getId(), loggedInAdminUser.getId(),
+        		loggedInAdminUser.getEmail(), result.getId());
         return ResponseEntity.ok()
             .headers(HeaderUtil.createEntityUpdateAlert(applicationName, true, ENTITY_NAME, emergencyContactDTO.getId().toString()))
             .body(result);

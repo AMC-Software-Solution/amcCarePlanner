@@ -7,6 +7,8 @@ import com.amc.careplanner.service.dto.EmployeeHolidayDTO;
 import com.amc.careplanner.service.dto.TaskCriteria;
 import com.amc.careplanner.service.dto.TaskDTO;
 import com.amc.careplanner.service.ext.EmployeeHolidayServiceExt;
+import com.amc.careplanner.service.ext.SystemEventsHistoryServiceExt;
+import com.amc.careplanner.utils.CommonUtils;
 import com.amc.careplanner.service.dto.EmployeeHolidayCriteria;
 import com.amc.careplanner.domain.User;
 import com.amc.careplanner.repository.ext.UserRepositoryExt;
@@ -56,12 +58,16 @@ public class EmployeeHolidayResourceExt extends EmployeeHolidayResource{
     private final EmployeeHolidayQueryService employeeHolidayQueryService;
     
     private final UserRepositoryExt userRepositoryExt;
+    
+	private final SystemEventsHistoryServiceExt systemEventsHistoryServiceExt;
 
-    public EmployeeHolidayResourceExt(EmployeeHolidayServiceExt employeeHolidayServiceExt, EmployeeHolidayQueryService employeeHolidayQueryService, UserRepositoryExt userRepositoryExt) {
+
+    public EmployeeHolidayResourceExt(EmployeeHolidayServiceExt employeeHolidayServiceExt, EmployeeHolidayQueryService employeeHolidayQueryService, UserRepositoryExt userRepositoryExt,SystemEventsHistoryServiceExt systemEventsHistoryServiceExt) {
     	super(employeeHolidayServiceExt,employeeHolidayQueryService);
         this.employeeHolidayServiceExt = employeeHolidayServiceExt;
         this.employeeHolidayQueryService = employeeHolidayQueryService;
         this.userRepositoryExt = userRepositoryExt;
+        this.systemEventsHistoryServiceExt = systemEventsHistoryServiceExt;
     }
 
     /**
@@ -81,6 +87,11 @@ public class EmployeeHolidayResourceExt extends EmployeeHolidayResource{
         employeeHolidayDTO.setLastUpdatedDate(ZonedDateTime.now());
         employeeHolidayDTO.setClientId(getClientIdFromLoggedInUser());
         EmployeeHolidayDTO result = employeeHolidayServiceExt.save(employeeHolidayDTO);
+        String loggedInAdminUserEmail = SecurityUtils.getCurrentUserLogin().get();
+		User loggedInAdminUser = userRepositoryExt.findOneByEmailIgnoreCase(loggedInAdminUserEmail).get();  		
+  		CommonUtils.fireSystemEvent(systemEventsHistoryServiceExt, "createEmployeeHoliday", "/api/v1/create-EmployeeHoliday-by-client-id",
+        		result.getDescription() + " has just been created", "EmployeeHoliday", result.getId(), loggedInAdminUser.getId(),
+        		loggedInAdminUser.getEmail(), result.getId());
         return ResponseEntity.created(new URI("/api/employee-holidays/" + result.getId()))
             .headers(HeaderUtil.createEntityCreationAlert(applicationName, true, ENTITY_NAME, result.getId().toString()))
             .body(result);
@@ -107,6 +118,11 @@ public class EmployeeHolidayResourceExt extends EmployeeHolidayResource{
         }
         employeeHolidayDTO.setLastUpdatedDate(ZonedDateTime.now());
         EmployeeHolidayDTO result = employeeHolidayServiceExt.save(employeeHolidayDTO);
+        String loggedInAdminUserEmail = SecurityUtils.getCurrentUserLogin().get();
+		User loggedInAdminUser = userRepositoryExt.findOneByEmailIgnoreCase(loggedInAdminUserEmail).get();  		
+  		CommonUtils.fireSystemEvent(systemEventsHistoryServiceExt, "updateEmployeeHoliday", "/api/v1/update-EmployeeHoliday-by-client-id",
+        		result.getDescription() + " has just been updated", "EmployeeHoliday", result.getId(), loggedInAdminUser.getId(),
+        		loggedInAdminUser.getEmail(), result.getId());
         return ResponseEntity.ok()
             .headers(HeaderUtil.createEntityUpdateAlert(applicationName, true, ENTITY_NAME, employeeHolidayDTO.getId().toString()))
             .body(result);

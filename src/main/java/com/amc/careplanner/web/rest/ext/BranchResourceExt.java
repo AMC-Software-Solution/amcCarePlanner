@@ -7,6 +7,8 @@ import com.amc.careplanner.service.dto.BranchDTO;
 import com.amc.careplanner.service.dto.EmployeeCriteria;
 import com.amc.careplanner.service.dto.EmployeeDTO;
 import com.amc.careplanner.service.ext.BranchServiceExt;
+import com.amc.careplanner.service.ext.SystemEventsHistoryServiceExt;
+import com.amc.careplanner.utils.CommonUtils;
 import com.amc.careplanner.service.dto.BranchCriteria;
 import com.amc.careplanner.domain.User;
 import com.amc.careplanner.repository.ext.UserRepositoryExt;
@@ -56,12 +58,16 @@ public class BranchResourceExt extends BranchResource {
     private final BranchQueryService branchQueryService;
     
     private final UserRepositoryExt userRepositoryExt;
+    
+	private final SystemEventsHistoryServiceExt systemEventsHistoryServiceExt;
 
-    public BranchResourceExt(BranchServiceExt branchServiceExt, BranchQueryService branchQueryService,UserRepositoryExt userRepositoryExt) {
+
+    public BranchResourceExt(BranchServiceExt branchServiceExt, BranchQueryService branchQueryService,UserRepositoryExt userRepositoryExt, SystemEventsHistoryServiceExt systemEventsHistoryServiceExt) {
     	super(branchServiceExt,branchQueryService);
         this.branchServiceExt = branchServiceExt;
         this.branchQueryService = branchQueryService;
         this.userRepositoryExt = userRepositoryExt;
+        this.systemEventsHistoryServiceExt = systemEventsHistoryServiceExt;
     }
 
     /**
@@ -81,6 +87,11 @@ public class BranchResourceExt extends BranchResource {
         branchDTO.setLastUpdatedDate(ZonedDateTime.now());
         branchDTO.setClientId(getClientIdFromLoggedInUser());
         BranchDTO result = branchServiceExt.save(branchDTO);
+        String loggedInAdminUserEmail = SecurityUtils.getCurrentUserLogin().get();
+		User loggedInAdminUser = userRepositoryExt.findOneByEmailIgnoreCase(loggedInAdminUserEmail).get();  		
+  		CommonUtils.fireSystemEvent(systemEventsHistoryServiceExt, "createBranch", "/api/v1/create-branch-by-client-id",
+        		result.getName() + " has just been created", "Branch", result.getId(), loggedInAdminUser.getId(),
+        		loggedInAdminUser.getEmail(), result.getId());
         return ResponseEntity.created(new URI("/v1/api/get_branches_by_client_id/" + result.getId()))
             .headers(HeaderUtil.createEntityCreationAlert(applicationName, true, ENTITY_NAME, result.getId().toString()))
             .body(result);
@@ -105,7 +116,11 @@ public class BranchResourceExt extends BranchResource {
         
         branchDTO.setClientId(getClientIdFromLoggedInUser());
         BranchDTO result = branchServiceExt.save(branchDTO);
-        
+        String loggedInAdminUserEmail = SecurityUtils.getCurrentUserLogin().get();
+		User loggedInAdminUser = userRepositoryExt.findOneByEmailIgnoreCase(loggedInAdminUserEmail).get();  		
+  		CommonUtils.fireSystemEvent(systemEventsHistoryServiceExt, "updateBranch", "/api/v1/update-branch-by-client-id",
+        		result.getName() + " has just been updated", "Branch", result.getId(), loggedInAdminUser.getId(),
+        		loggedInAdminUser.getEmail(), result.getId());
         return ResponseEntity.ok()
             .headers(HeaderUtil.createEntityUpdateAlert(applicationName, true, ENTITY_NAME, branchDTO.getId().toString()))
             .body(result);

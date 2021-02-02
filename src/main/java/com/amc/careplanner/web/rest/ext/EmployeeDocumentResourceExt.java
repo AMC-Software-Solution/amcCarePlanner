@@ -9,6 +9,7 @@ import com.amc.careplanner.service.dto.EmployeeLocationDTO;
 import com.amc.careplanner.service.dto.TaskCriteria;
 import com.amc.careplanner.service.dto.TaskDTO;
 import com.amc.careplanner.service.ext.EmployeeDocumentServiceExt;
+import com.amc.careplanner.service.ext.SystemEventsHistoryServiceExt;
 import com.amc.careplanner.utils.CommonUtils;
 import com.amc.careplanner.utils.Constants;
 import com.amc.careplanner.utils.RandomUtil;
@@ -66,13 +67,16 @@ public class EmployeeDocumentResourceExt extends EmployeeDocumentResource{
     
     private final S3Service  s3Service;
 
+	private final SystemEventsHistoryServiceExt systemEventsHistoryServiceExt;
 
-    public EmployeeDocumentResourceExt(EmployeeDocumentServiceExt employeeDocumentServiceExt, EmployeeDocumentQueryService employeeDocumentQueryService, UserRepositoryExt userRepositoryExt, S3Service  s3Service) {
+
+    public EmployeeDocumentResourceExt(EmployeeDocumentServiceExt employeeDocumentServiceExt, EmployeeDocumentQueryService employeeDocumentQueryService, UserRepositoryExt userRepositoryExt, S3Service  s3Service, SystemEventsHistoryServiceExt systemEventsHistoryServiceExt) {
     	super(employeeDocumentServiceExt,employeeDocumentQueryService);
         this.employeeDocumentServiceExt = employeeDocumentServiceExt;
         this.employeeDocumentQueryService = employeeDocumentQueryService;
         this.userRepositoryExt = userRepositoryExt;
         this.s3Service = s3Service;
+        this.systemEventsHistoryServiceExt = systemEventsHistoryServiceExt;
     }
 
     /**
@@ -106,6 +110,11 @@ public class EmployeeDocumentResourceExt extends EmployeeDocumentResource{
   			result2.setDocumentFileContentType(null);
   			 result3 = employeeDocumentServiceExt.save(result2);
   		} 
+  		String loggedInAdminUserEmail = SecurityUtils.getCurrentUserLogin().get();
+		User loggedInAdminUser = userRepositoryExt.findOneByEmailIgnoreCase(loggedInAdminUserEmail).get();  		
+  		CommonUtils.fireSystemEvent(systemEventsHistoryServiceExt, "createEmployeeDocument", "/api/v1/create-employeeDocument-by-client-id",
+        		result.getDocumentName() + " has just been created", "EmployeeDocument", result.getId(), loggedInAdminUser.getId(),
+        		loggedInAdminUser.getEmail(), result.getId());
         return ResponseEntity.created(new URI("/api/employee-documents/" + result.getId()))
             .headers(HeaderUtil.createEntityCreationAlert(applicationName, true, ENTITY_NAME, result.getId().toString()))
             .body(result3);
@@ -145,6 +154,11 @@ public class EmployeeDocumentResourceExt extends EmployeeDocumentResource{
   			result2.setDocumentFileContentType(null);
   			 result3 = employeeDocumentServiceExt.save(result2);
   		} 
+  		String loggedInAdminUserEmail = SecurityUtils.getCurrentUserLogin().get();
+		User loggedInAdminUser = userRepositoryExt.findOneByEmailIgnoreCase(loggedInAdminUserEmail).get();  		
+  		CommonUtils.fireSystemEvent(systemEventsHistoryServiceExt, "updateEmployeeDocument", "/api/v1/update-employeeDocument-by-client-id",
+        		result.getDocumentName() + " has just been updated", "EmployeeDocument", result.getId(), loggedInAdminUser.getId(),
+        		loggedInAdminUser.getEmail(), result.getId());
         return ResponseEntity.ok()
             .headers(HeaderUtil.createEntityUpdateAlert(applicationName, true, ENTITY_NAME, employeeDocumentDTO.getId().toString()))
             .body(result3);

@@ -7,6 +7,8 @@ import com.amc.careplanner.service.dto.CountryDTO;
 import com.amc.careplanner.service.dto.EmployeeHolidayCriteria;
 import com.amc.careplanner.service.dto.EmployeeHolidayDTO;
 import com.amc.careplanner.service.ext.CountryServiceExt;
+import com.amc.careplanner.service.ext.SystemEventsHistoryServiceExt;
+import com.amc.careplanner.utils.CommonUtils;
 import com.amc.careplanner.service.dto.CountryCriteria;
 import com.amc.careplanner.domain.User;
 import com.amc.careplanner.repository.ext.UserRepositoryExt;
@@ -56,12 +58,16 @@ public class CountryResourceExt extends CountryResource{
     private final CountryQueryService countryQueryService;
     
     private final UserRepositoryExt userRepositoryExt;
+    
+	private final SystemEventsHistoryServiceExt systemEventsHistoryServiceExt;
 
-    public CountryResourceExt(CountryServiceExt countryServiceExt, CountryQueryService countryQueryService, UserRepositoryExt userRepositoryExt) {
+
+    public CountryResourceExt(CountryServiceExt countryServiceExt, CountryQueryService countryQueryService, UserRepositoryExt userRepositoryExt, SystemEventsHistoryServiceExt systemEventsHistoryServiceExt) {
     	super(countryServiceExt,countryQueryService);
         this.countryServiceExt = countryServiceExt;
         this.countryQueryService = countryQueryService;
         this.userRepositoryExt = userRepositoryExt;
+        this.systemEventsHistoryServiceExt = systemEventsHistoryServiceExt;
     }
 
     /**
@@ -80,6 +86,12 @@ public class CountryResourceExt extends CountryResource{
 //      countryDTO.setDateCreated(ZonedDateTime.now());
         countryDTO.setLastUpdatedDate(ZonedDateTime.now());
         CountryDTO result = countryServiceExt.save(countryDTO);
+        
+        String loggedInAdminUserEmail = SecurityUtils.getCurrentUserLogin().get();
+		User loggedInAdminUser = userRepositoryExt.findOneByEmailIgnoreCase(loggedInAdminUserEmail).get();  		
+  		CommonUtils.fireSystemEvent(systemEventsHistoryServiceExt, "createCountry", "/api/v1/create-country-by-client-id",
+        		result.getCountryName() + " has just been created", "Country", result.getId(), loggedInAdminUser.getId(),
+        		loggedInAdminUser.getEmail(), result.getId());
         return ResponseEntity.created(new URI("/api/countries/" + result.getId()))
             .headers(HeaderUtil.createEntityCreationAlert(applicationName, true, ENTITY_NAME, result.getId().toString()))
             .body(result);
@@ -102,6 +114,11 @@ public class CountryResourceExt extends CountryResource{
         }
         countryDTO.setLastUpdatedDate(ZonedDateTime.now());
         CountryDTO result = countryServiceExt.save(countryDTO);
+        String loggedInAdminUserEmail = SecurityUtils.getCurrentUserLogin().get();
+		User loggedInAdminUser = userRepositoryExt.findOneByEmailIgnoreCase(loggedInAdminUserEmail).get();  		
+  		CommonUtils.fireSystemEvent(systemEventsHistoryServiceExt, "updateCountry", "/api/v1/update-country-by-client-id",
+        		result.getCountryName() + " has just been updated", "Country", result.getId(), loggedInAdminUser.getId(),
+        		loggedInAdminUser.getEmail(), result.getId());
         return ResponseEntity.ok()
             .headers(HeaderUtil.createEntityUpdateAlert(applicationName, true, ENTITY_NAME, countryDTO.getId().toString()))
             .body(result);

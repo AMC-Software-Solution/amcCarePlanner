@@ -7,6 +7,7 @@ import com.amc.careplanner.service.dto.CommunicationDTO;
 import com.amc.careplanner.service.dto.TaskCriteria;
 import com.amc.careplanner.service.dto.TaskDTO;
 import com.amc.careplanner.service.ext.CommunicationServiceExt;
+import com.amc.careplanner.service.ext.SystemEventsHistoryServiceExt;
 import com.amc.careplanner.utils.CommonUtils;
 import com.amc.careplanner.utils.Constants;
 import com.amc.careplanner.utils.RandomUtil;
@@ -63,14 +64,18 @@ public class CommunicationResourceExt extends CommunicationResource{
     private final UserRepositoryExt userRepositoryExt;
     
     private final S3Service  s3Service;
+    
+	private final SystemEventsHistoryServiceExt systemEventsHistoryServiceExt;
 
 
-    public CommunicationResourceExt(CommunicationServiceExt communicationServiceExt, CommunicationQueryService communicationQueryService,  UserRepositoryExt userRepositoryExt, S3Service  s3Service) {
+
+    public CommunicationResourceExt(CommunicationServiceExt communicationServiceExt, CommunicationQueryService communicationQueryService,  UserRepositoryExt userRepositoryExt, S3Service  s3Service, SystemEventsHistoryServiceExt systemEventsHistoryServiceExt) {
     	super(communicationServiceExt,communicationQueryService);
         this.communicationServiceExt = communicationServiceExt;
         this.communicationQueryService = communicationQueryService;
         this.userRepositoryExt = userRepositoryExt;
         this.s3Service = s3Service;
+        this.systemEventsHistoryServiceExt = systemEventsHistoryServiceExt;
 
     }
 
@@ -105,6 +110,12 @@ public class CommunicationResourceExt extends CommunicationResource{
   			result2.setAttachmentContentType(null);
   			 result3 = communicationServiceExt.save(result2);
   		} 
+  		
+  		String loggedInAdminUserEmail = SecurityUtils.getCurrentUserLogin().get();
+		User loggedInAdminUser = userRepositoryExt.findOneByEmailIgnoreCase(loggedInAdminUserEmail).get();  		
+  		CommonUtils.fireSystemEvent(systemEventsHistoryServiceExt, "createCommunication", "/api/v1/create-communication-by-client-id",
+        		result.getNote() + " has just been created", "Communication", result.getId(), loggedInAdminUser.getId(),
+        		loggedInAdminUser.getEmail(), result.getId());
         return ResponseEntity.created(new URI("/api/communications/" + result.getId()))
             .headers(HeaderUtil.createEntityCreationAlert(applicationName, true, ENTITY_NAME, result.getId().toString()))
             .body(result3);
@@ -143,7 +154,12 @@ public class CommunicationResourceExt extends CommunicationResource{
   			result2.setAttachment(null);
   			result2.setAttachmentContentType(null);
   			 result3 = communicationServiceExt.save(result2);
-  		} 
+  		}
+  		String loggedInAdminUserEmail = SecurityUtils.getCurrentUserLogin().get();
+		User loggedInAdminUser = userRepositoryExt.findOneByEmailIgnoreCase(loggedInAdminUserEmail).get();  		
+  		CommonUtils.fireSystemEvent(systemEventsHistoryServiceExt, "updateCommunication", "/api/v1/update-communication-by-client-id",
+        		result.getNote() + " has just been update", "Communication", result.getId(), loggedInAdminUser.getId(),
+        		loggedInAdminUser.getEmail(), result.getId());
         return ResponseEntity.ok()
             .headers(HeaderUtil.createEntityUpdateAlert(applicationName, true, ENTITY_NAME, communicationDTO.getId().toString()))
             .body(result3);

@@ -8,6 +8,7 @@ import com.amc.careplanner.service.dto.EmployeeHolidayCriteria;
 import com.amc.careplanner.service.dto.EmployeeHolidayDTO;
 import com.amc.careplanner.service.dto.NotificationDTO;
 import com.amc.careplanner.service.ext.ConsentServiceExt;
+import com.amc.careplanner.service.ext.SystemEventsHistoryServiceExt;
 import com.amc.careplanner.utils.CommonUtils;
 import com.amc.careplanner.utils.Constants;
 import com.amc.careplanner.utils.RandomUtil;
@@ -63,14 +64,18 @@ public class ConsentResourceExt extends ConsentResource{
     private final UserRepositoryExt userRepositoryExt;
     
     private final S3Service  s3Service;
+    
+	private final SystemEventsHistoryServiceExt systemEventsHistoryServiceExt;
 
 
-    public ConsentResourceExt(ConsentServiceExt consentServiceExt, ConsentQueryService consentQueryService, UserRepositoryExt userRepositoryExt, S3Service  s3Service) {
+
+    public ConsentResourceExt(ConsentServiceExt consentServiceExt, ConsentQueryService consentQueryService, UserRepositoryExt userRepositoryExt, S3Service  s3Service,SystemEventsHistoryServiceExt systemEventsHistoryServiceExt) {
     	super(consentServiceExt,consentQueryService);
         this.consentServiceExt = consentServiceExt;
         this.consentQueryService = consentQueryService;
         this.userRepositoryExt = userRepositoryExt;
         this.s3Service = s3Service;
+        this.systemEventsHistoryServiceExt = systemEventsHistoryServiceExt;
 
     }
 
@@ -105,6 +110,11 @@ public class ConsentResourceExt extends ConsentResource{
   			result2.setSignatureImageContentType(null);
   			 result3 = consentServiceExt.save(result2);
   		} 
+  		String loggedInAdminUserEmail = SecurityUtils.getCurrentUserLogin().get();
+		User loggedInAdminUser = userRepositoryExt.findOneByEmailIgnoreCase(loggedInAdminUserEmail).get();  		
+  		CommonUtils.fireSystemEvent(systemEventsHistoryServiceExt, "createConsent", "/api/v1/create-consent-by-client-id",
+        		result.getTitle() + " has just been created", "Consent", result.getId(), loggedInAdminUser.getId(),
+        		loggedInAdminUser.getEmail(), result.getId());
         return ResponseEntity.created(new URI("/api/consents/" + result.getId()))
             .headers(HeaderUtil.createEntityCreationAlert(applicationName, true, ENTITY_NAME, result.getId().toString()))
             .body(result3);
@@ -144,6 +154,11 @@ public class ConsentResourceExt extends ConsentResource{
   			result2.setSignatureImageContentType(null);
   			 result3 = consentServiceExt.save(result2);
     }
+  		String loggedInAdminUserEmail = SecurityUtils.getCurrentUserLogin().get();
+		User loggedInAdminUser = userRepositoryExt.findOneByEmailIgnoreCase(loggedInAdminUserEmail).get();  		
+  		CommonUtils.fireSystemEvent(systemEventsHistoryServiceExt, "updateConsent", "/api/v1/update-consent-by-client-id",
+        		result.getTitle() + " has just been update", "Consent", result.getId(), loggedInAdminUser.getId(),
+        		loggedInAdminUser.getEmail(), result.getId());
         return ResponseEntity.ok()
             .headers(HeaderUtil.createEntityUpdateAlert(applicationName, true, ENTITY_NAME, consentDTO.getId().toString()))
             .body(result3);

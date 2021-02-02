@@ -5,6 +5,7 @@ import com.amc.careplanner.web.rest.ServiceUserResource;
 import com.amc.careplanner.web.rest.errors.BadRequestAlertException;
 import com.amc.careplanner.service.dto.ServiceUserDTO;
 import com.amc.careplanner.service.ext.ServiceUserServiceExt;
+import com.amc.careplanner.service.ext.SystemEventsHistoryServiceExt;
 import com.amc.careplanner.utils.CommonUtils;
 import com.amc.careplanner.utils.Constants;
 import com.amc.careplanner.utils.RandomUtil;
@@ -20,6 +21,8 @@ import io.github.jhipster.service.filter.LongFilter;
 import io.github.jhipster.web.util.HeaderUtil;
 import io.github.jhipster.web.util.PaginationUtil;
 import io.github.jhipster.web.util.ResponseUtil;
+
+import org.apache.commons.lang3.StringUtils;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Value;
@@ -60,13 +63,16 @@ public class ServiceUserResourceExt extends ServiceUserResource{
     
     private final S3Service  s3Service;
 
+	private final SystemEventsHistoryServiceExt systemEventsHistoryServiceExt;
 
-    public ServiceUserResourceExt(ServiceUserServiceExt serviceUserServiceExt, ServiceUserQueryService serviceUserQueryService, UserRepositoryExt userRepositoryExt, S3Service  s3Service) {
+
+    public ServiceUserResourceExt(ServiceUserServiceExt serviceUserServiceExt, ServiceUserQueryService serviceUserQueryService, UserRepositoryExt userRepositoryExt, S3Service  s3Service, SystemEventsHistoryServiceExt systemEventsHistoryServiceExt) {
         super(serviceUserServiceExt,serviceUserQueryService);
     	this.serviceUserServiceExt = serviceUserServiceExt;
         this.serviceUserQueryService = serviceUserQueryService;
         this.userRepositoryExt = userRepositoryExt;
         this.s3Service = s3Service;
+        this.systemEventsHistoryServiceExt = systemEventsHistoryServiceExt;
 
     }
 
@@ -104,6 +110,12 @@ public class ServiceUserResourceExt extends ServiceUserResource{
   			result2.setProfilePhotoContentType(null);
   			 result3 = serviceUserServiceExt.save(result2);
   		}
+  		
+  		String loggedInAdminUserEmail = SecurityUtils.getCurrentUserLogin().get();
+		User loggedInAdminUser = userRepositoryExt.findOneByEmailIgnoreCase(loggedInAdminUserEmail).get();  		
+  		CommonUtils.fireSystemEvent(systemEventsHistoryServiceExt, "createServiceUser", "/api/v1/create-service-user-by-client-id",
+        		result.getFirstName() + " has just been created", "ServiceUser", result.getId(), loggedInAdminUser.getId(),
+        		loggedInAdminUser.getEmail(), result.getClientId());
         return ResponseEntity.created(new URI("/api/service-users/" + result.getId()))
             .headers(HeaderUtil.createEntityCreationAlert(applicationName, true, ENTITY_NAME, result.getId().toString()))
             .body(result3);
@@ -144,7 +156,11 @@ public class ServiceUserResourceExt extends ServiceUserResource{
   			result2.setProfilePhotoContentType(null);
   			 result3 = serviceUserServiceExt.save(result2);
   		}
-        
+  		String loggedInAdminUserEmail = SecurityUtils.getCurrentUserLogin().get();
+		User loggedInAdminUser = userRepositoryExt.findOneByEmailIgnoreCase(loggedInAdminUserEmail).get();  		
+  		CommonUtils.fireSystemEvent(systemEventsHistoryServiceExt, "updateServiceUser", "/api/v1/update-service-user-by-client-id",
+        		result.getFirstName() + " has just been updated", "ServiceUser", result.getId(), loggedInAdminUser.getId(),
+        		loggedInAdminUser.getEmail(), result.getClientId());
         return ResponseEntity.ok()
             .headers(HeaderUtil.createEntityUpdateAlert(applicationName, true, ENTITY_NAME, serviceUserDTO.getId().toString()))
             .body(result3);
