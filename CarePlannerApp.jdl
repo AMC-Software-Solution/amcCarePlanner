@@ -262,7 +262,6 @@ entity ServiceUser {
 	servicePriority ServicePriority required,
 	source Source required,
 	status ServiceUserStatus required,
-	firstLanguage String maxlength(25),
 	interpreterRequired Boolean,
     activatedDate ZonedDateTime,
 	profilePhoto ImageBlob,
@@ -276,6 +275,14 @@ entity ServiceUser {
 	clientId Long required,
 	hasExtraData Boolean
 }
+
+
+
+ relationship ManyToOne  {
+   ServiceUser {firstLanguage(language)} to Language
+ 
+}
+
 
  relationship ManyToOne  {
    ServiceUser {user(email)} to User
