@@ -187,8 +187,9 @@ public class EmployeeLocationResourceExt extends EmployeeLocationResource{
     
     @GetMapping("/get-employee-location-by-client-id-employee-id/{employeeId}")   
     public ResponseEntity<EmployeeLocationDTO> getEmployeeLocationByEmployeeId(@PathVariable Long employeeId) {
-        log.debug("REST request to get EmployeeLocation : {}", employeeId);
+        
         Long loggedInClientId = getClientIdFromLoggedInUser();
+        log.debug("REST request to get EmployeeLocation : employeeId: {} loggedInClientId: {}", employeeId, loggedInClientId);
         EmployeeLocationCriteria employeeLocationCriteria = new EmployeeLocationCriteria();
        
         LongFilter longFilterForClientId = new LongFilter();
@@ -197,12 +198,20 @@ public class EmployeeLocationResourceExt extends EmployeeLocationResource{
 		
 		LongFilter longFilterForEmployeeId = new LongFilter();
 		longFilterForEmployeeId.setEquals(employeeId);
-		employeeLocationCriteria.setEmployeeId(longFilterForClientId);
+		employeeLocationCriteria.setEmployeeId(longFilterForEmployeeId);
 		
 		
 		 List<EmployeeLocationDTO> listOfEmployeeLocations = employeeLocationQueryService.findByCriteria(employeeLocationCriteria);
-		 EmployeeLocationDTO employeeLocationDTO =listOfEmployeeLocations.get(0);
-        if (employeeLocationDTO != null && employeeLocationDTO.getClientId() != null && employeeLocationDTO.getClientId() != loggedInClientId) {
+		 
+		 EmployeeLocationDTO employeeLocationDTO = new EmployeeLocationDTO();
+		 
+		 if (listOfEmployeeLocations != null && listOfEmployeeLocations.size() > 0) {
+			 
+			 employeeLocationDTO = listOfEmployeeLocations.get(0);
+		 
+		 }
+        
+		 if (employeeLocationDTO != null && employeeLocationDTO.getClientId() != null && employeeLocationDTO.getClientId() != loggedInClientId) {
         	  throw new BadRequestAlertException("clientId mismatch", ENTITY_NAME, "clientIdMismatch");
         }
         return ResponseUtil.wrapOrNotFound(Optional.of(employeeLocationDTO));
