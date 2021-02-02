@@ -86,6 +86,8 @@ public class ServiceUserResourceExt extends ServiceUserResource{
 //      serviceUserDTO.setDateCreated(ZonedDateTime.now());
         serviceUserDTO.setLastUpdatedDate(ZonedDateTime.now());
         serviceUserDTO.setClientId(getClientIdFromLoggedInUser());
+        serviceUserDTO.setServiceUserCode(serviceUserDTO.getFirstName() + "_" + serviceUserDTO.getMiddleName() + "_" + serviceUserDTO.getLastName() + "_" + serviceUserDTO.getClientId());
+    
         ServiceUserDTO result = serviceUserServiceExt.save(serviceUserDTO);
         
         ServiceUserDTO result2 = result;

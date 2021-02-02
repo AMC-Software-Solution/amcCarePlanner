@@ -1,0 +1,104 @@
+1<?xml version="1.0" encoding="utf-8"?>
+2<manifest xmlns:android="http://schemas.android.com/apk/res/android"
+3    package="com.amc.careplanner.amc_care_planner"
+4    android:versionCode="1"
+5    android:versionName="1.0.0" >
+6
+7    <uses-sdk
+8        android:minSdkVersion="18"
+9        android:targetSdkVersion="28" />
+10    <!--
+11         Flutter needs it to communicate with the running application
+12         to allow setting breakpoints, to provide hot reload, etc.
+13    -->
+14    <uses-permission android:name="android.permission.INTERNET" />
+14-->/Users/ahmeddini/amc/amcCarePlanner/flutter-app/android/app/src/main/AndroidManifest.xml:8:5-66
+14-->/Users/ahmeddini/amc/amcCarePlanner/flutter-app/android/app/src/main/AndroidManifest.xml:8:22-64
+15
+16    <application
+16-->/Users/ahmeddini/amc/amcCarePlanner/flutter-app/android/app/src/main/AndroidManifest.xml:9:5-48:19
+17        android:name="io.flutter.app.FlutterApplication"
+17-->/Users/ahmeddini/amc/amcCarePlanner/flutter-app/android/app/src/main/AndroidManifest.xml:10:9-57
+18        android:appComponentFactory="androidx.core.app.CoreComponentFactory"
+18-->[androidx.core:core:1.1.0] /Users/ahmeddini/.gradle/caches/transforms-2/files-2.1/a528b13ac93e64cafa3d0480e2c93207/core-1.1.0/AndroidManifest.xml:24:18-86
+19        android:debuggable="true"
+20        android:icon="@mipmap/ic_launcher"
+20-->/Users/ahmeddini/amc/amcCarePlanner/flutter-app/android/app/src/main/AndroidManifest.xml:12:9-43
+21        android:label="amc_care_planner"
+21-->/Users/ahmeddini/amc/amcCarePlanner/flutter-app/android/app/src/main/AndroidManifest.xml:11:9-41
+22        android:usesCleartextTraffic="true" >
+22-->/Users/ahmeddini/amc/amcCarePlanner/flutter-app/android/app/src/main/AndroidManifest.xml:13:9-44
+23        <activity
+23-->/Users/ahmeddini/amc/amcCarePlanner/flutter-app/android/app/src/main/AndroidManifest.xml:14:9-42:20
+24            android:name="com.amc.careplanner.amc_care_planner.MainActivity"
+24-->/Users/ahmeddini/amc/amcCarePlanner/flutter-app/android/app/src/main/AndroidManifest.xml:15:13-41
+25            android:configChanges="orientation|keyboardHidden|keyboard|screenSize|smallestScreenSize|locale|layoutDirection|fontScale|screenLayout|density|uiMode"
+25-->/Users/ahmeddini/amc/amcCarePlanner/flutter-app/android/app/src/main/AndroidManifest.xml:18:13-163
+26            android:hardwareAccelerated="true"
+26-->/Users/ahmeddini/amc/amcCarePlanner/flutter-app/android/app/src/main/AndroidManifest.xml:19:13-47
+27            android:launchMode="singleTop"
+27-->/Users/ahmeddini/amc/amcCarePlanner/flutter-app/android/app/src/main/AndroidManifest.xml:16:13-43
+28            android:theme="@style/LaunchTheme"
+28-->/Users/ahmeddini/amc/amcCarePlanner/flutter-app/android/app/src/main/AndroidManifest.xml:17:13-47
+29            android:windowSoftInputMode="adjustResize" >
+29-->/Users/ahmeddini/amc/amcCarePlanner/flutter-app/android/app/src/main/AndroidManifest.xml:20:13-55
+30
+31            <!--
+32                 Specifies an Android theme to apply to this Activity as soon as
+33                 the Android process has started. This theme is visible to the user
+34                 while the Flutter UI initializes. After that, this theme continues
+35                 to determine the Window background behind the Flutter UI.
+36            -->
+37            <meta-data
+37-->/Users/ahmeddini/amc/amcCarePlanner/flutter-app/android/app/src/main/AndroidManifest.xml:25:13-28:17
+38                android:name="io.flutter.embedding.android.NormalTheme"
+38-->/Users/ahmeddini/amc/amcCarePlanner/flutter-app/android/app/src/main/AndroidManifest.xml:26:15-70
+39                android:resource="@style/NormalTheme" />
+39-->/Users/ahmeddini/amc/amcCarePlanner/flutter-app/android/app/src/main/AndroidManifest.xml:27:15-52
+40            <!--
+41                 Displays an Android View that continues showing the launch screen
+42                 Drawable until Flutter paints its first frame, then this splash
+43                 screen fades out. A splash screen is useful to avoid any visual
+44                 gap between the end of Android's launch screen and the painting of
+45                 Flutter's first frame.
+46            -->
+47            <meta-data
+47-->/Users/ahmeddini/amc/amcCarePlanner/flutter-app/android/app/src/main/AndroidManifest.xml:34:13-37:17
+48                android:name="io.flutter.embedding.android.SplashScreenDrawable"
+48-->/Users/ahmeddini/amc/amcCarePlanner/flutter-app/android/app/src/main/AndroidManifest.xml:35:15-79
+49                android:resource="@drawable/launch_background" />
+49-->/Users/ahmeddini/amc/amcCarePlanner/flutter-app/android/app/src/main/AndroidManifest.xml:36:15-61
+50
+51            <intent-filter>
+51-->/Users/ahmeddini/amc/amcCarePlanner/flutter-app/android/app/src/main/AndroidManifest.xml:38:13-41:29
+52                <action android:name="android.intent.action.MAIN" />
+52-->/Users/ahmeddini/amc/amcCarePlanner/flutter-app/android/app/src/main/AndroidManifest.xml:39:17-68
+52-->/Users/ahmeddini/amc/amcCarePlanner/flutter-app/android/app/src/main/AndroidManifest.xml:39:25-66
+53
+54                <category android:name="android.intent.category.LAUNCHER" />
+54-->/Users/ahmeddini/amc/amcCarePlanner/flutter-app/android/app/src/main/AndroidManifest.xml:40:17-76
+54-->/Users/ahmeddini/amc/amcCarePlanner/flutter-app/android/app/src/main/AndroidManifest.xml:40:27-74
+55            </intent-filter>
+56        </activity>
+57        <!--
+58             Don't delete the meta-data below.
+59             This is used by the Flutter tool to generate GeneratedPluginRegistrant.java
+60        -->
+61        <meta-data
+61-->/Users/ahmeddini/amc/amcCarePlanner/flutter-app/android/app/src/main/AndroidManifest.xml:45:9-47:33
+62            android:name="flutterEmbedding"
+62-->/Users/ahmeddini/amc/amcCarePlanner/flutter-app/android/app/src/main/AndroidManifest.xml:46:13-44
+63            android:value="2" />
+63-->/Users/ahmeddini/amc/amcCarePlanner/flutter-app/android/app/src/main/AndroidManifest.xml:47:13-30
+64
+65        <activity
+65-->[:url_launcher] /Users/ahmeddini/amc/amcCarePlanner/flutter-app/build/url_launcher/intermediates/library_manifest/debug/AndroidManifest.xml:8:9-11:74
+66            android:name="io.flutter.plugins.urllauncher.WebViewActivity"
+66-->[:url_launcher] /Users/ahmeddini/amc/amcCarePlanner/flutter-app/build/url_launcher/intermediates/library_manifest/debug/AndroidManifest.xml:9:13-74
+67            android:exported="false"
+67-->[:url_launcher] /Users/ahmeddini/amc/amcCarePlanner/flutter-app/build/url_launcher/intermediates/library_manifest/debug/AndroidManifest.xml:10:13-37
+68            android:theme="@android:style/Theme.NoTitleBar.Fullscreen" />
+68-->[:url_launcher] /Users/ahmeddini/amc/amcCarePlanner/flutter-app/build/url_launcher/intermediates/library_manifest/debug/AndroidManifest.xml:11:13-71
+69    </application>
+70
+71</manifest>

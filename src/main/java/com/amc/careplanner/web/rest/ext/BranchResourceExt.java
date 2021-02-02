@@ -157,6 +157,7 @@ public class BranchResourceExt extends BranchResource {
 		LongFilter longFilterForId = new LongFilter();
 		longFilterForId.setEquals(id);
 		branchCriteria.setClientId(longFilterForClientId);
+		branchCriteria.setId(longFilterForId);
 		 List<BranchDTO> listOfBranches = branchQueryService.findByCriteria(branchCriteria);
 		 BranchDTO branchDTO =listOfBranches.get(0);
         if (branchDTO != null && branchDTO.getClientId() != null && branchDTO.getClientId() != getClientIdFromLoggedInUser()) {
