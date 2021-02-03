@@ -5,6 +5,8 @@ import com.amc.careplanner.web.rest.EmployeeLocationResource;
 import com.amc.careplanner.web.rest.errors.BadRequestAlertException;
 import com.amc.careplanner.service.dto.EmployeeLocationDTO;
 import com.amc.careplanner.service.ext.EmployeeLocationServiceExt;
+import com.amc.careplanner.service.ext.SystemEventsHistoryServiceExt;
+import com.amc.careplanner.utils.CommonUtils;
 import com.amc.careplanner.service.dto.EmployeeCriteria;
 import com.amc.careplanner.service.dto.EmployeeDTO;
 import com.amc.careplanner.service.dto.EmployeeHolidayCriteria;
@@ -58,12 +60,16 @@ public class EmployeeLocationResourceExt extends EmployeeLocationResource{
     private final EmployeeLocationQueryService employeeLocationQueryService;
     
     private final UserRepositoryExt userRepositoryExt;
+    
+	private final SystemEventsHistoryServiceExt systemEventsHistoryServiceExt;
 
-    public EmployeeLocationResourceExt(EmployeeLocationServiceExt employeeLocationServiceExt, EmployeeLocationQueryService employeeLocationQueryService, UserRepositoryExt userRepositoryExt) {
+
+    public EmployeeLocationResourceExt(EmployeeLocationServiceExt employeeLocationServiceExt, EmployeeLocationQueryService employeeLocationQueryService, UserRepositoryExt userRepositoryExt, SystemEventsHistoryServiceExt systemEventsHistoryServiceExt) {
         super(employeeLocationServiceExt,employeeLocationQueryService);
     	this.employeeLocationServiceExt = employeeLocationServiceExt;
         this.employeeLocationQueryService = employeeLocationQueryService;
         this.userRepositoryExt = userRepositoryExt;
+        this.systemEventsHistoryServiceExt = systemEventsHistoryServiceExt;
     }
 
     /**
@@ -83,6 +89,11 @@ public class EmployeeLocationResourceExt extends EmployeeLocationResource{
         employeeLocationDTO.setLastUpdatedDate(ZonedDateTime.now());
       employeeLocationDTO.setClientId(getClientIdFromLoggedInUser());
         EmployeeLocationDTO result = employeeLocationServiceExt.save(employeeLocationDTO);
+        String loggedInAdminUserEmail = SecurityUtils.getCurrentUserLogin().get();
+		User loggedInAdminUser = userRepositoryExt.findOneByEmailIgnoreCase(loggedInAdminUserEmail).get();  		
+  		CommonUtils.fireSystemEvent(systemEventsHistoryServiceExt, "createEmployeeLocation", "/api/v1/create-employee-location-by-client-id",
+        		result.getId() + " has just been created", "EmployeeLocation", result.getId(), loggedInAdminUser.getId(),
+        		loggedInAdminUser.getEmail(), result.getId());
         return ResponseEntity.created(new URI("/api/employee-locations/" + result.getId()))
             .headers(HeaderUtil.createEntityCreationAlert(applicationName, true, ENTITY_NAME, result.getId().toString()))
             .body(result);
@@ -108,6 +119,11 @@ public class EmployeeLocationResourceExt extends EmployeeLocationResource{
       }
         employeeLocationDTO.setLastUpdatedDate(ZonedDateTime.now());
         EmployeeLocationDTO result = employeeLocationServiceExt.save(employeeLocationDTO);
+        String loggedInAdminUserEmail = SecurityUtils.getCurrentUserLogin().get();
+		User loggedInAdminUser = userRepositoryExt.findOneByEmailIgnoreCase(loggedInAdminUserEmail).get();  		
+  		CommonUtils.fireSystemEvent(systemEventsHistoryServiceExt, "updateEmployeeLocation", "/api/v1/update-employee-location-by-client-id",
+        		result.getId() + " has just been updated", "EmployeeLocation", result.getId(), loggedInAdminUser.getId(),
+        		loggedInAdminUser.getEmail(), result.getId());
         return ResponseEntity.ok()
             .headers(HeaderUtil.createEntityUpdateAlert(applicationName, true, ENTITY_NAME, employeeLocationDTO.getId().toString()))
             .body(result);

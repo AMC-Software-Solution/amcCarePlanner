@@ -5,6 +5,8 @@ import com.amc.careplanner.web.rest.InvoiceResource;
 import com.amc.careplanner.web.rest.errors.BadRequestAlertException;
 import com.amc.careplanner.service.dto.InvoiceDTO;
 import com.amc.careplanner.service.ext.InvoiceServiceExt;
+import com.amc.careplanner.service.ext.SystemEventsHistoryServiceExt;
+import com.amc.careplanner.utils.CommonUtils;
 import com.amc.careplanner.service.dto.EmployeeHolidayCriteria;
 import com.amc.careplanner.service.dto.EmployeeHolidayDTO;
 import com.amc.careplanner.service.dto.InvoiceCriteria;
@@ -56,12 +58,16 @@ public class InvoiceResourceExt extends InvoiceResource{
     private final InvoiceQueryService invoiceQueryService;
     
     private final UserRepositoryExt userRepositoryExt;
+    
+	private final SystemEventsHistoryServiceExt systemEventsHistoryServiceExt;
 
-    public InvoiceResourceExt(InvoiceServiceExt invoiceServiceExt, InvoiceQueryService invoiceQueryService,UserRepositoryExt userRepositoryExt) {
+
+    public InvoiceResourceExt(InvoiceServiceExt invoiceServiceExt, InvoiceQueryService invoiceQueryService,UserRepositoryExt userRepositoryExt, SystemEventsHistoryServiceExt systemEventsHistoryServiceExt) {
         super(invoiceServiceExt,invoiceQueryService);
     	this.invoiceServiceExt = invoiceServiceExt;
         this.invoiceQueryService = invoiceQueryService;
         this.userRepositoryExt = userRepositoryExt;
+        this.systemEventsHistoryServiceExt = systemEventsHistoryServiceExt;
     }
 
     /**
@@ -81,6 +87,11 @@ public class InvoiceResourceExt extends InvoiceResource{
         invoiceDTO.setLastUpdatedDate(ZonedDateTime.now());
         invoiceDTO.setClientId(getClientIdFromLoggedInUser());
         InvoiceDTO result = invoiceServiceExt.save(invoiceDTO);
+        String loggedInAdminUserEmail = SecurityUtils.getCurrentUserLogin().get();
+		User loggedInAdminUser = userRepositoryExt.findOneByEmailIgnoreCase(loggedInAdminUserEmail).get();  		
+  		CommonUtils.fireSystemEvent(systemEventsHistoryServiceExt, "createInvoice", "/api/v1/create-invoice-by-client-id",
+        		result.getDescription() + " has just been created", "Invoice", result.getId(), loggedInAdminUser.getId(),
+        		loggedInAdminUser.getEmail(), result.getId());
         return ResponseEntity.created(new URI("/api/invoices/" + result.getId()))
             .headers(HeaderUtil.createEntityCreationAlert(applicationName, true, ENTITY_NAME, result.getId().toString()))
             .body(result);
@@ -106,6 +117,11 @@ public class InvoiceResourceExt extends InvoiceResource{
       }
         invoiceDTO.setLastUpdatedDate(ZonedDateTime.now());
         InvoiceDTO result = invoiceServiceExt.save(invoiceDTO);
+        String loggedInAdminUserEmail = SecurityUtils.getCurrentUserLogin().get();
+		User loggedInAdminUser = userRepositoryExt.findOneByEmailIgnoreCase(loggedInAdminUserEmail).get();  		
+  		CommonUtils.fireSystemEvent(systemEventsHistoryServiceExt, "updateInvoice", "/api/v1/update-invoice-by-client-id",
+        		result.getDescription() + " has just been updated", "Invoice", result.getId(), loggedInAdminUser.getId(),
+        		loggedInAdminUser.getEmail(), result.getId());
         return ResponseEntity.ok()
             .headers(HeaderUtil.createEntityUpdateAlert(applicationName, true, ENTITY_NAME, invoiceDTO.getId().toString()))
             .body(result);

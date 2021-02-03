@@ -112,7 +112,7 @@ public class EmployeeDocumentResourceExt extends EmployeeDocumentResource{
   		} 
   		String loggedInAdminUserEmail = SecurityUtils.getCurrentUserLogin().get();
 		User loggedInAdminUser = userRepositoryExt.findOneByEmailIgnoreCase(loggedInAdminUserEmail).get();  		
-  		CommonUtils.fireSystemEvent(systemEventsHistoryServiceExt, "createEmployeeDocument", "/api/v1/create-employeeDocument-by-client-id",
+  		CommonUtils.fireSystemEvent(systemEventsHistoryServiceExt, "createEmployeeDocument", "/api/v1/create-employee-document-by-client-id",
         		result.getDocumentName() + " has just been created", "EmployeeDocument", result.getId(), loggedInAdminUser.getId(),
         		loggedInAdminUser.getEmail(), result.getId());
         return ResponseEntity.created(new URI("/api/employee-documents/" + result.getId()))
@@ -156,7 +156,7 @@ public class EmployeeDocumentResourceExt extends EmployeeDocumentResource{
   		} 
   		String loggedInAdminUserEmail = SecurityUtils.getCurrentUserLogin().get();
 		User loggedInAdminUser = userRepositoryExt.findOneByEmailIgnoreCase(loggedInAdminUserEmail).get();  		
-  		CommonUtils.fireSystemEvent(systemEventsHistoryServiceExt, "updateEmployeeDocument", "/api/v1/update-employeeDocument-by-client-id",
+  		CommonUtils.fireSystemEvent(systemEventsHistoryServiceExt, "updateEmployeeDocument", "/api/v1/update-employee-document-by-client-id",
         		result.getDocumentName() + " has just been updated", "EmployeeDocument", result.getId(), loggedInAdminUser.getId(),
         		loggedInAdminUser.getEmail(), result.getId());
         return ResponseEntity.ok()

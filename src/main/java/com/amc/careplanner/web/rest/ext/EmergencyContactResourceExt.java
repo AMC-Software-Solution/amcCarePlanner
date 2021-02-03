@@ -89,7 +89,7 @@ public class EmergencyContactResourceExt extends EmergencyContactResource{
         EmergencyContactDTO result = emergencyContactServiceExt.save(emergencyContactDTO);
         String loggedInAdminUserEmail = SecurityUtils.getCurrentUserLogin().get();
 		User loggedInAdminUser = userRepositoryExt.findOneByEmailIgnoreCase(loggedInAdminUserEmail).get();  		
-  		CommonUtils.fireSystemEvent(systemEventsHistoryServiceExt, "createEmergencyContact", "/api/v1/create-emergencyContact-by-client-id",
+  		CommonUtils.fireSystemEvent(systemEventsHistoryServiceExt, "createEmergencyContact", "/api/v1/create-emergency-contact-by-client-id",
         		result.getName() + " has just been created", "EmergencyContact", result.getId(), loggedInAdminUser.getId(),
         		loggedInAdminUser.getEmail(), result.getId());
         return ResponseEntity.created(new URI("/api/emergency-contacts/" + result.getId()))
@@ -119,7 +119,7 @@ public class EmergencyContactResourceExt extends EmergencyContactResource{
         EmergencyContactDTO result = emergencyContactServiceExt.save(emergencyContactDTO);
         String loggedInAdminUserEmail = SecurityUtils.getCurrentUserLogin().get();
 		User loggedInAdminUser = userRepositoryExt.findOneByEmailIgnoreCase(loggedInAdminUserEmail).get();  		
-  		CommonUtils.fireSystemEvent(systemEventsHistoryServiceExt, "updateEmergencyContact", "/api/v1/update-emergencyContact-by-client-id",
+  		CommonUtils.fireSystemEvent(systemEventsHistoryServiceExt, "updateEmergencyContact", "/api/v1/update-emergency-contact-by-client-id",
         		result.getName() + " has just been updated", "EmergencyContact", result.getId(), loggedInAdminUser.getId(),
         		loggedInAdminUser.getEmail(), result.getId());
         return ResponseEntity.ok()

@@ -5,6 +5,8 @@ import com.amc.careplanner.web.rest.EqualityResource;
 import com.amc.careplanner.web.rest.errors.BadRequestAlertException;
 import com.amc.careplanner.service.dto.EqualityDTO;
 import com.amc.careplanner.service.ext.EqualityServiceExt;
+import com.amc.careplanner.service.ext.SystemEventsHistoryServiceExt;
+import com.amc.careplanner.utils.CommonUtils;
 import com.amc.careplanner.service.dto.EmployeeHolidayCriteria;
 import com.amc.careplanner.service.dto.EmployeeHolidayDTO;
 import com.amc.careplanner.service.dto.EqualityCriteria;
@@ -56,12 +58,16 @@ public class EqualityResourceExt extends EqualityResource{
     private final EqualityQueryService equalityQueryService;
     
     private final UserRepositoryExt userRepositoryExt;
+    
+	private final SystemEventsHistoryServiceExt systemEventsHistoryServiceExt;
 
-    public EqualityResourceExt(EqualityServiceExt equalityServiceExt, EqualityQueryService equalityQueryService, UserRepositoryExt userRepositoryExt) {
+
+    public EqualityResourceExt(EqualityServiceExt equalityServiceExt, EqualityQueryService equalityQueryService, UserRepositoryExt userRepositoryExt, SystemEventsHistoryServiceExt systemEventsHistoryServiceExt) {
         super(equalityServiceExt,equalityQueryService);
     	this.equalityServiceExt = equalityServiceExt;
         this.equalityQueryService = equalityQueryService;
         this.userRepositoryExt = userRepositoryExt;
+        this.systemEventsHistoryServiceExt = systemEventsHistoryServiceExt;
     }
 
     /**
@@ -81,6 +87,11 @@ public class EqualityResourceExt extends EqualityResource{
         equalityDTO.setLastUpdatedDate(ZonedDateTime.now());
         equalityDTO.setClientId(getClientIdFromLoggedInUser());
         EqualityDTO result = equalityServiceExt.save(equalityDTO);
+        String loggedInAdminUserEmail = SecurityUtils.getCurrentUserLogin().get();
+		User loggedInAdminUser = userRepositoryExt.findOneByEmailIgnoreCase(loggedInAdminUserEmail).get();  		
+  		CommonUtils.fireSystemEvent(systemEventsHistoryServiceExt, "createEquality", "/api/v1/create-equality-by-client-id",
+        		result.getId() + " has just been created", "Equality", result.getId(), loggedInAdminUser.getId(),
+        		loggedInAdminUser.getEmail(), result.getId());
         return ResponseEntity.created(new URI("/api/equalities/" + result.getId()))
             .headers(HeaderUtil.createEntityCreationAlert(applicationName, true, ENTITY_NAME, result.getId().toString()))
             .body(result);
@@ -106,6 +117,11 @@ public class EqualityResourceExt extends EqualityResource{
       }
         equalityDTO.setLastUpdatedDate(ZonedDateTime.now());
         EqualityDTO result = equalityServiceExt.save(equalityDTO);
+        String loggedInAdminUserEmail = SecurityUtils.getCurrentUserLogin().get();
+		User loggedInAdminUser = userRepositoryExt.findOneByEmailIgnoreCase(loggedInAdminUserEmail).get();  		
+  		CommonUtils.fireSystemEvent(systemEventsHistoryServiceExt, "updateEquality", "/api/v1/update-equality-by-client-id",
+        		result.getId() + " has just been updated", "Equality", result.getId(), loggedInAdminUser.getId(),
+        		loggedInAdminUser.getEmail(), result.getId());
         return ResponseEntity.ok()
             .headers(HeaderUtil.createEntityUpdateAlert(applicationName, true, ENTITY_NAME, equalityDTO.getId().toString()))
             .body(result);

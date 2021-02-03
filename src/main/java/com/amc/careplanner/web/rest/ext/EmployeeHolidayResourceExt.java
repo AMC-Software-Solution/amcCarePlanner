@@ -89,7 +89,7 @@ public class EmployeeHolidayResourceExt extends EmployeeHolidayResource{
         EmployeeHolidayDTO result = employeeHolidayServiceExt.save(employeeHolidayDTO);
         String loggedInAdminUserEmail = SecurityUtils.getCurrentUserLogin().get();
 		User loggedInAdminUser = userRepositoryExt.findOneByEmailIgnoreCase(loggedInAdminUserEmail).get();  		
-  		CommonUtils.fireSystemEvent(systemEventsHistoryServiceExt, "createEmployeeHoliday", "/api/v1/create-EmployeeHoliday-by-client-id",
+  		CommonUtils.fireSystemEvent(systemEventsHistoryServiceExt, "createEmployeeHoliday", "/api/v1/create-employee-holiday-by-client-id",
         		result.getDescription() + " has just been created", "EmployeeHoliday", result.getId(), loggedInAdminUser.getId(),
         		loggedInAdminUser.getEmail(), result.getId());
         return ResponseEntity.created(new URI("/api/employee-holidays/" + result.getId()))
@@ -120,7 +120,7 @@ public class EmployeeHolidayResourceExt extends EmployeeHolidayResource{
         EmployeeHolidayDTO result = employeeHolidayServiceExt.save(employeeHolidayDTO);
         String loggedInAdminUserEmail = SecurityUtils.getCurrentUserLogin().get();
 		User loggedInAdminUser = userRepositoryExt.findOneByEmailIgnoreCase(loggedInAdminUserEmail).get();  		
-  		CommonUtils.fireSystemEvent(systemEventsHistoryServiceExt, "updateEmployeeHoliday", "/api/v1/update-EmployeeHoliday-by-client-id",
+  		CommonUtils.fireSystemEvent(systemEventsHistoryServiceExt, "updateEmployeeHoliday", "/api/v1/update-employee-holiday-by-client-id",
         		result.getDescription() + " has just been updated", "EmployeeHoliday", result.getId(), loggedInAdminUser.getId(),
         		loggedInAdminUser.getEmail(), result.getId());
         return ResponseEntity.ok()
