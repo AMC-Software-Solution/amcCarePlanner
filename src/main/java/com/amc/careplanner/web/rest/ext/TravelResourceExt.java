@@ -4,7 +4,9 @@ import com.amc.careplanner.service.TravelService;
 import com.amc.careplanner.web.rest.TravelResource;
 import com.amc.careplanner.web.rest.errors.BadRequestAlertException;
 import com.amc.careplanner.service.dto.TravelDTO;
+import com.amc.careplanner.service.ext.SystemEventsHistoryServiceExt;
 import com.amc.careplanner.service.ext.TravelServiceExt;
+import com.amc.careplanner.utils.CommonUtils;
 import com.amc.careplanner.service.dto.EmployeeHolidayCriteria;
 import com.amc.careplanner.service.dto.EmployeeHolidayDTO;
 import com.amc.careplanner.service.dto.TravelCriteria;
@@ -56,12 +58,15 @@ public class TravelResourceExt extends TravelResource{
     private final TravelQueryService travelQueryService;
     
     private final UserRepositoryExt userRepositoryExt;
+    
+    private final SystemEventsHistoryServiceExt systemEventsHistoryServiceExt;
 
-    public TravelResourceExt(TravelServiceExt travelServiceExt, TravelQueryService travelQueryService, UserRepositoryExt userRepositoryExt) {
+    public TravelResourceExt(TravelServiceExt travelServiceExt, TravelQueryService travelQueryService, UserRepositoryExt userRepositoryExt, SystemEventsHistoryServiceExt systemEventsHistoryServiceExt) {
         super(travelServiceExt,travelQueryService);
     	this.travelServiceExt = travelServiceExt;
         this.travelQueryService = travelQueryService;
         this.userRepositoryExt = userRepositoryExt;
+        this.systemEventsHistoryServiceExt = systemEventsHistoryServiceExt;
     }
 
     /**
@@ -81,6 +86,11 @@ public class TravelResourceExt extends TravelResource{
         travelDTO.setLastUpdatedDate(ZonedDateTime.now());
         travelDTO.setClientId(getClientIdFromLoggedInUser());
         TravelDTO result = travelServiceExt.save(travelDTO);
+        String loggedInAdminUserEmail = SecurityUtils.getCurrentUserLogin().get();
+		User loggedInAdminUser = userRepositoryExt.findOneByEmailIgnoreCase(loggedInAdminUserEmail).get();  		
+  		CommonUtils.fireSystemEvent(systemEventsHistoryServiceExt, "createTravel", "/api/v1/create-travel-by-client-id",
+        		result.getTravelMode() + " has just been created", "Travel", result.getId(), loggedInAdminUser.getId(),
+        		loggedInAdminUser.getEmail(), result.getId());
         return ResponseEntity.created(new URI("/api/travels/" + result.getId()))
             .headers(HeaderUtil.createEntityCreationAlert(applicationName, true, ENTITY_NAME, result.getId().toString()))
             .body(result);
@@ -106,6 +116,11 @@ public class TravelResourceExt extends TravelResource{
       }
         travelDTO.setLastUpdatedDate(ZonedDateTime.now());
         TravelDTO result = travelServiceExt.save(travelDTO);
+        String loggedInAdminUserEmail = SecurityUtils.getCurrentUserLogin().get();
+		User loggedInAdminUser = userRepositoryExt.findOneByEmailIgnoreCase(loggedInAdminUserEmail).get();  		
+  		CommonUtils.fireSystemEvent(systemEventsHistoryServiceExt, "updateTravel", "/api/v1/update-travel-by-client-id",
+        		result.getTravelMode() + " has just been created", "Travel", result.getId(), loggedInAdminUser.getId(),
+        		loggedInAdminUser.getEmail(), result.getId());
         return ResponseEntity.ok()
             .headers(HeaderUtil.createEntityUpdateAlert(applicationName, true, ENTITY_NAME, travelDTO.getId().toString()))
             .body(result);

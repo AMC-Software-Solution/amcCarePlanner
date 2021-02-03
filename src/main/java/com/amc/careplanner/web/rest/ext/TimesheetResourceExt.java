@@ -4,7 +4,9 @@ import com.amc.careplanner.service.TimesheetService;
 import com.amc.careplanner.web.rest.TimesheetResource;
 import com.amc.careplanner.web.rest.errors.BadRequestAlertException;
 import com.amc.careplanner.service.dto.TimesheetDTO;
+import com.amc.careplanner.service.ext.SystemEventsHistoryServiceExt;
 import com.amc.careplanner.service.ext.TimesheetServiceExt;
+import com.amc.careplanner.utils.CommonUtils;
 import com.amc.careplanner.service.dto.TaskCriteria;
 import com.amc.careplanner.service.dto.TaskDTO;
 import com.amc.careplanner.service.dto.TimesheetCriteria;
@@ -56,12 +58,15 @@ public class TimesheetResourceExt extends TimesheetResource{
     private final TimesheetQueryService timesheetQueryService;
     
     private final UserRepositoryExt userRepositoryExt;
+    
+    private final SystemEventsHistoryServiceExt systemEventsHistoryServiceExt;
 
-    public TimesheetResourceExt(TimesheetServiceExt timesheetServiceExt, TimesheetQueryService timesheetQueryService, UserRepositoryExt userRepositoryExt) {
+    public TimesheetResourceExt(TimesheetServiceExt timesheetServiceExt, TimesheetQueryService timesheetQueryService, UserRepositoryExt userRepositoryExt, SystemEventsHistoryServiceExt systemEventsHistoryServiceExt) {
         super(timesheetServiceExt,timesheetQueryService);
     	this.timesheetServiceExt = timesheetServiceExt;
         this.timesheetQueryService = timesheetQueryService;
         this.userRepositoryExt = userRepositoryExt;
+        this.systemEventsHistoryServiceExt = systemEventsHistoryServiceExt;
     }
 
     /**
@@ -81,6 +86,11 @@ public class TimesheetResourceExt extends TimesheetResource{
         timesheetDTO.setLastUpdatedDate(ZonedDateTime.now());
         timesheetDTO.setClientId(getClientIdFromLoggedInUser());
         TimesheetDTO result = timesheetServiceExt.save(timesheetDTO);
+        String loggedInAdminUserEmail = SecurityUtils.getCurrentUserLogin().get();
+		User loggedInAdminUser = userRepositoryExt.findOneByEmailIgnoreCase(loggedInAdminUserEmail).get();  		
+  		CommonUtils.fireSystemEvent(systemEventsHistoryServiceExt, "createTimesheet", "/api/v1/create-timesheet-by-client-id",
+        		result.getTimesheetDate() + " has just been created", "Timesheet", result.getId(), loggedInAdminUser.getId(),
+        		loggedInAdminUser.getEmail(), result.getId());
         return ResponseEntity.created(new URI("/api/timesheets/" + result.getId()))
             .headers(HeaderUtil.createEntityCreationAlert(applicationName, true, ENTITY_NAME, result.getId().toString()))
             .body(result);
@@ -106,6 +116,11 @@ public class TimesheetResourceExt extends TimesheetResource{
         }
         timesheetDTO.setLastUpdatedDate(ZonedDateTime.now());
         TimesheetDTO result = timesheetServiceExt.save(timesheetDTO);
+        String loggedInAdminUserEmail = SecurityUtils.getCurrentUserLogin().get();
+		User loggedInAdminUser = userRepositoryExt.findOneByEmailIgnoreCase(loggedInAdminUserEmail).get();  		
+  		CommonUtils.fireSystemEvent(systemEventsHistoryServiceExt, "updateTimesheet", "/api/v1/update-timesheet-by-client-id",
+        		result.getTimesheetDate() + " has just been created", "Timesheet", result.getId(), loggedInAdminUser.getId(),
+        		loggedInAdminUser.getEmail(), result.getId());
         return ResponseEntity.ok()
             .headers(HeaderUtil.createEntityUpdateAlert(applicationName, true, ENTITY_NAME, timesheetDTO.getId().toString()))
             .body(result);

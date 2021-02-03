@@ -4,7 +4,9 @@ import com.amc.careplanner.service.TerminalDeviceService;
 import com.amc.careplanner.web.rest.TerminalDeviceResource;
 import com.amc.careplanner.web.rest.errors.BadRequestAlertException;
 import com.amc.careplanner.service.dto.TerminalDeviceDTO;
+import com.amc.careplanner.service.ext.SystemEventsHistoryServiceExt;
 import com.amc.careplanner.service.ext.TerminalDeviceServiceExt;
+import com.amc.careplanner.utils.CommonUtils;
 import com.amc.careplanner.service.dto.TaskCriteria;
 import com.amc.careplanner.service.dto.TaskDTO;
 import com.amc.careplanner.service.dto.TerminalDeviceCriteria;
@@ -56,13 +58,16 @@ public class TerminalDeviceResourceExt extends TerminalDeviceResource{
     private final TerminalDeviceQueryService terminalDeviceQueryService;
     
     private final UserRepositoryExt userRepositoryExt;
+    
+    private final SystemEventsHistoryServiceExt systemEventsHistoryServiceExt;
 
 
-    public TerminalDeviceResourceExt(TerminalDeviceServiceExt terminalDeviceServiceExt, TerminalDeviceQueryService terminalDeviceQueryService, UserRepositoryExt userRepositoryExt) {
+    public TerminalDeviceResourceExt(TerminalDeviceServiceExt terminalDeviceServiceExt, TerminalDeviceQueryService terminalDeviceQueryService, UserRepositoryExt userRepositoryExt, SystemEventsHistoryServiceExt systemEventsHistoryServiceExt) {
         super(terminalDeviceServiceExt,terminalDeviceQueryService);
     	this.terminalDeviceServiceExt = terminalDeviceServiceExt;
         this.terminalDeviceQueryService = terminalDeviceQueryService;
         this.userRepositoryExt = userRepositoryExt;
+        this.systemEventsHistoryServiceExt = systemEventsHistoryServiceExt;
 
     }
 
@@ -83,6 +88,11 @@ public class TerminalDeviceResourceExt extends TerminalDeviceResource{
         terminalDeviceDTO.setLastUpdatedDate(ZonedDateTime.now());
         terminalDeviceDTO.setClientId(getClientIdFromLoggedInUser());
         TerminalDeviceDTO result = terminalDeviceServiceExt.save(terminalDeviceDTO);
+        String loggedInAdminUserEmail = SecurityUtils.getCurrentUserLogin().get();
+		User loggedInAdminUser = userRepositoryExt.findOneByEmailIgnoreCase(loggedInAdminUserEmail).get();  		
+  		CommonUtils.fireSystemEvent(systemEventsHistoryServiceExt, "createTerminalDevice", "/api/v1/create-terminal-device-by-client-id",
+        		result.getDeviceName() + " has just been created", "TerminalDevice", result.getId(), loggedInAdminUser.getId(),
+        		loggedInAdminUser.getEmail(), result.getId());
         return ResponseEntity.created(new URI("/api/terminal-devices/" + result.getId()))
             .headers(HeaderUtil.createEntityCreationAlert(applicationName, true, ENTITY_NAME, result.getId().toString()))
             .body(result);
@@ -108,6 +118,12 @@ public class TerminalDeviceResourceExt extends TerminalDeviceResource{
         }
         terminalDeviceDTO.setLastUpdatedDate(ZonedDateTime.now());
         TerminalDeviceDTO result = terminalDeviceServiceExt.save(terminalDeviceDTO);
+        String loggedInAdminUserEmail = SecurityUtils.getCurrentUserLogin().get();
+		User loggedInAdminUser = userRepositoryExt.findOneByEmailIgnoreCase(loggedInAdminUserEmail).get();  		
+  		CommonUtils.fireSystemEvent(systemEventsHistoryServiceExt, "updateTerminalDevice", "/api/v1/update-terminal-device-by-client-id",
+        		result.getDeviceName() + " has just been created", "TerminalDevice", result.getId(), loggedInAdminUser.getId(),
+        		loggedInAdminUser.getEmail(), result.getId());
+        
         return ResponseEntity.ok()
             .headers(HeaderUtil.createEntityUpdateAlert(applicationName, true, ENTITY_NAME, terminalDeviceDTO.getId().toString()))
             .body(result);

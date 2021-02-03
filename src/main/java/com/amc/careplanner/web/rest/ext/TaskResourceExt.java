@@ -4,12 +4,15 @@ import com.amc.careplanner.service.TaskService;
 import com.amc.careplanner.web.rest.TaskResource;
 import com.amc.careplanner.web.rest.errors.BadRequestAlertException;
 import com.amc.careplanner.service.dto.TaskDTO;
+import com.amc.careplanner.service.ext.SystemEventsHistoryServiceExt;
 import com.amc.careplanner.service.ext.TaskServiceExt;
+import com.amc.careplanner.utils.CommonUtils;
 import com.amc.careplanner.service.dto.BranchCriteria;
 import com.amc.careplanner.service.dto.BranchDTO;
 import com.amc.careplanner.service.dto.TaskCriteria;
 import com.amc.careplanner.domain.User;
 import com.amc.careplanner.repository.ext.UserRepositoryExt;
+import com.amc.careplanner.s3.S3Service;
 import com.amc.careplanner.security.AuthoritiesConstants;
 import com.amc.careplanner.security.SecurityUtils;
 import com.amc.careplanner.service.TaskQueryService;
@@ -56,13 +59,16 @@ public class TaskResourceExt extends TaskResource{
     private final TaskQueryService taskQueryService;
 
     private final UserRepositoryExt userRepositoryExt;
+    
+    private final SystemEventsHistoryServiceExt systemEventsHistoryServiceExt;
 
     
-    public TaskResourceExt(TaskServiceExt taskServiceExt, TaskQueryService taskQueryService, UserRepositoryExt userRepositoryExt) {
+    public TaskResourceExt(TaskServiceExt taskServiceExt, TaskQueryService taskQueryService, UserRepositoryExt userRepositoryExt,S3Service s3Service, SystemEventsHistoryServiceExt systemEventsHistoryServiceExt) {
         super(taskServiceExt,taskQueryService);
     	this.taskServiceExt = taskServiceExt;
         this.taskQueryService = taskQueryService;
         this.userRepositoryExt = userRepositoryExt;
+        this.systemEventsHistoryServiceExt = systemEventsHistoryServiceExt;
     }
 
     /**
@@ -82,6 +88,12 @@ public class TaskResourceExt extends TaskResource{
         taskDTO.setLastUpdatedDate(ZonedDateTime.now());
         taskDTO.setClientId(getClientIdFromLoggedInUser());
         TaskDTO result = taskServiceExt.save(taskDTO);
+        String loggedInAdminUserEmail = SecurityUtils.getCurrentUserLogin().get();
+		User loggedInAdminUser = userRepositoryExt.findOneByEmailIgnoreCase(loggedInAdminUserEmail).get();  		
+  		CommonUtils.fireSystemEvent(systemEventsHistoryServiceExt, "createTask", "/api/v1/create-task-by-client-id",
+        		result.getTaskName() + " has just been created", "Task", result.getId(), loggedInAdminUser.getId(),
+        		loggedInAdminUser.getEmail(), result.getId());
+        
         return ResponseEntity.created(new URI("/api/tasks/" + result.getId()))
             .headers(HeaderUtil.createEntityCreationAlert(applicationName, true, ENTITY_NAME, result.getId().toString()))
             .body(result);
@@ -110,6 +122,12 @@ public class TaskResourceExt extends TaskResource{
       }
         taskDTO.setLastUpdatedDate(ZonedDateTime.now());
         TaskDTO result = taskServiceExt.save(taskDTO);
+        String loggedInAdminUserEmail = SecurityUtils.getCurrentUserLogin().get();
+		User loggedInAdminUser = userRepositoryExt.findOneByEmailIgnoreCase(loggedInAdminUserEmail).get();  		
+  		CommonUtils.fireSystemEvent(systemEventsHistoryServiceExt, "updateTask", "/api/v1/update-task-by-client-id",
+        		result.getTaskName() + " has just been created", "Task", result.getId(), loggedInAdminUser.getId(),
+        		loggedInAdminUser.getEmail(), result.getId());
+        
         return ResponseEntity.ok()
             .headers(HeaderUtil.createEntityUpdateAlert(applicationName, true, ENTITY_NAME, taskDTO.getId().toString()))
             .body(result);
