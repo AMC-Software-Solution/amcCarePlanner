@@ -5,6 +5,8 @@ import com.amc.careplanner.web.rest.PayrollResource;
 import com.amc.careplanner.web.rest.errors.BadRequestAlertException;
 import com.amc.careplanner.service.dto.PayrollDTO;
 import com.amc.careplanner.service.ext.PayrollServiceExt;
+import com.amc.careplanner.service.ext.SystemEventsHistoryServiceExt;
+import com.amc.careplanner.utils.CommonUtils;
 import com.amc.careplanner.service.dto.EmployeeHolidayCriteria;
 import com.amc.careplanner.service.dto.EmployeeHolidayDTO;
 import com.amc.careplanner.service.dto.PayrollCriteria;
@@ -56,12 +58,16 @@ public class PayrollResourceExt extends PayrollResource{
     private final PayrollQueryService payrollQueryService;
     
     private final UserRepositoryExt userRepositoryExt;
+    
+    private final SystemEventsHistoryServiceExt systemEventsHistoryServiceExt;
 
-    public PayrollResourceExt(PayrollServiceExt payrollServiceExt, PayrollQueryService payrollQueryService, UserRepositoryExt userRepositoryExt) {
+    public PayrollResourceExt(PayrollServiceExt payrollServiceExt, PayrollQueryService payrollQueryService, UserRepositoryExt userRepositoryExt, SystemEventsHistoryServiceExt systemEventsHistoryServiceExt) {
         super(payrollServiceExt,payrollQueryService);
     	this.payrollServiceExt = payrollServiceExt;
         this.payrollQueryService = payrollQueryService;
         this.userRepositoryExt = userRepositoryExt;
+        this.systemEventsHistoryServiceExt = systemEventsHistoryServiceExt;
+        
     }
 
     /**
@@ -81,6 +87,12 @@ public class PayrollResourceExt extends PayrollResource{
         payrollDTO.setLastUpdatedDate(ZonedDateTime.now());
         payrollDTO.setClientId(getClientIdFromLoggedInUser());
         PayrollDTO result = payrollServiceExt.save(payrollDTO);
+        
+        String loggedInAdminUserEmail = SecurityUtils.getCurrentUserLogin().get();
+		User loggedInAdminUser = userRepositoryExt.findOneByEmailIgnoreCase(loggedInAdminUserEmail).get();  		
+  		CommonUtils.fireSystemEvent(systemEventsHistoryServiceExt, "createPayroll", "/api/v1/create-payroll-by-client-id",
+        		result.getPaymentDate() + " has just been created", "Payroll", result.getId(), loggedInAdminUser.getId(),
+        		loggedInAdminUser.getEmail(), result.getId());
         return ResponseEntity.created(new URI("/api/payrolls/" + result.getId()))
             .headers(HeaderUtil.createEntityCreationAlert(applicationName, true, ENTITY_NAME, result.getId().toString()))
             .body(result);
@@ -106,6 +118,13 @@ public class PayrollResourceExt extends PayrollResource{
       }
         payrollDTO.setLastUpdatedDate(ZonedDateTime.now());
         PayrollDTO result = payrollServiceExt.save(payrollDTO);
+        
+        String loggedInAdminUserEmail = SecurityUtils.getCurrentUserLogin().get();
+		User loggedInAdminUser = userRepositoryExt.findOneByEmailIgnoreCase(loggedInAdminUserEmail).get();  		
+  		CommonUtils.fireSystemEvent(systemEventsHistoryServiceExt, "updatePayroll", "/api/v1/update-payroll-by-client-id",
+        		result.getPaymentDate() + " has just been created", "Payroll", result.getId(), loggedInAdminUser.getId(),
+        		loggedInAdminUser.getEmail(), result.getId());
+        
         return ResponseEntity.ok()
             .headers(HeaderUtil.createEntityUpdateAlert(applicationName, true, ENTITY_NAME, payrollDTO.getId().toString()))
             .body(result);

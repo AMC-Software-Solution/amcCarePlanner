@@ -5,6 +5,8 @@ import com.amc.careplanner.web.rest.PowerOfAttorneyResource;
 import com.amc.careplanner.web.rest.errors.BadRequestAlertException;
 import com.amc.careplanner.service.dto.PowerOfAttorneyDTO;
 import com.amc.careplanner.service.ext.PowerOfAttorneyServiceExt;
+import com.amc.careplanner.service.ext.SystemEventsHistoryServiceExt;
+import com.amc.careplanner.utils.CommonUtils;
 import com.amc.careplanner.service.dto.EmployeeHolidayCriteria;
 import com.amc.careplanner.service.dto.EmployeeHolidayDTO;
 import com.amc.careplanner.service.dto.PowerOfAttorneyCriteria;
@@ -56,12 +58,15 @@ public class PowerOfAttorneyResourceExt extends PowerOfAttorneyResource{
     private final PowerOfAttorneyQueryService powerOfAttorneyQueryService;
     
     private final UserRepositoryExt userRepositoryExt;
+    
+    private final SystemEventsHistoryServiceExt systemEventsHistoryServiceExt;
 
-    public PowerOfAttorneyResourceExt(PowerOfAttorneyServiceExt powerOfAttorneyServiceExt, PowerOfAttorneyQueryService powerOfAttorneyQueryService, UserRepositoryExt userRepositoryExt) {
+    public PowerOfAttorneyResourceExt(PowerOfAttorneyServiceExt powerOfAttorneyServiceExt, PowerOfAttorneyQueryService powerOfAttorneyQueryService, UserRepositoryExt userRepositoryExt, SystemEventsHistoryServiceExt systemEventsHistoryServiceExt) {
         super(powerOfAttorneyServiceExt,powerOfAttorneyQueryService);
     	this.powerOfAttorneyServiceExt = powerOfAttorneyServiceExt;
         this.powerOfAttorneyQueryService = powerOfAttorneyQueryService;
         this.userRepositoryExt = userRepositoryExt;
+        this.systemEventsHistoryServiceExt = systemEventsHistoryServiceExt;
     }
 
     /**
@@ -81,6 +86,12 @@ public class PowerOfAttorneyResourceExt extends PowerOfAttorneyResource{
         powerOfAttorneyDTO.setLastUpdatedDate(ZonedDateTime.now());
         powerOfAttorneyDTO.setClientId(getClientIdFromLoggedInUser());
         PowerOfAttorneyDTO result = powerOfAttorneyServiceExt.save(powerOfAttorneyDTO);
+        
+        String loggedInAdminUserEmail = SecurityUtils.getCurrentUserLogin().get();
+		User loggedInAdminUser = userRepositoryExt.findOneByEmailIgnoreCase(loggedInAdminUserEmail).get();  		
+  		CommonUtils.fireSystemEvent(systemEventsHistoryServiceExt, "createPowerOfAttorney", "/api/v1/create-power-of-attorney-by-client-id",
+        		result.getClientId() + " has just been created", "PowerOfAttorney", result.getId(), loggedInAdminUser.getId(),
+        		loggedInAdminUser.getEmail(), result.getId());
         return ResponseEntity.created(new URI("/api/power-of-attorneys/" + result.getId()))
             .headers(HeaderUtil.createEntityCreationAlert(applicationName, true, ENTITY_NAME, result.getId().toString()))
             .body(result);
@@ -106,6 +117,11 @@ public class PowerOfAttorneyResourceExt extends PowerOfAttorneyResource{
       }
         powerOfAttorneyDTO.setLastUpdatedDate(ZonedDateTime.now());
         PowerOfAttorneyDTO result = powerOfAttorneyServiceExt.save(powerOfAttorneyDTO);
+        String loggedInAdminUserEmail = SecurityUtils.getCurrentUserLogin().get();
+		User loggedInAdminUser = userRepositoryExt.findOneByEmailIgnoreCase(loggedInAdminUserEmail).get();  		
+  		CommonUtils.fireSystemEvent(systemEventsHistoryServiceExt, "updatePowerOfAttorney", "/api/v1/update-power-of-attorney-by-client-id",
+        		result.getClientId() + " has just been created", "PowerOfAttorney", result.getId(), loggedInAdminUser.getId(),
+        		loggedInAdminUser.getEmail(), result.getId());
         return ResponseEntity.ok()
             .headers(HeaderUtil.createEntityUpdateAlert(applicationName, true, ENTITY_NAME, powerOfAttorneyDTO.getId().toString()))
             .body(result);

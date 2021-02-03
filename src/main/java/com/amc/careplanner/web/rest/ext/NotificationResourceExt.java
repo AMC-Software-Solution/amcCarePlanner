@@ -7,6 +7,7 @@ import com.amc.careplanner.service.dto.NotificationDTO;
 import com.amc.careplanner.service.dto.TaskCriteria;
 import com.amc.careplanner.service.dto.TaskDTO;
 import com.amc.careplanner.service.ext.NotificationServiceExt;
+import com.amc.careplanner.service.ext.SystemEventsHistoryServiceExt;
 import com.amc.careplanner.utils.CommonUtils;
 import com.amc.careplanner.utils.Constants;
 import com.amc.careplanner.utils.RandomUtil;
@@ -64,13 +65,16 @@ public class NotificationResourceExt extends NotificationResource{
     private final UserRepositoryExt userRepositoryExt;
     
     private final S3Service  s3Service;
+    
+    private final SystemEventsHistoryServiceExt systemEventsHistoryServiceExt;
 
-    public NotificationResourceExt(NotificationServiceExt notificationServiceExt, NotificationQueryService notificationQueryService, UserRepositoryExt userRepositoryExt, S3Service  s3Service) {
+    public NotificationResourceExt(NotificationServiceExt notificationServiceExt, NotificationQueryService notificationQueryService, UserRepositoryExt userRepositoryExt, S3Service  s3Service, SystemEventsHistoryServiceExt systemEventsHistoryServiceExt) {
         super(notificationServiceExt,notificationQueryService);
     	this.notificationServiceExt = notificationServiceExt;
         this.notificationQueryService = notificationQueryService;
         this.userRepositoryExt = userRepositoryExt;
         this.s3Service = s3Service;
+        this.systemEventsHistoryServiceExt = systemEventsHistoryServiceExt;
     }
 
     /**
@@ -105,6 +109,12 @@ public class NotificationResourceExt extends NotificationResource{
   			result2.setImageContentType(null);
   			 result3 = notificationServiceExt.save(result2);
   		} 
+  		
+  	  String loggedInAdminUserEmail = SecurityUtils.getCurrentUserLogin().get();
+  			User loggedInAdminUser = userRepositoryExt.findOneByEmailIgnoreCase(loggedInAdminUserEmail).get();  		
+  	  		CommonUtils.fireSystemEvent(systemEventsHistoryServiceExt, "createNotification", "/api/v1/create-notification-by-client-id",
+  	        		result.getTitle() + " has just been created", "Notification", result.getId(), loggedInAdminUser.getId(),
+  	        		loggedInAdminUser.getEmail(), result.getId());
         return ResponseEntity.created(new URI("/api/notifications/" + result.getId()))
             .headers(HeaderUtil.createEntityCreationAlert(applicationName, true, ENTITY_NAME, result.getId().toString()))
             .body(result3);
@@ -144,6 +154,11 @@ public class NotificationResourceExt extends NotificationResource{
   			result2.setImageContentType(null);
   			 result3 = notificationServiceExt.save(result2);
   		}
+  		String loggedInAdminUserEmail = SecurityUtils.getCurrentUserLogin().get();
+			User loggedInAdminUser = userRepositoryExt.findOneByEmailIgnoreCase(loggedInAdminUserEmail).get();  		
+	  		CommonUtils.fireSystemEvent(systemEventsHistoryServiceExt, "updateNotification", "/api/v1/update-notification-by-client-id",
+	        		result.getTitle() + " has just been created", "Notification", result.getId(), loggedInAdminUser.getId(),
+	        		loggedInAdminUser.getEmail(), result.getId());
         return ResponseEntity.ok()
             .headers(HeaderUtil.createEntityUpdateAlert(applicationName, true, ENTITY_NAME, notificationDTO.getId().toString()))
             .body(result3);
