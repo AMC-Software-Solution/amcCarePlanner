@@ -44,6 +44,17 @@ enum TaskStatus{
 	AVAILABLE
 }
 
+enum ActivityStatus{
+	UNASSIGNED,
+	ASSSIGNED,
+	INPROGRESS,
+	CANCELLED_BY_CLIENT,
+	CANCELLED_BY_EMPLOYEE,
+	MISSED,
+	COMPLETED,
+	REJECTED,
+	AVAILABLE
+}
 enum Vulnerability{	
 	HIV_AIDS,
 	LEARNING_DISABILITIES,
@@ -202,6 +213,17 @@ enum HolidayStatus{
 	REQUESTED,
 	APPROVED,
 	REJECTED
+}
+
+enum TimesheetStatus {
+	OPENED,
+	CLOSED
+}
+
+enum ApprovalStatus {
+	PENDING,
+	APPROVED,
+    REJECTED
 }
 
 
@@ -942,6 +964,15 @@ lastUpdatedDate ZonedDateTime,
 }
 
 
+entity TaskType {
+	taskType String required,
+	description String,
+	status TaskStatus,
+	createdDate ZonedDateTime,
+    lastUpdatedDate ZonedDateTime,
+	clientId Long required,
+	hasExtraData Boolean
+}
 
 entity Task {
 	taskName String required,
@@ -955,6 +986,29 @@ entity Task {
 	clientId Long required,
 	hasExtraData Boolean
 }
+
+relationship ManyToOne {
+    Task {taskType (taskType) } to TaskType
+ }
+
+entity TaskActivity{
+	activityName String required,
+	description String,
+	dateOfActivity LocalDate required,
+	startTime String required,
+	endTime String,
+	status ActivityStatus,
+	createdDate ZonedDateTime,
+    lastUpdatedDate ZonedDateTime,
+	clientId Long required,
+	hasExtraData Boolean
+}
+
+relationship ManyToOne {
+    TaskActivity {task (taskName) } to Task
+ }
+
+
 
 
 relationship ManyToOne {
@@ -1073,6 +1127,9 @@ entity Timesheet {
 	hoursWorked Integer required,
 	breakStartTime String,
 	breakEndTime String,
+	hoursMatchTask Boolean,
+	timesheetStatus TimesheetStatus,
+	approvalStatus  ApprovalStatus,
 	note String,
 	createdDate ZonedDateTime,
     lastUpdatedDate ZonedDateTime,
@@ -1183,11 +1240,11 @@ entity Language {
  
  
  
-paginate Client,Branch,ServiceUser,MedicalContact,ServiceUserContact,EmergencyContact,ServiceUserLocation,PowerOfAttorney, Consent,Access,Equality,QuestionType,Question,Answer,Employee,EmployeeLocation,EmployeeAvailability,CarerServiceUserRelation,DisabilityType,Disability,EligibilityType,Eligibility,Travel,Payroll,EmployeeHoliday,ServceUserDocument,TerminalDevice,EmployeeDocument,Communication,DocumentType,Notification,Country,Task,ServiceUserEvent,ServiceOrder,Invoice,Timesheet,ClientDocument,SystemEventsHistory,SystemSetting,Currency,ExtraData,CarerServiceUserRelation,EmployeeDesignation,RelationshipType,DocumentFolder,Language with pagination
-dto Client,Branch,ServiceUser,MedicalContact,ServiceUserContact,EmergencyContact,ServiceUserLocation,PowerOfAttorney, Consent,Access,Equality,QuestionType,Question,Answer,Employee,EmployeeLocation,EmployeeAvailability,CarerServiceUserRelation,DisabilityType,Disability,EligibilityType,Eligibility,Travel,Payroll,EmployeeHoliday,ServceUserDocument,TerminalDevice,EmployeeDocument,Communication,DocumentType,Notification,Country,Task,ServiceUserEvent,ServiceOrder,Invoice,Timesheet,ClientDocument,SystemEventsHistory,SystemSetting,Currency,ExtraData,CarerServiceUserRelation,EmployeeDesignation,RelationshipType,DocumentFolder,Language with mapstruct
-service Client,Branch,ServiceUser,MedicalContact,ServiceUserContact,EmergencyContact,ServiceUserLocation,PowerOfAttorney, Consent,Access,Equality,QuestionType,Question,Answer,Employee,EmployeeLocation,EmployeeAvailability,CarerServiceUserRelation,DisabilityType,Disability,EligibilityType,Eligibility,Travel,Payroll,EmployeeHoliday,ServceUserDocument,TerminalDevice,EmployeeDocument,Communication,DocumentType,Notification,Country,Task,ServiceUserEvent,ServiceOrder,Invoice,Timesheet,ClientDocument,SystemEventsHistory,SystemSetting,Currency,ExtraData,CarerServiceUserRelation,EmployeeDesignation,RelationshipType,DocumentFolder,Language with serviceClass
-//search Client,Branch,ServiceUser,MedicalContact,ServiceUserContact,EmergencyContact,ServiceUserLocation,PowerOfAttorney, Consent,Access,Equality,QuestionType,Question,Answer,Employee,EmployeeLocation,EmployeeAvailability,DisabilityType,Disability,EligibilityType,Eligibility,Travel,Payroll,EmployeeHoliday,ServceUserDocument,TerminalDevice,EmployeeDocument,Communication,DocumentType,Notification,Country,Task,ServiceUserEvent,ServiceOrder,Invoice,Timesheet,ClientDocument,SystemEventsHistory,SystemSetting,Currency,ExtraData,EmployeeDesignation,RelationshipType,DocumentFolder,Language with elasticsearch
-filter Client,Branch,ServiceUser,MedicalContact,ServiceUserContact,EmergencyContact,ServiceUserLocation,PowerOfAttorney, Consent,Access,Equality,QuestionType,Question,Answer,Employee,EmployeeLocation,EmployeeAvailability,CarerServiceUserRelation,DisabilityType,Disability,EligibilityType,Eligibility,Travel,Payroll,EmployeeHoliday,ServceUserDocument,TerminalDevice,EmployeeDocument,Communication,DocumentType,Notification,Country,Task,ServiceUserEvent,ServiceOrder,Invoice,Timesheet,ClientDocument,SystemEventsHistory,SystemSetting,Currency,ExtraData,CarerServiceUserRelation,EmployeeDesignation,RelationshipType,DocumentFolder,Language
+paginate Client,Branch,ServiceUser,MedicalContact,ServiceUserContact,EmergencyContact,ServiceUserLocation,PowerOfAttorney, Consent,Access,Equality,QuestionType,Question,Answer,Employee,EmployeeLocation,EmployeeAvailability,CarerServiceUserRelation,DisabilityType,Disability,EligibilityType,Eligibility,Travel,Payroll,EmployeeHoliday,ServceUserDocument,TerminalDevice,EmployeeDocument,Communication,DocumentType,Notification,Country,Task,ServiceUserEvent,ServiceOrder,Invoice,Timesheet,ClientDocument,SystemEventsHistory,SystemSetting,Currency,ExtraData,CarerServiceUserRelation,EmployeeDesignation,RelationshipType,DocumentFolder,Language,TaskType,TaskActivity with pagination
+dto Client,Branch,ServiceUser,MedicalContact,ServiceUserContact,EmergencyContact,ServiceUserLocation,PowerOfAttorney, Consent,Access,Equality,QuestionType,Question,Answer,Employee,EmployeeLocation,EmployeeAvailability,CarerServiceUserRelation,DisabilityType,Disability,EligibilityType,Eligibility,Travel,Payroll,EmployeeHoliday,ServceUserDocument,TerminalDevice,EmployeeDocument,Communication,DocumentType,Notification,Country,Task,ServiceUserEvent,ServiceOrder,Invoice,Timesheet,ClientDocument,SystemEventsHistory,SystemSetting,Currency,ExtraData,CarerServiceUserRelation,EmployeeDesignation,RelationshipType,DocumentFolder,Language,TaskType,TaskActivity with mapstruct
+service Client,Branch,ServiceUser,MedicalContact,ServiceUserContact,EmergencyContact,ServiceUserLocation,PowerOfAttorney, Consent,Access,Equality,QuestionType,Question,Answer,Employee,EmployeeLocation,EmployeeAvailability,CarerServiceUserRelation,DisabilityType,Disability,EligibilityType,Eligibility,Travel,Payroll,EmployeeHoliday,ServceUserDocument,TerminalDevice,EmployeeDocument,Communication,DocumentType,Notification,Country,Task,ServiceUserEvent,ServiceOrder,Invoice,Timesheet,ClientDocument,SystemEventsHistory,SystemSetting,Currency,ExtraData,CarerServiceUserRelation,EmployeeDesignation,RelationshipType,DocumentFolder,Language,TaskType,TaskActivity with serviceClass
+//search Client,Branch,ServiceUser,MedicalContact,ServiceUserContact,EmergencyContact,ServiceUserLocation,PowerOfAttorney, Consent,Access,Equality,QuestionType,Question,Answer,Employee,EmployeeLocation,EmployeeAvailability,DisabilityType,Disability,EligibilityType,Eligibility,Travel,Payroll,EmployeeHoliday,ServceUserDocument,TerminalDevice,EmployeeDocument,Communication,DocumentType,Notification,Country,Task,ServiceUserEvent,ServiceOrder,Invoice,Timesheet,ClientDocument,SystemEventsHistory,SystemSetting,Currency,ExtraData,EmployeeDesignation,RelationshipType,DocumentFolder,Language,TaskType,TaskActivity with elasticsearch
+filter Client,Branch,ServiceUser,MedicalContact,ServiceUserContact,EmergencyContact,ServiceUserLocation,PowerOfAttorney, Consent,Access,Equality,QuestionType,Question,Answer,Employee,EmployeeLocation,EmployeeAvailability,CarerServiceUserRelation,DisabilityType,Disability,EligibilityType,Eligibility,Travel,Payroll,EmployeeHoliday,ServceUserDocument,TerminalDevice,EmployeeDocument,Communication,DocumentType,Notification,Country,Task,ServiceUserEvent,ServiceOrder,Invoice,Timesheet,ClientDocument,SystemEventsHistory,SystemSetting,Currency,ExtraData,CarerServiceUserRelation,EmployeeDesignation,RelationshipType,DocumentFolder,Language,TaskType,TaskActivity
 
 
  

@@ -166,7 +166,7 @@ public class TaskResourceExt extends TaskResource{
 
 		LongFilter longFilterForEmployeeId = new LongFilter();
 		longFilterForEmployeeId.setEquals(employeeId);
-		//taskCriteria.setEmployeeId(longFilterForEmployeeId);
+		taskCriteria.setAssignedToId(longFilterForEmployeeId);
 
 
 		 Page<TaskDTO> listOfPages = taskQueryService.findByCriteria(taskCriteria,pageable);

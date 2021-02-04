@@ -145,32 +145,7 @@ public class TimesheetResourceExt extends TimesheetResource{
         return ResponseEntity.ok().headers(headers).body(page.getContent());
     }
     
-    @GetMapping("/get-all-timesheets-by-client-id-employee-id/{employeeId}")   
-    public ResponseEntity< List<TimesheetDTO>> getAllTimesheetsByEmployeeId(@PathVariable Long employeeId, Pageable pageable) {
-        log.debug("REST request to get Timesheets : {}", employeeId);
-        Long loggedInClientId = getClientIdFromLoggedInUser();
-        TimesheetCriteria timesheetCriteria = new TimesheetCriteria();
-       
-		
-        LongFilter longFilterForClientId = new LongFilter();
-		longFilterForClientId.setEquals(loggedInClientId);
-		timesheetCriteria.setClientId(longFilterForClientId);
-		
-		LongFilter longFilterForEmployeeId = new LongFilter();
-		longFilterForEmployeeId.setEquals(employeeId);
-//		timesheetCriteria.setEmployeeId(longFilterForEmployeeId);
-		
-		
-		 Page<TimesheetDTO> listOfPages = timesheetQueryService.findByCriteria(timesheetCriteria,pageable);
-		 List <TimesheetDTO> listOfDTOs = listOfPages.getContent();
-		 if (listOfDTOs != null && listOfDTOs.size() > 0) {
-			 TimesheetDTO timesheetDTO =  listOfDTOs.get(0);
-        	if (timesheetDTO.getClientId() != null && timesheetDTO.getClientId() != loggedInClientId) {
-	        	  throw new BadRequestAlertException("clientId mismatch", ENTITY_NAME, "clientIdMismatch");
-	         }
-        }
-        return ResponseUtil.wrapOrNotFound(Optional.of(listOfDTOs));
-    }
+   
 
     /**
      * {@code GET  /timesheets/count} : count all the timesheets.
@@ -220,6 +195,34 @@ public class TimesheetResourceExt extends TimesheetResource{
 		}
 		
 		return clientId;
+    }
+    
+    
+    @GetMapping("/get-all-timesheet-by-client-id-employee-id/{employeeId}")   
+    public ResponseEntity< List<TimesheetDTO>>getAllTimesheetsByEmployeeId(@PathVariable Long employeeId, Pageable pageable) {
+        log.debug("REST request to get getAllTimesheetsByEmployeeId : {}", employeeId);
+        Long loggedInClientId = getClientIdFromLoggedInUser();
+        TimesheetCriteria timesheetCriteria = new TimesheetCriteria();
+
+
+        LongFilter longFilterForClientId = new LongFilter();
+		longFilterForClientId.setEquals(loggedInClientId);
+		timesheetCriteria.setClientId(longFilterForClientId);
+
+		LongFilter longFilterForEmployeeId = new LongFilter();
+		longFilterForEmployeeId.setEquals(employeeId);
+		timesheetCriteria.setCareProviderId(longFilterForEmployeeId);
+
+
+		 Page<TimesheetDTO> listOfPages = timesheetQueryService.findByCriteria(timesheetCriteria,pageable);
+		 List <TimesheetDTO> listOfDTOs = listOfPages.getContent();
+		 if (listOfDTOs != null && listOfDTOs.size() > 0) {
+			 TimesheetDTO timsheetDTO =  listOfDTOs.get(0);
+        	if (timsheetDTO.getClientId() != null && timsheetDTO.getClientId() != loggedInClientId) {
+	        	  throw new BadRequestAlertException("clientId mismatch", ENTITY_NAME, "clientIdMismatch");
+	         }
+        }
+        return ResponseUtil.wrapOrNotFound(Optional.of(listOfDTOs));
     }
     
 }
