@@ -4,7 +4,9 @@ import com.amc.careplanner.service.SystemSettingService;
 import com.amc.careplanner.web.rest.SystemSettingResource;
 import com.amc.careplanner.web.rest.errors.BadRequestAlertException;
 import com.amc.careplanner.service.dto.SystemSettingDTO;
+import com.amc.careplanner.service.ext.SystemEventsHistoryServiceExt;
 import com.amc.careplanner.service.ext.SystemSettingServiceExt;
+import com.amc.careplanner.utils.CommonUtils;
 import com.amc.careplanner.service.dto.EmployeeHolidayCriteria;
 import com.amc.careplanner.service.dto.EmployeeHolidayDTO;
 import com.amc.careplanner.service.dto.SystemSettingCriteria;
@@ -56,12 +58,16 @@ public class SystemSettingResourceExt extends SystemSettingResource{
     private final SystemSettingQueryService systemSettingQueryService;
     
     private final UserRepositoryExt userRepositoryExt;
+    
+	private final SystemEventsHistoryServiceExt systemEventsHistoryServiceExt;
 
-    public SystemSettingResourceExt(SystemSettingServiceExt systemSettingServiceExt, SystemSettingQueryService systemSettingQueryService, UserRepositoryExt userRepositoryExt) {
+
+    public SystemSettingResourceExt(SystemSettingServiceExt systemSettingServiceExt, SystemSettingQueryService systemSettingQueryService, UserRepositoryExt userRepositoryExt, SystemEventsHistoryServiceExt systemEventsHistoryServiceExt) {
         super(systemSettingServiceExt,systemSettingQueryService);
     	this.systemSettingServiceExt = systemSettingServiceExt;
         this.systemSettingQueryService = systemSettingQueryService;
         this.userRepositoryExt = userRepositoryExt;
+        this.systemEventsHistoryServiceExt = systemEventsHistoryServiceExt;
     }
 
     /**
@@ -81,6 +87,11 @@ public class SystemSettingResourceExt extends SystemSettingResource{
 //        systemSettingDTO.setLastUpdatedDate(ZonedDateTime.now());
         systemSettingDTO.setClientId(getClientIdFromLoggedInUser());
         SystemSettingDTO result = systemSettingServiceExt.save(systemSettingDTO);
+        String loggedInAdminUserEmail = SecurityUtils.getCurrentUserLogin().get();
+		User loggedInAdminUser = userRepositoryExt.findOneByEmailIgnoreCase(loggedInAdminUserEmail).get();  		
+  		CommonUtils.fireSystemEvent(systemEventsHistoryServiceExt, "createSystemSetting", "/api/v1/create-system-setting-by-client-id",
+        		result.getFieldName() + " has just been created", " SystemSetting", result.getId(), loggedInAdminUser.getId(),
+        		loggedInAdminUser.getEmail(), result.getId());
         return ResponseEntity.created(new URI("/api/system-settings/" + result.getId()))
             .headers(HeaderUtil.createEntityCreationAlert(applicationName, true, ENTITY_NAME, result.getId().toString()))
             .body(result);
@@ -106,6 +117,11 @@ public class SystemSettingResourceExt extends SystemSettingResource{
       }
 //        systemSettingDTO.setLastUpdatedDate(ZonedDateTime.now());
         SystemSettingDTO result = systemSettingServiceExt.save(systemSettingDTO);
+        String loggedInAdminUserEmail = SecurityUtils.getCurrentUserLogin().get();
+		User loggedInAdminUser = userRepositoryExt.findOneByEmailIgnoreCase(loggedInAdminUserEmail).get();  		
+  		CommonUtils.fireSystemEvent(systemEventsHistoryServiceExt, "updateSystemSetting", "/api/v1/update-system-setting-by-client-id",
+        		result.getFieldName() + " has just been updated", " SystemSetting", result.getId(), loggedInAdminUser.getId(),
+        		loggedInAdminUser.getEmail(), result.getId());
         return ResponseEntity.ok()
             .headers(HeaderUtil.createEntityUpdateAlert(applicationName, true, ENTITY_NAME, systemSettingDTO.getId().toString()))
             .body(result);

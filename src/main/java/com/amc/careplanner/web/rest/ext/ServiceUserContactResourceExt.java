@@ -5,6 +5,8 @@ import com.amc.careplanner.web.rest.ServiceUserContactResource;
 import com.amc.careplanner.web.rest.errors.BadRequestAlertException;
 import com.amc.careplanner.service.dto.ServiceUserContactDTO;
 import com.amc.careplanner.service.ext.ServiceUserContactServiceExt;
+import com.amc.careplanner.service.ext.SystemEventsHistoryServiceExt;
+import com.amc.careplanner.utils.CommonUtils;
 import com.amc.careplanner.service.dto.EmployeeHolidayCriteria;
 import com.amc.careplanner.service.dto.EmployeeHolidayDTO;
 import com.amc.careplanner.service.dto.ServiceUserContactCriteria;
@@ -56,12 +58,16 @@ public class ServiceUserContactResourceExt extends ServiceUserContactResource{
     private final ServiceUserContactQueryService serviceUserContactQueryService;
     
     private final UserRepositoryExt userRepositoryExt;
+    
+	private final SystemEventsHistoryServiceExt systemEventsHistoryServiceExt;
 
-    public ServiceUserContactResourceExt(ServiceUserContactServiceExt serviceUserContactServiceExt, ServiceUserContactQueryService serviceUserContactQueryService, UserRepositoryExt userRepositoryExt) {
+
+    public ServiceUserContactResourceExt(ServiceUserContactServiceExt serviceUserContactServiceExt, ServiceUserContactQueryService serviceUserContactQueryService, UserRepositoryExt userRepositoryExt, SystemEventsHistoryServiceExt systemEventsHistoryServiceExt) {
         super(serviceUserContactServiceExt,serviceUserContactQueryService);
     	this.serviceUserContactServiceExt = serviceUserContactServiceExt;
         this.serviceUserContactQueryService = serviceUserContactQueryService;
         this.userRepositoryExt = userRepositoryExt;
+        this.systemEventsHistoryServiceExt = systemEventsHistoryServiceExt;
     }
 
     /**
@@ -81,6 +87,11 @@ public class ServiceUserContactResourceExt extends ServiceUserContactResource{
         serviceUserContactDTO.setLastUpdatedDate(ZonedDateTime.now());
         serviceUserContactDTO.setClientId(getClientIdFromLoggedInUser());
         ServiceUserContactDTO result = serviceUserContactServiceExt.save(serviceUserContactDTO);
+        String loggedInAdminUserEmail = SecurityUtils.getCurrentUserLogin().get();
+		User loggedInAdminUser = userRepositoryExt.findOneByEmailIgnoreCase(loggedInAdminUserEmail).get();  		
+  		CommonUtils.fireSystemEvent(systemEventsHistoryServiceExt, "createServiceUserContact", "/api/v1/create-service-user-contact-by-client-id",
+        		result.getAddress() + " has just been created", "ServiceUserContact", result.getId(), loggedInAdminUser.getId(),
+        		loggedInAdminUser.getEmail(), result.getId());
         return ResponseEntity.created(new URI("/api/service-user-contacts/" + result.getId()))
             .headers(HeaderUtil.createEntityCreationAlert(applicationName, true, ENTITY_NAME, result.getId().toString()))
             .body(result);
@@ -106,6 +117,11 @@ public class ServiceUserContactResourceExt extends ServiceUserContactResource{
       }
         serviceUserContactDTO.setLastUpdatedDate(ZonedDateTime.now());
         ServiceUserContactDTO result = serviceUserContactServiceExt.save(serviceUserContactDTO);
+        String loggedInAdminUserEmail = SecurityUtils.getCurrentUserLogin().get();
+		User loggedInAdminUser = userRepositoryExt.findOneByEmailIgnoreCase(loggedInAdminUserEmail).get();  		
+  		CommonUtils.fireSystemEvent(systemEventsHistoryServiceExt, "updateServiceUserContact", "/api/v1/update-service-user-contact-by-client-id",
+        		result.getAddress() + " has just been updated", "ServiceUserContact", result.getId(), loggedInAdminUser.getId(),
+        		loggedInAdminUser.getEmail(), result.getId());
         return ResponseEntity.ok()
             .headers(HeaderUtil.createEntityUpdateAlert(applicationName, true, ENTITY_NAME, serviceUserContactDTO.getId().toString()))
             .body(result);

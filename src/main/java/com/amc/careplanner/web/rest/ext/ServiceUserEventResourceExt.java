@@ -5,6 +5,8 @@ import com.amc.careplanner.web.rest.ServiceUserEventResource;
 import com.amc.careplanner.web.rest.errors.BadRequestAlertException;
 import com.amc.careplanner.service.dto.ServiceUserEventDTO;
 import com.amc.careplanner.service.ext.ServiceUserEventServiceExt;
+import com.amc.careplanner.service.ext.SystemEventsHistoryServiceExt;
+import com.amc.careplanner.utils.CommonUtils;
 import com.amc.careplanner.service.dto.EmployeeHolidayCriteria;
 import com.amc.careplanner.service.dto.EmployeeHolidayDTO;
 import com.amc.careplanner.service.dto.ServiceUserEventCriteria;
@@ -56,12 +58,16 @@ public class ServiceUserEventResourceExt extends ServiceUserEventResource{
     private final ServiceUserEventQueryService serviceUserEventQueryService;
     
     private final UserRepositoryExt userRepositoryExt;
+    
+	private final SystemEventsHistoryServiceExt systemEventsHistoryServiceExt;
 
-    public ServiceUserEventResourceExt(ServiceUserEventServiceExt serviceUserEventServiceExt, ServiceUserEventQueryService serviceUserEventQueryService, UserRepositoryExt userRepositoryExt) {
+
+    public ServiceUserEventResourceExt(ServiceUserEventServiceExt serviceUserEventServiceExt, ServiceUserEventQueryService serviceUserEventQueryService, UserRepositoryExt userRepositoryExt, SystemEventsHistoryServiceExt systemEventsHistoryServiceExt) {
         super(serviceUserEventServiceExt,serviceUserEventQueryService);
     	this.serviceUserEventServiceExt = serviceUserEventServiceExt;
         this.serviceUserEventQueryService = serviceUserEventQueryService;
         this.userRepositoryExt = userRepositoryExt;
+        this.systemEventsHistoryServiceExt = systemEventsHistoryServiceExt;
     }
 
     /**
@@ -81,6 +87,11 @@ public class ServiceUserEventResourceExt extends ServiceUserEventResource{
         serviceUserEventDTO.setLastUpdatedDate(ZonedDateTime.now());
         serviceUserEventDTO.setClientId(getClientIdFromLoggedInUser());
         ServiceUserEventDTO result = serviceUserEventServiceExt.save(serviceUserEventDTO);
+        String loggedInAdminUserEmail = SecurityUtils.getCurrentUserLogin().get();
+		User loggedInAdminUser = userRepositoryExt.findOneByEmailIgnoreCase(loggedInAdminUserEmail).get();  		
+  		CommonUtils.fireSystemEvent(systemEventsHistoryServiceExt, "createServiceUserEvent", "/api/v1/create-service-user-event-by-client-id",
+        		result.getEventTitle() + " has just been created", "ServiceUserEvent", result.getId(), loggedInAdminUser.getId(),
+        		loggedInAdminUser.getEmail(), result.getId());
         return ResponseEntity.created(new URI("/api/service-user-events/" + result.getId()))
             .headers(HeaderUtil.createEntityCreationAlert(applicationName, true, ENTITY_NAME, result.getId().toString()))
             .body(result);
@@ -106,6 +117,11 @@ public class ServiceUserEventResourceExt extends ServiceUserEventResource{
       }
         serviceUserEventDTO.setLastUpdatedDate(ZonedDateTime.now());
         ServiceUserEventDTO result = serviceUserEventServiceExt.save(serviceUserEventDTO);
+        String loggedInAdminUserEmail = SecurityUtils.getCurrentUserLogin().get();
+		User loggedInAdminUser = userRepositoryExt.findOneByEmailIgnoreCase(loggedInAdminUserEmail).get();  		
+  		CommonUtils.fireSystemEvent(systemEventsHistoryServiceExt, "updateServiceUserEvent", "/api/v1/update-service-user-event-by-client-id",
+        		result.getEventTitle() + " has just been updated", "ServiceUserEvent", result.getId(), loggedInAdminUser.getId(),
+        		loggedInAdminUser.getEmail(), result.getId());
         return ResponseEntity.ok()
             .headers(HeaderUtil.createEntityUpdateAlert(applicationName, true, ENTITY_NAME, serviceUserEventDTO.getId().toString()))
             .body(result);

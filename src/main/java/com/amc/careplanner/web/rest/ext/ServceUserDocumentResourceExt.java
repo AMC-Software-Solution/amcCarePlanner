@@ -5,6 +5,8 @@ import com.amc.careplanner.web.rest.ServceUserDocumentResource;
 import com.amc.careplanner.web.rest.errors.BadRequestAlertException;
 import com.amc.careplanner.service.dto.ServceUserDocumentDTO;
 import com.amc.careplanner.service.ext.ServceUserDocumentServiceExt;
+import com.amc.careplanner.service.ext.SystemEventsHistoryServiceExt;
+import com.amc.careplanner.utils.CommonUtils;
 import com.amc.careplanner.service.dto.EmployeeHolidayCriteria;
 import com.amc.careplanner.service.dto.EmployeeHolidayDTO;
 import com.amc.careplanner.service.dto.ServceUserDocumentCriteria;
@@ -56,12 +58,15 @@ public class ServceUserDocumentResourceExt extends ServceUserDocumentResource{
     private final ServceUserDocumentQueryService servceUserDocumentQueryService;
     
     private final UserRepositoryExt userRepositoryExt;
+    
+    private final SystemEventsHistoryServiceExt systemEventsHistoryServiceExt;
 
-    public ServceUserDocumentResourceExt(ServceUserDocumentServiceExt servceUserDocumentServiceExt, ServceUserDocumentQueryService servceUserDocumentQueryService, UserRepositoryExt userRepositoryExt) {
+    public ServceUserDocumentResourceExt(ServceUserDocumentServiceExt servceUserDocumentServiceExt, ServceUserDocumentQueryService servceUserDocumentQueryService, UserRepositoryExt userRepositoryExt, SystemEventsHistoryServiceExt systemEventsHistoryServiceExt) {
         super(servceUserDocumentServiceExt,servceUserDocumentQueryService);
     	this.servceUserDocumentServiceExt = servceUserDocumentServiceExt;
         this.servceUserDocumentQueryService = servceUserDocumentQueryService;
         this.userRepositoryExt = userRepositoryExt;
+        this.systemEventsHistoryServiceExt = systemEventsHistoryServiceExt;
     }
 
     /**
@@ -81,6 +86,11 @@ public class ServceUserDocumentResourceExt extends ServceUserDocumentResource{
         servceUserDocumentDTO.setLastUpdatedDate(ZonedDateTime.now());
         servceUserDocumentDTO.setClientId(getClientIdFromLoggedInUser());
         ServceUserDocumentDTO result = servceUserDocumentServiceExt.save(servceUserDocumentDTO);
+        String loggedInAdminUserEmail = SecurityUtils.getCurrentUserLogin().get();
+		User loggedInAdminUser = userRepositoryExt.findOneByEmailIgnoreCase(loggedInAdminUserEmail).get();  		
+  		CommonUtils.fireSystemEvent(systemEventsHistoryServiceExt, "createServceUserDocument", "/api/v1/create-servce-user-document-by-client-id",
+        		result.getDocumentName() + " has just been created", "ServceUserDocument", result.getId(), loggedInAdminUser.getId(),
+        		loggedInAdminUser.getEmail(), result.getId());
         return ResponseEntity.created(new URI("/api/servce-user-documents/" + result.getId()))
             .headers(HeaderUtil.createEntityCreationAlert(applicationName, true, ENTITY_NAME, result.getId().toString()))
             .body(result);
@@ -106,6 +116,11 @@ public class ServceUserDocumentResourceExt extends ServceUserDocumentResource{
       }
         servceUserDocumentDTO.setLastUpdatedDate(ZonedDateTime.now());
         ServceUserDocumentDTO result = servceUserDocumentServiceExt.save(servceUserDocumentDTO);
+        String loggedInAdminUserEmail = SecurityUtils.getCurrentUserLogin().get();
+		User loggedInAdminUser = userRepositoryExt.findOneByEmailIgnoreCase(loggedInAdminUserEmail).get();  		
+  		CommonUtils.fireSystemEvent(systemEventsHistoryServiceExt, "updateServceUserDocument", "/api/v1/update-servce-user-document-by-client-id",
+        		result.getDocumentName() + " has just been updated", "ServceUserDocument", result.getId(), loggedInAdminUser.getId(),
+        		loggedInAdminUser.getEmail(), result.getId());
         return ResponseEntity.ok()
             .headers(HeaderUtil.createEntityUpdateAlert(applicationName, true, ENTITY_NAME, servceUserDocumentDTO.getId().toString()))
             .body(result);

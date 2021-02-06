@@ -5,6 +5,8 @@ import com.amc.careplanner.web.rest.ServiceUserLocationResource;
 import com.amc.careplanner.web.rest.errors.BadRequestAlertException;
 import com.amc.careplanner.service.dto.ServiceUserLocationDTO;
 import com.amc.careplanner.service.ext.ServiceUserLocationServiceExt;
+import com.amc.careplanner.service.ext.SystemEventsHistoryServiceExt;
+import com.amc.careplanner.utils.CommonUtils;
 import com.amc.careplanner.service.dto.EmployeeHolidayCriteria;
 import com.amc.careplanner.service.dto.EmployeeHolidayDTO;
 import com.amc.careplanner.service.dto.ServiceUserLocationCriteria;
@@ -56,12 +58,16 @@ public class ServiceUserLocationResourceExt extends ServiceUserLocationResource{
     private final ServiceUserLocationQueryService serviceUserLocationQueryService;
     
     private final UserRepositoryExt userRepositoryExt;
+    
+	private final SystemEventsHistoryServiceExt systemEventsHistoryServiceExt;
 
-    public ServiceUserLocationResourceExt(ServiceUserLocationServiceExt serviceUserLocationServiceExt, ServiceUserLocationQueryService serviceUserLocationQueryService, UserRepositoryExt userRepositoryExt) {
+
+    public ServiceUserLocationResourceExt(ServiceUserLocationServiceExt serviceUserLocationServiceExt, ServiceUserLocationQueryService serviceUserLocationQueryService, UserRepositoryExt userRepositoryExt, SystemEventsHistoryServiceExt systemEventsHistoryServiceExt) {
         super(serviceUserLocationServiceExt,serviceUserLocationQueryService);
     	this.serviceUserLocationServiceExt = serviceUserLocationServiceExt;
         this.serviceUserLocationQueryService = serviceUserLocationQueryService;
         this.userRepositoryExt = userRepositoryExt;
+        this.systemEventsHistoryServiceExt = systemEventsHistoryServiceExt;
     }
 
     /**
@@ -81,6 +87,11 @@ public class ServiceUserLocationResourceExt extends ServiceUserLocationResource{
         serviceUserLocationDTO.setLastUpdatedDate(ZonedDateTime.now());
         serviceUserLocationDTO.setClientId(getClientIdFromLoggedInUser());
         ServiceUserLocationDTO result = serviceUserLocationServiceExt.save(serviceUserLocationDTO);
+        String loggedInAdminUserEmail = SecurityUtils.getCurrentUserLogin().get();
+		User loggedInAdminUser = userRepositoryExt.findOneByEmailIgnoreCase(loggedInAdminUserEmail).get();  		
+  		CommonUtils.fireSystemEvent(systemEventsHistoryServiceExt, "createServiceUserLocation", "/api/v1/create-service-user-location-by-client-id",
+        		result.getClientId() + " has just been created", "ServiceUserLocation", result.getId(), loggedInAdminUser.getId(),
+        		loggedInAdminUser.getEmail(), result.getId());
         return ResponseEntity.created(new URI("/api/service-user-locations/" + result.getId()))
             .headers(HeaderUtil.createEntityCreationAlert(applicationName, true, ENTITY_NAME, result.getId().toString()))
             .body(result);
@@ -106,6 +117,11 @@ public class ServiceUserLocationResourceExt extends ServiceUserLocationResource{
       }
         serviceUserLocationDTO.setLastUpdatedDate(ZonedDateTime.now());
         ServiceUserLocationDTO result = serviceUserLocationServiceExt.save(serviceUserLocationDTO);
+        String loggedInAdminUserEmail = SecurityUtils.getCurrentUserLogin().get();
+		User loggedInAdminUser = userRepositoryExt.findOneByEmailIgnoreCase(loggedInAdminUserEmail).get();  		
+  		CommonUtils.fireSystemEvent(systemEventsHistoryServiceExt, "updateServiceUserLocation", "/api/v1/update-service-user-location-by-client-id",
+        		result.getClientId() + " has just been updated", "ServiceUserLocation", result.getId(), loggedInAdminUser.getId(),
+        		loggedInAdminUser.getEmail(), result.getId());
         return ResponseEntity.ok()
             .headers(HeaderUtil.createEntityUpdateAlert(applicationName, true, ENTITY_NAME, serviceUserLocationDTO.getId().toString()))
             .body(result);

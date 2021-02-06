@@ -5,6 +5,8 @@ import com.amc.careplanner.web.rest.ServiceOrderResource;
 import com.amc.careplanner.web.rest.errors.BadRequestAlertException;
 import com.amc.careplanner.service.dto.ServiceOrderDTO;
 import com.amc.careplanner.service.ext.ServiceOrderServiceExt;
+import com.amc.careplanner.service.ext.SystemEventsHistoryServiceExt;
+import com.amc.careplanner.utils.CommonUtils;
 import com.amc.careplanner.service.dto.EmployeeHolidayCriteria;
 import com.amc.careplanner.service.dto.EmployeeHolidayDTO;
 import com.amc.careplanner.service.dto.ServiceOrderCriteria;
@@ -56,12 +58,16 @@ public class ServiceOrderResourceExt extends ServiceOrderResource{
     private final ServiceOrderQueryService serviceOrderQueryService;
     
     private final UserRepositoryExt userRepositoryExt;
+    
+	private final SystemEventsHistoryServiceExt systemEventsHistoryServiceExt;
 
-    public ServiceOrderResourceExt(ServiceOrderServiceExt serviceOrderServiceExt, ServiceOrderQueryService serviceOrderQueryService, UserRepositoryExt userRepositoryExt) {
+
+    public ServiceOrderResourceExt(ServiceOrderServiceExt serviceOrderServiceExt, ServiceOrderQueryService serviceOrderQueryService, UserRepositoryExt userRepositoryExt, SystemEventsHistoryServiceExt systemEventsHistoryServiceExt) {
         super(serviceOrderServiceExt,serviceOrderQueryService);
     	this.serviceOrderServiceExt = serviceOrderServiceExt;
         this.serviceOrderQueryService = serviceOrderQueryService;
         this.userRepositoryExt = userRepositoryExt;
+        this.systemEventsHistoryServiceExt = systemEventsHistoryServiceExt;
     }
 
     /**
@@ -81,6 +87,11 @@ public class ServiceOrderResourceExt extends ServiceOrderResource{
         serviceOrderDTO.setLastUpdatedDate(ZonedDateTime.now());
         serviceOrderDTO.setClientId(getClientIdFromLoggedInUser());
         ServiceOrderDTO result = serviceOrderServiceExt.save(serviceOrderDTO);
+        String loggedInAdminUserEmail = SecurityUtils.getCurrentUserLogin().get();
+		User loggedInAdminUser = userRepositoryExt.findOneByEmailIgnoreCase(loggedInAdminUserEmail).get();  		
+  		CommonUtils.fireSystemEvent(systemEventsHistoryServiceExt, "createServiceOrder", "/api/v1/create-service-order-by-client-id",
+        		result.getTitle() + " has just been created", "ServiceOrder", result.getId(), loggedInAdminUser.getId(),
+        		loggedInAdminUser.getEmail(), result.getId());
         return ResponseEntity.created(new URI("/api/service-orders/" + result.getId()))
             .headers(HeaderUtil.createEntityCreationAlert(applicationName, true, ENTITY_NAME, result.getId().toString()))
             .body(result);
@@ -106,6 +117,11 @@ public class ServiceOrderResourceExt extends ServiceOrderResource{
       }
         serviceOrderDTO.setLastUpdatedDate(ZonedDateTime.now());
         ServiceOrderDTO result = serviceOrderServiceExt.save(serviceOrderDTO);
+        String loggedInAdminUserEmail = SecurityUtils.getCurrentUserLogin().get();
+		User loggedInAdminUser = userRepositoryExt.findOneByEmailIgnoreCase(loggedInAdminUserEmail).get();  		
+  		CommonUtils.fireSystemEvent(systemEventsHistoryServiceExt, "updateServiceOrder", "/api/v1/update-service-order-by-client-id",
+        		result.getTitle() + " has just been updated", "ServiceOrder", result.getId(), loggedInAdminUser.getId(),
+        		loggedInAdminUser.getEmail(), result.getId());
         return ResponseEntity.ok()
             .headers(HeaderUtil.createEntityUpdateAlert(applicationName, true, ENTITY_NAME, serviceOrderDTO.getId().toString()))
             .body(result);

@@ -5,6 +5,8 @@ import com.amc.careplanner.web.rest.MedicalContactResource;
 import com.amc.careplanner.web.rest.errors.BadRequestAlertException;
 import com.amc.careplanner.service.dto.MedicalContactDTO;
 import com.amc.careplanner.service.ext.MedicalContactServiceExt;
+import com.amc.careplanner.service.ext.SystemEventsHistoryServiceExt;
+import com.amc.careplanner.utils.CommonUtils;
 import com.amc.careplanner.service.dto.EmployeeHolidayCriteria;
 import com.amc.careplanner.service.dto.EmployeeHolidayDTO;
 import com.amc.careplanner.service.dto.MedicalContactCriteria;
@@ -56,12 +58,16 @@ public class MedicalContactResourceExt extends MedicalContactResource{
     private final MedicalContactQueryService medicalContactQueryService;
     
     private final UserRepositoryExt userRepositoryExt;
+    
+	private final SystemEventsHistoryServiceExt systemEventsHistoryServiceExt;
 
-    public MedicalContactResourceExt(MedicalContactServiceExt medicalContactServiceExt, MedicalContactQueryService medicalContactQueryService, UserRepositoryExt userRepositoryExt) {
+
+    public MedicalContactResourceExt(MedicalContactServiceExt medicalContactServiceExt, MedicalContactQueryService medicalContactQueryService, UserRepositoryExt userRepositoryExt, SystemEventsHistoryServiceExt systemEventsHistoryServiceExt) {
         super(medicalContactServiceExt,medicalContactQueryService);
     	this.medicalContactServiceExt = medicalContactServiceExt;
         this.medicalContactQueryService = medicalContactQueryService;
         this.userRepositoryExt = userRepositoryExt;
+        this.systemEventsHistoryServiceExt = systemEventsHistoryServiceExt;
     }
 
     /**
@@ -81,6 +87,11 @@ public class MedicalContactResourceExt extends MedicalContactResource{
         medicalContactDTO.setLastUpdatedDate(ZonedDateTime.now());
         medicalContactDTO.setClientId(getClientIdFromLoggedInUser());
         MedicalContactDTO result = medicalContactServiceExt.save(medicalContactDTO);
+        String loggedInAdminUserEmail = SecurityUtils.getCurrentUserLogin().get();
+		User loggedInAdminUser = userRepositoryExt.findOneByEmailIgnoreCase(loggedInAdminUserEmail).get();  		
+  		CommonUtils.fireSystemEvent(systemEventsHistoryServiceExt, "createMedicalContact", "/api/v1/create-medical-contact-by-client-id",
+        		result.getDoctorName() + " has just been created", "MedicalContact", result.getId(), loggedInAdminUser.getId(),
+        		loggedInAdminUser.getEmail(), result.getId());
         return ResponseEntity.created(new URI("/api/medical-contacts/" + result.getId()))
             .headers(HeaderUtil.createEntityCreationAlert(applicationName, true, ENTITY_NAME, result.getId().toString()))
             .body(result);
@@ -106,6 +117,11 @@ public class MedicalContactResourceExt extends MedicalContactResource{
       }
         medicalContactDTO.setLastUpdatedDate(ZonedDateTime.now());
         MedicalContactDTO result = medicalContactServiceExt.save(medicalContactDTO);
+        String loggedInAdminUserEmail = SecurityUtils.getCurrentUserLogin().get();
+		User loggedInAdminUser = userRepositoryExt.findOneByEmailIgnoreCase(loggedInAdminUserEmail).get();  		
+  		CommonUtils.fireSystemEvent(systemEventsHistoryServiceExt, "updateMedicalContact", "/api/v1/update-medical-contact-by-client-id",
+        		result.getDoctorName() + " has just been updated", "MedicalContact", result.getId(), loggedInAdminUser.getId(),
+        		loggedInAdminUser.getEmail(), result.getId());
         return ResponseEntity.ok()
             .headers(HeaderUtil.createEntityUpdateAlert(applicationName, true, ENTITY_NAME, medicalContactDTO.getId().toString()))
             .body(result);
