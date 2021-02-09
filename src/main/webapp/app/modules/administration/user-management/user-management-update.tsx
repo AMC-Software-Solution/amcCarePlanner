@@ -156,6 +156,23 @@ export const UserManagementUpdate = (props: IUserManagementUpdateProps) => {
                   value={user.email}
                 />
               </AvGroup>
+			  <AvGroup>
+                <Label for="imageUrl">
+                  <Translate contentKey="userManagement.imageUrl">Image URL</Translate>
+                </Label>
+                <AvField
+                  type="text"
+                  className="form-control"
+                  name="imageUrl"
+                  validate={{
+                    maxLength: {
+                      value: 500,
+                      errorMessage: translate('entity.validation.maxlength', { max: 500 }),
+                    },
+                  }}
+                  value={user.imageUrl}
+                />
+              </AvGroup>
               <AvGroup check>
                 <Label>
                   <AvInput type="checkbox" name="activated" value={user.activated} checked={user.activated} disabled={!user.id} />{' '}

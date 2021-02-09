@@ -57,61 +57,59 @@ import java.util.Optional;
  * REST controller for managing {@link com.amc.careplanner.domain.Employee}.
  */
 @RestController
-@RequestMapping("/api/v1") 
-public class EmployeeResourceExt extends EmployeeResource{
+@RequestMapping("/api/v1")
+public class EmployeeResourceExt extends EmployeeResource {
 
-    private final Logger log = LoggerFactory.getLogger(EmployeeResourceExt.class);
+	private final Logger log = LoggerFactory.getLogger(EmployeeResourceExt.class);
 
-    private static final String ENTITY_NAME = "employee";
+	private static final String ENTITY_NAME = "employee";
 
-    @Value("${jhipster.clientApp.name}")
-    private String applicationName;
+	@Value("${jhipster.clientApp.name}")
+	private String applicationName;
 
-    private final EmployeeServiceExt employeeServiceExt;
+	private final EmployeeServiceExt employeeServiceExt;
 
-    private final EmployeeQueryService employeeQueryService;
-    
+	private final EmployeeQueryService employeeQueryService;
 
 	private final UserRepositoryExt userRepositoryExt;
 
 	private final UserServiceExt userServiceExt;
 
 	private final UserMapper userMapper;
-	
+
 	private final MailService mailService;
-	
+
 	private final S3Service s3Service;
-	
+
 	private final SystemEventsHistoryServiceExt systemEventsHistoryServiceExt;
-	
 
+	public EmployeeResourceExt(EmployeeServiceExt employeeServiceExt, EmployeeQueryService employeeQueryService,
+			UserRepositoryExt userRepositoryExt, UserServiceExt userServiceExt, UserMapper userMapper,
+			MailService mailService, S3Service s3Service, SystemEventsHistoryServiceExt systemEventsHistoryServiceExt) {
+		super(employeeServiceExt, employeeQueryService);
+		this.employeeServiceExt = employeeServiceExt;
+		this.employeeQueryService = employeeQueryService;
+		this.userRepositoryExt = userRepositoryExt;
+		this.userServiceExt = userServiceExt;
+		this.userMapper = userMapper;
+		this.mailService = mailService;
+		this.s3Service = s3Service;
+		this.systemEventsHistoryServiceExt = systemEventsHistoryServiceExt;
 
-    public EmployeeResourceExt(EmployeeServiceExt employeeServiceExt, EmployeeQueryService employeeQueryService,
-    	    UserRepositoryExt userRepositoryExt, UserServiceExt userServiceExt, UserMapper userMapper, MailService mailService, S3Service s3Service, SystemEventsHistoryServiceExt systemEventsHistoryServiceExt) {
-        super(employeeServiceExt,employeeQueryService);
-    	this.employeeServiceExt = employeeServiceExt;
-        this.employeeQueryService = employeeQueryService;
-        this.userRepositoryExt = userRepositoryExt;
-        this.userServiceExt = userServiceExt;
-        this.userMapper = userMapper;
-        this.mailService = mailService;
-        this.s3Service = s3Service;
-        this.systemEventsHistoryServiceExt = systemEventsHistoryServiceExt;
-   
-    }
-    
+	}
 
-
-    @PostMapping("/create-employee-login-by-client-id")
-    @PreAuthorize("hasAuthority(\"" + AuthoritiesConstants.COMPANY_ADMIN + "\")")
-    public ResponseEntity<EmployeeDTO> createEmployeeWithLogin(@Valid @RequestBody EmployeeDTO employeeDTO) throws URISyntaxException {
-        log.debug("REST request to save Employee : {}", employeeDTO);
-        if (employeeDTO.getId() != null) {
-            throw new BadRequestAlertException("A new employee cannot already have an ID", ENTITY_NAME, "idexists");
-        }
-        // the idea is to generate an employee code, which will allow us to 
-        // uniquely identify an employee by their FirstName Initial and Last Name
-		employeeDTO.setEmployeeCode(employeeDTO.getFirstName().toUpperCase() + "_" + employeeDTO.getMiddleInitial() + "_" + employeeDTO.getLastName());
+	@PostMapping("/create-employee-login-by-client-id")
+	@PreAuthorize("hasAuthority(\"" + AuthoritiesConstants.COMPANY_ADMIN + "\")")
+	public ResponseEntity<EmployeeDTO> createEmployeeWithLogin(@Valid @RequestBody EmployeeDTO employeeDTO)
+			throws URISyntaxException {
+		log.debug("REST request to save Employee : {}", employeeDTO);
+		if (employeeDTO.getId() != null) {
+			throw new BadRequestAlertException("A new employee cannot already have an ID", ENTITY_NAME, "idexists");
+		}
+		// the idea is to generate an employee code, which will allow us to
+		// uniquely identify an employee by their FirstName Initial and Last Name
+		employeeDTO.setEmployeeCode(employeeDTO.getFirstName().toUpperCase() + "_" + employeeDTO.getMiddleInitial()
+				+ "_" + employeeDTO.getLastName());
 
 		// We have decided to use and store the user.login as clientID
 		String loggedInAdminUserEmail = SecurityUtils.getCurrentUserLogin().get();
@@ -120,7 +118,7 @@ public class EmployeeResourceExt extends EmployeeResource{
 			throw new BadRequestAlertException("Employee Creation error, registered has no client", ENTITY_NAME,
 					"employeewithnoclient");
 		}
-		
+
 		ManagedUserVM managedUserVM = new ManagedUserVM();
 
 		// this should be a system config settings weather to allow email activation
@@ -134,18 +132,18 @@ public class EmployeeResourceExt extends EmployeeResource{
 		} else {
 			managedUserVM.setEmail(employeeDTO.getEmail());
 		}
-		
+
 		// default profile icons
-        String imageUrl = null;
-    	if (StringUtils.isEmpty(employeeDTO.getPhotoUrl())) {
-			if ( employeeDTO.getGender() == Gender.MALE) {
+		String imageUrl = null;
+		if (StringUtils.isEmpty(employeeDTO.getPhotoUrl())) {
+			if (employeeDTO.getGender() == Gender.MALE) {
 				imageUrl = "https://www.clipartkey.com/mpngs/m/282-2825385_profile-picture-placeholder-blue.png";
 			} else {
-				imageUrl = "https://www.rsa.com.np/wp-content/uploads/2016/02/icon-user-default.png";	
+				imageUrl = "https://www.rsa.com.np/wp-content/uploads/2016/02/icon-user-default.png";
 			}
 			employeeDTO.setPhotoUrl(imageUrl);
 		}
-    	
+
 		managedUserVM.setFirstName(employeeDTO.getFirstName());
 		managedUserVM.setLastName(employeeDTO.getLastName());
 		managedUserVM.setLangKey("en");
@@ -154,8 +152,6 @@ public class EmployeeResourceExt extends EmployeeResource{
 		managedUserVM.setCreatedDate(ZonedDateTime.now().toInstant());
 		managedUserVM.setLogin(loggedInAdminUser.getLogin());
 		managedUserVM.setImageUrl(imageUrl);
-		
-		
 
 		userServiceExt.registerUser(managedUserVM, managedUserVM.getPassword());
 		User user = userRepositoryExt.findOneByEmailIgnoreCase(employeeDTO.getEmail()).get();
@@ -164,9 +160,7 @@ public class EmployeeResourceExt extends EmployeeResource{
 					"usercouldnotbecreated");
 
 		}
-		
 
-		
 		employeeDTO.setUserId(user.getId());
 		employeeDTO.setClientId(Long.valueOf(loggedInAdminUser.getLogin()));
 		employeeDTO.setAcruedHolidayHours(0);
@@ -175,159 +169,199 @@ public class EmployeeResourceExt extends EmployeeResource{
 		if (StringUtils.isEmpty(employeeDTO.getPreferredName())) {
 			employeeDTO.setPreferredName(employeeDTO.getFirstName());
 		}
-		// generate Random number 
-		//employeeDTO.setPinCode(pinCode);
-        EmployeeDTO result = employeeServiceExt.save(employeeDTO);
-      
-        EmployeeDTO result2 = result;
+		// generate Random number
+		// employeeDTO.setPinCode(pinCode);
+		EmployeeDTO result = employeeServiceExt.save(employeeDTO);
+
+		EmployeeDTO result2 = result;
 		if (employeeDTO.getPhotoContentType() != null) {
 			String fileName = ENTITY_NAME + RandomUtil.generateRandomAlphaNum(10) + "-" + result.getId() + ".png";
 			String url = Constants.S3_ENDPOINT + fileName;
 			result.setPhotoUrl(url);
 			byte[] imageBytes = CommonUtils.resize(CommonUtils.createImageFromBytes(employeeDTO.getPhoto()),
 					Constants.FULL_IMAGE_HEIGHT, Constants.FULL_IMAGE_WIDTH);
-			CommonUtils.uploadToS3(imageBytes, fileName, s3Service.getAmazonS3(),employeeDTO.getPhotoContentType());
+			CommonUtils.uploadToS3(imageBytes, fileName, s3Service.getAmazonS3(), employeeDTO.getPhotoContentType());
 			result2 = employeeServiceExt.save(result);
 			result2.setPhoto(null);
 			result2.setPhotoContentType(null);
 			user.setImageUrl(url);
 			userRepositoryExt.save(user);
 		}
-        
-        if (result == null ) {
-        	throw new BadRequestAlertException("Employee Creation error, user could not be created", ENTITY_NAME,
+
+		if (result == null) {
+			throw new BadRequestAlertException("Employee Creation error, user could not be created", ENTITY_NAME,
 					"usercouldnotbecreated");
-        }
-        mailService.sendCreationEmail(user);
-        
-        CommonUtils.fireSystemEvent(systemEventsHistoryServiceExt, "createEmployeeWithLogin", "/api/v1/create-employee-login-by-client-id",
-        		result.getFirstName() + " has just been created", "Employee", result.getId(), loggedInAdminUser.getId(),
-        		loggedInAdminUser.getEmail(), result.getClientId());
-        return ResponseEntity.created(new URI("/v1/api/get_employee_by_client_id/" + result.getId()))
-            .headers(HeaderUtil.createEntityCreationAlert(applicationName, true, ENTITY_NAME, result.getId().toString()))
-            .body(result);
-    }
-    
-    @GetMapping("/get-all-employees-by-client-id")
-    public ResponseEntity<List<EmployeeDTO>> getAllEmployees(EmployeeCriteria criteria, Pageable pageable) {
-        log.debug("REST request to get Employees by criteria: {}", criteria);
-        EmployeeCriteria employeeCriteria = new EmployeeCriteria();
+		}
+		mailService.sendCreationEmail(user);
+
+		CommonUtils.fireSystemEvent(systemEventsHistoryServiceExt, "createEmployeeWithLogin",
+				"/api/v1/create-employee-login-by-client-id", result.getFirstName() + " has just been created",
+				"Employee", result.getId(), loggedInAdminUser.getId(), loggedInAdminUser.getEmail(),
+				result.getClientId());
+		return ResponseEntity
+				.created(new URI("/v1/api/get_employee_by_client_id/" + result.getId())).headers(HeaderUtil
+						.createEntityCreationAlert(applicationName, true, ENTITY_NAME, result.getId().toString()))
+				.body(result);
+	}
+
+	@GetMapping("/get-all-employees-by-client-id")
+	public ResponseEntity<List<EmployeeDTO>> getAllEmployees(EmployeeCriteria criteria, Pageable pageable) {
+		log.debug("REST request to get Employees by criteria: {}", criteria);
+		EmployeeCriteria employeeCriteria = new EmployeeCriteria();
 		LongFilter longFilterForClientId = new LongFilter();
 		longFilterForClientId.setEquals(getClientIdFromLoggedInUser());
 		employeeCriteria.setClientId(longFilterForClientId);
-        Page<EmployeeDTO> page = employeeQueryService.findByCriteria(employeeCriteria, pageable);
-        HttpHeaders headers = PaginationUtil.generatePaginationHttpHeaders(ServletUriComponentsBuilder.fromCurrentRequest(), page);
-        return ResponseEntity.ok().headers(headers).body(page.getContent());
-    }
-    
-    
-    @PutMapping("/update-employee-by-client-id")
-    @PreAuthorize("hasAuthority(\"" + AuthoritiesConstants.COMPANY_ADMIN + "\")")
-    public ResponseEntity<EmployeeDTO> updateEmployee(@Valid @RequestBody EmployeeDTO employeeDTO) throws URISyntaxException {
-        log.debug("REST request to update Employee : {}", employeeDTO);
-        if (employeeDTO.getId() == null) {
-            throw new BadRequestAlertException("Invalid id", ENTITY_NAME, "idnull");
-        }
-        
-        // We have decided to use and store the user.login as clientID
+		Page<EmployeeDTO> page = employeeQueryService.findByCriteria(employeeCriteria, pageable);
+		HttpHeaders headers = PaginationUtil
+				.generatePaginationHttpHeaders(ServletUriComponentsBuilder.fromCurrentRequest(), page);
+		return ResponseEntity.ok().headers(headers).body(page.getContent());
+	}
+
+	@PutMapping("/update-employee-by-client-id")
+	@PreAuthorize("hasAuthority(\"" + AuthoritiesConstants.COMPANY_ADMIN + "\")")
+	public ResponseEntity<EmployeeDTO> updateEmployee(@Valid @RequestBody EmployeeDTO employeeDTO)
+			throws URISyntaxException {
+		log.debug("REST request to update Employee : {}", employeeDTO);
+		if (employeeDTO.getId() == null) {
+			throw new BadRequestAlertException("Invalid id", ENTITY_NAME, "idnull");
+		}
+
+		// We have decided to use and store the user.login as clientID
 		String loggedInAdminUserEmail = SecurityUtils.getCurrentUserLogin().get();
 		User loggedInAdminUser = userRepositoryExt.findOneByEmailIgnoreCase(loggedInAdminUserEmail).get();
 		if (StringUtils.isEmpty(loggedInAdminUser.getLogin())) {
 			throw new BadRequestAlertException("Employee Creation error, registered has no client", ENTITY_NAME,
 					"employeewithnoclient");
 		}
-		
-        
-        User user = userRepositoryExt.findOneWithAuthoritiesByEmailIgnoreCase(employeeDTO.getEmail()).get();
-        
-        if (employeeDTO != null && employeeDTO.getClientId() != null && employeeDTO.getClientId() != getClientIdFromLoggedInUser()) {
-        	  throw new BadRequestAlertException("clientId mismatch", ENTITY_NAME, "clientIdMismatch");
-        }
-        
-        String imageUrl = null;
-    	if (StringUtils.isEmpty(employeeDTO.getPhotoUrl())) {
-			if ( employeeDTO.getGender() == Gender.MALE) {
+
+		User user = userRepositoryExt.findOneWithAuthoritiesByEmailIgnoreCase(employeeDTO.getEmail()).get();
+
+		if (employeeDTO != null && employeeDTO.getClientId() != null
+				&& employeeDTO.getClientId() != getClientIdFromLoggedInUser()) {
+			throw new BadRequestAlertException("clientId mismatch", ENTITY_NAME, "clientIdMismatch");
+		}
+
+		String imageUrl = null;
+		if (StringUtils.isEmpty(employeeDTO.getPhotoUrl())) {
+			if (employeeDTO.getGender() == Gender.MALE) {
 				imageUrl = "https://www.clipartkey.com/mpngs/m/282-2825385_profile-picture-placeholder-blue.png";
 			} else {
-				imageUrl = "https://www.rsa.com.np/wp-content/uploads/2016/02/icon-user-default.png";	
+				imageUrl = "https://www.rsa.com.np/wp-content/uploads/2016/02/icon-user-default.png";
 			}
 			employeeDTO.setPhotoUrl(imageUrl);
 		}
-        
-    	
+
 		if (user != null) {
 			// update all fields
 			user.setFirstName(employeeDTO.getFirstName());
-			//user.setLogin(employeeDTO.getLogin());
+			// user.setLogin(employeeDTO.getLogin());
 			user.setEmail(employeeDTO.getEmail());
 			user.setLastName(employeeDTO.getLastName());
-			//user.setActivated(employeeDTO.getActive());
+			// user.setActivated(employeeDTO.getActive());
 			user.setLastModifiedBy(SecurityUtils.getCurrentUserLogin().get());
 			user.setLastModifiedDate(Instant.now());
 			user.setImageUrl(imageUrl);
 			userServiceExt.updateUser(userMapper.userToUserDTO(user));
-			
+
 		}
-        
-        EmployeeDTO result = employeeServiceExt.save(employeeDTO);
-        
-        CommonUtils.fireSystemEvent(systemEventsHistoryServiceExt, "updateEmployee", "/api/v1/update-employee-by-client-id",
-        		result.getFirstName() + " has just been updated", "Employee", result.getId(), loggedInAdminUser.getId(),
-        		loggedInAdminUser.getEmail(), result.getClientId());
-        return ResponseEntity.ok()
-            .headers(HeaderUtil.createEntityUpdateAlert(applicationName, true, ENTITY_NAME, employeeDTO.getId().toString()))
-            .body(result);
-    }
-    
-    
-    @GetMapping("/get-employee-by-client-id/{id}")
-    public ResponseEntity<EmployeeDTO> getEmployee(@PathVariable Long id) {
-        log.debug("REST request to get Employee : {}", id);
-        EmployeeCriteria employeeCriteria = new EmployeeCriteria();
+
+		EmployeeDTO result = employeeServiceExt.save(employeeDTO);
+
+		CommonUtils.fireSystemEvent(systemEventsHistoryServiceExt, "updateEmployee",
+				"/api/v1/update-employee-by-client-id", result.getFirstName() + " has just been updated", "Employee",
+				result.getId(), loggedInAdminUser.getId(), loggedInAdminUser.getEmail(), result.getClientId());
+		return ResponseEntity.ok().headers(
+				HeaderUtil.createEntityUpdateAlert(applicationName, true, ENTITY_NAME, employeeDTO.getId().toString()))
+				.body(result);
+	}
+
+	@GetMapping("/get-employee-by-client-id/{id}")
+	public ResponseEntity<EmployeeDTO> getEmployee(@PathVariable Long id) {
+		log.debug("REST request to get Employee : {}", id);
+		EmployeeCriteria employeeCriteria = new EmployeeCriteria();
+
 		LongFilter longFilterForClientId = new LongFilter();
 		longFilterForClientId.setEquals(getClientIdFromLoggedInUser());
+		employeeCriteria.setClientId(longFilterForClientId);
+
 		LongFilter longFilterForId = new LongFilter();
 		employeeCriteria.setId(longFilterForId);
 		longFilterForId.setEquals(id);
-		employeeCriteria.setClientId(longFilterForClientId);
-		 List<EmployeeDTO> listOfEmployees = employeeQueryService.findByCriteria(employeeCriteria);
-		 EmployeeDTO employeeDTO =listOfEmployees.get(0);
-        if (employeeDTO != null && employeeDTO.getClientId() != null && employeeDTO.getClientId() != getClientIdFromLoggedInUser()) {
-        	  throw new BadRequestAlertException("clientId mismatch", ENTITY_NAME, "clientIdMismatch");
-        }
-        return ResponseUtil.wrapOrNotFound(Optional.of(employeeDTO));
-    }
-    
-    
-    
-    @GetMapping("/get-employee-by-client-id-by-email/{email}")
-    public ResponseEntity<EmployeeDTO> getEmployeeByEmail(@PathVariable String email) {
-        log.debug("REST request to get Employee email: {}", email);
-        EmployeeCriteria employeeCriteria = new EmployeeCriteria();
+
+		List<EmployeeDTO> listOfEmployees = employeeQueryService.findByCriteria(employeeCriteria);
+
+		EmployeeDTO employeeDTO = null;
+		if (listOfEmployees != null && listOfEmployees.size() > 0) {
+			employeeDTO = listOfEmployees.get(0);
+			if (employeeDTO != null && employeeDTO.getClientId() != null
+					&& employeeDTO.getClientId() != getClientIdFromLoggedInUser()) {
+				throw new BadRequestAlertException("clientId mismatch", ENTITY_NAME, "clientIdMismatch");
+			}
+		}
+
+		return ResponseUtil.wrapOrNotFound(Optional.of(employeeDTO));
+	}
+
+	@GetMapping("/get-employee-by-client-id-by-user-id/{id}")
+	public ResponseEntity<EmployeeDTO> getEmployeeByUserId(@PathVariable Long id) {
+		log.debug("REST request to get UserID : {}", id);
+		EmployeeCriteria employeeCriteria = new EmployeeCriteria();
+
 		LongFilter longFilterForClientId = new LongFilter();
 		longFilterForClientId.setEquals(getClientIdFromLoggedInUser());
+		employeeCriteria.setClientId(longFilterForClientId);
+
+		LongFilter longFilterForId = new LongFilter();
+		employeeCriteria.setUserId(longFilterForId);
+		longFilterForId.setEquals(id);
+
+		List<EmployeeDTO> listOfEmployees = employeeQueryService.findByCriteria(employeeCriteria);
+		EmployeeDTO employeeDTO = null;
+		if (listOfEmployees != null && listOfEmployees.size() > 0) {
+			employeeDTO = listOfEmployees.get(0);
+			if (employeeDTO != null && employeeDTO.getClientId() != null
+					&& employeeDTO.getClientId() != getClientIdFromLoggedInUser()) {
+				throw new BadRequestAlertException("clientId mismatch", ENTITY_NAME, "clientIdMismatch");
+			}
+		}
+		return ResponseUtil.wrapOrNotFound(Optional.of(employeeDTO));
+	}
+
+	@GetMapping("/get-employee-by-client-id-by-email/{email}")
+	public ResponseEntity<EmployeeDTO> getEmployeeByEmail(@PathVariable String email) {
+		log.debug("REST request to get Employee email: {}", email);
+		EmployeeCriteria employeeCriteria = new EmployeeCriteria();
+
+		LongFilter longFilterForClientId = new LongFilter();
+		longFilterForClientId.setEquals(getClientIdFromLoggedInUser());
+		employeeCriteria.setClientId(longFilterForClientId);
+
 		StringFilter stringFilterForEmail = new StringFilter();
 		stringFilterForEmail.setEquals(email);
 		employeeCriteria.setEmail(stringFilterForEmail);
-		employeeCriteria.setClientId(longFilterForClientId);
-		 List<EmployeeDTO> listOfEmployees = employeeQueryService.findByCriteria(employeeCriteria);
-		 EmployeeDTO employeeDTO =listOfEmployees.get(0);
-        if (employeeDTO != null && employeeDTO.getClientId() != null && employeeDTO.getClientId() != getClientIdFromLoggedInUser()) {
-        	  throw new BadRequestAlertException("clientId mismatch", ENTITY_NAME, "clientIdMismatch");
-        }
-        return ResponseUtil.wrapOrNotFound(Optional.of(employeeDTO));
-    }
-    
-    private Long getClientIdFromLoggedInUser() {
-    	Long clientId = 0L;
-    	String loggedInAdminUserEmail = SecurityUtils.getCurrentUserLogin().get();
+
+		List<EmployeeDTO> listOfEmployees = employeeQueryService.findByCriteria(employeeCriteria);
+		EmployeeDTO employeeDTO = null;
+		if (listOfEmployees != null && listOfEmployees.size() > 0) {
+			employeeDTO = listOfEmployees.get(0);
+			if (employeeDTO != null && employeeDTO.getClientId() != null
+					&& employeeDTO.getClientId() != getClientIdFromLoggedInUser()) {
+				throw new BadRequestAlertException("clientId mismatch", ENTITY_NAME, "clientIdMismatch");
+			}
+		}
+		return ResponseUtil.wrapOrNotFound(Optional.of(employeeDTO));
+	}
+
+	private Long getClientIdFromLoggedInUser() {
+		Long clientId = 0L;
+		String loggedInAdminUserEmail = SecurityUtils.getCurrentUserLogin().get();
 		User loggedInAdminUser = userRepositoryExt.findOneByEmailIgnoreCase(loggedInAdminUserEmail).get();
-		
-		if(loggedInAdminUser != null) {
+
+		if (loggedInAdminUser != null) {
 			clientId = Long.valueOf(loggedInAdminUser.getLogin());
 		}
-		
+
 		return clientId;
-    }
-  
+	}
+
 }
