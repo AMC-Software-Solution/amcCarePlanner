@@ -4,6 +4,8 @@ import com.amc.careplanner.service.EligibilityTypeService;
 import com.amc.careplanner.web.rest.EligibilityTypeResource;
 import com.amc.careplanner.web.rest.errors.BadRequestAlertException;
 import com.amc.careplanner.service.dto.EligibilityTypeDTO;
+import com.amc.careplanner.service.ext.SystemEventsHistoryServiceExt;
+import com.amc.careplanner.utils.CommonUtils;
 import com.amc.careplanner.service.dto.EligibilityTypeCriteria;
 import com.amc.careplanner.domain.User;
 import com.amc.careplanner.repository.ext.UserRepositoryExt;
@@ -48,11 +50,17 @@ public class EligibilityTypeResourceExt extends EligibilityTypeResource{
     private final EligibilityTypeService eligibilityTypeService;
 
     private final EligibilityTypeQueryService eligibilityTypeQueryService;
+    
+    private final UserRepositoryExt userRepositoryExt;
 
-    public EligibilityTypeResourceExt(EligibilityTypeService eligibilityTypeService, EligibilityTypeQueryService eligibilityTypeQueryService) {
+    private final SystemEventsHistoryServiceExt systemEventsHistoryServiceExt;
+
+    public EligibilityTypeResourceExt(EligibilityTypeService eligibilityTypeService, EligibilityTypeQueryService eligibilityTypeQueryService, UserRepositoryExt userRepositoryExt, SystemEventsHistoryServiceExt systemEventsHistoryServiceExt) {
         super(eligibilityTypeService,eligibilityTypeQueryService);
     	this.eligibilityTypeService = eligibilityTypeService;
         this.eligibilityTypeQueryService = eligibilityTypeQueryService;
+        this.userRepositoryExt = userRepositoryExt;
+        this.systemEventsHistoryServiceExt = systemEventsHistoryServiceExt;
     }
 
     /**
@@ -69,6 +77,11 @@ public class EligibilityTypeResourceExt extends EligibilityTypeResource{
             throw new BadRequestAlertException("A new eligibilityType cannot already have an ID", ENTITY_NAME, "idexists");
         }
         EligibilityTypeDTO result = eligibilityTypeService.save(eligibilityTypeDTO);
+        String loggedInAdminUserEmail = SecurityUtils.getCurrentUserLogin().get();
+    	User loggedInAdminUser = userRepositoryExt.findOneByEmailIgnoreCase(loggedInAdminUserEmail).get();  		
+    		CommonUtils.fireSystemEvent(systemEventsHistoryServiceExt, "createEligibilityType", "/api/v1/create-eligibility-type-by-client-id",
+           result.getEligibilityType() + " has just been created", "EligibilityType", result.getId(), loggedInAdminUser.getId(),
+        		loggedInAdminUser.getEmail(), result.getId());
         return ResponseEntity.created(new URI("/api/eligibility-types/" + result.getId()))
             .headers(HeaderUtil.createEntityCreationAlert(applicationName, true, ENTITY_NAME, result.getId().toString()))
             .body(result);
@@ -90,6 +103,11 @@ public class EligibilityTypeResourceExt extends EligibilityTypeResource{
             throw new BadRequestAlertException("Invalid id", ENTITY_NAME, "idnull");
         }
         EligibilityTypeDTO result = eligibilityTypeService.save(eligibilityTypeDTO);
+        String loggedInAdminUserEmail = SecurityUtils.getCurrentUserLogin().get();
+    	User loggedInAdminUser = userRepositoryExt.findOneByEmailIgnoreCase(loggedInAdminUserEmail).get();  		
+    		CommonUtils.fireSystemEvent(systemEventsHistoryServiceExt, "updateEligibilityType", "/api/v1/update-eligibility-type-by-client-id",
+           result.getEligibilityType() + " has just been updated", "EligibilityType", result.getId(), loggedInAdminUser.getId(),
+        		loggedInAdminUser.getEmail(), result.getId());
         return ResponseEntity.ok()
             .headers(HeaderUtil.createEntityUpdateAlert(applicationName, true, ENTITY_NAME, eligibilityTypeDTO.getId().toString()))
             .body(result);

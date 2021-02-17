@@ -67,8 +67,6 @@ public class ConsentResourceExt extends ConsentResource{
     
 	private final SystemEventsHistoryServiceExt systemEventsHistoryServiceExt;
 
-
-
     public ConsentResourceExt(ConsentServiceExt consentServiceExt, ConsentQueryService consentQueryService, UserRepositoryExt userRepositoryExt, S3Service  s3Service, SystemEventsHistoryServiceExt systemEventsHistoryServiceExt) {
     	super(consentServiceExt,consentQueryService);
         this.consentServiceExt = consentServiceExt;

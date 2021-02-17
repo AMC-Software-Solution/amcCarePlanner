@@ -7,6 +7,8 @@ import com.amc.careplanner.service.dto.AnswerDTO;
 import com.amc.careplanner.service.dto.EmployeeDocumentCriteria;
 import com.amc.careplanner.service.dto.EmployeeDocumentDTO;
 import com.amc.careplanner.service.ext.AnswerServiceExt;
+import com.amc.careplanner.service.ext.SystemEventsHistoryServiceExt;
+import com.amc.careplanner.utils.CommonUtils;
 import com.amc.careplanner.service.dto.AnswerCriteria;
 import com.amc.careplanner.domain.User;
 import com.amc.careplanner.repository.ext.UserRepositoryExt;
@@ -56,12 +58,15 @@ public class AnswerResourceExt extends AnswerResource{
     private final AnswerQueryService answerQueryService;
     
     private final UserRepositoryExt userRepositoryExt;
+    
+    private final SystemEventsHistoryServiceExt systemEventsHistoryServiceExt;
 
-    public AnswerResourceExt(AnswerServiceExt answerServiceExt, AnswerQueryService answerQueryService, UserRepositoryExt userRepositoryExt) {
+    public AnswerResourceExt(AnswerServiceExt answerServiceExt, AnswerQueryService answerQueryService, UserRepositoryExt userRepositoryExt, SystemEventsHistoryServiceExt systemEventsHistoryServiceExt) {
     	super(answerServiceExt,answerQueryService);
         this.answerServiceExt = answerServiceExt;
         this.answerQueryService = answerQueryService;
         this.userRepositoryExt = userRepositoryExt;
+        this.systemEventsHistoryServiceExt = systemEventsHistoryServiceExt;
     }
 
     /**
@@ -82,6 +87,11 @@ public class AnswerResourceExt extends AnswerResource{
         answerDTO.setLastUpdatedDate(ZonedDateTime.now());
         answerDTO.setClientId(getClientIdFromLoggedInUser());
         AnswerDTO result = answerServiceExt.save(answerDTO);
+        String loggedInAdminUserEmail = SecurityUtils.getCurrentUserLogin().get();
+		User loggedInAdminUser = userRepositoryExt.findOneByEmailIgnoreCase(loggedInAdminUserEmail).get();  		
+  		CommonUtils.fireSystemEvent(systemEventsHistoryServiceExt, "createAnswer", "/api/v1/create-answer-by-client-id",
+        		result.getAnswer() + " has just been created", "Answer", result.getId(), loggedInAdminUser.getId(),
+        		loggedInAdminUser.getEmail(), result.getId());
         return ResponseEntity.created(new URI("/api/answers/" + result.getId()))
             .headers(HeaderUtil.createEntityCreationAlert(applicationName, true, ENTITY_NAME, result.getId().toString()))
             .body(result);
@@ -107,6 +117,11 @@ public class AnswerResourceExt extends AnswerResource{
  }
         answerDTO.setLastUpdatedDate(ZonedDateTime.now());
         AnswerDTO result = answerServiceExt.save(answerDTO);
+        String loggedInAdminUserEmail = SecurityUtils.getCurrentUserLogin().get();
+		User loggedInAdminUser = userRepositoryExt.findOneByEmailIgnoreCase(loggedInAdminUserEmail).get();  		
+  		CommonUtils.fireSystemEvent(systemEventsHistoryServiceExt, "updateAnswer", "/api/v1/update-answer-by-client-id",
+        		result.getAnswer() + " has just been updated", "Answer", result.getId(), loggedInAdminUser.getId(),
+        		loggedInAdminUser.getEmail(), result.getId());
         return ResponseEntity.ok()
             .headers(HeaderUtil.createEntityUpdateAlert(applicationName, true, ENTITY_NAME, answerDTO.getId().toString()))
             .body(result);
