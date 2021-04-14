@@ -85,7 +85,7 @@ public class ClientResourceExt extends ClientResource{
      * @throws URISyntaxException if the Location URI syntax is incorrect.
      */
     @PostMapping("/create-client-by-client-id")
-    @PreAuthorize("hasAuthority(\"" + AuthoritiesConstants.ADMIN + "\")")
+    @PreAuthorize("hasAuthority(\"" + AuthoritiesConstants.COMPANY_ADMIN + "\")")
     public ResponseEntity<ClientDTO> createClient(@Valid @RequestBody ClientDTO clientDTO) throws URISyntaxException {
         log.debug("REST request to save Client : {}", clientDTO);
         if (clientDTO.getId() != null) {
@@ -129,7 +129,7 @@ public class ClientResourceExt extends ClientResource{
      * @throws URISyntaxException if the Location URI syntax is incorrect.
      */
     @PutMapping("/update-client-by-client-id")
-    @PreAuthorize("hasAuthority(\"" + AuthoritiesConstants.ADMIN + "\")")
+    @PreAuthorize("hasAuthority(\"" + AuthoritiesConstants.COMPANY_ADMIN + "\")")
     public ResponseEntity<ClientDTO> updateClient(@Valid @RequestBody ClientDTO clientDTO) throws URISyntaxException {
         log.debug("REST request to update Client : {}", clientDTO);
         if (clientDTO.getId() == null) {
@@ -170,7 +170,7 @@ public class ClientResourceExt extends ClientResource{
      * @return the {@link ResponseEntity} with status {@code 200 (OK)} and the list of clients in body.
      */
     @GetMapping("/get-all-clients-by-client-id")
-    @PreAuthorize("hasAuthority(\"" + AuthoritiesConstants.ADMIN + "\")")
+    @PreAuthorize("hasAuthority(\"" + AuthoritiesConstants.COMPANY_ADMIN + "\")")
     public ResponseEntity<List<ClientDTO>> getAllClients(ClientCriteria criteria, Pageable pageable) {
         log.debug("REST request to get Clients by criteria: {}", criteria);
         ClientCriteria clientCriteria = new ClientCriteria();
@@ -188,7 +188,7 @@ public class ClientResourceExt extends ClientResource{
      * @return the {@link ResponseEntity} with status {@code 200 (OK)} and the count in body.
      */
     @GetMapping("/clients/count")
-    @PreAuthorize("hasAuthority(\"" + AuthoritiesConstants.ADMIN + "\")")
+    @PreAuthorize("hasAuthority(\"" + AuthoritiesConstants.COMPANY_ADMIN + "\")")
     public ResponseEntity<Long> countClients(ClientCriteria criteria) {
         log.debug("REST request to count Clients by criteria: {}", criteria);
         return ResponseEntity.ok().body(clientQueryService.countByCriteria(criteria));
@@ -201,7 +201,7 @@ public class ClientResourceExt extends ClientResource{
      * @return the {@link ResponseEntity} with status {@code 200 (OK)} and with body the clientDTO, or with status {@code 404 (Not Found)}.
      */
     @GetMapping("/get-client-by-client-id/{id}")
-    @PreAuthorize("hasAuthority(\"" + AuthoritiesConstants.ADMIN + "\")")
+    @PreAuthorize("hasAuthority(\"" + AuthoritiesConstants.COMPANY_ADMIN + "\")")
     public ResponseEntity<ClientDTO> getClient(@PathVariable Long id) {
         log.debug("REST request to get Client : {}", id);
         Optional<ClientDTO> clientDTO = clientServiceExt.findOne(id);
@@ -215,7 +215,7 @@ public class ClientResourceExt extends ClientResource{
      * @return the {@link ResponseEntity} with status {@code 204 (NO_CONTENT)}.
      */
     @DeleteMapping("/delete-client-by-client-id/{id}")
-    @PreAuthorize("hasAuthority(\"" + AuthoritiesConstants.ADMIN + "\")")
+    @PreAuthorize("hasAuthority(\"" + AuthoritiesConstants.COMPANY_ADMIN + "\")")
     public ResponseEntity<Void> deleteClient(@PathVariable Long id) {
         log.debug("REST request to delete Client : {}", id);
         clientServiceExt.delete(id);
